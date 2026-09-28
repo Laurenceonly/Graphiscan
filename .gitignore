@@ -1,0 +1,53 @@
+# Local secrets and machine-specific configuration
+**/.env
+**/.env.*
+!**/.env.example
+graphiscan/config.py
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+**/google-services.json
+**/GoogleService-Info.plist
+**/local.properties
+
+# Dependencies, caches, and builds
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/build/
+**/.gradle/
+*.apk
+*.aab
+*.log
+
+# Private uploads, datasets, and generated ML artifacts
+graphiscan/static/uploads/
+/raw_dataset/
+/model/
+/model_old_binary_backup/
+graphiscan/binary_raw/
+graphiscan/binary_dataset/
+graphiscan/training_results/
+**/*.keras
+**/*.h5
+**/*.hdf5
+**/*.tflite
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.local
+
+# Empty top-level placeholders without a matching application
+/app
+/package-lock.json
