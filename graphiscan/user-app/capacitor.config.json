@@ -1,0 +1,14 @@
+{
+  "appId": "com.graphiscan.app",
+  "appName": "GRAPHISCAN",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "10.0.23.90"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

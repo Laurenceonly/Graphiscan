@@ -1,0 +1,14 @@
+{
+  "model_name": "ResNet50",
+  "classes": [
+    "normal",
+    "high_potential"
+  ],
+  "input_size": [
+    224,
+    224
+  ],
+  "threshold": 0.5,
+  "normal_label": 0,
+  "high_potential_label": 1
+}

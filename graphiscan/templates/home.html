@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graphiscan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --soft-blue: #e9f7ff;
+            --blue: #7cc8f8;
+            --blue-dark: #2f80b9;
+            --blue-deep: #145c8f;
+            --white: #ffffff;
+            --page-bg: #f6fbff;
+            --text: #1f2a37;
+            --muted: #667085;
+            --border: #e5eef5;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --shadow-sm: 0 8px 20px rgba(47, 128, 185, 0.08);
+            --shadow-md: 0 18px 40px rgba(47, 128, 185, 0.14);
+            --shadow-lg: 0 28px 80px rgba(47, 128, 185, 0.20);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body.landing-page {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(124, 200, 248, 0.24), transparent 34%),
+                radial-gradient(circle at bottom right, rgba(47, 128, 185, 0.14), transparent 30%),
+                linear-gradient(180deg, #ffffff 0%, var(--page-bg) 100%);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Navbar */
+        .landing-nav {
+            min-height: 74px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo a {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text);
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+            color: var(--white);
+            box-shadow: 0 12px 24px rgba(47, 128, 185, 0.25);
+            font-size: 1rem;
+        }
+
+        .logo span {
+            color: var(--blue-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue-dark);
+        }
+
+        .nav-signin {
+            background: var(--blue-dark);
+            color: var(--white) !important;
+            padding: 12px 22px;
+            border-radius: 999px;
+            box-shadow: 0 12px 28px rgba(47, 128, 185, 0.24);
+        }
+
+        .nav-signin:hover {
+            transform: translateY(-2px);
+            background: #256b9c;
+        }
+
+        /* Hero */
+        .hero-container {
+            min-height: auto;
+            padding: 46px 8% 70px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            align-items: center;
+            gap: 58px;
+        }
+
+        .hero-badge,
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: var(--soft-blue);
+            color: var(--blue-deep);
+            border: 1px solid #ccecff;
+            font-weight: 800;
+            font-size: 0.86rem;
+        }
+
+        .hero-text h1 {
+            margin: 14px 0 0;
+            max-width: 760px;
+            font-size: clamp(2.7rem, 5vw, 5.3rem);
+            line-height: 1.02;
+            letter-spacing: -3.4px;
+            color: var(--text);
+        }
+
+        .hero-text h1 span {
+            color: var(--blue-dark);
+        }
+
+        .hero-text p {
+            margin: 18px 0 0;
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 1.12rem;
+            line-height: 1.8;
+        }
+
+        .cta-area {
+            margin-top: 26px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 999px;
+            font-weight: 800;
+            transition: 0.25s ease;
+        }
+
+        .btn-primary {
+            background: var(--blue-dark);
+            color: var(--white);
+            box-shadow: 0 14px 32px rgba(47, 128, 185, 0.24);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background: #256b9c;
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--blue-deep);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            border-color: var(--blue);
+            background: #fbfdff;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            max-width: 650px;
+            margin-top: 24px;
+        }
+
+        .hero-stat {
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 1.45rem;
+            color: var(--blue-deep);
+            margin-bottom: 4px;
+        }
+
+        .hero-stat span {
+            color: var(--muted);
+            font-weight: 700;
+            font-size: 0.84rem;
+            line-height: 1.4;
+        }
+
+        /* Hero Visual */
+        .hero-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .scan-card {
+            width: min(100%, 540px);
+            min-height: 455px;
+            border-radius: 36px;
+            background: linear-gradient(145deg, #ffffff, #eef9ff);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            padding: 26px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-card::before {
+            content: "";
+            position: absolute;
+            width: 270px;
+            height: 270px;
+            border-radius: 50%;
+            background: rgba(124, 200, 248, 0.28);
+            right: -100px;
+            top: -100px;
+        }
+
+        .scan-card::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            border: 1px solid rgba(47, 128, 185, 0.12);
+            left: -60px;
+            bottom: -40px;
+        }
+
+        .scan-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .scan-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .scan-dots span {
+            width: 12px;
+            height: 12px;
+            background: var(--blue);
+            border-radius: 50%;
+        }
+
+        .scan-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--success);
+            background: #ecfdf3;
+            border-radius: 999px;
+            padding: 7px 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .paper-preview {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            min-height: 235px;
+            padding: 28px;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .paper-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .paper-title strong {
+            font-size: 0.95rem;
+        }
+
+        .paper-title small {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .line {
+            height: 14px;
+            border-radius: 999px;
+            background: var(--soft-blue);
+            margin-bottom: 20px;
+        }
+
+        .line.long { width: 90%; }
+        .line.medium { width: 72%; }
+        .line.short { width: 55%; }
+        .line.tiny { width: 38%; }
+
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 55%;
+            height: 4px;
+            background: var(--blue);
+            box-shadow: 0 0 24px rgba(124, 200, 248, 0.9);
+            animation: scanMove 2.6s ease-in-out infinite;
+        }
+
+        @keyframes scanMove {
+            0%, 100% { top: 28%; opacity: 0.65; }
+            50% { top: 72%; opacity: 1; }
+        }
+
+        .result-chip {
+            position: relative;
+            z-index: 2;
+            margin-top: 18px;
+            padding: 18px 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: var(--soft-blue);
+            color: var(--blue-deep);
+            flex-shrink: 0;
+        }
+
+        .result-chip strong,
+        .result-chip small {
+            display: block;
+        }
+
+        .result-chip strong {
+            color: var(--text);
+        }
+
+        .result-chip small {
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .confidence-card {
+            position: absolute;
+            z-index: 3;
+            right: 18px;
+            bottom: 18px;
+            width: 170px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(12px);
+        }
+
+        .confidence-card span {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .confidence-card strong {
+            display: block;
+            color: var(--blue-deep);
+            font-size: 1.8rem;
+            margin: 3px 0 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--soft-blue);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 78%;
+            height: 100%;
+            background: var(--blue-dark);
+            border-radius: inherit;
+        }
+
+        /* Sections */
+        .section {
+            padding: 86px 8%;
+        }
+
+        .section-soft {
+            background: linear-gradient(180deg, var(--soft-blue), #f6fbff);
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 780px;
+            margin: 0 auto 46px;
+        }
+
+        .section-heading h2,
+        .about-box h2,
+        .cta-box h2 {
+            margin: 14px 0 0;
+            color: var(--text);
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -1.6px;
+            line-height: 1.15;
+        }
+
+        .section-heading p {
+            margin: 16px auto 0;
+            color: var(--muted);
+            line-height: 1.75;
+            max-width: 680px;
+        }
+
+        .feature-grid,
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card,
+        .step-card {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            transition: 0.25s ease;
+        }
+
+        .feature-card:hover,
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            color: var(--blue-deep);
+            background: var(--soft-blue);
+            margin-bottom: 18px;
+            font-size: 1.3rem;
+        }
+
+        .feature-card h3,
+        .step-card h3 {
+            margin: 0 0 12px;
+            color: var(--text);
+            font-size: 1.2rem;
+            letter-spacing: -0.4px;
+        }
+
+        .feature-card p,
+        .step-card p,
+        .about-box p,
+        .cta-box p {
+            color: var(--muted);
+            line-height: 1.75;
+            margin: 0;
+        }
+
+        .step-number {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: var(--white);
+            color: var(--blue-deep);
+            border: 1px solid #ccecff;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* About */
+        .about-box {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 46px;
+            align-items: center;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 34px;
+            padding: 46px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .about-points {
+            display: grid;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .about-point {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .about-point i {
+            color: var(--success);
+            margin-top: 3px;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 0 8% 86px;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--blue-deep), var(--blue-dark));
+            color: var(--white);
+            border-radius: 34px;
+            padding: clamp(30px, 5vw, 52px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            right: -80px;
+            top: -100px;
+        }
+
+        .cta-box h2 {
+            color: var(--white);
+            margin-top: 0;
+        }
+
+        .cta-box p {
+            color: rgba(255, 255, 255, 0.82);
+            max-width: 680px;
+            margin-top: 14px;
+        }
+
+        .cta-box > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-box .btn-secondary {
+            background: var(--white);
+            color: var(--blue-deep);
+        }
+
+        /* Footer */
+        .landing-footer {
+            padding: 30px 8%;
+            text-align: center;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            background: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 980px) {
+            .landing-nav {
+                padding: 14px 6%;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                padding: 38px 6% 58px;
+            }
+
+            .hero-text h1 {
+                letter-spacing: -2px;
+            }
+
+            .feature-grid,
+            .steps-grid,
+            .about-box {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 72px 6%;
+            }
+
+            .cta-section {
+                padding: 0 6% 72px;
+            }
+
+            .cta-box {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .logo a {
+                font-size: 1.35rem;
+            }
+
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+
+            .nav-signin {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hero-container {
+                gap: 38px;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 2.45rem;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .cta-area .btn {
+                width: 100%;
+            }
+
+            .scan-card {
+                min-height: auto;
+                border-radius: 28px;
+                padding: 20px;
+            }
+
+            .paper-preview {
+                min-height: 230px;
+                padding: 24px;
+            }
+
+            .confidence-card {
+                position: relative;
+                right: auto;
+                bottom: auto;
+                width: 100%;
+                margin-top: 18px;
+            }
+
+            .about-box,
+            .feature-card,
+            .step-card,
+            .cta-box {
+                padding: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body class="landing-page">
+
+    <nav class="landing-nav">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <span class="logo-icon">
+                    <i class="fa-solid fa-pen-nib"></i>
+                </span>
+                GRAPHI<span>SCAN</span>
+            </a>
+        </div>
+
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-signin">Get Started</a>
+        </div>
+    </nav>
+
+    <main class="hero-container">
+        <section class="hero-text">
+            <div class="hero-badge">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                AI-Powered Handwriting Screening
+            </div>
+
+            <h1>
+                Handwriting analysis for <span>early dysgraphia screening.</span>
+            </h1>
+
+            <p>
+                GRAPHISCAN uses deep learning to analyze handwriting samples and generate preliminary
+                screening results that help teachers, parents, and support staff identify learners who may
+                need further evaluation.
+            </p>
+
+            <div class="cta-area">
+                <a href="{{ url_for('login') }}" class="btn btn-primary">
+                    Start Screening
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="#how-it-works" class="btn btn-secondary">
+                    Learn More
+                    <i class="fa-solid fa-circle-info"></i>
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>CNN</strong>
+                    <span>Deep learning model for image analysis</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>Web</strong>
+                    <span>Responsive system for easy access</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>Reports</strong>
+                    <span>Screening results and recommendations</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="hero-image" aria-label="GRAPHISCAN screening preview">
+            <div class="scan-card">
+                <div class="scan-card-header">
+                    <div class="scan-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="scan-status">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Online
+                    </div>
+                </div>
+
+                <div class="paper-preview">
+                    <div class="paper-title">
+                        <strong>Handwriting Sample</strong>
+                        <small>Scanning...</small>
+                    </div>
+
+                    <div class="line long"></div>
+                    <div class="line medium"></div>
+                    <div class="line short"></div>
+                    <div class="line long"></div>
+                    <div class="line tiny"></div>
+                    <div class="scan-line"></div>
+                </div>
+
+                <div class="result-chip">
+                    <div class="result-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <strong>AI Screening in Progress</strong>
+                        <small>Analyzing spacing, pattern, and handwriting structure...</small>
+                    </div>
+                </div>
+
+                <div class="confidence-card">
+                    <span>Model Confidence</span>
+                    <strong>78%</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section id="features" class="section">
+        <div class="section-heading">
+            <span class="section-badge">
+                <i class="fa-solid fa-layer-group"></i>
+                Core Features
+            </span>
+            <h2>Designed for teachers, parents, experts, and administrators.</h2>
+            <p>
+                GRAPHISCAN combines sample management, AI-assisted screening, validation, and reporting
+                into one clean web-based system.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                </div>
+                <h3>Handwriting Upload</h3>
+                <p>Teachers can upload student handwriting samples directly through the web system.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3>AI-Based Screening</h3>
+                <p>The CNN model analyzes handwriting images and generates a dysgraphia probability score.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <h3>Reports & Recommendations</h3>
+                <p>The system provides screening results, confidence scores, and basic intervention recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="section section-soft">
+        <div class="section-heading">
+            <span class="section-badge">
+                <i class="fa-solid fa-route"></i>
+                Process
+            </span>
+            <h2>How GRAPHISCAN works</h2>
+            <p>
+                The workflow is simple: upload a sample, let the system analyze it, then review the generated result.
+            </p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Upload Sample</h3>
+                <p>The teacher selects a student and uploads a handwriting image for screening.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Analyze Image</h3>
+                <p>The system preprocesses the image and sends it to the trained CNN model.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>View Result</h3>
+                <p>The user receives a classification, probability score, and recommendation.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section about-section">
+        <div class="about-box">
+            <div>
+                <span class="section-badge">
+                    <i class="fa-solid fa-circle-info"></i>
+                    About the Project
+                </span>
+                <h2>GRAPHISCAN supports early detection through handwriting image analysis.</h2>
+            </div>
+
+            <div>
+                <p>
+                    This capstone project aims to support early detection of possible dysgraphia through handwriting
+                    image analysis. It is not a replacement for professional diagnosis, but it can assist educators,
+                    parents, and support staff in identifying learners who may need further evaluation and intervention.
+                </p>
+
+                <div class="about-points">
+                    <div class="about-point">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Responsive web-based access for different user roles.</span>
+                    </div>
+                    <div class="about-point">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>AI-assisted analysis using handwriting image samples.</span>
+                    </div>
+                    <div class="about-point">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Designed to support, not replace, expert evaluation.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-box">
+            <div>
+                <h2>Ready to start screening?</h2>
+                <p>
+                    Login to access your dashboard or create an account to begin using GRAPHISCAN.
+                </p>
+            </div>
+
+            <div class="cta-area">
+                <a href="{{ url_for('login') }}" class="btn btn-secondary">
+                    Login
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">
+                    Register
+                    <i class="fa-solid fa-user-plus"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <p>© 2026 GRAPHISCAN. Davao del Norte State College - Institute of Computing.</p>
+    </footer>
+
+</body>
+</html>
