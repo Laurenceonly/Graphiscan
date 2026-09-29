@@ -3,7 +3,6 @@
     <div class="compact-page screening-results-page">
       <div class="page-header compact-header">
         <div>
-          <span>Screening Records</span>
           <h1>Screening Results</h1>
           <p>View handwriting screening results and validation status.</p>
         </div>
@@ -29,8 +28,8 @@
       <div class="panel-card compact-panel">
         <div class="table-header compact-table-header">
           <div>
-            <h2>Screening Results</h2>
-            <p>{{ filteredResults.length }} of {{ results.length }} record/s shown.</p>
+            <h2>Records</h2>
+            <p>Showing {{ filteredResults.length }} of {{ results.length }}</p>
           </div>
 
           <div class="table-toolbar">
@@ -68,14 +67,10 @@
           <table>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Student</th>
-                <th>Grade Level</th>
                 <th>Teacher</th>
-                <th>Parent</th>
                 <th>Classification</th>
-                <th>Probability</th>
-                <th>Confidence</th>
+                <th>Predicted-class score</th>
                 <th>Validation</th>
                 <th>Date</th>
                 <th>Action</th>
@@ -83,9 +78,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(result, index) in filteredResults" :key="result.result_id">
-                <td>{{ index + 1 }}</td>
-
+              <tr v-for="result in filteredResults" :key="result.result_id">
                 <td>
                   <div class="user-cell">
                     <div class="user-avatar">
@@ -94,14 +87,12 @@
 
                     <div>
                       <strong>{{ result.student_name || 'Unknown Student' }}</strong>
-                      <small class="table-subtext">Screening record</small>
+                      <small class="table-subtext">{{ result.grade_level || 'Grade not set' }}</small>
                     </div>
                   </div>
                 </td>
 
-                <td>{{ result.grade_level || 'N/A' }}</td>
                 <td>{{ result.teacher_name || 'N/A' }}</td>
-                <td>{{ result.parent_name || 'Not assigned' }}</td>
 
                 <td>
                   <span class="result-badge" :class="classificationClass(result.classification)">
@@ -109,17 +100,9 @@
                   </span>
                 </td>
 
-                <td>{{ formatProbability(result.dysgraphia_probability) }}</td>
-
                 <td>
                   <div class="confidence-cell">
                     <strong>{{ formatPercent(result.confidence_score) }}</strong>
-                    <div class="mini-progress">
-                      <div
-                        class="mini-progress-fill"
-                        :style="{ width: `${normalizePercent(result.confidence_score)}%` }"
-                      ></div>
-                    </div>
                   </div>
                 </td>
 
@@ -287,7 +270,7 @@ async function loadResults() {
       error.value = response.data.message || 'Unable to load screening results.'
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to connect to Flask API.'
+    error.value = err.response?.data?.message || 'Unable to connect. Check your connection and try again.'
     console.error(err)
   } finally {
     loading.value = false
@@ -351,14 +334,6 @@ function normalizePercent(value) {
 }
 
 function formatPercent(value) {
-  if (value === null || value === undefined || value === '') {
-    return 'N/A'
-  }
-
-  return `${normalizePercent(value)}%`
-}
-
-function formatProbability(value) {
   if (value === null || value === undefined || value === '') {
     return 'N/A'
   }

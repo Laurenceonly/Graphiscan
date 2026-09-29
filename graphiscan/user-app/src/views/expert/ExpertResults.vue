@@ -5,7 +5,7 @@
         <div class="expert-results-hero-copy">
           <span>Expert Review</span>
           <h2>Validation Queue</h2>
-          <p>Review AI screening records, confidence scores, probability, and validation status.</p>
+          <p>Review screening records, model scores, and validation status.</p>
         </div>
 
         <div class="expert-results-hero-icon">
@@ -53,7 +53,7 @@
           <div>
             <span>Review Directory</span>
             <h3>Screening Records</h3>
-            <p>{{ filteredResults.length }} of {{ results.length }} record/s shown.</p>
+            <p>Showing {{ filteredResults.length }} of {{ results.length }}</p>
           </div>
 
           <button
@@ -129,19 +129,14 @@
               </span>
             </div>
 
-            <div class="expert-result-details expert-result-details-clean">
+            <div class="expert-result-details expert-result-details-clean screening-result-meta">
               <div>
-                <span>Probability</span>
-                <strong>{{ formatPercent(result.dysgraphia_probability) }}</strong>
-              </div>
-
-              <div>
-                <span>Confidence</span>
+                <span>Model score</span>
                 <strong>{{ formatPercent(result.confidence_score) }}</strong>
               </div>
 
               <div>
-                <span>Date Generated</span>
+                <span>Screened on</span>
                 <strong>{{ result.date_generated || 'N/A' }}</strong>
               </div>
             </div>
@@ -265,7 +260,6 @@ const filteredResults = computed(() => {
         String(result.teacher_name || '').toLowerCase().includes(keyword) ||
         String(result.classification || '').toLowerCase().includes(keyword) ||
         String(result.validation_status || '').toLowerCase().includes(keyword) ||
-        String(result.dysgraphia_probability || '').toLowerCase().includes(keyword) ||
         String(result.confidence_score || '').toLowerCase().includes(keyword) ||
         String(result.date_generated || '').toLowerCase().includes(keyword)
 
@@ -298,11 +292,11 @@ async function loadResults() {
     }
   } catch (err) {
     if (err.code === 'ECONNABORTED') {
-      error.value = 'Loading took too long. Please check if Flask is running, then refresh.'
+      error.value = 'Loading took too long. Check your connection and try again.'
     } else if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load validation queue. Please refresh or log in again.'
+      error.value = 'Unable to load validation queue. Check your connection and try again.'
     }
 
     console.error(err)

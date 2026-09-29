@@ -1,10 +1,10 @@
-import os
+import json
 import random
 import shutil
 from pathlib import Path
 
 RAW_DATASET_DIR = Path("raw_dataset")
-OUTPUT_DATASET_DIR = Path("dataset")
+OUTPUT_DATASET_DIR = Path("dataset_image_split")
 
 CLASS_NAMES = [
     "normal",
@@ -27,7 +27,10 @@ def is_image_file(file_path):
 
 def prepare_output_folders():
     if OUTPUT_DATASET_DIR.exists():
-        shutil.rmtree(OUTPUT_DATASET_DIR)
+        raise FileExistsError(
+            f"{OUTPUT_DATASET_DIR} already exists. Choose a new output directory "
+            "or archive the existing split before creating another one."
+        )
 
     for split in ["train", "validation", "test"]:
         for class_name in CLASS_NAMES:
@@ -38,9 +41,8 @@ def prepare_output_folders():
 def copy_files(files, split_name, class_name):
     target_folder = OUTPUT_DATASET_DIR / split_name / class_name
 
-    for index, file_path in enumerate(files, start=1):
-        new_name = f"{class_name}_{index:04d}{file_path.suffix.lower()}"
-        shutil.copy2(file_path, target_folder / new_name)
+    for file_path in files:
+        shutil.copy2(file_path, target_folder / file_path.name)
 
 
 def split_class_images(class_name):
@@ -49,11 +51,11 @@ def split_class_images(class_name):
     if not source_folder.exists():
         raise FileNotFoundError(f"Missing folder: {source_folder}")
 
-    image_files = [
+    image_files = sorted([
         file_path
         for file_path in source_folder.iterdir()
         if file_path.is_file() and is_image_file(file_path)
-    ]
+    ])
 
     random.shuffle(image_files)
 
@@ -100,7 +102,17 @@ def main():
         print(f"  validation: {result['validation']}")
         print(f"  test: {result['test']}\n")
 
-    print("Final folder created: dataset/")
+    summary = {
+        "split_level": "image",
+        "writer_separation_verified": False,
+        "random_seed": RANDOM_SEED,
+        "classes": results,
+    }
+    (OUTPUT_DATASET_DIR / "split_summary.json").write_text(
+        json.dumps(summary, indent=2), encoding="utf-8"
+    )
+    print(f"Final folder created: {OUTPUT_DATASET_DIR}/")
+    print("Writer separation could not be verified from the supplied images.")
 
 
 if __name__ == "__main__":

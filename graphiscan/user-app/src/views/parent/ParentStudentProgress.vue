@@ -11,11 +11,11 @@
           <div>
             <span>Child Progress</span>
             <h2>{{ student.fullname || 'Child Progress' }}</h2>
-            Track screening history, high potential probability trend and expert validation.
+            Review screening history and expert decisions.
           </div>
 
           <div class="progress-hero-icon">
-            <TrendingUp :size="28" :stroke-width="1.9" />
+            <FileText :size="28" :stroke-width="1.9" />
           </div>
         </section>
 
@@ -41,10 +41,6 @@
               <strong>{{ student.teacher_name || 'N/A' }}</strong>
             </div>
 
-            <div>
-              <small>Total Screenings</small>
-              <strong>{{ summary.total_screenings || progress.length || 0 }}</strong>
-            </div>
           </div>
         </section>
 
@@ -55,44 +51,8 @@
           </div>
 
           <div class="progress-summary-card">
-            <small>Latest High Potential Probability</small>
-            <strong>{{ formatPercent(latestResult?.dysgraphia_probability) }}</strong>
-          </div>
-
-          <div class="progress-summary-card">
-            <small>Progress Trend</small>
-            <strong>{{ summary.trend_label || 'Not enough data yet' }}</strong>
-          </div>
-        </section>
-
-        <section class="progress-chart-card">
-          <div class="progress-section-head">
-            <span>Progress Graph</span>
-            <h3>High Potential Probability Over Time</h3>
-          </div>
-
-          <div v-if="progress.length >= 1" class="progress-chart-wrap">
-            <Line :data="chartData" :options="chartOptions" />
-          </div>
-
-          <div v-else class="mobile-empty-state compact">
-            <div>
-              <LineChart :size="28" :stroke-width="1.8" />
-            </div>
-
-            <h3>No graph data yet</h3>
-            <p>Screening records will appear here once available.</p>
-          </div>
-        </section>
-
-        <section class="progress-interpretation-card">
-          <div class="progress-interpretation-icon">
-            <BrainCircuit :size="22" :stroke-width="1.9" />
-          </div>
-
-          <div>
-            <strong>Progress Interpretation</strong>
-            <p>{{ progressInterpretation }}</p>
+            <small>Assessments</small>
+            <strong>{{ summary.total_screenings || progress.length || 0 }}</strong>
           </div>
         </section>
 
@@ -124,7 +84,7 @@
 
                 <div class="timeline-metrics">
                   <div>
-                    <small>Probability</small>
+                    <small>High Potential model score</small>
                     <strong>{{ formatPercent(item.dysgraphia_probability) }}</strong>
                   </div>
 
@@ -192,34 +152,11 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import {
   ArrowLeft,
-  BrainCircuit,
   FileQuestion,
-  LineChart,
-  TrendingUp
+  FileText
 } from 'lucide-vue-next'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
 import UserLayout from '../../layouts/UserLayout.vue'
 import userApi from '../../api/userApi'
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  Filler
-)
 
 const route = useRoute()
 
@@ -241,131 +178,6 @@ const latestResult = computed(() => {
   return [...progress.value].sort((a, b) => {
     return getDateValue(b.date_generated) - getDateValue(a.date_generated)
   })[0]
-})
-
-const sortedProgress = computed(() => {
-  return [...progress.value].sort((a, b) => {
-    return getDateValue(a.date_generated) - getDateValue(b.date_generated)
-  })
-})
-
-const chartData = computed(() => {
-  return {
-    labels: sortedProgress.value.map((item, index) => {
-      return item.date_generated || `Screening ${index + 1}`
-    }),
-    datasets: [
-      {
-        label: 'High Potential Probability',
-        data: sortedProgress.value.map((item) => normalizePercent(item.dysgraphia_probability)),
-        borderColor: '#2f80b9',
-        backgroundColor: 'rgba(47, 128, 185, 0.12)',
-        pointBackgroundColor: '#2f80b9',
-        pointBorderColor: '#ffffff',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 4,
-        borderWidth: 3,
-        tension: 0.25,
-        fill: true
-      }
-    ]
-  }
-})
-
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: false,
-  interaction: {
-    mode: 'index',
-    intersect: false
-  },
-  plugins: {
-    legend: {
-      position: 'bottom',
-      labels: {
-        usePointStyle: true,
-        boxWidth: 8,
-        boxHeight: 8,
-        padding: 18,
-        color: '#475467',
-        font: {
-          family: 'Inter',
-          size: 12,
-          weight: '500'
-        }
-      }
-    },
-    tooltip: {
-      backgroundColor: '#1f2a37',
-      titleColor: '#ffffff',
-      bodyColor: '#ffffff',
-      padding: 12,
-      cornerRadius: 12,
-      displayColors: true,
-      callbacks: {
-        label(context) {
-          return `${context.dataset.label}: ${context.raw}%`
-        }
-      }
-    }
-  },
-  scales: {
-    x: {
-      grid: {
-        display: false
-      },
-      ticks: {
-        color: '#667085',
-        maxRotation: 0,
-        autoSkip: true,
-        font: {
-          family: 'Inter',
-          size: 11
-        }
-      }
-    },
-    y: {
-      beginAtZero: true,
-      suggestedMax: 100,
-      grid: {
-        color: 'rgba(102, 112, 133, 0.12)'
-      },
-      ticks: {
-        color: '#667085',
-        callback(value) {
-          return `${value}%`
-        },
-        font: {
-          family: 'Inter',
-          size: 11
-        }
-      }
-    }
-  }
-}
-
-const progressInterpretation = computed(() => {
-  if (!progress.value.length) {
-    return 'No screening result has been recorded yet. Screening records will appear here once available.'
-  }
-
-  if (progress.value.length === 1) {
-    return 'Only one screening result is available. More screenings are needed to identify a clear progress trend.'
-  }
-
-  const change = normalizeNumber(summary.value.probability_change)
-
-  if (change < 0) {
-    return `High potential probability decreased by ${Math.abs(change)} points from the first to the latest screening. Continue monitoring and follow expert guidance.`
-  }
-
-  if (change > 0) {
-    return `High potential probability increased by ${change} points from the first to the latest screening. Follow-up monitoring may be needed.`
-  }
-
-  return 'High potential probability shows no major change across screenings. Continue regular monitoring.'
 })
 
 onMounted(() => {
@@ -411,11 +223,11 @@ async function loadProgress() {
     }
   } catch (err) {
     if (err.code === 'ECONNABORTED') {
-      error.value = 'Loading took too long. Please check if Flask is running, then refresh.'
+      error.value = 'Loading took too long. Check your connection and try again.'
     } else if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load child progress. Please refresh or log in again.'
+      error.value = 'Unable to load child progress. Check your connection and try again.'
     }
 
     console.error(err)
@@ -438,21 +250,6 @@ function normalizePercent(value) {
 
   if (numberValue > 0 && numberValue <= 1) {
     return Number((numberValue * 100).toFixed(2))
-  }
-
-  return Number(numberValue.toFixed(2))
-}
-
-function normalizeNumber(value) {
-  if (value === null || value === undefined || value === '') {
-    return 0
-  }
-
-  const cleanedValue = String(value).replace('%', '').trim()
-  const numberValue = Number(cleanedValue)
-
-  if (Number.isNaN(numberValue)) {
-    return 0
   }
 
   return Number(numberValue.toFixed(2))

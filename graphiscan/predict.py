@@ -134,25 +134,9 @@ def classify_result(high_probability):
     if high_probability >= 0.75:
         classification = "High Potential"
         confidence_score = high_percentage
-        recommendation = (
-            "The handwriting sample shows possible indicators that need expert review. "
-            "Continue monitoring the learner and wait for validation before using the result for follow-up action."
-        )
-        analysis_summary = (
-            "The AI screening result indicates a high potential for dysgraphia-related handwriting difficulty. "
-            "This result is not a clinical diagnosis and should be reviewed by an expert."
-        )
     else:
         classification = "Normal"
         confidence_score = normal_percentage
-        recommendation = (
-            "The handwriting sample does not show strong indicators of dysgraphia in this screening. "
-            "Continue regular classroom monitoring and provide writing practice when needed."
-        )
-        analysis_summary = (
-            "The AI screening result indicates normal handwriting patterns based on the uploaded sample. "
-            "This result should still be interpreted with teacher observation and expert judgment when necessary."
-        )
 
     return {
         "classification": classification,
@@ -160,8 +144,7 @@ def classify_result(high_probability):
         "high_potential_probability": high_percentage,
         "normal_probability": normal_percentage,
         "confidence_score": confidence_score,
-        "recommendation": recommendation,
-        "analysis_summary": analysis_summary
+        "analysis_summary": ""
     }
 
 

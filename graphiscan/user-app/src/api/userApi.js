@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const API_ORIGIN = 'http://192.168.1.43:5000'
+export const API_ORIGIN = (import.meta.env.VITE_API_ORIGIN || 'http://localhost:5000').replace(/\/$/, '')
 
 const userApi = axios.create({
   baseURL: `${API_ORIGIN}/api/user`

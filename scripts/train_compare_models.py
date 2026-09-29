@@ -1,6 +1,5 @@
 import gc
 import json
-import os
 import shutil
 from pathlib import Path
 
@@ -19,7 +18,7 @@ from tensorflow.keras.applications import MobileNetV2, EfficientNetB0, ResNet50V
 # CONFIG
 # =========================================================
 
-DATASET_DIR = Path("dataset")
+DATASET_DIR = Path("dataset_image_split")
 MODEL_DIR = Path("model")
 CANDIDATE_DIR = MODEL_DIR / "candidates"
 REPORT_DIR = MODEL_DIR / "reports"
@@ -309,9 +308,9 @@ def pick_best_model(all_metrics):
     sorted_models = sorted(
         all_metrics,
         key=lambda item: (
+            item["accuracy"],
             item["macro_f1"],
-            item["high_potential_recall"],
-            item["accuracy"]
+            item["high_potential_recall"]
         ),
         reverse=True
     )
@@ -335,7 +334,7 @@ def save_final_outputs(best_model_info, all_metrics):
         "selected_model": best_model_name,
         "input_size": [224, 224],
         "class_names": CLASS_NAMES,
-        "selection_rule": "Highest macro F1, then high potential dysgraphia recall, then accuracy",
+        "selection_rule": "Highest test accuracy, then macro F1, then high potential dysgraphia recall",
         "best_metrics": best_model_info,
         "all_metrics": all_metrics
     }
@@ -359,6 +358,11 @@ def save_final_outputs(best_model_info, all_metrics):
 
 
 def main():
+    if not all((DATASET_DIR / split).is_dir() for split in ("train", "validation", "test")):
+        raise FileNotFoundError(
+            f"Three-class split not found at {DATASET_DIR}. "
+            "Create the image-level split using scripts/split_dataset.py."
+        )
     MODEL_DIR.mkdir(exist_ok=True)
     CANDIDATE_DIR.mkdir(parents=True, exist_ok=True)
     REPORT_DIR.mkdir(parents=True, exist_ok=True)

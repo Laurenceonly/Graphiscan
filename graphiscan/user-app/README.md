@@ -1,5 +1,3 @@
-# Vue 3 + Vite
+# GraphiScan user app
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+Vue 3 mobile interface for teachers, parents, experts, and guests, packaged for Android with Capacitor. Start the Flask backend from `graphiscan/`, then run `npm install` and `npm run dev` in this directory. Set the backend address in `src/api/userApi.js` for the host or device in use. The Android project remains in `android/`.

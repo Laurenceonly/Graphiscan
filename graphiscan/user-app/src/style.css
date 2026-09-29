@@ -16357,9 +16357,6 @@ textarea {
   Clean white + soft blue premium mobile interface
 ========================================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-
 /* =========================================================
   01. DESIGN TOKENS
 ========================================================= */
@@ -33477,4 +33474,9 @@ textarea {
   .image-action-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Result lists show one model score and the screening date. */
+.screening-result-meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }

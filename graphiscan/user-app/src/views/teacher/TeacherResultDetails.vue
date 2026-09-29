@@ -23,7 +23,7 @@
         <section class="result-status-card">
           <div class="result-status-head">
             <div>
-              <span>AI Screening Output</span>
+              <span>Model Screening Result</span>
               <h3>{{ result.classification || 'No classification available' }}</h3>
             </div>
 
@@ -37,12 +37,12 @@
 
           <div class="result-score-grid">
             <div>
-              <small>High Potential Probability</small>
+              <small>High Potential model score</small>
               <strong>{{ formatPercent(result.dysgraphia_probability) }}</strong>
             </div>
 
             <div>
-              <small>Confidence Score</small>
+              <small>Predicted-class score</small>
               <strong>{{ formatPercent(result.confidence_score) }}</strong>
             </div>
           </div>
@@ -124,28 +124,6 @@
             <h3>No image available</h3>
             <p>The handwriting sample image was not found.</p>
           </div>
-        </section>
-
-        <section class="result-info-card">
-          <div class="result-section-head">
-            <span>AI Recommendation</span>
-            <h3>System Suggested Action</h3>
-          </div>
-
-          <p class="result-report-text">
-            {{ result.recommendation || 'No AI recommendation available.' }}
-          </p>
-        </section>
-
-        <section class="result-info-card">
-          <div class="result-section-head">
-            <span>Analysis</span>
-            <h3>Analysis Summary</h3>
-          </div>
-
-          <p class="result-report-text">
-            {{ result.analysis_summary || 'No analysis summary available.' }}
-          </p>
         </section>
 
         <section class="result-validation-card">
@@ -235,7 +213,7 @@ async function loadResultDetails() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load result details. Please refresh or log in again.'
+      error.value = 'Unable to load result details. Check your connection and try again.'
     }
 
     console.error(err)

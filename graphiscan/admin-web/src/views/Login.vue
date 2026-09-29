@@ -3,8 +3,6 @@
     <section class="login-shell">
       <div class="login-left">
         <div class="login-brand-row">
-          <div class="login-brand-mark">G</div>
-
           <div>
             <h1>GRAPHI<span>SCAN</span></h1>
             <p>Admin Web Panel</p>
@@ -92,14 +90,12 @@
           <div class="hero-bg-shape one"></div>
           <div class="hero-bg-shape two"></div>
 
-          <div class="hero-logo">G</div>
-
           <div class="hero-content">
             <span>GRAPHISCAN</span>
-            <h2>Dysgraphia Detection and Management System</h2>
+            <h2>Handwriting Screening and Progress</h2>
             <p>
               A centralized admin workspace for user management, student records,
-              AI screening results, expert validation, and audit monitoring.
+              screening records, expert validation, and audit activity.
             </p>
           </div>
 
@@ -181,7 +177,7 @@ async function loginAdmin() {
     if (err.response && err.response.data && err.response.data.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Failed to connect to Flask API.'
+      error.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)

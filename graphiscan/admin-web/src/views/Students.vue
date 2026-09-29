@@ -3,7 +3,6 @@
     <div class="compact-page student-management-page">
       <div class="page-header compact-header">
         <div>
-          <span>Student Records</span>
           <h1>Students</h1>
           <p>Manage student records, assigned teachers, and linked parents.</p>
         </div>
@@ -29,8 +28,8 @@
       <div class="panel-card compact-panel">
         <div class="table-header compact-table-header">
           <div>
-            <h2>System Students</h2>
-            <p>All student records registered in GRAPHISCAN.</p>
+            <h2>Student records</h2>
+            <p>View assignments and linked guardians.</p>
           </div>
 
           <div class="user-toolbar">
@@ -66,24 +65,18 @@
           <table>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Student</th>
-                <th>Age</th>
-                <th>Grade Level</th>
                 <th>Teacher</th>
                 <th>Parent / Guardian</th>
-                <th>Date Added</th>
                 <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
               <tr
-                v-for="(student, index) in filteredStudents"
+                v-for="student in filteredStudents"
                 :key="student.student_id"
               >
-                <td>{{ index + 1 }}</td>
-
                 <td>
                   <div class="user-cell">
                     <div class="user-avatar">
@@ -92,12 +85,13 @@
 
                     <div>
                       <strong>{{ student.fullname || 'Unknown Student' }}</strong>
+                      <small class="table-subtext">
+                        {{ student.grade_level || 'Grade not set' }}
+                        <template v-if="student.age"> · Age {{ student.age }}</template>
+                      </small>
                     </div>
                   </div>
                 </td>
-
-                <td>{{ student.age || 'N/A' }}</td>
-                <td>{{ student.grade_level || 'N/A' }}</td>
 
                 <td>
                   <div class="user-cell compact-user-cell">
@@ -134,8 +128,6 @@
                     </button>
                   </div>
                 </td>
-
-                <td>{{ student.created_at || 'N/A' }}</td>
 
                 <td>
                   <div class="table-actions">
@@ -540,7 +532,7 @@ async function loadPageData(clearMessages = true) {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Failed to connect to Flask API.'
+      error.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -719,7 +711,7 @@ async function createStudent() {
     if (err.response?.data?.message) {
       addError.value = err.response.data.message
     } else {
-      addError.value = 'Failed to connect to Flask API.'
+      addError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -780,7 +772,7 @@ async function updateStudentGuardian() {
     if (err.response?.data?.message) {
       guardianError.value = err.response.data.message
     } else {
-      guardianError.value = 'Failed to connect to Flask API.'
+      guardianError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -853,7 +845,7 @@ async function deleteStudentPermanently() {
     if (err.response?.data?.message) {
       deleteError.value = err.response.data.message
     } else {
-      deleteError.value = 'Failed to connect to Flask API.'
+      deleteError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)

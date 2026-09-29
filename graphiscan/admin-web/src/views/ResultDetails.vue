@@ -5,7 +5,7 @@
         <div>
           <span>Screening Report</span>
           <h1>Result Details</h1>
-          <p>Review the AI output, handwriting sample, student context, and expert validation.</p>
+          <p>Review the screening result, handwriting sample, and expert validation.</p>
         </div>
 
         <RouterLink class="small-action-btn" to="/admin/results">
@@ -21,14 +21,9 @@
         <section class="panel-card result-overview-card">
           <div class="result-overview-head">
             <div>
-              <span>AI Screening Output</span>
+              <span>Model Screening Result</span>
               <h2>{{ result.classification || 'No classification' }}</h2>
-              <p>Generated from the submitted handwriting sample.</p>
             </div>
-
-            <span class="result-badge" :class="classificationClass(result.classification)">
-              {{ result.classification || 'N/A' }}
-            </span>
           </div>
 
           <div class="result-score-grid">
@@ -37,7 +32,7 @@
                 <Percent :size="18" :stroke-width="1.8" />
               </div>
 
-              <span>Dysgraphia Probability</span>
+              <span>High Potential model score</span>
               <strong>{{ formatPercent(result.dysgraphia_probability) }}</strong>
 
               <div class="result-score-track">
@@ -53,7 +48,7 @@
                 <Gauge :size="18" :stroke-width="1.8" />
               </div>
 
-              <span>Confidence Score</span>
+              <span>Predicted-class score</span>
               <strong>{{ formatPercent(result.confidence_score) }}</strong>
 
               <div class="result-score-track">
@@ -74,25 +69,8 @@
             </div>
           </div>
 
-          <div class="result-note-grid">
-            <div class="result-note-card">
-              <div class="result-note-head">
-                <BrainCircuit :size="18" :stroke-width="1.8" />
-                <h3>AI Recommendation</h3>
-              </div>
+          <p>Model scores are screening outputs, not a diagnosis.</p>
 
-              <p>{{ result.recommendation || 'No AI recommendation available.' }}</p>
-            </div>
-
-            <div class="result-note-card">
-              <div class="result-note-head">
-                <FileText :size="18" :stroke-width="1.8" />
-                <h3>Analysis Summary</h3>
-              </div>
-
-              <p>{{ result.analysis_summary || 'No analysis summary available.' }}</p>
-            </div>
-          </div>
         </section>
 
         <section class="result-content-grid">
@@ -101,7 +79,7 @@
               <div>
                 <span>Handwriting Sample</span>
                 <h2>Uploaded Image</h2>
-                <p>Image used by the system for AI screening.</p>
+                <p>Image submitted for this screening.</p>
               </div>
             </div>
 
@@ -154,10 +132,6 @@
                 <strong>{{ result.parent_name || 'Not assigned' }}</strong>
               </div>
 
-              <div class="wide-info">
-                <span>Generated</span>
-                <strong>{{ result.date_generated || 'N/A' }}</strong>
-              </div>
             </div>
 
             <RouterLink
@@ -184,11 +158,6 @@
           </div>
 
           <div class="result-info-list expert-review-list">
-            <div>
-              <span>Status</span>
-              <strong>{{ result.validation_status || 'Pending' }}</strong>
-            </div>
-
             <div>
               <span>Expert / SPED Coordinator</span>
               <strong>{{ result.expert_name || 'Not yet validated' }}</strong>
@@ -235,9 +204,7 @@ import adminApi from '../api/adminApi'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import {
   ArrowLeft,
-  BrainCircuit,
   CalendarDays,
-  FileText,
   Gauge,
   ImageOff,
   Percent,
@@ -277,7 +244,7 @@ async function loadResultDetails() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Failed to connect to Flask API.'
+      error.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -311,20 +278,6 @@ function formatPercent(value) {
   }
 
   return `${normalizePercent(value)}%`
-}
-
-function classificationClass(classification) {
-  const text = String(classification || '').trim().toLowerCase()
-
-  if (text.includes('high potential') || text.includes('potential dysgraphia')) {
-    return 'danger'
-  }
-
-  if (text.includes('normal')) {
-    return 'success'
-  }
-
-  return 'secondary'
 }
 
 function validationClass(status) {

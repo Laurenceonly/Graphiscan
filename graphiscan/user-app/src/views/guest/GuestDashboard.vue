@@ -44,7 +44,7 @@
             <span>Preview</span>
             <h3>Screening Workflow</h3>
             <p>
-              Learn how handwriting samples are submitted for AI screening.
+              Learn how handwriting samples are submitted for screening.
             </p>
           </div>
         </RouterLink>

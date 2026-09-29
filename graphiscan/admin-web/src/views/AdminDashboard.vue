@@ -1,11 +1,10 @@
 <template>
   <AdminLayout title="Admin Dashboard">
     <div class="dashboard-page modern-admin-dashboard">
-      <section class="dash-head modern-dashboard-hero">
+      <section class="dashboard-toolbar">
         <div>
-          <span class="dash-eyebrow">Admin Overview</span>
-          <h1>GRAPHISCAN Analytics</h1>
-          <p>Monitor users, students, screenings, validations, and progress indicators.</p>
+          <h1>Screening overview</h1>
+          <p>Current records and expert review activity.</p>
         </div>
 
         <button
@@ -23,50 +22,42 @@
 
       <section class="dashboard-highlight-grid">
         <RouterLink class="dashboard-highlight-card primary" to="/admin/results">
+          <div class="highlight-icon">
+            <FileText :size="20" :stroke-width="1.9" />
+          </div>
           <div>
             <span>Total Screenings</span>
             <strong>{{ displayNumber(totalResults) }}</strong>
-            <p>{{ displayNumber(totalSamples) }} uploaded samples</p>
-          </div>
-
-          <div class="highlight-icon">
-            <FileText :size="24" :stroke-width="1.9" />
           </div>
         </RouterLink>
 
         <RouterLink class="dashboard-highlight-card" to="/admin/students">
+          <div class="highlight-icon">
+            <GraduationCap :size="20" :stroke-width="1.9" />
+          </div>
           <div>
             <span>Students</span>
             <strong>{{ displayNumber(totalStudents) }}</strong>
-            <p>{{ displayNumber(progressStats.screened) }} with screening records</p>
-          </div>
-
-          <div class="highlight-icon">
-            <GraduationCap :size="24" :stroke-width="1.9" />
           </div>
         </RouterLink>
 
         <RouterLink class="dashboard-highlight-card" to="/admin/users">
+          <div class="highlight-icon">
+            <Users :size="20" :stroke-width="1.9" />
+          </div>
           <div>
             <span>Users</span>
             <strong>{{ displayNumber(totalUsers) }}</strong>
-            <p>{{ displayNumber(userRoleStats.active) }} active accounts</p>
-          </div>
-
-          <div class="highlight-icon">
-            <Users :size="24" :stroke-width="1.9" />
           </div>
         </RouterLink>
 
         <RouterLink class="dashboard-highlight-card danger" to="/admin/progress">
+          <div class="highlight-icon">
+            <AlertTriangle :size="20" :stroke-width="1.9" />
+          </div>
           <div>
             <span>Follow-ups</span>
             <strong>{{ displayNumber(progressStats.followUp) }}</strong>
-            <p>Students needing support</p>
-          </div>
-
-          <div class="highlight-icon">
-            <AlertTriangle :size="24" :stroke-width="1.9" />
           </div>
         </RouterLink>
       </section>
@@ -75,7 +66,6 @@
         <section class="clean-panel">
           <div class="clean-panel-head split-head">
             <div>
-              <span>Validation</span>
               <h2>Review Status</h2>
             </div>
 
@@ -113,7 +103,6 @@
         <section class="clean-panel">
           <div class="clean-panel-head split-head">
             <div>
-              <span>Screening Classification</span>
               <h2>Result Breakdown</h2>
             </div>
 
@@ -142,87 +131,7 @@
                 <p>High Potential</p>
                 <strong>{{ displayNumber(classificationStats.highPotential) }}</strong>
               </div>
-
-              <div class="average-probability-card">
-                <p>Average Probability</p>
-                <strong>{{ averageProbability }}</strong>
-              </div>
             </div>
-          </div>
-        </section>
-      </section>
-
-      <section class="dashboard-visual-grid">
-        <section class="clean-panel">
-          <div class="clean-panel-head split-head">
-            <div>
-              <span>Users</span>
-              <h2>Role Distribution</h2>
-            </div>
-
-            <RouterLink class="mini-view-link" to="/admin/users">
-              Manage users
-            </RouterLink>
-          </div>
-
-          <div class="role-pill-grid">
-            <RouterLink
-              v-for="item in roleCards"
-              :key="item.label"
-              class="role-pill-card"
-              to="/admin/users"
-            >
-              <div class="role-pill-icon">
-                <component :is="item.icon" :size="18" :stroke-width="1.9" />
-              </div>
-
-              <div>
-                <span>{{ item.label }}</span>
-                <strong>{{ displayNumber(item.value) }}</strong>
-              </div>
-            </RouterLink>
-          </div>
-        </section>
-
-        <section class="clean-panel">
-          <div class="clean-panel-head split-head">
-            <div>
-              <span>Progress</span>
-              <h2>Student Monitoring</h2>
-            </div>
-
-            <RouterLink class="mini-view-link" to="/admin/progress">
-              View progress
-            </RouterLink>
-          </div>
-
-          <div class="progress-summary-list">
-            <RouterLink class="progress-summary-row" to="/admin/progress">
-              <div>
-                <strong>With Screenings</strong>
-                <small>Students with progress records</small>
-              </div>
-
-              <span>{{ displayNumber(progressStats.screened) }}</span>
-            </RouterLink>
-
-            <RouterLink class="progress-summary-row success" to="/admin/progress">
-              <div>
-                <strong>Improving</strong>
-                <small>Lower latest probability</small>
-              </div>
-
-              <span>{{ displayNumber(progressStats.improving) }}</span>
-            </RouterLink>
-
-            <RouterLink class="progress-summary-row danger" to="/admin/progress">
-              <div>
-                <strong>Follow-up Needed</strong>
-                <small>Marked for support</small>
-              </div>
-
-              <span>{{ displayNumber(progressStats.followUp) }}</span>
-            </RouterLink>
           </div>
         </section>
       </section>
@@ -230,7 +139,6 @@
       <section class="clean-panel">
         <div class="clean-panel-head split-head">
           <div>
-            <span>Activity</span>
             <h2>Recent Screenings</h2>
           </div>
 
@@ -248,11 +156,11 @@
           >
             <div>
               <strong>{{ result.student_name || result.fullname || 'Student Record' }}</strong>
-              <p>{{ result.classification || 'No classification' }}</p>
+              <p>{{ result.classification || 'No classification' }} · {{ result.date_generated || 'Date unavailable' }}</p>
             </div>
 
-            <span class="result-badge" :class="classificationClass(result.classification)">
-              {{ formatProbability(result.dysgraphia_probability) }}
+            <span class="result-badge" :class="validationClass(result.validation_status)">
+              {{ result.validation_status || 'Pending' }}
             </span>
           </RouterLink>
         </div>
@@ -272,12 +180,9 @@ import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   AlertTriangle,
-  CheckCircle2,
-  ClipboardCheck,
   FileText,
   GraduationCap,
   RefreshCcw,
-  UserRound,
   Users
 } from 'lucide-vue-next'
 import adminApi from '../api/adminApi'
@@ -286,7 +191,6 @@ import AdminLayout from '../layouts/AdminLayout.vue'
 const dashboard = ref({
   total_users: null,
   total_students: null,
-  total_samples: null,
   total_results: null,
   pending_validations: null,
   validated_validations: null,
@@ -308,10 +212,6 @@ const totalUsers = computed(() => {
 
 const totalStudents = computed(() => {
   return dashboard.value.total_students ?? students.value.length
-})
-
-const totalSamples = computed(() => {
-  return dashboard.value.total_samples ?? totalResults.value
 })
 
 const totalResults = computed(() => {
@@ -379,41 +279,6 @@ const validationBars = computed(() => {
   ]
 })
 
-const userRoleStats = computed(() => {
-  return {
-    teachers: users.value.filter((user) => normalizeText(user.role) === 'teacher').length,
-    parents: users.value.filter((user) => normalizeText(user.role) === 'parent').length,
-    experts: users.value.filter((user) => normalizeText(user.role) === 'expert').length,
-    admins: users.value.filter((user) => normalizeText(user.role) === 'admin').length,
-    active: users.value.filter((user) => isActiveUser(user)).length
-  }
-})
-
-const roleCards = computed(() => {
-  return [
-    {
-      label: 'Teachers',
-      value: userRoleStats.value.teachers,
-      icon: ClipboardCheck
-    },
-    {
-      label: 'Parents',
-      value: userRoleStats.value.parents,
-      icon: UserRound
-    },
-    {
-      label: 'Experts',
-      value: userRoleStats.value.experts,
-      icon: CheckCircle2
-    },
-    {
-      label: 'Admins',
-      value: userRoleStats.value.admins,
-      icon: Users
-    }
-  ]
-})
-
 const classificationStats = computed(() => {
   const stats = {
     normal: 0,
@@ -464,10 +329,6 @@ const classificationRingStyle = computed(() => {
 
 const progressStats = computed(() => {
   return {
-    screened: progressStudents.value.filter((student) => getTotalScreenings(student) > 0).length,
-    improving: progressStudents.value.filter((student) => {
-      return normalizeText(student.trend_label || student.progress_trend) === 'improving'
-    }).length,
     followUp: progressStudents.value.filter((student) => {
       return normalizeText(getFollowUpNeeded(student)) === 'yes'
     }).length
@@ -480,22 +341,6 @@ const recentResults = computed(() => {
       return new Date(b.date_generated || 0) - new Date(a.date_generated || 0)
     })
     .slice(0, 5)
-})
-
-const averageProbability = computed(() => {
-  const values = results.value
-    .map((result) => normalizePercent(result.dysgraphia_probability))
-    .filter((value) => value !== null)
-
-  if (!values.length) {
-    return 'N/A'
-  }
-
-  const total = values.reduce((sum, value) => {
-    return sum + value
-  }, 0)
-
-  return `${Number((total / values.length).toFixed(2))}%`
 })
 
 onMounted(() => {
@@ -521,13 +366,17 @@ async function loadDashboard() {
       adminApi.get('/students/progress')
     ])
 
+    if ([dashboardResponse, usersResponse, studentsResponse, resultsResponse, progressResponse]
+      .some((response) => response.status === 'rejected' || !response.value.data.success)) {
+      error.value = 'Some dashboard information could not be loaded. Refresh to try again.'
+    }
+
     if (dashboardResponse.status === 'fulfilled' && dashboardResponse.value.data.success) {
       const data = dashboardResponse.value.data.dashboard || dashboardResponse.value.data
 
       dashboard.value = {
         total_users: data.total_users ?? null,
         total_students: data.total_students ?? null,
-        total_samples: data.total_samples ?? null,
         total_results: data.total_results ?? null,
         pending_validations: data.pending_validations ?? null,
         validated_validations: data.validated_validations ?? null,
@@ -552,7 +401,7 @@ async function loadDashboard() {
       progressStudents.value = extractArray(progressResponse.value.data, ['students', 'progress', 'data'])
     }
   } catch (err) {
-    error.value = 'Unable to load dashboard analytics. Please refresh or log in again.'
+    error.value = 'Unable to load dashboard analytics. Check your connection and try again.'
     console.error(err)
   } finally {
     loading.value = false
@@ -585,24 +434,6 @@ function normalizeText(value) {
   return String(value || '').trim().toLowerCase()
 }
 
-function normalizePercent(value) {
-  if (value === null || value === undefined || value === '') {
-    return null
-  }
-
-  const numberValue = Number(value)
-
-  if (Number.isNaN(numberValue)) {
-    return null
-  }
-
-  if (numberValue > 0 && numberValue <= 1) {
-    return Number((numberValue * 100).toFixed(2))
-  }
-
-  return Number(numberValue.toFixed(2))
-}
-
 function getPercent(value, total) {
   if (!total) {
     return 0
@@ -611,42 +442,13 @@ function getPercent(value, total) {
   return Math.min(100, Number(((Number(value || 0) / total) * 100).toFixed(2)))
 }
 
-function formatProbability(value) {
-  const percent = normalizePercent(value)
+function validationClass(status) {
+  const text = normalizeText(status)
 
-  if (percent === null) {
-    return 'N/A'
-  }
-
-  return `${percent}%`
-}
-
-function classificationClass(classification) {
-  const text = normalizeText(classification)
-
-  if (text.includes('high potential') || text.includes('potential dysgraphia')) {
-    return 'danger'
-  }
-
-  if (text.includes('normal')) {
-    return 'success'
-  }
+  if (text === 'validated') return 'success'
+  if (text === 'flagged') return 'danger'
 
   return 'secondary'
-}
-
-function isActiveUser(user) {
-  const status = normalizeText(user.status || user.account_status)
-
-  if (!status) {
-    return true
-  }
-
-  return status === 'active' || status === 'approved'
-}
-
-function getTotalScreenings(student) {
-  return Number(student.total_screenings ?? student.screening_count ?? student.result_count ?? 0)
 }
 
 function getFollowUpNeeded(student) {

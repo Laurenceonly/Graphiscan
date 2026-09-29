@@ -605,7 +605,7 @@
         <section class="main-card">
             <div class="main-card-header">
                 <h2>Validate Screening Result</h2>
-                <p>Check the handwriting sample, AI screening output, and add expert validation remarks.</p>
+                <p>Review the handwriting sample and model result, then add expert validation remarks.</p>
             </div>
 
             <div class="result-layout">
@@ -653,7 +653,7 @@
                     <div class="section-block">
                         <h3 class="section-title">
                             <i class="fa-solid fa-brain"></i>
-                            AI Screening Output
+                            Model Screening Result
                         </h3>
 
                         <div class="output-grid">
@@ -662,11 +662,11 @@
                                 <span class="output-value">{{ result.classification }}</span>
                             </div>
                             <div class="output-item">
-                                <span class="output-label">Dysgraphia Probability</span>
+                                <span class="output-label">High Potential model score</span>
                                 <span class="output-value">{{ result.dysgraphia_probability }}</span>
                             </div>
                             <div class="output-item">
-                                <span class="output-label">Confidence Score</span>
+                                <span class="output-label">Predicted-class score</span>
                                 <span class="output-value">{{ result.confidence_score }}%</span>
                                 <div class="progress-track">
                                     <div class="progress-fill" data-confidence="{{ result.confidence_score }}"></div>

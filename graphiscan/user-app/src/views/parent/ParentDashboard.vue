@@ -5,7 +5,7 @@
         <div class="parent-hero-copy">
           <span>Parent Workspace</span>
           <h2>Hi, {{ firstName }}</h2>
-          <p>View linked child reports, validation status, and follow-up recommendations.</p>
+          <p>View linked child reports, validation status, and expert notes.</p>
         </div>
 
         <div class="parent-hero-icon">
@@ -230,7 +230,7 @@ async function loadDashboardData() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load parent dashboard. Please refresh or log in again.'
+      error.value = 'Unable to load parent dashboard. Check your connection and try again.'
     }
 
     console.error(err)

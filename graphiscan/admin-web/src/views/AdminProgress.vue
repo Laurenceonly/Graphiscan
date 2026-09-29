@@ -3,9 +3,8 @@
     <div class="compact-page admin-progress-page-clean">
       <div class="page-header compact-header">
         <div>
-          <span>Progress Monitoring</span>
           <h1>Student Progress</h1>
-          <p>Monitor student screening progress, probability trends, validation status, and follow-up needs.</p>
+          <p>Review assessment history, expert decisions, and follow-up needs.</p>
         </div>
       </div>
 
@@ -33,8 +32,8 @@
         <div class="panel-card compact-panel">
           <div class="table-header compact-table-header">
             <div>
-              <h2>Progress Records</h2>
-              <p>{{ filteredStudents.length }} of {{ students.length }} student/s shown.</p>
+              <h2>Students</h2>
+              <p>{{ filteredStudents.length }} of {{ students.length }} students shown.</p>
             </div>
 
             <div class="user-toolbar">
@@ -55,20 +54,6 @@
           </div>
 
           <div class="admin-progress-filter-panel">
-            <div class="filter-chip-row">
-              <button
-                v-for="filter in trendFilters"
-                :key="filter.value"
-                class="filter-chip"
-                :class="{ active: trendFilter === filter.value }"
-                type="button"
-                @click="trendFilter = filter.value"
-              >
-                {{ filter.label }}
-                <strong>{{ filter.count }}</strong>
-              </button>
-            </div>
-
             <div class="user-filter-controls">
               <select v-model="validationFilter" class="user-filter-select">
                 <option value="all">All validations</option>
@@ -90,14 +75,10 @@
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>Student</th>
                   <th>Teacher</th>
-                  <th>Parent</th>
                   <th>Latest Result</th>
-                  <th>Probability</th>
-                  <th>Screenings</th>
-                  <th>Trend</th>
+                  <th>Assessments</th>
                   <th>Validation</th>
                   <th>Follow-up</th>
                   <th>Action</th>
@@ -105,9 +86,7 @@
               </thead>
 
               <tbody>
-                <tr v-for="(student, index) in filteredStudents" :key="student.student_id">
-                  <td>{{ index + 1 }}</td>
-
+                <tr v-for="student in filteredStudents" :key="student.student_id">
                   <td>
                     <div class="user-cell">
                       <div class="user-avatar">
@@ -125,8 +104,6 @@
                   </td>
 
                   <td>{{ student.teacher_name || 'N/A' }}</td>
-                  <td>{{ student.parent_name || 'Not assigned' }}</td>
-
                   <td>
                     <span class="result-badge" :class="classificationClass(getClassification(student))">
                       {{ getClassification(student) }}
@@ -134,30 +111,7 @@
                   </td>
 
                   <td>
-                    <div class="probability-cell">
-                      <strong>{{ formatPercent(getProbability(student)) }}</strong>
-
-                      <div class="mini-progress">
-                        <div
-                          class="mini-progress-fill"
-                          :style="{ width: `${progressWidth(getProbability(student))}%` }"
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td>
                     <strong>{{ getTotalScreenings(student) }}</strong>
-                  </td>
-
-                  <td>
-                    <span class="result-badge" :class="trendClass(getTrend(student))">
-                      {{ getTrend(student) }}
-                    </span>
-
-                    <small v-if="getProbabilityChange(student) !== null" class="table-subtext">
-                      {{ signedChange(getProbabilityChange(student)) }} pts
-                    </small>
                   </td>
 
                   <td>
@@ -219,7 +173,6 @@ const students = ref([])
 const summary = ref({})
 
 const searchQuery = ref('')
-const trendFilter = ref('all')
 const validationFilter = ref('all')
 
 const totalStudents = computed(() => {
@@ -301,46 +254,6 @@ const progressStatCards = computed(() => {
   ]
 })
 
-const trendCounts = computed(() => {
-  return {
-    all: students.value.length,
-    improving: countByTrend('improving'),
-    needsAttention: countByTrend('needs attention'),
-    noMajorChange: countByTrend('no major change'),
-    notEnoughData: countByTrend('not enough data yet')
-  }
-})
-
-const trendFilters = computed(() => {
-  return [
-    {
-      label: 'All',
-      value: 'all',
-      count: trendCounts.value.all
-    },
-    {
-      label: 'Improving',
-      value: 'improving',
-      count: trendCounts.value.improving
-    },
-    {
-      label: 'Needs Attention',
-      value: 'needs attention',
-      count: trendCounts.value.needsAttention
-    },
-    {
-      label: 'No Major Change',
-      value: 'no major change',
-      count: trendCounts.value.noMajorChange
-    },
-    {
-      label: 'Not Enough Data',
-      value: 'not enough data yet',
-      count: trendCounts.value.notEnoughData
-    }
-  ]
-})
-
 const validationCounts = computed(() => {
   return {
     pending: countByValidation('pending'),
@@ -361,7 +274,6 @@ const filteredStudents = computed(() => {
         student.teacher_name,
         student.parent_name,
         getClassification(student),
-        getTrend(student),
         getValidationStatus(student),
         getFollowUpNeeded(student)
       ]
@@ -370,15 +282,11 @@ const filteredStudents = computed(() => {
 
       const matchesSearch = !keyword || searchableText.includes(keyword)
 
-      const matchesTrend =
-        trendFilter.value === 'all' ||
-        normalizeTrend(getTrend(student)) === trendFilter.value
-
       const matchesValidation =
         validationFilter.value === 'all' ||
         normalizeText(getValidationStatus(student)) === validationFilter.value
 
-      return matchesSearch && matchesTrend && matchesValidation
+      return matchesSearch && matchesValidation
     })
     .sort((a, b) => {
       const followUpA = normalizeText(getFollowUpNeeded(a)) === 'yes' ? 1 : 0
@@ -413,7 +321,7 @@ async function loadProgress() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load student progress. Please refresh or log in again.'
+      error.value = 'Unable to load student progress. Check your connection and try again.'
     }
 
     console.error(err)
@@ -437,31 +345,8 @@ function getClassification(student) {
   )
 }
 
-function getProbability(student) {
-  const latest = getLatestResult(student)
-
-  return (
-    student.latest_probability ??
-    student.dysgraphia_probability ??
-    latest.dysgraphia_probability ??
-    null
-  )
-}
-
 function getTotalScreenings(student) {
   return Number(student.total_screenings ?? student.screening_count ?? student.result_count ?? 0)
-}
-
-function getTrend(student) {
-  return student.trend_label || student.progress_trend || 'Not enough data yet'
-}
-
-function getProbabilityChange(student) {
-  if (student.probability_change === null || student.probability_change === undefined) {
-    return null
-  }
-
-  return Number(student.probability_change)
 }
 
 function getValidationStatus(student) {
@@ -490,75 +375,10 @@ function normalizeText(value) {
   return String(value || '').trim().toLowerCase()
 }
 
-function normalizeTrend(value) {
-  const text = normalizeText(value)
-
-  if (text.includes('improving')) return 'improving'
-  if (text.includes('needs attention')) return 'needs attention'
-  if (text.includes('no major change') || text.includes('stable')) return 'no major change'
-
-  return 'not enough data yet'
-}
-
-function countByTrend(trend) {
-  return students.value.filter((student) => {
-    return normalizeTrend(getTrend(student)) === trend
-  }).length
-}
-
 function countByValidation(status) {
   return students.value.filter((student) => {
     return normalizeText(getValidationStatus(student)) === status
   }).length
-}
-
-function normalizePercent(value) {
-  if (value === null || value === undefined || value === '') {
-    return null
-  }
-
-  const cleanedValue = String(value).replace('%', '').trim()
-  const numberValue = Number(cleanedValue)
-
-  if (Number.isNaN(numberValue)) {
-    return null
-  }
-
-  if (numberValue > 0 && numberValue <= 1) {
-    return Number((numberValue * 100).toFixed(2))
-  }
-
-  return Number(numberValue.toFixed(2))
-}
-
-function formatPercent(value) {
-  const normalized = normalizePercent(value)
-
-  if (normalized === null) {
-    return 'N/A'
-  }
-
-  return `${normalized}%`
-}
-
-function progressWidth(value) {
-  const normalized = normalizePercent(value)
-
-  if (normalized === null) {
-    return 0
-  }
-
-  return Math.max(0, Math.min(100, normalized))
-}
-
-function signedChange(value) {
-  const numberValue = Number(value || 0)
-
-  if (numberValue > 0) {
-    return `+${numberValue}`
-  }
-
-  return String(numberValue)
 }
 
 function displayNumber(value) {
@@ -575,7 +395,6 @@ function getInitial(name) {
 
 function clearFilters() {
   searchQuery.value = ''
-  trendFilter.value = 'all'
   validationFilter.value = 'all'
 }
 
@@ -598,16 +417,6 @@ function validationClass(status) {
 
   if (text === 'validated') return 'success'
   if (text === 'flagged') return 'danger'
-
-  return 'secondary'
-}
-
-function trendClass(trend) {
-  const text = normalizeTrend(trend)
-
-  if (text === 'improving') return 'success'
-  if (text === 'needs attention') return 'danger'
-  if (text === 'no major change') return 'warning'
 
   return 'secondary'
 }

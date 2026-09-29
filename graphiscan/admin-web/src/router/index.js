@@ -78,7 +78,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(_to, _from, savedPosition) {
+    return savedPosition || { top: 0, left: 0, behavior: 'auto' }
+  }
 })
 
 function clearAdminSession() {
@@ -87,7 +90,7 @@ function clearAdminSession() {
   localStorage.removeItem('graphiscan_admin_user')
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const isAuthenticated = localStorage.getItem('graphiscan_admin_auth') === 'true'
   const token = localStorage.getItem('graphiscan_admin_token')
 
@@ -95,27 +98,21 @@ router.beforeEach((to, from, next) => {
     if (isAuthenticated && !token) {
       clearAdminSession()
 
-      next({
+      return {
         path: '/login',
         query: { session: 'expired' }
-      })
-
-      return
+      }
     }
 
     if (!isAuthenticated || !token) {
       clearAdminSession()
-      next('/login')
-      return
+      return '/login'
     }
   }
 
   if (to.path === '/login' && isAuthenticated && token) {
-    next('/admin/dashboard')
-    return
+    return '/admin/dashboard'
   }
-
-  next()
 })
 
 export default router

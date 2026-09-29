@@ -53,7 +53,7 @@
           <div>
             <span>Report Directory</span>
             <h3>Screening Reports</h3>
-            <p>{{ filteredResults.length }} of {{ results.length }} report/s shown.</p>
+            <p>Showing {{ filteredResults.length }} of {{ results.length }}</p>
           </div>
 
           <button
@@ -129,19 +129,14 @@
               </span>
             </div>
 
-            <div class="parent-result-details parent-result-details-clean">
+            <div class="parent-result-details parent-result-details-clean screening-result-meta">
               <div>
-                <span>Probability</span>
-                <strong>{{ formatPercent(result.dysgraphia_probability) }}</strong>
-              </div>
-
-              <div>
-                <span>Confidence</span>
+                <span>Model score</span>
                 <strong>{{ formatPercent(result.confidence_score) }}</strong>
               </div>
 
               <div>
-                <span>Date Generated</span>
+                <span>Screened on</span>
                 <strong>{{ result.date_generated || 'N/A' }}</strong>
               </div>
             </div>
@@ -268,7 +263,7 @@ async function loadResults() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load child results. Please refresh or log in again.'
+      error.value = 'Unable to load child results. Check your connection and try again.'
     }
 
     console.error(err)
@@ -305,7 +300,6 @@ const filteredResults = computed(() => {
         String(result.teacher_name || '').toLowerCase().includes(keyword) ||
         String(result.classification || '').toLowerCase().includes(keyword) ||
         String(result.validation_status || '').toLowerCase().includes(keyword) ||
-        String(result.dysgraphia_probability || '').toLowerCase().includes(keyword) ||
         String(result.confidence_score || '').toLowerCase().includes(keyword) ||
         String(result.date_generated || '').toLowerCase().includes(keyword)
 

@@ -11,7 +11,7 @@
           <div class="expert-validate-hero-copy">
             <span>Expert Review</span>
             <h2>Validate Result</h2>
-            <p>Review the AI output, handwriting sample, student details, and submit your expert decision.</p>
+            <p>Review the model result, handwriting sample, and student details before your decision.</p>
           </div>
 
           <div class="expert-validate-hero-icon">
@@ -22,7 +22,7 @@
         <section class="expert-ai-card expert-card-clean">
           <div class="expert-ai-head expert-ai-head-clean">
             <div>
-              <span>AI Screening Output</span>
+              <span>Model Screening Result</span>
               <h3>{{ result.classification || 'No classification available' }}</h3>
             </div>
 
@@ -33,12 +33,12 @@
 
           <div class="expert-score-grid expert-score-grid-clean">
             <div>
-              <small>High Potential Probability</small>
+              <small>High Potential model score</small>
               <strong>{{ formatPercent(result.dysgraphia_probability) }}</strong>
             </div>
 
             <div>
-              <small>Confidence Score</small>
+              <small>Predicted-class score</small>
               <strong>{{ formatPercent(result.confidence_score) }}</strong>
             </div>
           </div>
@@ -132,28 +132,6 @@
           </div>
         </section>
 
-        <section class="expert-info-card expert-card-clean">
-          <div class="expert-section-head expert-section-head-clean">
-            <span>AI Recommendation</span>
-            <h3>System Suggested Action</h3>
-          </div>
-
-          <p class="expert-report-text expert-report-text-clean">
-            {{ result.recommendation || 'No AI recommendation available.' }}
-          </p>
-        </section>
-
-        <section class="expert-info-card expert-card-clean">
-          <div class="expert-section-head expert-section-head-clean">
-            <span>Analysis</span>
-            <h3>Analysis Summary</h3>
-          </div>
-
-          <p class="expert-report-text expert-report-text-clean">
-            {{ result.analysis_summary || 'No analysis summary available.' }}
-          </p>
-        </section>
-
         <form class="expert-validation-form expert-validation-form-clean" @submit.prevent="submitValidation">
           <div class="expert-section-head expert-section-head-clean">
             <span>Validation Decision</span>
@@ -171,7 +149,7 @@
             >
               <CheckCircle2 :size="22" :stroke-width="1.9" />
               <strong>Validated</strong>
-              <small>AI result is acceptable after expert review.</small>
+              <small>Screening result is acceptable after expert review.</small>
             </button>
 
             <button
@@ -193,7 +171,7 @@
             <textarea
               v-model="remarks"
               class="expert-remarks-textarea expert-remarks-clean"
-              placeholder="Explain your expert judgment about the AI screening result."
+              placeholder="Explain your expert judgment about the screening result."
               :disabled="saving"
             ></textarea>
           </div>
@@ -337,11 +315,11 @@ async function loadResultForValidation() {
     }
   } catch (err) {
     if (err.code === 'ECONNABORTED') {
-      error.value = 'Loading took too long. Please check if Flask is running, then refresh.'
+      error.value = 'Loading took too long. Check your connection and try again.'
     } else if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load result. Please refresh or log in again.'
+      error.value = 'Unable to load result. Check your connection and try again.'
     }
 
     console.error(err)
@@ -396,7 +374,7 @@ async function submitValidation() {
     }
   } catch (err) {
     if (err.code === 'ECONNABORTED') {
-      submitError.value = 'Saving took too long. Please check if Flask is running, then try again.'
+      submitError.value = 'Saving took too long. Check your connection and try again.'
     } else if (err.response?.data?.message) {
       submitError.value = err.response.data.message
     } else {

@@ -27,12 +27,14 @@ graphiscan/config.py
 *.apk
 *.aab
 *.log
+/.local-tools/
+/.local-backups/
 
 # Private uploads, datasets, and generated ML artifacts
 graphiscan/static/uploads/
 /raw_dataset/
+/dataset_image_split/
 /model/
-/model_old_binary_backup/
 graphiscan/binary_raw/
 graphiscan/binary_dataset/
 graphiscan/training_results/
@@ -41,13 +43,14 @@ graphiscan/training_results/
 **/*.hdf5
 **/*.tflite
 
+# Database exports can contain student records and password hashes.
+**/*.sql
+!graphiscan/db/legacy_mysql_schema.sql
+!graphiscan/db/postgres/*.sql
+
 # Local editor and OS files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 *.local
-
-# Empty top-level placeholders without a matching application
-/app
-/package-lock.json

@@ -3,7 +3,7 @@
     <section class="teacher-upload-page upload-page-clean">
       <section class="upload-hero-card upload-hero-clean">
         <div>
-          <span>AI Screening</span>
+          <span>Handwriting Screening</span>
           <h2>Upload handwriting</h2>
           <p>Select a student, attach a clear handwriting image, and generate a screening result.</p>
         </div>
@@ -183,7 +183,7 @@
 
           <div class="screening-result-grid screening-result-grid-clean">
             <div>
-              <small>High Potential Probability</small>
+              <small>High Potential model score</small>
               <strong>{{ formatPercent(screeningResult.dysgraphia_probability) }}</strong>
             </div>
 
@@ -295,7 +295,7 @@ async function loadStudents() {
     if (err.response && err.response.data && err.response.data.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load students. Please refresh or log in again.'
+      error.value = 'Unable to load students. Check your connection and try again.'
     }
 
     console.error(err)
@@ -413,7 +413,7 @@ async function uploadSample() {
     if (err.response && err.response.data && err.response.data.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to upload sample. Please refresh or log in again.'
+      error.value = 'Unable to upload sample. Check your connection and try again.'
     }
 
     console.error(err)

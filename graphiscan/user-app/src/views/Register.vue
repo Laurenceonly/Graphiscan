@@ -2,8 +2,6 @@
   <main class="mobile-login-page register-mobile-page">
     <section class="mobile-login-card register-card register-card-clean">
       <div class="mobile-brand">
-        <div class="mobile-brand-mark">G</div>
-
         <div>
           <h1>GRAPHI<span>SCAN</span></h1>
           <p>User App Registration</p>

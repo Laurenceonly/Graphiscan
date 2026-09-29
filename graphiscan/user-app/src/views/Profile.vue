@@ -3,7 +3,7 @@
     <section class="mobile-profile-page">
       <div class="profile-hero-card">
         <div class="profile-avatar-large">
-          {{ userInitial }}
+          <UserRound :size="30" :stroke-width="1.8" aria-hidden="true" />
         </div>
 
         <div>
@@ -107,6 +107,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { UserRound } from 'lucide-vue-next'
 import UserLayout from '../layouts/UserLayout.vue'
 import userApi from '../api/userApi'
 
@@ -124,10 +125,6 @@ function getStoredUserData() {
 }
 
 const userData = getStoredUserData()
-
-const userInitial = computed(() => {
-  return userData.fullname ? userData.fullname.charAt(0).toUpperCase() : 'G'
-})
 
 const readableRole = computed(() => {
   if (userData.role === 'teacher') return 'Teacher'

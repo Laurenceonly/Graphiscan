@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import userApi from '../api/userApi'
 
-import Register from '../views/Register.vue'
 import ForgotPassword from '../views/ForgotPassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import Login from '../views/Login.vue'
@@ -40,7 +39,7 @@ const routes = [
   },
   {
     path: '/register',
-    component: Register
+    redirect: '/login'
   },
   {
     path: '/forgot-password',
@@ -201,7 +200,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(_to, _from, savedPosition) {
+    return savedPosition || { top: 0, left: 0, behavior: 'auto' }
+  }
 })
 
 function clearUserSession() {
@@ -246,7 +248,7 @@ async function verifyUserSession() {
   return freshUser
 }
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const isAuthenticated = localStorage.getItem('graphiscan_user_auth') === 'true'
   const token = localStorage.getItem('graphiscan_user_token')
 
@@ -254,35 +256,29 @@ router.beforeEach(async (to, from, next) => {
     if (!isAuthenticated || !token) {
       clearUserSession()
 
-      next({
+      return {
         path: '/login',
         query: { session: 'expired' }
-      })
-
-      return
+      }
     }
 
     try {
       const freshUser = await verifyUserSession()
 
       if (to.meta.role && freshUser.role !== to.meta.role) {
-        next(getDashboardPath(freshUser.role))
-        return
+        return getDashboardPath(freshUser.role)
       }
 
-      next()
       return
     } catch (err) {
       console.error(err)
 
       clearUserSession()
 
-      next({
+      return {
         path: '/login',
         query: { session: 'inactive' }
-      })
-
-      return
+      }
     }
   }
 
@@ -290,19 +286,16 @@ router.beforeEach(async (to, from, next) => {
     try {
       const freshUser = await verifyUserSession()
 
-      next(getDashboardPath(freshUser.role))
-      return
+      return getDashboardPath(freshUser.role)
     } catch (err) {
       console.error(err)
 
       clearUserSession()
 
-      next({
+      return {
         path: '/login',
         query: { session: 'inactive' }
-      })
-
-      return
+      }
     }
   }
 
@@ -314,11 +307,8 @@ router.beforeEach(async (to, from, next) => {
     token &&
     userData.role
   ) {
-    next(getDashboardPath(userData.role))
-    return
+    return getDashboardPath(userData.role)
   }
-
-  next()
 })
 
 export default router
