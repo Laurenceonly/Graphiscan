@@ -149,26 +149,10 @@ def run_handwriting_screening(image_path, demo=False):
         "classification": prediction_result.get("classification", "Unclassified"),
         "dysgraphia_probability": prediction_result.get("dysgraphia_probability", 0),
         "confidence_score": prediction_result.get("confidence_score", 0),
-        "recommendation": prediction_result.get("recommendation", "No recommendation available."),
         "analysis_summary": analysis_summary,
         "normal_probability": prediction_result.get("normal_probability", 0),
         "high_potential_probability": prediction_result.get("high_potential_probability", 0)
     }
-
-def normalize_percent_value(value):
-    if value is None:
-        return None
-
-    try:
-        number_value = float(value)
-    except (TypeError, ValueError):
-        return None
-
-    if number_value > 0 and number_value <= 1:
-        number_value = number_value * 100
-
-    return round(number_value, 2)
-
 
 def safe_date_string(value):
     if value:
@@ -176,30 +160,6 @@ def safe_date_string(value):
 
     return None
 
-
-def get_progress_trend(progress):
-    if len(progress) < 2:
-        return {
-            "probability_change": None,
-            "trend_label": "Not enough data yet"
-        }
-
-    first_probability = normalize_percent_value(progress[0].get("dysgraphia_probability")) or 0
-    latest_probability = normalize_percent_value(progress[-1].get("dysgraphia_probability")) or 0
-
-    probability_change = round(latest_probability - first_probability, 2)
-
-    if probability_change < 0:
-        trend_label = "Improving"
-    elif probability_change > 0:
-        trend_label = "Needs attention"
-    else:
-        trend_label = "No major change"
-
-    return {
-        "probability_change": probability_change,
-        "trend_label": trend_label
-    }   
 
 def build_image_url(image_path):
     if not image_path:
@@ -450,6 +410,9 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    flash("Accounts are created by a GraphiScan administrator or researcher.", "info")
+    return redirect(url_for("login"))
+
     if request.method == "POST":
         fullname = request.form.get("fullname", "").strip()
         email = request.form.get("email", "").strip().lower()
@@ -992,6 +955,11 @@ def api_user_login():
 
 @app.route("/api/user/register", methods=["POST"])
 def api_user_register():
+    return jsonify({
+        "success": False,
+        "message": "Accounts are created by a GraphiScan administrator or researcher."
+    }), 403
+
     data = request.get_json() or {}
 
     fullname = data.get("fullname", "").strip()
@@ -1606,7 +1574,6 @@ def api_teacher_upload_sample():
     classification = screening_result["classification"]
     dysgraphia_probability = screening_result["dysgraphia_probability"]
     confidence_score = screening_result["confidence_score"]
-    recommendation = screening_result["recommendation"]
     analysis_summary = screening_result["analysis_summary"]
 
     cursor.execute("""
@@ -1626,7 +1593,7 @@ def api_teacher_upload_sample():
         classification,
         confidence_score,
         analysis_summary,
-        recommendation
+        ""
     ))
 
     result_id = cursor.lastrowid
@@ -1636,10 +1603,12 @@ def api_teacher_upload_sample():
         VALUES (%s, 'Pending')
     """, (result_id,))
 
+    cursor.execute("SELECT COUNT(*) FROM reports WHERE student_id = %s", (student_id,))
+    report_type = "Follow-up Screening" if cursor.fetchone()[0] else "Initial Screening"
     cursor.execute("""
         INSERT INTO reports (student_id, result_id, report_type, report_status)
-        VALUES (%s, %s, 'Initial Screening', 'Generated')
-    """, (student_id, result_id))
+        VALUES (%s, %s, %s, 'Generated')
+    """, (student_id, result_id, report_type))
 
     conn.commit()
 
@@ -1775,30 +1744,10 @@ def api_teacher_student_progress(student_id):
             item["date_generated"] = str(item["date_generated"])
 
     latest_result = progress[-1] if progress else None
-    first_result = progress[0] if progress else None
-
-    probability_change = None
-    trend_label = "Not enough data yet"
-
-    if first_result and latest_result and len(progress) >= 2:
-        first_probability = float(first_result["dysgraphia_probability"] or 0)
-        latest_probability = float(latest_result["dysgraphia_probability"] or 0)
-        probability_change = round(latest_probability - first_probability, 2)
-
-        if probability_change < 0:
-            trend_label = "Improving"
-        elif probability_change > 0:
-            trend_label = "Needs attention"
-        else:
-            trend_label = "No major change"
-
     summary = {
         "total_screenings": len(progress),
-        "latest_result": latest_result,
-        "probability_change": probability_change,
-        "trend_label": trend_label
+        "latest_result": latest_result
     }
-
     return jsonify({
         "success": True,
         "student": student,
@@ -1841,7 +1790,6 @@ def api_guest_demo_screening():
         classification = screening_result["classification"]
         dysgraphia_probability = screening_result["dysgraphia_probability"]
         confidence_score = screening_result["confidence_score"]
-        recommendation = screening_result["recommendation"]
         analysis_summary = screening_result["analysis_summary"]
 
         log_action(
@@ -1855,7 +1803,6 @@ def api_guest_demo_screening():
             "classification": classification,
             "confidence_score": confidence_score,
             "dysgraphia_probability": dysgraphia_probability,
-            "recommendation": recommendation,
             "analysis_summary": analysis_summary,
             "is_demo": True
         })
@@ -1894,7 +1841,6 @@ def api_teacher_result_detail(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
 
             hs.image_path,
@@ -2025,7 +1971,6 @@ def api_expert_result_detail(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
 
             hs.image_path,
@@ -2148,30 +2093,10 @@ def api_expert_student_progress(student_id):
             item["date_generated"] = str(item["date_generated"])
 
     latest_result = progress[-1] if progress else None
-    first_result = progress[0] if progress else None
-
-    probability_change = None
-    trend_label = "Not enough data yet"
-
-    if first_result and latest_result and len(progress) >= 2:
-        first_probability = float(first_result["dysgraphia_probability"] or 0)
-        latest_probability = float(latest_result["dysgraphia_probability"] or 0)
-        probability_change = round(latest_probability - first_probability, 2)
-
-        if probability_change < 0:
-            trend_label = "Improving"
-        elif probability_change > 0:
-            trend_label = "Needs attention"
-        else:
-            trend_label = "No major change"
-
     summary = {
         "total_screenings": len(progress),
-        "latest_result": latest_result,
-        "probability_change": probability_change,
-        "trend_label": trend_label
+        "latest_result": latest_result
     }
-
     return jsonify({
         "success": True,
         "student": student,
@@ -2367,7 +2292,6 @@ def api_parent_result_detail(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
 
             hs.image_path,
@@ -2484,28 +2408,10 @@ def api_parent_student_progress(student_id):
             item["date_generated"] = str(item["date_generated"])
 
     latest_result = progress[-1] if progress else None
-    first_result = progress[0] if progress else None
-
-    probability_change = None
-    trend_label = "Not enough data yet"
-
-    if first_result and latest_result and len(progress) >= 2:
-        first_probability = float(first_result["dysgraphia_probability"] or 0)
-        latest_probability = float(latest_result["dysgraphia_probability"] or 0)
-        probability_change = round(latest_probability - first_probability, 2)
-
-        if probability_change < 0:
-            trend_label = "Improving"
-        elif probability_change > 0:
-            trend_label = "Needs attention"
-        else:
-            trend_label = "No major change"
 
     summary = {
         "total_screenings": len(progress),
-        "latest_result": latest_result,
-        "probability_change": probability_change,
-        "trend_label": trend_label
+        "latest_result": latest_result
     }
 
     return jsonify({
@@ -2760,7 +2666,7 @@ def upload_sample():
             file.save(filepath)
 
             # AI SCREENING RESULT
-            # Uses the selected GRAPHISCAN 3-class model.
+            # Uses the active GRAPHISCAN binary model.
             try:
                 screening_result = run_handwriting_screening(filepath)
 
@@ -2782,7 +2688,6 @@ def upload_sample():
             classification = screening_result["classification"]
             dysgraphia_probability = screening_result["dysgraphia_probability"]
             confidence_score = screening_result["confidence_score"]
-            recommendation = screening_result["recommendation"]
             analysis_summary = screening_result["analysis_summary"]
 
             cursor.execute("""
@@ -2802,7 +2707,7 @@ def upload_sample():
                 classification,
                 confidence_score,
                 analysis_summary,
-                recommendation
+                ""
             ))
 
             result_id = cursor.lastrowid
@@ -2812,10 +2717,12 @@ def upload_sample():
                 VALUES (%s, 'Pending')
             """, (result_id,))
 
+            cursor.execute("SELECT COUNT(*) FROM reports WHERE student_id = %s", (student_id,))
+            report_type = "Follow-up Screening" if cursor.fetchone()[0] else "Initial Screening"
             cursor.execute("""
                 INSERT INTO reports (student_id, result_id, report_type, report_status)
-                VALUES (%s, %s, 'Initial Screening', 'Generated')
-            """, (student_id, result_id))
+                VALUES (%s, %s, %s, 'Generated')
+            """, (student_id, result_id, report_type))
 
             conn.commit()
 
@@ -2859,7 +2766,6 @@ def view_result(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
             hs.image_path,
             hs.teacher_id,
@@ -3040,7 +2946,6 @@ def validate_result(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
             hs.image_path,
             s.fullname AS student_name,
@@ -3132,7 +3037,6 @@ def view_report(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
             hs.image_path,
             hs.teacher_id,
@@ -3631,7 +3535,6 @@ def api_admin_students_progress():
 
     student_map = {}
     all_results = []
-    date_groups = {}
 
     for row in rows:
         student_id = row["student_id"]
@@ -3668,23 +3571,11 @@ def api_admin_students_progress():
             student_map[student_id]["progress"].append(progress_item)
             all_results.append(progress_item)
 
-            probability_value = normalize_percent_value(row["dysgraphia_probability"])
-
-            if date_generated and probability_value is not None:
-                date_key = date_generated[:10]
-
-                if date_key not in date_groups:
-                    date_groups[date_key] = []
-
-                date_groups[date_key].append(probability_value)
-
     students = []
 
     for student in student_map.values():
         progress = student["progress"]
         latest_result = progress[-1] if progress else None
-        trend = get_progress_trend(progress)
-
         students.append({
             "student_id": student["student_id"],
             "student_name": student["student_name"],
@@ -3698,9 +3589,7 @@ def api_admin_students_progress():
             "latest_probability": latest_result["dysgraphia_probability"] if latest_result else None,
             "latest_confidence": latest_result["confidence_score"] if latest_result else None,
             "latest_validation_status": latest_result["validation_status"] if latest_result else "Pending",
-            "follow_up_needed": latest_result["follow_up_needed"] if latest_result else "No",
-            "probability_change": trend["probability_change"],
-            "trend_label": trend["trend_label"]
+            "follow_up_needed": latest_result["follow_up_needed"] if latest_result else "No"
         })
 
     classification_counts = {}
@@ -3714,8 +3603,6 @@ def api_admin_students_progress():
         "No": 0
     }
 
-    probability_values = []
-
     for result in all_results:
         classification = result["classification"] or "Unclassified"
         validation_status = result["validation_status"] or "Pending"
@@ -3724,26 +3611,6 @@ def api_admin_students_progress():
         classification_counts[classification] = classification_counts.get(classification, 0) + 1
         validation_counts[validation_status] = validation_counts.get(validation_status, 0) + 1
         follow_up_counts[follow_up_needed] = follow_up_counts.get(follow_up_needed, 0) + 1
-
-        probability_value = normalize_percent_value(result["dysgraphia_probability"])
-
-        if probability_value is not None:
-            probability_values.append(probability_value)
-
-    average_probability = None
-
-    if probability_values:
-        average_probability = round(sum(probability_values) / len(probability_values), 2)
-
-    average_probability_trend = []
-
-    for date_key in sorted(date_groups.keys()):
-        values = date_groups[date_key]
-
-        average_probability_trend.append({
-            "date": date_key,
-            "average_probability": round(sum(values) / len(values), 2)
-        })
 
     screened_students = len([
         student for student in students
@@ -3759,7 +3626,6 @@ def api_admin_students_progress():
         "total_students": len(students),
         "screened_students": screened_students,
         "total_screenings": len(all_results),
-        "average_probability": average_probability,
         "pending_validations": validation_counts.get("Pending", 0),
         "expert_reviewed": validation_counts.get("Validated", 0) + validation_counts.get("Flagged", 0),
         "students_needing_follow_up": students_needing_follow_up
@@ -3772,8 +3638,7 @@ def api_admin_students_progress():
         "charts": {
             "classification_counts": classification_counts,
             "validation_counts": validation_counts,
-            "follow_up_counts": follow_up_counts,
-            "average_probability_trend": average_probability_trend
+            "follow_up_counts": follow_up_counts
         }
     })
 
@@ -3861,13 +3726,10 @@ def api_admin_student_progress_detail(student_id):
             item["expert_name"] = "Not yet reviewed"
 
     latest_result = progress[-1] if progress else None
-    trend = get_progress_trend(progress)
 
     summary = {
         "total_screenings": len(progress),
-        "latest_result": latest_result,
-        "probability_change": trend["probability_change"],
-        "trend_label": trend["trend_label"]
+        "latest_result": latest_result
     }
 
     return jsonify({
@@ -4722,7 +4584,6 @@ def api_admin_result_detail(result_id):
             r.classification,
             r.confidence_score,
             r.analysis_summary,
-            r.recommendation,
             r.date_generated,
 
             hs.image_path,

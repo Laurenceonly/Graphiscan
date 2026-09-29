@@ -88,7 +88,7 @@
 
         <div>
           <strong>Professional Review</strong>
-          <p>Validate AI screening outputs before reports guide follow-up decisions.</p>
+          <p>Review screening results before reports guide follow-up decisions.</p>
         </div>
       </section>
     </section>
@@ -195,11 +195,11 @@ async function loadDashboardData() {
     }
   } catch (err) {
     if (err.code === 'ECONNABORTED') {
-      error.value = 'Loading took too long. Please check if Flask is running, then refresh.'
+      error.value = 'Loading took too long. Check your connection and try again.'
     } else if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load expert dashboard. Please refresh or log in again.'
+      error.value = 'Unable to load expert dashboard. Check your connection and try again.'
     }
 
     console.error(err)

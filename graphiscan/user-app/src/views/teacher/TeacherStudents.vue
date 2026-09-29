@@ -41,7 +41,7 @@
           <div>
             <span>Directory</span>
             <h3>Student List</h3>
-            <p>{{ filteredStudents.length }} of {{ students.length }} student/s shown.</p>
+            <p>Showing {{ filteredStudents.length }} of {{ students.length }}</p>
           </div>
 
           <button
@@ -213,7 +213,7 @@ async function loadStudents() {
     if (err.response && err.response.data && err.response.data.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to load students. Please refresh or log in again.'
+      error.value = 'Unable to load students. Check your connection and try again.'
     }
 
     console.error(err)

@@ -13,7 +13,7 @@
         aria-label="Open profile"
         @click="goToProfile"
       >
-        {{ userInitial }}
+        <UserRound :size="20" :stroke-width="1.9" aria-hidden="true" />
       </button>
     </header>
 
@@ -69,10 +69,6 @@ function getStoredUserData() {
 }
 
 const userData = getStoredUserData()
-
-const userInitial = computed(() => {
-  return userData.fullname ? userData.fullname.charAt(0).toUpperCase() : 'G'
-})
 
 const roleLabel = computed(() => {
   if (userData.role === 'teacher') return 'Teacher Workspace'

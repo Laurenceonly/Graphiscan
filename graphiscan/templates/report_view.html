@@ -619,7 +619,7 @@
                 <section class="report-section">
                     <h4 class="section-title">
                         <i class="fa-solid fa-brain"></i>
-                        AI Screening Result
+                        Model Screening Result
                     </h4>
 
                     <table class="details-table">
@@ -628,11 +628,11 @@
                             <td>{{ report.classification }}</td>
                         </tr>
                         <tr>
-                            <th>Dysgraphia Probability</th>
+                            <th>High Potential model score</th>
                             <td>{{ report.dysgraphia_probability }}</td>
                         </tr>
                         <tr>
-                            <th>Confidence Score</th>
+                            <th>Predicted-class score</th>
                             <td>{{ report.confidence_score }}%</td>
                         </tr>
                         <tr>
@@ -640,22 +640,6 @@
                             <td>{{ report.date_generated }}</td>
                         </tr>
                     </table>
-                </section>
-
-                <section class="report-section">
-                    <h4 class="section-title">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        Analysis Summary
-                    </h4>
-                    <p class="text-panel">{{ report.analysis_summary }}</p>
-                </section>
-
-                <section class="report-section">
-                    <h4 class="section-title">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        Recommendation
-                    </h4>
-                    <p class="text-panel">{{ report.recommendation }}</p>
                 </section>
 
                 <section class="report-section">

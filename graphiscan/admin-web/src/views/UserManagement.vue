@@ -3,7 +3,6 @@
     <div class="compact-page user-management-page">
       <div class="page-header compact-header">
         <div>
-          <span>Accounts</span>
           <h1>Users</h1>
           <p>Manage users, roles, and account access.</p>
         </div>
@@ -29,8 +28,8 @@
       <div class="panel-card compact-panel">
         <div class="table-header compact-table-header">
           <div>
-            <h2>System Users</h2>
-            <p>Registered admin, teacher, parent, expert, and guest accounts.</p>
+            <h2>Accounts</h2>
+            <p>Manage roles and access for each account.</p>
           </div>
 
           <div class="user-toolbar">
@@ -97,21 +96,17 @@
           <table>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
                 <th>Status</th>
-                <th>Contact</th>
                 <th>Registered</th>
                 <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr v-for="(user, index) in filteredUsers" :key="user.user_id">
-                <td>{{ index + 1 }}</td>
-
+              <tr v-for="user in filteredUsers" :key="user.user_id">
                 <td>
                   <div class="user-cell">
                     <div class="user-avatar">
@@ -138,7 +133,6 @@
                   </span>
                 </td>
 
-                <td>{{ user.contact_no || 'N/A' }}</td>
                 <td>{{ user.created_at || 'N/A' }}</td>
 
                 <td>
@@ -576,7 +570,7 @@ async function loadUsers(clearMessages = true) {
       error.value = response.data.message || 'Unable to load users.'
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to connect to Flask API.'
+    error.value = err.response?.data?.message || 'Unable to connect. Check your connection and try again.'
     console.error(err)
   } finally {
     loading.value = false
@@ -855,7 +849,7 @@ async function createUser() {
     if (err.response && err.response.data && err.response.data.message) {
       addError.value = err.response.data.message
     } else {
-      addError.value = 'Failed to connect to Flask API.'
+      addError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -932,7 +926,7 @@ async function confirmStatusAction() {
     if (err.response && err.response.data && err.response.data.message) {
       statusActionError.value = err.response.data.message
     } else {
-      statusActionError.value = 'Failed to connect to Flask API.'
+      statusActionError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)
@@ -1006,7 +1000,7 @@ async function deleteUserPermanently() {
     if (err.response && err.response.data && err.response.data.message) {
       deleteError.value = err.response.data.message
     } else {
-      deleteError.value = 'Failed to connect to Flask API.'
+      deleteError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)

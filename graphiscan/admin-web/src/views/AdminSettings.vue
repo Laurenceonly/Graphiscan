@@ -3,7 +3,6 @@
     <div class="compact-page admin-settings-page">
       <div class="page-header compact-header">
         <div>
-          <span>System Settings</span>
           <h1>Settings</h1>
           <p>Manage administrator account security.</p>
         </div>
@@ -17,7 +16,6 @@
             </div>
 
             <div>
-              <span>Admin Security</span>
               <h2>Change Password</h2>
               <p>Update your password. The system will require login again after a successful change.</p>
             </div>
@@ -120,11 +118,6 @@
               </p>
             </div>
 
-            <div class="password-security-note full-field">
-              <ShieldCheck :size="18" :stroke-width="1.8" />
-              <p>Password changes will end your current admin session.</p>
-            </div>
-
             <p v-if="changePasswordError" class="error-message full-field">
               {{ changePasswordError }}
             </p>
@@ -154,36 +147,6 @@
           </form>
         </section>
 
-        <section class="panel-card settings-info-card">
-          <div class="settings-card-head compact">
-            <div class="settings-card-icon">
-              <ShieldCheck :size="22" :stroke-width="1.9" />
-            </div>
-
-            <div>
-              <span>Account</span>
-              <h2>Security Reminder</h2>
-              <p>Use a strong password and keep your admin access private.</p>
-            </div>
-          </div>
-
-          <div class="settings-info-list">
-            <div>
-              <span>Account Type</span>
-              <strong>System Administrator</strong>
-            </div>
-
-            <div>
-              <span>Password Rule</span>
-              <strong>Uppercase, lowercase, number, and symbol required</strong>
-            </div>
-
-            <div>
-              <span>Session Rule</span>
-              <strong>Re-login required after password change</strong>
-            </div>
-          </div>
-        </section>
       </section>
     </div>
   </AdminLayout>
@@ -197,8 +160,7 @@ import AdminLayout from '../layouts/AdminLayout.vue'
 import {
   Eye,
   EyeOff,
-  KeyRound,
-  ShieldCheck
+  KeyRound
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -303,7 +265,7 @@ async function changeAdminPassword() {
     if (err.response && err.response.data && err.response.data.message) {
       changePasswordError.value = err.response.data.message
     } else {
-      changePasswordError.value = 'Failed to connect to Flask API.'
+      changePasswordError.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)

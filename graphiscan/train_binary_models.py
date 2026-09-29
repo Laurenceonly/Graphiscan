@@ -515,7 +515,7 @@ with open(FINAL_MODEL_CONFIG_PATH, "w", encoding="utf-8") as file:
             "model_name": best_model_name,
             "classes": CLASS_NAMES,
             "input_size": [224, 224],
-            "threshold": 0.5,
+            "threshold": 0.75,
             "normal_label": 0,
             "high_potential_label": 1
         },

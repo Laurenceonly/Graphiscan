@@ -6,7 +6,7 @@
           <span>Demo Screening</span>
           <h2>Try handwriting screening</h2>
           <p>
-            Upload a handwriting image to preview the GRAPHISCAN AI screening flow.
+            Upload a handwriting image to preview the GraphiScan screening flow.
             Demo results are not saved as official records.
           </p>
         </div>
@@ -104,7 +104,7 @@
         <section v-if="demoResult" class="guest-demo-result-card">
           <div class="guest-demo-result-head">
             <div>
-              <span>Demo AI Result</span>
+              <span>Demo Screening Result</span>
               <h3>{{ demoResult.classification }}</h3>
             </div>
 
@@ -113,12 +113,12 @@
 
           <div class="guest-demo-result-grid">
             <div>
-             <small>High Potential Probability</small>
+              <small>High Potential model score</small>
               <strong>{{ demoResult.dysgraphia_probability || 'N/A' }}</strong>
             </div>
 
             <div>
-              <small>Confidence Score</small>
+              <small>Predicted-class score</small>
               <strong>{{ demoResult.confidence_score || 0 }}%</strong>
 
               <div class="guest-demo-confidence-track">
@@ -130,21 +130,11 @@
             </div>
           </div>
 
-          <div class="guest-demo-text-block">
-            <small>Recommendation</small>
-            <p>{{ demoResult.recommendation || 'No recommendation available.' }}</p>
-          </div>
-
-          <div class="guest-demo-text-block">
-            <small>Analysis Summary</small>
-            <p>{{ demoResult.analysis_summary || 'No analysis summary available.' }}</p>
-          </div>
-
           <div class="guest-demo-warning">
             <strong>Demo result only</strong>
             <p>
               This result is not official and will not receive expert validation.
-              Register as an approved user to use official GRAPHISCAN workflows.
+              Ask a GraphiScan administrator for an account to use official screening features.
             </p>
           </div>
         </section>
@@ -261,8 +251,6 @@ async function submitDemoScreening() {
         classification: response.data.classification,
         confidence_score: response.data.confidence_score,
         dysgraphia_probability: response.data.dysgraphia_probability,
-        recommendation: response.data.recommendation,
-        analysis_summary: response.data.analysis_summary,
         is_demo: true
       }
     } else {

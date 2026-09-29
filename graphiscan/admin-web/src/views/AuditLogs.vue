@@ -3,7 +3,6 @@
     <div class="compact-page audit-logs-page">
       <div class="page-header compact-header">
         <div>
-          <span>System Activity</span>
           <h1>System Logs</h1>
           <p>Review user activity, account actions, access records, and system events.</p>
         </div>
@@ -30,7 +29,7 @@
         <div class="table-header compact-table-header">
           <div>
             <h2>Recorded Activities</h2>
-            <p>{{ filteredLogs.length }} of {{ logs.length }} log/s shown.</p>
+            <p>{{ filteredLogs.length }} of {{ logs.length }} activities shown.</p>
           </div>
 
           <div class="user-toolbar">
@@ -93,7 +92,6 @@
           <table>
             <thead>
               <tr>
-                <th>#</th>
                 <th>User</th>
                 <th>Role</th>
                 <th>Category</th>
@@ -107,8 +105,6 @@
                 v-for="(log, index) in filteredLogs"
                 :key="log.log_id || `${index}-${log.log_date}`"
               >
-                <td>{{ index + 1 }}</td>
-
                 <td>
                   <div class="user-cell">
                     <div class="user-avatar">
@@ -202,7 +198,7 @@ async function loadAuditLogs() {
     if (err.response?.data?.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Failed to connect to Flask API.'
+      error.value = 'Unable to connect. Check your connection and try again.'
     }
 
     console.error(err)

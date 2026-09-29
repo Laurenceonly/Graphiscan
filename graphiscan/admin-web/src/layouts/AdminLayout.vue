@@ -2,8 +2,6 @@
   <div class="admin-shell">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-icon">G</div>
-
         <div>
           <h1>GRAPHI<span>SCAN</span></h1>
           <p>Admin Workspace</p>
@@ -41,20 +39,7 @@
 
     <main class="main-panel">
       <header class="topbar">
-        <div>
-          <h2>{{ title }}</h2>
-        </div>
-
-        <div class="topbar-actions">
-          <div class="admin-profile admin-profile-static">
-            <div class="avatar">{{ adminInitial }}</div>
-
-            <div>
-              <strong>{{ adminName }}</strong>
-              <small>System Administrator</small>
-            </div>
-          </div>
-        </div>
+        <h2>{{ title }}</h2>
       </header>
 
       <section class="content">
@@ -110,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import adminApi from '../api/adminApi'
 import {
@@ -137,16 +122,6 @@ const router = useRouter()
 
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
-
-function getStoredAdminUser() {
-  try {
-    return JSON.parse(localStorage.getItem('graphiscan_admin_user') || '{}')
-  } catch {
-    return {}
-  }
-}
-
-const adminUser = getStoredAdminUser()
 
 const navigationSections = [
   {
@@ -205,14 +180,6 @@ const navigationSections = [
     ]
   }
 ]
-
-const adminName = computed(() => {
-  return adminUser.fullname || 'Admin'
-})
-
-const adminInitial = computed(() => {
-  return adminName.value ? adminName.value.charAt(0).toUpperCase() : 'A'
-})
 
 function openLogoutModal() {
   showLogoutModal.value = true

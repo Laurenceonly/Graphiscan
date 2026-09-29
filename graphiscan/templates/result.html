@@ -495,10 +495,10 @@
             <div>
                 <span class="page-kicker">
                     <i class="fa-solid fa-brain"></i>
-                    AI Screening Output
+                    Model Screening Result
                 </span>
                 <h1 class="page-title">Screening Result</h1>
-                <p class="page-subtitle">Review the handwriting sample, student information, AI output, summary, and recommendation.</p>
+                <p class="page-subtitle">Review the handwriting sample, student information, model result, and expert validation.</p>
             </div>
 
             <div class="header-actions">
@@ -589,7 +589,7 @@
                     <div class="section-block">
                         <h3 class="section-title">
                             <i class="fa-solid fa-brain"></i>
-                            AI Screening Output
+                            Model Screening Result
                         </h3>
 
                         <div class="output-grid">
@@ -599,12 +599,12 @@
                             </div>
 
                             <div class="output-item">
-                                <span class="output-label">Dysgraphia Probability</span>
+                                <span class="output-label">High Potential model score</span>
                                 <span class="output-value">{{ result.dysgraphia_probability }}</span>
                             </div>
 
                             <div class="output-item">
-                                <span class="output-label">Confidence Score</span>
+                                <span class="output-label">Predicted-class score</span>
                                 <span class="output-value">{{ result.confidence_score }}%</span>
                                 <div class="progress-track">
                                     <div class="progress-fill" data-confidence="{{ result.confidence_score }}"></div>
@@ -616,22 +616,6 @@
                                 <span class="output-value">{{ result.validation_status }}</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="section-block">
-                        <h3 class="section-title">
-                            <i class="fa-solid fa-clipboard-list"></i>
-                            Analysis Summary
-                        </h3>
-                        <p class="text-box">{{ result.analysis_summary }}</p>
-                    </div>
-
-                    <div class="section-block">
-                        <h3 class="section-title">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            Recommendation
-                        </h3>
-                        <p class="text-box">{{ result.recommendation }}</p>
                     </div>
 
                     {% if result.remarks %}

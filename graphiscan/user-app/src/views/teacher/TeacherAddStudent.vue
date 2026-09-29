@@ -238,7 +238,7 @@ async function addStudent() {
     if (err.response && err.response.data && err.response.data.message) {
       error.value = err.response.data.message
     } else {
-      error.value = 'Unable to add student. Please refresh or log in again.'
+      error.value = 'Unable to add student. Check your connection and try again.'
     }
 
     console.error(err)

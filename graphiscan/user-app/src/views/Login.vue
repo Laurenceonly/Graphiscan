@@ -2,8 +2,6 @@
   <main class="mobile-login-page">
     <section class="mobile-login-card user-login-card-clean">
       <div class="mobile-brand">
-        <div class="mobile-brand-mark">G</div>
-
         <div>
           <h1>GRAPHI<span>SCAN</span></h1>
           <p>Teacher • Parent • Expert • Guest</p>
@@ -90,10 +88,7 @@
           {{ loading ? 'Signing in...' : 'Sign in' }}
         </button>
 
-        <p class="auth-switch">
-          Don’t have an account?
-          <RouterLink to="/register">Create account</RouterLink>
-        </p>
+        <p class="auth-switch">Ask your GraphiScan administrator for an account.</p>
       </form>
     </section>
   </main>
