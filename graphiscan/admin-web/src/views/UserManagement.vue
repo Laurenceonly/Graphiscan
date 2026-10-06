@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="User Management">
+  <AdminLayout>
     <div class="compact-page user-management-page">
       <div class="page-header compact-header">
         <div>
@@ -92,6 +92,9 @@
         <div
           v-if="!loading && !error && filteredUsers.length > 0"
           class="table-wrapper compact-table-scroll admin-users-table"
+          role="region"
+          aria-label="Users"
+          tabindex="0"
         >
           <table>
             <thead>
@@ -107,7 +110,7 @@
 
             <tbody>
               <tr v-for="user in filteredUsers" :key="user.user_id">
-                <td>
+                <td data-label="Name">
                   <div class="user-cell">
                     <div class="user-avatar">
                       {{ getInitial(user.fullname) }}
@@ -119,23 +122,23 @@
                   </div>
                 </td>
 
-                <td>{{ user.email || 'N/A' }}</td>
+                <td data-label="Email">{{ user.email || 'N/A' }}</td>
 
-                <td>
+                <td data-label="Role">
                   <span class="role-badge" :class="user.role || 'unknown'">
                     {{ formatRole(user.role) }}
                   </span>
                 </td>
 
-                <td>
+                <td data-label="Status">
                   <span class="status-badge" :class="getStatusClass(user.account_status)">
                     {{ formatStatus(user.account_status) }}
                   </span>
                 </td>
 
-                <td>{{ user.created_at || 'N/A' }}</td>
+                <td data-label="Registered">{{ user.created_at || 'N/A' }}</td>
 
-                <td>
+                <td data-label="Actions">
                   <div class="table-actions user-action-stack">
                     <span v-if="isCurrentAdmin(user)" class="current-admin-pill">
                       Current Admin

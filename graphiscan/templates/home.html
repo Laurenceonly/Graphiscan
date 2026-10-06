@@ -766,8 +766,7 @@
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
             <a href="#about">About</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}" class="nav-signin">Get Started</a>
+            <a href="{{ url_for('login') }}" class="nav-signin">Sign In</a>
         </div>
     </nav>
 
@@ -978,18 +977,14 @@
             <div>
                 <h2>Ready to start screening?</h2>
                 <p>
-                    Login to access your dashboard or create an account to begin using GRAPHISCAN.
+                    Sign in with the account provided by your GraphiScan administrator to access your dashboard.
                 </p>
             </div>
 
             <div class="cta-area">
                 <a href="{{ url_for('login') }}" class="btn btn-secondary">
-                    Login
+                    Sign In
                     <i class="fa-solid fa-right-to-bracket"></i>
-                </a>
-                <a href="{{ url_for('register') }}" class="btn btn-secondary">
-                    Register
-                    <i class="fa-solid fa-user-plus"></i>
                 </a>
             </div>
         </div>

@@ -120,8 +120,8 @@
               <FileQuestion :size="28" :stroke-width="1.8" />
             </div>
 
-            <h3>No screenings yet</h3>
-            <p>Your child has no recorded handwriting screening results yet.</p>
+            <h3>No reviewed results yet</h3>
+            <p>Expert-reviewed screening results will appear here.</p>
           </div>
         </section>
 

@@ -89,10 +89,10 @@
       <section class="guest-upgrade-card">
         <div>
           <span>Need Full Access?</span>
-          <h3>Register with the correct role</h3>
+          <h3>Request the right account</h3>
           <p>
-            To use official GRAPHISCAN features, create an account as a teacher,
-            parent, or expert and wait for administrator approval.
+            Ask your GraphiScan administrator for a teacher, parent, or expert account
+            to use official screening features.
           </p>
         </div>
       </section>

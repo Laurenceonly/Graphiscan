@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Student Progress">
+  <AdminLayout>
     <div class="compact-page admin-progress-page-clean">
       <div class="page-header compact-header">
         <div>
@@ -71,6 +71,9 @@
           <div
             v-if="filteredStudents.length > 0"
             class="table-wrapper compact-table-scroll admin-progress-table"
+            role="region"
+            aria-label="Student progress"
+            tabindex="0"
           >
             <table>
               <thead>
@@ -87,7 +90,7 @@
 
               <tbody>
                 <tr v-for="student in filteredStudents" :key="student.student_id">
-                  <td>
+                  <td data-label="Student">
                     <div class="user-cell">
                       <div class="user-avatar">
                         {{ getInitial(student.fullname || student.student_name) }}
@@ -103,30 +106,30 @@
                     </div>
                   </td>
 
-                  <td>{{ student.teacher_name || 'N/A' }}</td>
-                  <td>
+                  <td data-label="Teacher">{{ student.teacher_name || 'N/A' }}</td>
+                  <td data-label="Latest Result">
                     <span class="result-badge" :class="classificationClass(getClassification(student))">
                       {{ getClassification(student) }}
                     </span>
                   </td>
 
-                  <td>
+                  <td data-label="Assessments">
                     <strong>{{ getTotalScreenings(student) }}</strong>
                   </td>
 
-                  <td>
+                  <td data-label="Validation">
                     <span class="result-badge" :class="validationClass(getValidationStatus(student))">
                       {{ getValidationStatus(student) }}
                     </span>
                   </td>
 
-                  <td>
+                  <td data-label="Follow-up">
                     <span class="result-badge" :class="followUpClass(getFollowUpNeeded(student))">
                       {{ getFollowUpNeeded(student) }}
                     </span>
                   </td>
 
-                  <td>
+                  <td data-label="Action">
                     <RouterLink
                       class="small-action-btn"
                       :to="`/admin/progress/${student.student_id}`"

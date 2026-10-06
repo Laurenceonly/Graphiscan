@@ -350,43 +350,6 @@
             box-shadow: 0 0 0 4px rgba(47, 128, 185, 0.10);
         }
 
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-            margin: 6px 0 24px;
-            flex-wrap: wrap;
-        }
-
-        .remember-me {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .remember-me input {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--blue-dark);
-        }
-
-        .helper-link,
-        .footer-link {
-            color: var(--blue-dark);
-            font-weight: 800;
-            transition: 0.25s ease;
-        }
-
-        .helper-link:hover,
-        .footer-link:hover {
-            color: var(--blue-deep);
-            text-decoration: underline;
-        }
-
         .btn-primary {
             width: 100%;
             display: inline-flex;
@@ -410,31 +373,6 @@
             background: #256b9c;
             transform: translateY(-2px);
             box-shadow: 0 18px 34px rgba(47, 128, 185, 0.26);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--muted);
-            font-size: 0.86rem;
-            font-weight: 700;
-            margin: 28px 0 20px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            height: 1px;
-            background: var(--border);
-            flex: 1;
-        }
-
-        .signup-link {
-            text-align: center;
-            color: var(--muted);
-            margin: 0;
-            line-height: 1.6;
         }
 
         .security-note {
@@ -600,32 +538,16 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <label class="remember-me">
-                                <input type="checkbox" name="remember">
-                                Remember me
-                            </label>
-                            <!-- Replace # with your forgot password route if you have one -->
-                            <a href="#" class="helper-link">Forgot password?</a>
-                        </div>
-
                         <button type="submit" class="btn-primary">
                             Login
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </form>
 
-                    <div class="divider">New to GRAPHISCAN?</div>
-
-                    <p class="signup-link">
-                        Don&apos;t have an account?
-                        <a href="{{ url_for('register') }}" class="footer-link">Create one</a>
-                    </p>
-
                     <div class="security-note">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>
-                            Use the account provided by your administrator or register if your role requires access.
+                            Use the account provided by your GraphiScan administrator.
                         </span>
                     </div>
                 </div>

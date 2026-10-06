@@ -1,11 +1,22 @@
 <template>
   <div class="admin-shell">
-    <aside class="sidebar">
+    <button
+      v-if="isMenuOpen"
+      class="sidebar-backdrop"
+      type="button"
+      aria-label="Close navigation"
+      @click="closeMenu"
+    ></button>
+
+    <aside id="admin-navigation" ref="sidebarRef" class="sidebar" :class="{ 'is-open': isMenuOpen }" aria-label="Admin navigation">
       <div class="brand">
         <div>
           <h1>GRAPHI<span>SCAN</span></h1>
           <p>Admin Workspace</p>
         </div>
+        <button class="sidebar-close-btn" type="button" aria-label="Close navigation" @click="closeMenu">
+          <X :size="20" :stroke-width="1.8" />
+        </button>
       </div>
 
       <div
@@ -15,12 +26,13 @@
       >
         <p class="sidebar-label">{{ section.label }}</p>
 
-        <nav class="nav-menu">
+        <nav class="nav-menu" :aria-label="section.label">
           <RouterLink
             v-for="item in section.links"
             :key="item.to"
             class="nav-link"
             :to="item.to"
+            @click="closeMenu"
           >
             <span class="nav-icon">
               <component :is="item.icon" :size="17" :stroke-width="1.8" />
@@ -37,9 +49,20 @@
       </button>
     </aside>
 
-    <main class="main-panel">
+    <main class="main-panel" :inert="isNarrow && isMenuOpen ? '' : null">
       <header class="topbar">
-        <h2>{{ title }}</h2>
+        <button
+          ref="menuButtonRef"
+          class="mobile-nav-toggle"
+          type="button"
+          aria-label="Open navigation"
+          aria-controls="admin-navigation"
+          :aria-expanded="isMenuOpen"
+          @click="openMenu"
+        >
+          <Menu :size="21" :stroke-width="1.8" />
+        </button>
+        <span class="mobile-header-brand">GraphiScan</span>
       </header>
 
       <section class="content">
@@ -95,8 +118,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import adminApi from '../api/adminApi'
 import {
   AlertTriangle,
@@ -105,23 +128,63 @@ import {
   History,
   LayoutDashboard,
   LogOut,
+  Menu,
   Settings,
   TrendingUp,
   Users,
   X
 } from 'lucide-vue-next'
 
-defineProps({
-  title: {
-    type: String,
-    default: 'Admin Dashboard'
-  }
-})
-
 const router = useRouter()
+const route = useRoute()
 
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
+const isMenuOpen = ref(false)
+const isNarrow = ref(false)
+const sidebarRef = ref(null)
+const menuButtonRef = ref(null)
+let navMedia
+
+function syncNavWidth(event) {
+  isNarrow.value = event.matches
+  if (!event.matches) closeMenu()
+}
+
+function closeMenu() {
+  isMenuOpen.value = false
+}
+
+async function openMenu() {
+  isMenuOpen.value = true
+  await nextTick()
+  sidebarRef.value?.querySelector('.nav-link')?.focus()
+}
+
+function onKeydown(event) {
+  if (event.key === 'Escape' && isMenuOpen.value) {
+    closeMenu()
+    menuButtonRef.value?.focus()
+  }
+}
+
+watch(() => route.fullPath, closeMenu)
+watch(isMenuOpen, (open) => {
+  document.body.classList.toggle('admin-nav-open', open)
+})
+
+onMounted(() => {
+  navMedia = window.matchMedia('(max-width: 1100px)')
+  syncNavWidth(navMedia)
+  navMedia.addEventListener('change', syncNavWidth)
+  window.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  navMedia?.removeEventListener('change', syncNavWidth)
+  window.removeEventListener('keydown', onKeydown)
+  document.body.classList.remove('admin-nav-open')
+})
 
 const navigationSections = [
   {

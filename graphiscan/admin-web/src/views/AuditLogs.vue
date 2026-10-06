@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Audit Logs">
+  <AdminLayout>
     <div class="compact-page audit-logs-page">
       <div class="page-header compact-header">
         <div>
@@ -88,6 +88,9 @@
         <div
           v-if="!loading && !error && filteredLogs.length > 0"
           class="table-wrapper compact-table-scroll audit-logs-table"
+          role="region"
+          aria-label="Audit logs"
+          tabindex="0"
         >
           <table>
             <thead>
@@ -105,7 +108,7 @@
                 v-for="(log, index) in filteredLogs"
                 :key="log.log_id || `${index}-${log.log_date}`"
               >
-                <td>
+                <td data-label="User">
                   <div class="user-cell">
                     <div class="user-avatar">
                       {{ getInitial(log.fullname || log.email) }}
@@ -118,13 +121,13 @@
                   </div>
                 </td>
 
-                <td>
+                <td data-label="Role">
                   <span class="role-badge" :class="log.role || 'unknown'">
                     {{ formatRole(log.role) }}
                   </span>
                 </td>
 
-                <td>
+                <td data-label="Category">
                   <span
                     class="action-category-badge"
                     :class="getLogCategory(log.action)"
@@ -133,13 +136,13 @@
                   </span>
                 </td>
 
-                <td>
+                <td data-label="Action">
                   <span class="audit-action-text">
                     {{ log.action || 'N/A' }}
                   </span>
                 </td>
 
-                <td>{{ log.log_date || 'N/A' }}</td>
+                <td data-label="Date / Time">{{ log.log_date || 'N/A' }}</td>
               </tr>
             </tbody>
           </table>

@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Admin Dashboard">
+  <AdminLayout>
     <div class="dashboard-page modern-admin-dashboard">
       <section class="dashboard-toolbar">
         <div>

@@ -256,20 +256,6 @@ def hash_reset_token(token):
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
-def get_registration_status(role):
-    """
-    Public registration approval rules:
-    - guest accounts can try the app immediately
-    - parent / teacher / expert accounts wait for approval
-    - admin cannot register publicly
-    """
-    if role == "guest":
-        return "active"
-
-    if role in ["parent", "teacher", "expert"]:
-        return "pending"
-
-    return None
 # =========================================================
 # ADMIN API PROTECTION
 # Protects /api/admin routes from direct unauthorized access.
@@ -412,71 +398,6 @@ def home():
 def register():
     flash("Accounts are created by a GraphiScan administrator or researcher.", "info")
     return redirect(url_for("login"))
-
-    if request.method == "POST":
-        fullname = request.form.get("fullname", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
-        role = request.form.get("role", "").strip().lower()
-        contact_no = request.form.get("contact_no", "").strip()
-
-        if not fullname or not email or not password or not role:
-            flash("Please complete all required fields.", "danger")
-            return redirect(url_for("register"))
-
-        if not validate_email_format(email):
-            flash("Please enter a valid email address.", "danger")
-            return redirect(url_for("register"))
-
-        # Public registration must never create admin accounts.
-        if role not in ["guest", "parent", "teacher", "expert"]:
-            flash("Invalid account role.", "danger")
-            return redirect(url_for("register"))
-
-        password_errors = validate_password_strength(password)
-
-        if password_errors:
-            flash(password_errors[0], "danger")
-            return redirect(url_for("register"))
-
-        account_status = get_registration_status(role)
-
-        if not account_status:
-            flash("Invalid account role.", "danger")
-            return redirect(url_for("register"))
-
-        hashed_password = hash_password(password)
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        try:
-            cursor.execute("""
-                INSERT INTO users 
-                (fullname, email, password, role, contact_no, account_status)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (fullname, email, hashed_password, role, contact_no, account_status))
-
-            conn.commit()
-
-            new_user_id = cursor.lastrowid
-            log_action(new_user_id, f"New {role} account registered with status {account_status}")
-
-            if account_status == "active":
-                flash("Account registered successfully. You may now log in.", "success")
-            else:
-                flash("Registration submitted. Please wait for account approval.", "success")
-
-            return redirect(url_for("login"))
-
-        except mysql.connector.Error:
-            flash("Registration failed. Please check your details and try again.", "danger")
-
-        finally:
-            cursor.close()
-            conn.close()
-
-    return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -960,96 +881,7 @@ def api_user_register():
         "message": "Accounts are created by a GraphiScan administrator or researcher."
     }), 403
 
-    data = request.get_json() or {}
-
-    fullname = data.get("fullname", "").strip()
-    email = data.get("email", "").strip().lower()
-    password = data.get("password", "")
-    confirm_password = data.get("confirm_password", "")
-    role = data.get("role", "").strip().lower()
-    contact_no = data.get("contact_no", "").strip()
-
-    if not fullname or not email or not password or not confirm_password or not role:
-        return jsonify({
-            "success": False,
-            "message": "Please complete all required fields."
-        }), 400
-
-    if not validate_email_format(email):
-        return jsonify({
-            "success": False,
-            "message": "Please enter a valid email address."
-        }), 400
-
-    # Public registration can create app users only.
-    # Admin accounts must be created by an existing admin or directly in the database.
-    if role not in ["guest", "parent", "teacher", "expert"]:
-        return jsonify({
-            "success": False,
-            "message": "Invalid account role."
-        }), 400
-
-    if password != confirm_password:
-        return jsonify({
-            "success": False,
-            "message": "Passwords do not match."
-        }), 400
-
-    password_errors = validate_password_strength(password)
-
-    if password_errors:
-        return jsonify({
-            "success": False,
-            "message": password_errors[0]
-        }), 400
-
-    account_status = get_registration_status(role)
-
-    if not account_status:
-        return jsonify({
-            "success": False,
-            "message": "Invalid account role."
-        }), 400
-
-    hashed_password = hash_password(password)
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    try:
-        cursor.execute("""
-            INSERT INTO users 
-            (fullname, email, password, role, contact_no, account_status)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (fullname, email, hashed_password, role, contact_no, account_status))
-
-        conn.commit()
-
-        new_user_id = cursor.lastrowid
-        log_action(new_user_id, f"New {role} account registered through user app with status {account_status}")
-
-        if account_status == "active":
-            message = "Account registered successfully. You may now log in."
-        else:
-            message = "Registration submitted. Please wait for account approval."
-
-        return jsonify({
-            "success": True,
-            "message": message,
-            "account_status": account_status
-        })
-
-    except mysql.connector.Error:
-        return jsonify({
-            "success": False,
-            "message": "Registration failed. Please check your details and try again."
-        }), 400
-
-    finally:
-        cursor.close()
-        conn.close()
-
-        # =========================================================
+# =========================================================
 # USER APP CURRENT SESSION API
 # Checks if the logged-in user token is still valid and active.
 # =========================================================
@@ -1309,8 +1141,10 @@ def api_user_download_result_image(result_id):
             FROM results r
             JOIN handwriting_samples hs ON r.sample_id = hs.sample_id
             JOIN students s ON hs.student_id = s.student_id
+            JOIN validations v ON r.result_id = v.result_id
             WHERE r.result_id = %s
             AND s.parent_id = %s
+            AND v.validation_status = 'Validated'
             LIMIT 1
         """, (result_id, user_id))
 
@@ -2246,8 +2080,9 @@ def api_parent_results():
         JOIN handwriting_samples hs ON r.sample_id = hs.sample_id
         JOIN students s ON hs.student_id = s.student_id
         JOIN users teacher ON hs.teacher_id = teacher.user_id
-        LEFT JOIN validations v ON r.result_id = v.result_id
+        JOIN validations v ON r.result_id = v.result_id
         WHERE s.parent_id = %s
+        AND v.validation_status = 'Validated'
         ORDER BY r.date_generated DESC
     """, (parent_id,))
 
@@ -2314,10 +2149,11 @@ def api_parent_result_detail(result_id):
         JOIN handwriting_samples hs ON r.sample_id = hs.sample_id
         JOIN students s ON hs.student_id = s.student_id
         JOIN users teacher ON hs.teacher_id = teacher.user_id
-        LEFT JOIN validations v ON r.result_id = v.result_id
+        JOIN validations v ON r.result_id = v.result_id
         LEFT JOIN users expert ON v.expert_id = expert.user_id
         WHERE r.result_id = %s
         AND s.parent_id = %s
+        AND v.validation_status = 'Validated'
     """, (result_id, parent_id))
 
     result = cursor.fetchone()
@@ -2392,9 +2228,10 @@ def api_parent_student_progress(student_id):
             expert.fullname AS expert_name
         FROM results r
         JOIN handwriting_samples hs ON r.sample_id = hs.sample_id
-        LEFT JOIN validations v ON r.result_id = v.result_id
+        JOIN validations v ON r.result_id = v.result_id
         LEFT JOIN users expert ON v.expert_id = expert.user_id
         WHERE hs.student_id = %s
+        AND v.validation_status = 'Validated'
         ORDER BY r.date_generated ASC
     """, (student_id,))
 
@@ -2803,7 +2640,7 @@ def view_result(result_id):
         allowed = True
     elif role == "teacher" and result["teacher_id"] == user_id:
         allowed = True
-    elif role == "parent" and result["parent_id"] == user_id:
+    elif role == "parent" and result["parent_id"] == user_id and result["validation_status"] == "Validated":
         allowed = True
 
     if not allowed:
@@ -3004,8 +2841,9 @@ def parent_results():
         JOIN handwriting_samples hs ON r.sample_id = hs.sample_id
         JOIN students s ON hs.student_id = s.student_id
         JOIN users u ON hs.teacher_id = u.user_id
-        LEFT JOIN validations v ON r.result_id = v.result_id
+        JOIN validations v ON r.result_id = v.result_id
         WHERE s.parent_id = %s
+        AND v.validation_status = 'Validated'
         ORDER BY r.date_generated DESC
     """, (session["user_id"],))
 
@@ -3081,7 +2919,7 @@ def view_report(result_id):
         allowed = True
     elif role == "teacher" and report["teacher_id"] == user_id:
         allowed = True
-    elif role == "parent" and report["parent_id"] == user_id:
+    elif role == "parent" and report["parent_id"] == user_id and report["validation_status"] == "Validated":
         allowed = True
 
     if not allowed:

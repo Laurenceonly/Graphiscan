@@ -142,14 +142,6 @@ onMounted(() => {
   if (route.query.reset === 'success') {
     success.value = 'Password reset successfully. You may now log in.'
   }
-
-  if (route.query.registered === 'success') {
-    success.value = 'Account registered successfully. You may now log in.'
-  }
-
-  if (route.query.registered === 'pending') {
-    success.value = 'Registration submitted. Please wait for account approval.'
-  }
 })
 
 function clearUserSession() {

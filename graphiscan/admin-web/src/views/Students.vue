@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Student Management">
+  <AdminLayout>
     <div class="compact-page student-management-page">
       <div class="page-header compact-header">
         <div>
@@ -61,6 +61,9 @@
         <div
           v-if="!loading && !error && filteredStudents.length > 0"
           class="table-wrapper compact-table-scroll admin-students-table"
+          role="region"
+          aria-label="Students"
+          tabindex="0"
         >
           <table>
             <thead>
@@ -77,7 +80,7 @@
                 v-for="student in filteredStudents"
                 :key="student.student_id"
               >
-                <td>
+                <td data-label="Student">
                   <div class="user-cell">
                     <div class="user-avatar">
                       {{ getInitial(student.fullname) }}
@@ -93,7 +96,7 @@
                   </div>
                 </td>
 
-                <td>
+                <td data-label="Teacher">
                   <div class="user-cell compact-user-cell">
                     <div class="mini-user-icon">
                       <UserRound :size="15" :stroke-width="1.8" />
@@ -106,7 +109,7 @@
                   </div>
                 </td>
 
-                <td>
+                <td data-label="Parent / Guardian">
                   <div class="guardian-cell">
                     <div class="user-cell compact-user-cell">
                       <div class="mini-user-icon">
@@ -129,7 +132,7 @@
                   </div>
                 </td>
 
-                <td>
+                <td data-label="Actions">
                   <div class="table-actions">
                     <button
                       class="small-action-btn"

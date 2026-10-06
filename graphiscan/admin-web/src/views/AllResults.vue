@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Results">
+  <AdminLayout>
     <div class="compact-page screening-results-page">
       <div class="page-header compact-header">
         <div>
@@ -63,6 +63,9 @@
         <div
           v-if="!loading && !error && filteredResults.length > 0"
           class="table-wrapper compact-table-scroll admin-results-table"
+          role="region"
+          aria-label="Screening results"
+          tabindex="0"
         >
           <table>
             <thead>
@@ -79,7 +82,7 @@
 
             <tbody>
               <tr v-for="result in filteredResults" :key="result.result_id">
-                <td>
+                <td data-label="Student">
                   <div class="user-cell">
                     <div class="user-avatar">
                       {{ getInitial(result.student_name) }}
@@ -92,29 +95,29 @@
                   </div>
                 </td>
 
-                <td>{{ result.teacher_name || 'N/A' }}</td>
+                <td data-label="Teacher">{{ result.teacher_name || 'N/A' }}</td>
 
-                <td>
+                <td data-label="Classification">
                   <span class="result-badge" :class="classificationClass(result.classification)">
                     {{ result.classification || 'N/A' }}
                   </span>
                 </td>
 
-                <td>
+                <td data-label="Predicted-class score">
                   <div class="confidence-cell">
                     <strong>{{ formatPercent(result.confidence_score) }}</strong>
                   </div>
                 </td>
 
-                <td>
+                <td data-label="Validation">
                   <span class="result-badge" :class="validationClass(result.validation_status)">
                     {{ result.validation_status || 'Pending' }}
                   </span>
                 </td>
 
-                <td>{{ result.date_generated || 'N/A' }}</td>
+                <td data-label="Date">{{ result.date_generated || 'N/A' }}</td>
 
-                <td>
+                <td data-label="Action">
                   <RouterLink
                     class="small-action-btn"
                     :to="`/admin/results/${result.result_id}`"
