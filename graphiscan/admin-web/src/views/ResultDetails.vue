@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Result">
+  <AdminLayout>
     <div class="result-page polished-result-page">
       <div class="page-header result-header polished-result-header">
         <div>

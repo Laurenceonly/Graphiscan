@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Settings">
+  <AdminLayout>
     <div class="compact-page admin-settings-page">
       <div class="page-header compact-header">
         <div>
@@ -65,28 +65,6 @@
                 </button>
               </div>
 
-              <div class="admin-password-strength">
-                <div class="strength-head">
-                  <span>Password Strength</span>
-                  <strong>{{ passwordStrengthLabel }}</strong>
-                </div>
-
-                <div class="strength-track">
-                  <div
-                    class="strength-fill"
-                    :class="passwordStrengthClass"
-                    :style="{ width: passwordStrengthWidth }"
-                  ></div>
-                </div>
-
-                <ul class="password-rules">
-                  <li :class="{ passed: passwordRules.length }">At least 8 characters</li>
-                  <li :class="{ passed: passwordRules.uppercase }">One uppercase letter</li>
-                  <li :class="{ passed: passwordRules.lowercase }">One lowercase letter</li>
-                  <li :class="{ passed: passwordRules.number }">One number</li>
-                  <li :class="{ passed: passwordRules.symbol }">One symbol</li>
-                </ul>
-              </div>
             </div>
 
             <div class="form-group full-field">
@@ -116,6 +94,29 @@
               >
                 New passwords do not match.
               </p>
+            </div>
+
+            <div class="admin-password-strength">
+              <div class="strength-head">
+                <span>Password Strength</span>
+                <strong>{{ passwordStrengthLabel }}</strong>
+              </div>
+
+              <div class="strength-track">
+                <div
+                  class="strength-fill"
+                  :class="passwordStrengthClass"
+                  :style="{ width: passwordStrengthWidth }"
+                ></div>
+              </div>
+
+              <ul class="password-rules">
+                <li :class="{ passed: passwordRules.length }">At least 8 characters</li>
+                <li :class="{ passed: passwordRules.uppercase }">One uppercase letter</li>
+                <li :class="{ passed: passwordRules.lowercase }">One lowercase letter</li>
+                <li :class="{ passed: passwordRules.number }">One number</li>
+                <li :class="{ passed: passwordRules.symbol }">One symbol</li>
+              </ul>
             </div>
 
             <p v-if="changePasswordError" class="error-message full-field">

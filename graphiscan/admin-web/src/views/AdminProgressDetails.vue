@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="Student Progress">
+  <AdminLayout>
     <div class="compact-page admin-progress-detail-clean-page">
       <div class="page-header compact-header">
         <div>

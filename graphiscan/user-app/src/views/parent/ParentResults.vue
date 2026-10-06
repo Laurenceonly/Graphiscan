@@ -20,30 +20,30 @@
           </div>
 
           <div>
-            <span>Total Results</span>
+            <span>Reviewed Results</span>
             <strong>{{ loading ? '...' : results.length }}</strong>
           </div>
         </article>
 
         <article class="parent-results-card parent-results-stat-card-clean">
-          <div class="parent-results-icon" :class="{ warning: pendingCount > 0 }">
-            <Clock3 :size="20" :stroke-width="2" />
+          <div class="parent-results-icon">
+            <UsersRound :size="20" :stroke-width="2" />
           </div>
 
           <div>
-            <span>Pending Review</span>
-            <strong>{{ loading ? '...' : pendingCount }}</strong>
+            <span>Children With Reports</span>
+            <strong>{{ loading ? '...' : childrenWithReports }}</strong>
           </div>
         </article>
 
         <article class="parent-results-card parent-results-stat-card-clean">
           <div class="parent-results-icon success">
-            <CheckCircle2 :size="20" :stroke-width="2" />
+            <ClipboardList :size="20" :stroke-width="2" />
           </div>
 
           <div>
-            <span>Expert Reviewed</span>
-            <strong>{{ loading ? '...' : reviewedCount }}</strong>
+            <span>Follow-up Needed</span>
+            <strong>{{ loading ? '...' : followUpCount }}</strong>
           </div>
         </article>
       </section>
@@ -74,20 +74,6 @@
             type="text"
             placeholder="Search reports"
           />
-        </div>
-
-        <div v-if="results.length > 0" class="filter-row parent-filter-row-clean">
-          <button
-            v-for="filter in filters"
-            :key="filter.value"
-            type="button"
-            class="filter-pill parent-filter-pill-clean"
-            :class="{ active: selectedFilter === filter.value }"
-            @click="selectedFilter = filter.value"
-          >
-            {{ filter.label }}
-            <strong>{{ filter.count }}</strong>
-          </button>
         </div>
 
         <div v-if="loading || error" class="parent-results-status-area">
@@ -188,7 +174,7 @@
           </div>
 
           <h3>No results yet</h3>
-          <p>Screening results connected to your child will appear here.</p>
+          <p>Expert-reviewed results connected to your child will appear here.</p>
         </section>
       </section>
     </section>
@@ -199,48 +185,22 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
-  CheckCircle2,
-  Clock3,
+  ClipboardList,
   Eye,
   FileQuestion,
   FileText,
   RefreshCw,
   Search,
-  TrendingUp
+  TrendingUp,
+  UsersRound
 } from 'lucide-vue-next'
 import UserLayout from '../../layouts/UserLayout.vue'
 import userApi from '../../api/userApi'
 
 const search = ref('')
-const selectedFilter = ref('all')
 const results = ref([])
 const loading = ref(true)
 const error = ref('')
-
-const filters = computed(() => {
-  return [
-    {
-      label: 'All',
-      value: 'all',
-      count: results.value.length
-    },
-    {
-      label: 'Pending',
-      value: 'pending',
-      count: countByStatus('pending')
-    },
-    {
-      label: 'Validated',
-      value: 'validated',
-      count: countByStatus('validated')
-    },
-    {
-      label: 'Flagged',
-      value: 'flagged',
-      count: countByStatus('flagged')
-    }
-  ]
-})
 
 onMounted(() => {
   loadResults()
@@ -272,15 +232,12 @@ async function loadResults() {
   }
 }
 
-const pendingCount = computed(() => {
-  return countByStatus('pending')
+const childrenWithReports = computed(() => {
+  return new Set(results.value.map((result) => result.student_id)).size
 })
 
-const reviewedCount = computed(() => {
-  return results.value.filter((result) => {
-    const status = normalizeText(result.validation_status || 'pending')
-    return status === 'validated' || status === 'flagged'
-  }).length
+const followUpCount = computed(() => {
+  return results.value.filter((result) => normalizeText(result.follow_up_needed) === 'yes').length
 })
 
 const filteredResults = computed(() => {
@@ -288,11 +245,6 @@ const filteredResults = computed(() => {
 
   return results.value
     .filter((result) => {
-      const status = normalizeText(result.validation_status || 'pending')
-
-      const matchesFilter =
-        selectedFilter.value === 'all' || status === selectedFilter.value
-
       const matchesSearch =
         !keyword ||
         String(result.student_name || '').toLowerCase().includes(keyword) ||
@@ -303,19 +255,12 @@ const filteredResults = computed(() => {
         String(result.confidence_score || '').toLowerCase().includes(keyword) ||
         String(result.date_generated || '').toLowerCase().includes(keyword)
 
-      return matchesFilter && matchesSearch
+      return matchesSearch
     })
     .sort((a, b) => {
       return getDateValue(b.date_generated) - getDateValue(a.date_generated)
     })
 })
-
-function countByStatus(status) {
-  return results.value.filter((result) => {
-    const currentStatus = normalizeText(result.validation_status || 'pending')
-    return currentStatus === status
-  }).length
-}
 
 function normalizeText(value) {
   return String(value || '').trim().toLowerCase()
