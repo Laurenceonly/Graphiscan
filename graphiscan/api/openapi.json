@@ -474,7 +474,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "description": "Hosted account list. Requires a current active session, completed onboarding, and a global accounts.manage grant. Returns a minimal account projection with optimistic revision. Account updates use the separate PATCH operation and require migration 017 and its writer configuration.",
         "parameters": [
           {
             "name": "limit",
@@ -512,15 +512,6 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/AccountStatus"
-            }
-          },
-          {
-            "name": "school_id",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "pattern": "^[1-9][0-9]{0,18}$",
-              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
             }
           }
         ],
@@ -574,7 +565,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -584,7 +575,7 @@
           "admin",
           "researcher"
         ],
-        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-record-scope": "Global accounts.manage grant; never client role metadata.",
         "x-permission": "accounts.manage"
       },
       "post": {
@@ -695,7 +686,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Protect self/last administrator and grant ceilings. Server checks expected_revision and advances it. Additional permission authority required for grant changes.",
+        "description": "Update account name, role, status and school/permission scopes. Requires an active session, completed onboarding and a global accounts.manage grant; permission grant replacement additionally requires permissions.manage. Protects self and the last active administrator and checks expected_revision. Temporary credentials and account creation are separate operations.",
         "parameters": [
           {
             "name": "user_id",
@@ -757,7 +748,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -2850,7 +2841,7 @@
         "tags": [
           "audit-logs"
         ],
-        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "description": "Hosted read-only audit list. Requires a current active session, completed onboarding, and a global audit.read grant. Returns a minimal activity projection.",
         "parameters": [
           {
             "name": "limit",
@@ -2870,36 +2861,18 @@
             }
           },
           {
-            "name": "actor_id",
+            "name": "q",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "maxLength": 120
             }
           },
           {
-            "name": "category",
+            "name": "role",
             "in": "query",
             "schema": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": "\\S"
-            }
-          },
-          {
-            "name": "from",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "$ref": "#/components/schemas/Role"
             }
           }
         ],
@@ -2953,7 +2926,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -2963,7 +2936,7 @@
           "admin",
           "researcher"
         ],
-        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-record-scope": "Global audit.read grant; never client role metadata.",
         "x-permission": "audit.read"
       }
     },
@@ -5398,6 +5371,20 @@
           "request_id"
         ]
       },
+      "AccountListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": { "type": "string", "format": "uuid" },
+          "full_name": { "type": "string" },
+          "email": { "type": "string", "nullable": true },
+          "role": { "$ref": "#/components/schemas/Role" },
+          "account_status": { "$ref": "#/components/schemas/AccountStatus" },
+          "revision": { "type": "integer", "minimum": 1 },
+          "created_at": { "type": "string", "format": "date-time" }
+        },
+        "required": ["user_id", "full_name", "email", "role", "account_status", "revision", "created_at"]
+      },
       "AccountList": {
         "type": "object",
         "additionalProperties": false,
@@ -5405,7 +5392,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Account"
+              "$ref": "#/components/schemas/AccountListItem"
             }
           },
           "page": {
@@ -5548,6 +5535,19 @@
           "request_id"
         ]
       },
+      "AuditListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "log_id": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+          "actor_id": { "type": "string", "format": "uuid", "nullable": true },
+          "full_name": { "type": "string", "nullable": true },
+          "role": { "type": "string", "nullable": true },
+          "action": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        },
+        "required": ["log_id", "actor_id", "full_name", "role", "action", "created_at"]
+      },
       "AuditEntryList": {
         "type": "object",
         "additionalProperties": false,
@@ -5555,7 +5555,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AuditEntry"
+              "$ref": "#/components/schemas/AuditListItem"
             }
           },
           "page": {

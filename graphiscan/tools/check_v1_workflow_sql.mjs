@@ -146,5 +146,107 @@ try{
     check((await one("SELECT has_function_privilege($1,'graphiscan_read_screenings(uuid,uuid,text,jsonb,timestamptz,bigint,integer,bigint,boolean)','EXECUTE') allowed",[role])).allowed,false)
     check((await one("SELECT has_table_privilege($1,'privacy_agreements','INSERT,UPDATE,DELETE') allowed",[role])).allowed,false)
   }
-  console.log(JSON.stringify({status:'workflow-sql-checks-passed',checks,scope:'isolated PGlite, actual 001-015 bundle and reader SQL; no hosted changes'}))
+  for(const [index,id] of [A,T,E,P].entries()){
+    sessions[id]=`40000000-0000-4000-8000-00000000000${index+1}`
+    await db.query('INSERT INTO auth.sessions(id,user_id) VALUES($1,$2)',[sessions[id],id])
+  }
+  const adminBundle=canonical(await read('016_admin_reads_setup'))
+  for(const name of ['016_admin_reads','grant_test_admin_reads']){
+    const body=canonical(await read(name)).replace('BEGIN;\n','').replace(/COMMIT;\n$/,'').trimEnd()
+    check(adminBundle.includes(body),true)
+  }
+  // A wrong fixture target must roll back the function and indexes too.
+  await db.query("UPDATE user_profiles SET full_name='Different Fictional Admin' WHERE user_id=$1",[A])
+  await assert.rejects(db.exec(adminBundle));checks++;await db.exec('ROLLBACK')
+  check((await one("SELECT to_regprocedure('public.graphiscan_read_admin(uuid,uuid,text,text,text,text,timestamptz,uuid,bigint,integer)') IS NULL absent")).absent,true)
+  check((await one("SELECT to_regclass('public.user_profiles_admin_page_idx') IS NULL absent")).absent,true)
+  await db.query("UPDATE user_profiles SET full_name='Synthetic Test Admin' WHERE user_id=$1",[A])
+  sessions[A]='45000000-0000-4000-8000-000000000001'
+  await db.query('INSERT INTO auth.sessions(id,user_id) VALUES($1,$2)',[sessions[A],A])
+  await db.exec(await read('016_admin_reads'))
+  const adminSignature='graphiscan_read_admin(uuid,uuid,text,text,text,text,timestamptz,uuid,bigint,integer)'
+  for(const role of ['anon','authenticated','service_role','graphiscan_password_writer'])
+    check((await one("SELECT has_function_privilege($1,$2,'EXECUTE') allowed",[role,adminSignature])).allowed,false)
+  check((await one("SELECT has_function_privilege('graphiscan_api_reader',$1,'EXECUTE') allowed",[adminSignature])).allowed,true)
+  const adminRead=async(id,resource='accounts',query={})=>(await one(
+    'SELECT graphiscan_read_admin($1,$2,$3,$4,$5,$6,$7::timestamptz,$8::uuid,$9::bigint,$10::integer) result',
+    [id,sessions[id],resource,query.q??'',query.role??null,query.status??null,
+      query.afterTime??null,query.afterUser??null,query.afterLog??null,query.limit??25])).result
+  await db.exec('SET ROLE graphiscan_api_reader')
+  check((await adminRead(A)).code,'FORBIDDEN')
+  check((await adminRead(T)).code,'FORBIDDEN')
+  await db.exec('RESET ROLE')
+  await db.exec(await read('grant_test_admin_reads'))
+  check((await one("SELECT count(*)::int n FROM user_permission_grants WHERE user_id=$1 AND school_id IS NULL AND permission_key IN ('accounts.manage','audit.read')",[A])).n,2)
+  check((await one('SELECT count(*)::int n FROM app_session_revocations WHERE session_id=$1',[sessions[A]])).n,1)
+  const grantedVersion=(await one('SELECT security_version FROM user_profiles WHERE user_id=$1',[A])).security_version
+  await db.exec(await read('grant_test_admin_reads'))
+  check((await one('SELECT security_version FROM user_profiles WHERE user_id=$1',[A])).security_version,grantedVersion)
+  check((await one("SELECT count(*)::int n FROM audit_logs WHERE action='test_fixture.admin_read_permissions_added'")).n,1)
+  sessions[A]='50000000-0000-4000-8000-000000000001'
+  await db.query('INSERT INTO auth.sessions(id,user_id) VALUES($1,$2)',[sessions[A],A])
+  await db.exec('SET ROLE graphiscan_api_reader')
+  check((await directory(A)).code,null)
+  check((await adminRead(A)).code,null)
+  check((await adminRead(A)).rows.length,5)
+  check((await adminRead(A,'accounts',{role:'teacher'})).rows.length,2)
+  check((await adminRead(A,'accounts',{status:'pending'})).rows.length,0)
+  check((await adminRead(A,'accounts',{q:'foreign'})).rows.length,1)
+  check((await adminRead(A,'audit')).code,null)
+  check((await adminRead(A,'audit')).rows.length>0,true)
+  check((await adminRead(T,'audit')).code,'FORBIDDEN')
+  check((await adminRead(A,'accounts',{limit:0})).code,'INVALID_QUERY')
+  check((await adminRead(A,'accounts',{afterTime:'2026-01-01T00:00:00Z'})).code,'INVALID_QUERY')
+  // Execute the real read-only setup checker's queries using the restricted reader.
+  const setupChecker=await fs.readFile(path.join(root,'graphiscan/tools/check_v1_admin_setup.py'),'utf8')
+  const setupQueries=[...setupChecker.matchAll(/cursor\.execute\("""([\s\S]*?)"""/g)].map(match=>match[1])
+  check(setupQueries.length,4)
+  check(await one(setupQueries[0].replaceAll('%s','$1'),['public.'+adminSignature]),{
+    guarded_function:true,reader_can_execute:true,other_roles_denied:true,public_denied:true})
+  check(await one(setupQueries[1]),{indexes_ready:true})
+  check((await one(setupQueries[2])).result,{code:'AUTHENTICATION_REQUIRED',rows:[]})
+  check(await one(setupQueries[3]),{single_test_admin:true,read_grants:true})
+  await db.exec('RESET ROLE')
+  await db.exec(await read('017_account_management'))
+  const writeSignature='graphiscan_update_account(uuid,uuid,uuid,jsonb,uuid)'
+  for(const role of ['anon','authenticated','service_role','graphiscan_api_reader','graphiscan_password_writer'])
+    check((await one("SELECT has_function_privilege($1,$2,'EXECUTE') allowed",[role,writeSignature])).allowed,false)
+  check((await one("SELECT has_function_privilege('graphiscan_admin_writer',$1,'EXECUTE') allowed",[writeSignature])).allowed,true)
+  check((await one("SELECT has_table_privilege('graphiscan_admin_writer','public.user_profiles','UPDATE') allowed")).allowed,false)
+  await db.exec('SET ROLE graphiscan_api_reader')
+  const revisionRows=await adminRead(A)
+  check(revisionRows.code,null)
+  check(revisionRows.rows.every(row=>Number.isInteger(row.revision)&&row.revision>0),true)
+  const accountPreflight=await read('017_account_management_preflight')
+  const accountCatalog=await one(accountPreflight)
+  check(Object.keys(accountCatalog).length,10)
+  for(const [name,value] of Object.entries(accountCatalog)) check(value,true,name)
+  await db.exec('RESET ROLE')
+  await db.exec('GRANT SELECT ON public.user_profiles TO graphiscan_admin_writer')
+  check((await one(accountPreflight)).no_direct_table_access,false)
+  await db.exec('REVOKE SELECT ON public.user_profiles FROM graphiscan_admin_writer')
+  await db.exec('GRANT EXECUTE ON FUNCTION public.'+writeSignature+' TO PUBLIC')
+  check((await one(accountPreflight)).public_denied,false)
+  check((await one(accountPreflight)).other_runtime_roles_denied,false)
+  await db.exec('REVOKE EXECUTE ON FUNCTION public.'+writeSignature+' FROM PUBLIC')
+  const updateAccount=async(target,payload,actor=A)=>(await one(
+    'SELECT graphiscan_update_account($1,$2,$3,$4::jsonb,$5) result',
+    [actor,sessions[actor],target,JSON.stringify(payload),'60000000-0000-4000-8000-000000000001'])).result
+  const beforeForeign=(await one('SELECT revision,security_version FROM user_profiles WHERE user_id=$1',[F]))
+  check((await updateAccount(F,{expected_revision:beforeForeign.revision,school_ids:'malformed'})).code,'INVALID_INPUT')
+  check((await updateAccount(F,{expected_revision:beforeForeign.revision,permission_grants:'malformed'})).code,'INVALID_INPUT')
+  const updateResult=await updateAccount(F,{expected_revision:beforeForeign.revision,full_name:'Renamed Foreign Teacher',school_ids:[school]})
+  check(updateResult.code,null)
+  check(updateResult.data.full_name,'Renamed Foreign Teacher')
+  check(updateResult.data.school_ids,[school])
+  check(updateResult.data.revision>beforeForeign.revision,true)
+  check((await one('SELECT count(*)::int n FROM app_session_revocations WHERE session_id=$1',[sessions[F]])).n,1)
+  check((await one('SELECT count(*)::int n FROM audit_logs WHERE actor_id=$1 AND action=\'accounts.updated\' AND resource_id=$2',[A,F])).n,1)
+  check((await updateAccount(F,{expected_revision:beforeForeign.revision,full_name:'Stale Name'})).code,'REVISION_CONFLICT')
+  check((await updateAccount(A,{expected_revision:(await one('SELECT revision FROM user_profiles WHERE user_id=$1',[A])).revision,account_status:'disabled'})).code,'FORBIDDEN')
+  check((await updateAccount(F,{expected_revision:updateResult.data.revision,permission_grants:[
+    {permission_key:'audit.read',school_id:null}]})).code,'FORBIDDEN')
+  check((await updateAccount(F,{expected_revision:updateResult.data.revision,role:'admin'})).code,null)
+  check((await one('SELECT role FROM user_profiles WHERE user_id=$1',[F])).role,'admin')
+  console.log(JSON.stringify({status:'workflow-sql-checks-passed',checks,scope:'isolated PGlite, migrations 001-017 including admin account updates; no hosted changes'}))
 }finally{await db.close()}

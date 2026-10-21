@@ -23,7 +23,7 @@ async page => {
     record(suffix + ':' + expected, (await response).status() === expected);
   };
   const login = async (value, expected = 200) => {
-    await page.goto(base + '/login');
+    await page.goto(base + '/legacy-login');
     await page.getByPlaceholder('Enter admin email').fill('fixture1@example.invalid');
     await page.getByPlaceholder('Enter password', {exact:true}).fill(value);
     await submit(page.getByRole('button', {name:'Sign in', exact:true}), '/api/admin/login', expected);
@@ -97,7 +97,7 @@ async page => {
   await page.getByPlaceholder('Create new password').fill(replacement);
   await page.getByPlaceholder('Re-enter new password').fill(replacement);
   await submit(page.getByRole('button',{name:'Change Password',exact:true}),'/api/admin/change-password');
-  await page.waitForURL('**/login');
+  await page.waitForURL('**/legacy-login');
   await login(password,401);
   await login(replacement);
   await page.goto(base+'/admin/audit-logs');

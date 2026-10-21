@@ -20,13 +20,13 @@
 
       <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
-      <section class="dashboard-highlight-grid">
+      <section class="dashboard-highlight-grid" aria-label="Record totals">
         <RouterLink class="dashboard-highlight-card primary" to="/admin/results">
           <div class="highlight-icon">
             <FileText :size="20" :stroke-width="1.9" />
           </div>
           <div>
-            <span>Total Screenings</span>
+            <span>Total screenings</span>
             <strong>{{ displayNumber(totalResults) }}</strong>
           </div>
         </RouterLink>
@@ -66,7 +66,7 @@
         <section class="clean-panel">
           <div class="clean-panel-head split-head">
             <div>
-              <h2>Review Status</h2>
+              <h2>Review status</h2>
             </div>
 
             <RouterLink class="mini-view-link" to="/admin/results">
@@ -103,7 +103,7 @@
         <section class="clean-panel">
           <div class="clean-panel-head split-head">
             <div>
-              <h2>Result Breakdown</h2>
+              <h2>Result breakdown</h2>
             </div>
 
             <RouterLink class="mini-view-link" to="/admin/results">
@@ -112,7 +112,7 @@
           </div>
 
           <div class="classification-ring-wrap">
-            <div class="classification-ring" :style="classificationRingStyle">
+            <div class="classification-ring" :style="classificationRingStyle" aria-hidden="true">
               <div>
                 <strong>{{ displayNumber(totalResults) }}</strong>
                 <span>Results</span>
@@ -139,7 +139,7 @@
       <section class="clean-panel">
         <div class="clean-panel-head split-head">
           <div>
-            <h2>Recent Screenings</h2>
+            <h2>Recent screenings</h2>
           </div>
 
           <RouterLink class="mini-view-link" to="/admin/results">
@@ -308,7 +308,7 @@ const classificationRingStyle = computed(() => {
 
   if (!total) {
     return {
-      background: 'conic-gradient(#eef3f8 0deg 360deg)'
+      background: 'var(--border)'
     }
   }
 
@@ -320,9 +320,9 @@ const classificationRingStyle = computed(() => {
 
   return {
     background: `conic-gradient(
-      #16a34a 0% ${normalEnd}%,
-      #e11d48 ${normalEnd}% ${highPotentialEnd}%,
-      #eef3f8 ${highPotentialEnd}% 100%
+      var(--success) 0% ${normalEnd}%,
+      var(--danger) ${normalEnd}% ${highPotentialEnd}%,
+      var(--border) ${highPotentialEnd}% 100%
     )`
   }
 })
@@ -470,3 +470,69 @@ function getResultPath(result) {
   return `/admin/results/${result.result_id}`
 }
 </script>
+
+<style scoped>
+.modern-admin-dashboard {
+  gap: 24px;
+  font: 400 14px/1.6 var(--font-ui);
+}
+.dashboard-toolbar { padding: 0; }
+.dashboard-toolbar h1 { font-size: 28px; line-height: 1.25; }
+.dashboard-toolbar p { font-size: 14px; line-height: 1.6; margin-top: 8px; }
+.dashboard-toolbar .dash-refresh-btn {
+  min-height: 44px; border-color: var(--control-border); border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+}
+.dashboard-highlight-grid { gap: 16px; }
+.dashboard-highlight-card {
+  min-height: 116px; padding: 20px; border-radius: 12px;
+  border-color: var(--border); box-shadow: none;
+}
+.dashboard-highlight-card:hover { background: var(--blue-50); border-color: var(--blue-700); box-shadow: none; }
+.dashboard-highlight-card .highlight-icon { width: 40px; height: 40px; border-radius: 8px; }
+.dashboard-highlight-card span { font-size: 13px; font-weight: 500; }
+.dashboard-highlight-card strong { font-size: 28px; line-height: 1.2; font-weight: 600; }
+.dashboard-visual-grid { gap: 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.clean-panel { padding: 24px; border-radius: 12px; box-shadow: none; }
+.clean-panel-head { margin-bottom: 24px; align-items: center; flex-wrap: wrap; gap: 12px; }
+.clean-panel-head h2 { font-size: 18px; font-weight: 600; line-height: 1.4; letter-spacing: -.02em; }
+.mini-view-link { min-height: 44px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; }
+.analytics-bar-list { gap: 24px; }
+.analytics-bar-top strong { font-size: 14px; font-weight: 500; }
+.analytics-bar-top small { font-size: 12px; }
+.analytics-bar-top span { font-size: 16px; }
+.analytics-bar-track { height: 8px; background: var(--border); }
+.analytics-bar-fill.warning { background: var(--warning); }
+.analytics-bar-fill.success, .legend-dot.success { background: var(--success); }
+.analytics-bar-fill.danger, .legend-dot.danger { background: var(--danger); }
+.classification-ring-wrap { grid-template-columns: minmax(140px, 180px) minmax(0, 1fr); gap: 20px; }
+.classification-ring { width: 100%; height: auto; aspect-ratio: 1; }
+.classification-ring strong { font-size: 28px; font-variant-numeric: tabular-nums; }
+.classification-ring span, .classification-legend p { font-size: 13px; }
+.classification-legend div { padding: 12px 0; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; }
+.classification-legend strong { font-size: 14px; font-variant-numeric: tabular-nums; }
+.recent-screening-item { padding: 16px; border-radius: 8px; background: var(--white); }
+.result-badge.success { color: var(--success-text); background: #ecfdf3; }
+.result-badge.danger { color: var(--danger-text); background: #fff1f2; }
+.recent-screening-item strong { font-size: 14px; font-weight: 500; }
+.recent-screening-item p { font-size: 13px; line-height: 1.6; }
+.clean-empty-state { padding: 32px 16px; }
+.clean-empty-state h3 { font-size: 16px; font-weight: 600; }
+.clean-empty-state p { font-size: 14px; }
+:is(a, button):focus-visible { outline: 3px solid var(--blue-700); outline-offset: 3px; }
+@media (max-width: 1280px) {
+  .classification-ring-wrap { grid-template-columns: 1fr; justify-items: center; }
+  .classification-ring { width: 160px; }
+  .classification-legend { width: 100%; }
+}
+@media (max-width: 760px) {
+  .dashboard-visual-grid { grid-template-columns: 1fr; }
+  .dashboard-toolbar { flex-direction: row; flex-wrap: wrap; }
+  .dashboard-toolbar h1 { font-size: 28px; }
+  .clean-panel { padding: 20px; }
+  .clean-panel-head { align-items: flex-start; text-align: left; }
+  .clean-panel-head h2 { text-align: left; }
+  .classification-ring-wrap { grid-template-columns: 1fr; }
+  .recent-screening-item { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+}
+</style>

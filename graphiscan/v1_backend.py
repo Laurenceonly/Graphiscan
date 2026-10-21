@@ -197,14 +197,45 @@ def backend_from_environment(environ=None):
         from v1_privacy import PrivacyService
         privacy_service = PrivacyService(connect, password_service.repository if password_service else None)
         backend = SupabasePostgresBackend(verifier, PostgresAccessRepository(connect), password_service, privacy_service)
+        admin_dsn = env.get("GRAPHISCAN_V1_ADMIN_DATABASE_URL", "")
+        if admin_dsn:
+            admin_info = psycopg.conninfo.conninfo_to_dict(admin_dsn)
+            if admin_info.get("user", "").split(".")[0] != "graphiscan_admin_writer":
+                raise ValueError()
+            from v1_admin_writes import AdminWriteService, PostgresAdminWriteRepository
+
+            def admin_connect():
+                connection = psycopg.connect(admin_dsn, row_factory=dict_row, connect_timeout=5,
+                                             sslmode="verify-full", application_name="graphiscan-v1-admin-write",
+                                             options="-c timezone=UTC -c statement_timeout=5s -c lock_timeout=3s")
+                try:
+                    connection.execute("SET SESSION TIME ZONE 'UTC'")
+                    connection.execute("SET SESSION statement_timeout = '5s'")
+                    connection.execute("SET SESSION lock_timeout = '3s'")
+                    connection.commit()
+                    return connection
+                except Exception:
+                    connection.close()
+                    raise
+
+            backend.admin_write_service = AdminWriteService(PostgresAdminWriteRepository(admin_connect))
         from v1_sessions import SessionService
         from v1_password import SupabasePasswordProvider
         backend.session_service = SessionService(backend,SupabasePasswordProvider(verifier),
                                                  password_service.repository if password_service else None)
         from v1_directory import DirectoryService
-        backend.directory_service = DirectoryService(connect)
+        cursor_options = {}
+        cursor_secret = env.get("GRAPHISCAN_V1_CURSOR_SECRET", "")
+        if cursor_secret:
+            cursor_key = bytes.fromhex(cursor_secret)
+            if len(cursor_key) != 32:
+                raise ValueError()
+            cursor_options["cursor_key"] = cursor_key
+        backend.directory_service = DirectoryService(connect, **cursor_options)
+        from v1_admin_reads import AdminReadService
+        backend.admin_read_service = AdminReadService(connect, **cursor_options)
         from v1_screenings import ScreeningReadService
-        backend.screening_read_service = ScreeningReadService(connect)
+        backend.screening_read_service = ScreeningReadService(connect, **cursor_options)
         from v1_screening_writes import ScreeningWriteService
         backend.screening_write_service = ScreeningWriteService(password_service.repository if password_service else None)
         from v1_uploads import ScreeningUploadService
@@ -215,11 +246,11 @@ def backend_from_environment(environ=None):
             try:runtime=runtime_from_manifest(env['GRAPHISCAN_V1_MODEL_MANIFEST'])
             except Exception:runtime=None
         backend.screening_upload_service=ScreeningUploadService(connect,
-            password_service.repository if password_service else None,runtime,storage_from_environment(env))
+            password_service.repository if password_service else None,runtime,storage_from_environment(env),**cursor_options)
         from v1_directory_writes import DirectoryWriteService
         backend.directory_write_service = DirectoryWriteService(password_service.repository if password_service else None)
         from v1_assignment_options import AssignmentOptionsService
-        backend.assignment_options_service = AssignmentOptionsService(connect)
+        backend.assignment_options_service = AssignmentOptionsService(connect, **cursor_options)
         return backend
     except Exception:
         return UnavailableBackend()

@@ -2,6 +2,7 @@
 async page => {
   const checks=[];let patches=[], conflict=false, listFailed=false, grants=true, optionPage=0;
   await page.unrouteAll({behavior:'ignoreErrors'});
+  await page.setViewportSize({width:1440,height:1000});
   const expert='11111111-1111-4111-8111-111111111111';
   let record={result_id:'41',student_id:'17',revision:1,classification:'Normal',predicted_class_score:0.8,date_generated:'2026-10-20T00:00:00Z',report:{report_type:'Follow-up Screening'},model:{model_key:'fictional',model_version:'v1'},review:{status:'Validated',assigned_expert_id:null,expert_id:'historical-reviewer',remarks:'Fictional review',expert_recommendation:'Fictional recommendation',follow_up_needed:false}};
   const check=(name,value)=>{if(!value)throw Error(name);checks.push(name)};
@@ -33,12 +34,20 @@ async page => {
     if(path==='/screenings/41/image')return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aB1kAAAAASUVORK5CYII=','base64')});
     throw Error('Unexpected API route '+path);
   });
-  await page.goto('http://127.0.0.1:5173/access');
+  await page.goto('http://127.0.0.1:5173/workspace');
+  await page.waitForURL('**/login');
+  check('workspace without in-memory session returns to login',new URL(page.url()).pathname==='/login');
   for(const [label,value] of [['Email address','fixture@example.invalid'],['Password','fictional-browser-only']]){
     const input=page.getByLabel(label,{exact:true});
     await input.click();await input.press('ControlOrMeta+A');await input.press('Backspace');await page.keyboard.insertText(value);
   }
   await page.getByRole('button',{name:'Sign in',exact:true}).click();
+  await page.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();
+  await page.waitForURL('**/workspace');
+  check('ready admin leaves login without losing hosted session',new URL(page.url()).pathname==='/workspace');
+  check('hosted dashboard uses reference sidebar and overview',await page.locator('.hosted-workspace .sidebar').count()===1);
+  await page.screenshot({path:'output/playwright/hosted-dashboard-desktop.png',fullPage:true});
+  await page.locator('.sidebar').getByRole('button',{name:'Results',exact:true}).click();
   await page.getByRole('button',{name:'View result 41'}).waitFor();
   check('ready admin renders results',await page.getByText('Follow-up Screening',{exact:false}).count()>0);
   await page.getByRole('button',{name:'Load more results',exact:true}).click();
@@ -74,11 +83,23 @@ async page => {
   await page.getByText('Fictional list failure',{exact:true}).waitFor();
   check('load failure is shown',await page.getByRole('alert').count()===1);
   grants=false;
+  await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+  await page.locator('.sidebar').getByRole('button',{name:'Settings',exact:true}).click();
   await page.getByRole('button',{name:'Refresh account',exact:true}).click();
+  await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+  await page.locator('.sidebar').getByRole('button',{name:'Results',exact:true}).click();
   await page.getByText('Screening records require permission',{exact:false}).waitFor();
   check('permission loss hides detail and assignment',await page.locator('.screening-detail').count()===0);
-  await page.getByRole('button',{name:'Sign out',exact:true}).click();
+  await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+  await page.locator('.sidebar').getByRole('button',{name:'Settings',exact:true}).click();
+  await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+  await page.locator('.sidebar').getByRole('button',{name:'Logout',exact:true}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'Logout',exact:true}).click();
   await page.getByRole('button',{name:'Sign in',exact:true}).waitFor();
+  await page.waitForURL('**/login');
+  check('signout returns to login',new URL(page.url()).pathname==='/login');
   check('signout clears results',await page.locator('.hosted-screenings').count()===0);
+  await page.getByLabel('Email address',{exact:true}).fill('');
+  await page.getByLabel('Password',{exact:true}).fill('');
   return {passed:checks.length,checks,assignmentRequests:patches.length,optionPages:optionPage};
 }
