@@ -8,14 +8,14 @@ Teachers can manage student records and submit handwriting samples for screening
 
 ## Built with
 
-- **Application:** Flask API and Vue 3 interfaces built with Vite.
+- **Application:** Flask API, Vue 3 interfaces built with Vite, and an in-progress React Native/Expo app.
 - **Machine learning:** TensorFlow/Keras and image preprocessing in Python.
-- **Data:** MySQL in the current prototype, with a PostgreSQL migration planned.
-- **Mobile direction:** A Vue app with Capacitor configuration.
+- **Data:** The legacy prototype uses MySQL. The Supabase Auth/PostgreSQL v1 schema is installed through migration017; full legacy-data migration and application cutover remain in progress.
+- **Mobile:** React Native/Expo is the agreed native direction; the existing Vue/Capacitor client remains until role and device parity are verified.
 
 ## Current status
 
-GraphiScan is in active development. The repository contains application source and development documentation. A public demo link will be added after deployment.
+GraphiScan is in active development. Supabase migrations through017 and the separate admin writer are installed and passed restricted read-only verification. Guarded account updates are implemented; actual mutation flows still need hosted verification. Account issuance/password reset, legacy-data/image migration, populated role-flow verification, final model decisions and deployment remain open. The user requires free model hosting; provider selection is pending. See [hosting preparation](graphiscan/api/HOSTING.md). A public link will be added after deployment.
 
 ## Responsible use
 

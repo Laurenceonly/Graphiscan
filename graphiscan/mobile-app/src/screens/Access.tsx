@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Text, View } from 'react-native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { RootRoutes } from '../navigation-types'
 import { useSession } from '../session'
-import { Body, Button, Field, Heading, Notice, Screen, styles, useColors } from '../ui'
+import { Body, Button, Field, Heading, Notice, Screen } from '../ui'
+import SignInPanel from '../SignInPanel'
 
 export function LoginScreen({ navigation }: NativeStackScreenProps<RootRoutes, 'Login'>) {
-  const { login } = useSession(), colors = useColors()
-  const [email, setEmail] = useState(''), [password, setPassword] = useState(''), [show, setShow] = useState(false)
+  const { login } = useSession()
+  const [email, setEmail] = useState(''), [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false), [error, setError] = useState('')
   async function submit() {
     if (busy) return
@@ -16,16 +16,9 @@ export function LoginScreen({ navigation }: NativeStackScreenProps<RootRoutes, '
     try { await login(email, password) } catch (failure: any) { setError(failure.message) }
     finally { setPassword(''); setBusy(false) }
   }
-  return <Screen><View style={{ paddingTop: 40, gap: 28 }}>
-    <Text style={[styles.title, { color: colors.primary }]}>GRAPHI<Text style={{ color: colors.text }}>SCAN</Text></Text>
-    <Heading>Welcome back</Heading><Body muted>Sign in with the account provided by your administrator.</Body>
-    <Field label="Email address" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" editable={!busy} />
-    <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry={!show} autoCapitalize="none" autoComplete="current-password" editable={!busy} onSubmitEditing={submit} />
-    <Button label={show ? 'Hide password' : 'Show password'} secondary onPress={() => setShow(!show)} />
-    <Notice error message={error} /><Button label={busy ? 'Signing in…' : 'Sign in'} disabled={busy} onPress={submit} />
-    <Button label="Forgot password?" secondary disabled={busy} onPress={() => navigation.navigate('ForgotPassword')} />
-    <Body muted>GraphiScan is a handwriting screening aid, not a clinical diagnosis.</Body>
-  </View></Screen>
+  return <SignInPanel email={email} password={password} busy={busy} error={error}
+    onEmail={setEmail} onPassword={setPassword} onSubmit={submit}
+    onForgotPassword={() => navigation.navigate('ForgotPassword')}/>
 }
 export function ForgotPasswordScreen() {
   const { api } = useSession()

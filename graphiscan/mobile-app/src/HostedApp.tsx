@@ -12,6 +12,7 @@ import { useRecords } from './use-records'
 import { dateLabel, screeningType } from './core/presentation'
 import { hostedPercent } from './core/hosted-presentation'
 import {HostedImage,HostedReview,HostedUpload} from './HostedScreeningActions'
+import SignInPanel from './SignInPanel'
 
 type Routes = { Main: undefined; Screening: { id: string }; History: { id: string }; Report: { id: string } }
 interface Profile { user_id: string; full_name: string; role: string; account_status: string; onboarding: { next_action: string } }
@@ -24,11 +25,8 @@ const origin = process.env.EXPO_PUBLIC_HOSTED_API_ORIGIN || (Platform.OS === 'an
 function HostedLogin({ login }: { login: (email: string, password: string) => Promise<void> }) {
   const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState('')
   async function submit() { if(busy)return;setBusy(true);setError('');try{await login(email.trim().toLowerCase(),password)}catch(e){setError((e as Error).message)}finally{setPassword('');setBusy(false)} }
-  return <Screen><Heading>GraphiScan</Heading><Body>Sign in with your issued teacher, expert or parent account.</Body>
-    <Field label="Email address" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" editable={!busy} />
-    <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete="current-password" editable={!busy} onSubmitEditing={submit} />
-    <Notice error message={error} /><Button label={busy?'Signing in...':'Sign in'} disabled={busy||!email.trim()||!password} onPress={submit} />
-    <Body muted>Screening supports expert review and does not establish a diagnosis.</Body></Screen>
+  return <SignInPanel email={email} password={password} busy={busy} error={error}
+    onEmail={setEmail} onPassword={setPassword} onSubmit={submit}/>
 }
 function Onboarding({ client, profile, refresh, logout }: { client: HostedClient; profile: Profile; refresh: () => Promise<void>; logout: () => Promise<void> }) {
   const action=profile.onboarding.next_action
@@ -136,7 +134,7 @@ function HostedRoot(){
   }).current
   const ready=profile?.onboarding.next_action==='ready'
   return <NavigationContainer theme={dark?DarkTheme:DefaultTheme}><StatusBar style={dark?'light':'dark'}/>
-    {!profile?<SafeAreaView edges={['top']} style={{flex:1}}><HostedLogin login={login}/></SafeAreaView>:!ready?<SafeAreaView edges={['top']} style={{flex:1}}><Onboarding client={api} profile={profile} refresh={refresh} logout={logout}/></SafeAreaView>:<Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator>
+    {!profile?<HostedLogin login={login}/>:!ready?<SafeAreaView edges={['top']} style={{flex:1}}><Onboarding client={api} profile={profile} refresh={refresh} logout={logout}/></SafeAreaView>:<Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator>
       <Stack.Screen name="Main" component={Main} options={{headerShown:false}}/><Stack.Screen name="Screening" component={Detail} options={{title:'Screening result'}}/>
       <Stack.Screen name="History" component={History} options={{title:'Student history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>
     </Stack.Navigator></Context.Provider>}

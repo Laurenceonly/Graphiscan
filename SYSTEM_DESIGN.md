@@ -116,6 +116,11 @@ Historical binary results may remain in history with their original model and tw
 
 ## Stack and hosting decision
 
+Budget steering (2026-10-22): user now requires free model hosting. The Cloud Run
+provider choice below is on hold pending a verified free option and its account,
+memory and usage constraints. Vercel admin, Supabase and Expo remain the planned
+parts. See `graphiscan/api/HOSTING.md` for current deployment preparation.
+
 Decision date: 2026-09-29. This is the agreed target architecture for the capstone pilot. It is not a claim that migration, model validation, or deployment is complete. Deployment is a later phase.
 
 ### Architecture

@@ -134,7 +134,7 @@ def main():
         assert npx, "npx is required"
         cli = [npx, "--yes", "--package", "@playwright/cli", "playwright-cli", "-s=adminwrites"]
         subprocess.run(cli + ["close"], cwd=ROOT, timeout=30, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(cli + ["open", "http://127.0.0.1:5175/login", "--headed"], cwd=ROOT, check=True, timeout=90, stdout=subprocess.DEVNULL)
+        subprocess.run(cli + ["open", "http://127.0.0.1:5175/legacy-login", "--headed"], cwd=ROOT, check=True, timeout=90, stdout=subprocess.DEVNULL)
         if args.phone:
             subprocess.run(cli + ["resize", "390", "844"], cwd=ROOT, check=True, timeout=30, stdout=subprocess.DEVNULL)
         subprocess.run(cli + ["run-code", "--filename", str(APP / "tools/admin_write_browser.js")], cwd=ROOT, check=True, timeout=180)

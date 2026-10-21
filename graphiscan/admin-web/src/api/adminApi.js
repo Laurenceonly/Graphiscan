@@ -50,8 +50,8 @@ adminApi.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       clearAdminSession()
 
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login?session=expired'
+      if (window.location.pathname !== '/legacy-login') {
+        window.location.href = '/legacy-login?session=expired'
       }
     }
 

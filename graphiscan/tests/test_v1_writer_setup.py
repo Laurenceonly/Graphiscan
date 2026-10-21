@@ -68,3 +68,26 @@ class WriterSetupTests(unittest.TestCase):
                     patch.object(setup.getpass, 'getpass') as prompt, patch('builtins.print'):
                 self.assertEqual(setup.main(), 2)
                 prompt.assert_not_called()
+
+    def test_admin_writer_uses_separate_role_and_preserves_password_writer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            env = Path(directory) / '.env'
+            env.write_text('GRAPHISCAN_V1_DATABASE_URL=' + READER + '\n'
+                           'GRAPHISCAN_V1_PASSWORD_DATABASE_URL=existing-password-writer\n', encoding='utf8')
+            with patch.object(setup, 'ENV_PATH', env), patch.object(setup.sys, 'argv', ['setup']), \
+                    patch.object(setup.sys.stdin, 'isatty', return_value=True), \
+                    patch.object(setup.getpass, 'getpass', return_value='Synthetic@/admin'), patch('builtins.print') as output:
+                self.assertEqual(setup.main('graphiscan_admin_writer', 'GRAPHISCAN_V1_ADMIN_DATABASE_URL'), 0)
+            values = dotenv_values(env, interpolate=False)
+            parsed = urlsplit(values['GRAPHISCAN_V1_ADMIN_DATABASE_URL'])
+            self.assertEqual(unquote(parsed.username), 'graphiscan_admin_writer.fixture')
+            self.assertEqual(unquote(parsed.password), 'Synthetic@/admin')
+            self.assertEqual(values['GRAPHISCAN_V1_PASSWORD_DATABASE_URL'], 'existing-password-writer')
+            self.assertEqual(values['GRAPHISCAN_V1_DATABASE_URL'], READER)
+            self.assertNotIn('Synthetic@/admin', str(output.call_args_list))
+
+    def test_writer_role_cannot_be_replaced_with_owner_or_mismatched_setting(self):
+        with self.assertRaises(ValueError):
+            setup.writer_uri(READER, 'fictional', 'postgres')
+        with self.assertRaises(ValueError):
+            setup.main('graphiscan_admin_writer', 'GRAPHISCAN_V1_PASSWORD_DATABASE_URL')

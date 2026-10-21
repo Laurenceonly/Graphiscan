@@ -268,6 +268,36 @@ def install_api_v1(app, backend: AccessBackend | None = None):
     def get_student(student_id):
         return read_directory('student', student_id)
 
+    def read_admin(resource):
+        from flask import current_app
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'admin_read_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return jsonify(**service.read(g.v1_identity, resource, request.args), request_id=g.v1_request_id)
+
+    @api.get('/accounts')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def list_admin_accounts():
+        return read_admin('accounts')
+
+    @api.get('/audit-logs')
+    @require_access(roles={'admin', 'researcher'}, permission='audit.read')
+    def list_admin_audit_logs():
+        return read_admin('audit')
+
+    @api.patch('/accounts/<user_id>')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def update_admin_account(user_id):
+        from flask import current_app
+        request.max_content_length = 32768
+        if request.args or not request.is_json:
+            raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'admin_write_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return jsonify(**service.update(g.v1_identity, user_id, request.get_json(silent=True),
+            g.v1_request_id), request_id=g.v1_request_id)
+
     def write_directory(operation, target=None):
         from flask import current_app
         request.max_content_length = 8192
