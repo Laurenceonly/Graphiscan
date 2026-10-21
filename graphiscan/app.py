@@ -27,7 +27,11 @@ load_dotenv()
 # 02. APP CONFIGURATION
 # =========================================================
 
+from api_v1 import install_api_v1
+from v1_backend import backend_from_environment
+
 app = Flask(__name__)
+install_api_v1(app, backend_from_environment())
 
 # Allows Vue admin web app to call Flask API routes.
 CORS(app, resources={
@@ -42,8 +46,8 @@ CORS(app, resources={
             "http://10.120.208.249:5173",
             "http://10.120.208.249:5174"
         ],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "methods": ["GET", "POST", "OPTIONS"]
+        "allow_headers": ["Content-Type", "Authorization", "Idempotency-Key"],
+        "methods": ["GET", "POST", "PATCH", "OPTIONS"]
     }
 })
 
@@ -65,7 +69,7 @@ def add_mobile_cors_headers(response):
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Vary"] = "Origin"
 
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, Idempotency-Key, X-Requested-With"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Private-Network"] = "true"
 
@@ -287,7 +291,36 @@ def require_admin_api(route_function):
                 "message": "Admin access required."
             }), 403
 
-        g.current_admin = admin_user
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("""
+                SELECT user_id, fullname, email, role, account_status
+                FROM users
+                WHERE user_id = %s
+                LIMIT 1
+            """, (admin_user["user_id"],))
+            fresh_admin = cursor.fetchone()
+        finally:
+            cursor.close()
+            conn.close()
+
+        if not fresh_admin:
+            ADMIN_TOKENS.pop(token, None)
+            return jsonify({
+                "success": False,
+                "message": "Your admin session is no longer valid. Please log in again."
+            }), 401
+
+        if fresh_admin.get("role") != "admin" or fresh_admin.get("account_status") != "active":
+            ADMIN_TOKENS.pop(token, None)
+            return jsonify({
+                "success": False,
+                "message": "Your admin account is not available. Please contact the administrator."
+            }), 403
+
+        ADMIN_TOKENS[token] = fresh_admin
+        g.current_admin = fresh_admin
 
         return route_function(*args, **kwargs)
 
@@ -1437,8 +1470,8 @@ def api_teacher_upload_sample():
         VALUES (%s, 'Pending')
     """, (result_id,))
 
-    cursor.execute("SELECT COUNT(*) FROM reports WHERE student_id = %s", (student_id,))
-    report_type = "Follow-up Screening" if cursor.fetchone()[0] else "Initial Screening"
+    cursor.execute("SELECT COUNT(*) AS report_count FROM reports WHERE student_id = %s", (student_id,))
+    report_type = "Follow-up Screening" if cursor.fetchone()["report_count"] else "Initial Screening"
     cursor.execute("""
         INSERT INTO reports (student_id, result_id, report_type, report_status)
         VALUES (%s, %s, %s, 'Generated')
@@ -1479,6 +1512,9 @@ def api_teacher_results():
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
+            s.student_id,
             r.classification,
             r.dysgraphia_probability,
             r.confidence_score,
@@ -1550,6 +1586,8 @@ def api_teacher_student_progress(student_id):
     cursor.execute("""
         SELECT
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             r.dysgraphia_probability,
             r.classification,
             r.confidence_score,
@@ -1671,6 +1709,9 @@ def api_teacher_result_detail(result_id):
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
+            s.student_id,
             r.dysgraphia_probability,
             r.classification,
             r.confidence_score,
@@ -1741,6 +1782,9 @@ def api_expert_results():
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
+            s.student_id,
             r.classification,
             r.dysgraphia_probability,
             r.confidence_score,
@@ -1801,6 +1845,8 @@ def api_expert_result_detail(result_id):
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             r.dysgraphia_probability,
             r.classification,
             r.confidence_score,
@@ -1900,6 +1946,8 @@ def api_expert_student_progress(student_id):
     cursor.execute("""
         SELECT
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             r.dysgraphia_probability,
             r.classification,
             r.confidence_score,
@@ -2059,6 +2107,8 @@ def api_parent_results():
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             s.student_id,
             r.classification,
             r.dysgraphia_probability,
@@ -2122,6 +2172,8 @@ def api_parent_result_detail(result_id):
     cursor.execute("""
         SELECT 
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             s.student_id,
             r.dysgraphia_probability,
             r.classification,
@@ -2217,6 +2269,8 @@ def api_parent_student_progress(student_id):
     cursor.execute("""
         SELECT
             r.result_id,
+            (SELECT CASE WHEN COUNT(DISTINCT rp.report_type) = 1 THEN MIN(rp.report_type) END
+             FROM reports rp WHERE rp.result_id = r.result_id AND rp.student_id = hs.student_id) AS report_type,
             r.dysgraphia_probability,
             r.classification,
             r.confidence_score,
@@ -2554,8 +2608,8 @@ def upload_sample():
                 VALUES (%s, 'Pending')
             """, (result_id,))
 
-            cursor.execute("SELECT COUNT(*) FROM reports WHERE student_id = %s", (student_id,))
-            report_type = "Follow-up Screening" if cursor.fetchone()[0] else "Initial Screening"
+            cursor.execute("SELECT COUNT(*) AS report_count FROM reports WHERE student_id = %s", (student_id,))
+            report_type = "Follow-up Screening" if cursor.fetchone()["report_count"] else "Initial Screening"
             cursor.execute("""
                 INSERT INTO reports (student_id, result_id, report_type, report_status)
                 VALUES (%s, %s, %s, 'Generated')
@@ -4468,7 +4522,7 @@ def api_admin_result_detail(result_id):
     if result["validation_date"]:
         result["validation_date"] = str(result["validation_date"])
 
-        result["image_url"] = build_image_url(result.get("image_path"))
+    result["image_url"] = build_image_url(result.get("image_path"))
 
     return jsonify({
         "success": True,

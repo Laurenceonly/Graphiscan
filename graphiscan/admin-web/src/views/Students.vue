@@ -49,14 +49,15 @@
                 v-model="search"
                 type="text"
                 placeholder="Search students"
+                aria-label="Search students"
               />
             </div>
           </div>
         </div>
 
-        <p v-if="loading" class="muted-message">Loading students...</p>
-        <p v-if="error" class="error-message">{{ error }}</p>
-        <p v-if="success" class="success-message">{{ success }}</p>
+        <p v-if="loading" class="muted-message" role="status">Loading students...</p>
+        <p v-if="error" class="error-message" role="alert">{{ error }}</p>
+        <p v-if="success" class="success-message" role="status">{{ success }}</p>
 
         <div
           v-if="!loading && !error && filteredStudents.length > 0"
@@ -168,7 +169,7 @@
         </div>
       </div>
 
-      <div v-if="showViewModal" class="modal-backdrop">
+      <div v-if="showViewModal" v-dialog="closeViewModal" class="modal-backdrop">
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
@@ -177,7 +178,9 @@
               <p>View student profile, assigned teacher, and linked parent.</p>
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeViewModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeViewModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
@@ -234,7 +237,7 @@
         </section>
       </div>
 
-      <div v-if="showAddModal" class="modal-backdrop">
+      <div v-if="showAddModal" v-dialog="closeAddModal" class="modal-backdrop">
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
@@ -243,15 +246,18 @@
               <p>Create a student record and assign a teacher.</p>
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeAddModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeAddModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
 
           <form class="admin-form-grid" @submit.prevent="createStudent">
+            <p class="form-help full-field">Fields marked * are required.</p>
             <div class="form-group">
-              <label>Student Full Name</label>
-              <input
+              <label for="students-1">Student Full Name <span aria-hidden="true">*</span></label>
+              <input id="students-1" aria-required="true"
                 v-model="newStudent.fullname"
                 type="text"
                 placeholder="Enter student full name"
@@ -259,8 +265,8 @@
             </div>
 
             <div class="form-group">
-              <label>Age</label>
-              <input
+              <label for="students-2">Age <span aria-hidden="true">*</span></label>
+              <input id="students-2" aria-required="true"
                 v-model="newStudent.age"
                 type="number"
                 min="1"
@@ -269,8 +275,8 @@
             </div>
 
             <div class="form-group">
-              <label>Grade Level</label>
-              <input
+              <label for="students-3">Grade Level <span aria-hidden="true">*</span></label>
+              <input id="students-3" aria-required="true"
                 v-model="newStudent.grade_level"
                 type="text"
                 placeholder="Example: Grade 3"
@@ -278,8 +284,8 @@
             </div>
 
             <div class="form-group">
-              <label>Assigned Teacher</label>
-              <select v-model="newStudent.teacher_id">
+              <label for="students-4">Assigned Teacher <span aria-hidden="true">*</span></label>
+              <select id="students-4" aria-required="true" v-model="newStudent.teacher_id">
                 <option value="">Select teacher</option>
                 <option
                   v-for="teacher in activeTeachers"
@@ -292,8 +298,8 @@
             </div>
 
             <div class="form-group full-field">
-              <label>Parent / Guardian</label>
-              <select v-model="newStudent.parent_id">
+              <label for="students-5">Parent / Guardian</label>
+              <select id="students-5" v-model="newStudent.parent_id">
                 <option value="">No parent assigned</option>
                 <option
                   v-for="parent in activeParents"
@@ -305,7 +311,7 @@
               </select>
             </div>
 
-            <p v-if="addError" class="error-message full-field">{{ addError }}</p>
+            <p v-if="addError" class="error-message full-field" role="alert">{{ addError }}</p>
 
             <div class="modal-actions full-field">
               <button class="cancel-btn" type="button" @click="closeAddModal">
@@ -320,7 +326,7 @@
         </section>
       </div>
 
-      <div v-if="showGuardianModal" class="modal-backdrop">
+      <div v-if="showGuardianModal" v-dialog="closeGuardianModal" class="modal-backdrop">
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
@@ -329,15 +335,17 @@
               <p>Link, change, or remove the parent connected to this student.</p>
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeGuardianModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeGuardianModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
 
           <form class="admin-form-grid" @submit.prevent="updateStudentGuardian">
             <div class="form-group full-field">
-              <label>Student</label>
-              <input
+              <label for="students-6">Student</label>
+              <input id="students-6"
                 type="text"
                 :value="selectedGuardianStudent?.fullname || 'Unknown Student'"
                 disabled
@@ -345,8 +353,8 @@
             </div>
 
             <div class="form-group full-field">
-              <label>Parent / Guardian</label>
-              <select v-model="selectedGuardianId">
+              <label for="students-7">Parent / Guardian</label>
+              <select id="students-7" v-model="selectedGuardianId">
                 <option value="">No parent assigned</option>
                 <option
                   v-for="parent in activeParents"
@@ -358,7 +366,7 @@
               </select>
             </div>
 
-            <p v-if="guardianError" class="error-message full-field">
+            <p v-if="guardianError" class="error-message full-field" role="alert">
               {{ guardianError }}
             </p>
 
@@ -375,14 +383,16 @@
         </section>
       </div>
 
-      <div v-if="showDeleteModal" class="modal-backdrop">
+      <div v-if="showDeleteModal" v-dialog="closeDeleteModal" class="modal-backdrop">
         <section class="danger-modal">
           <div class="danger-modal-head">
             <div class="danger-icon">
               <AlertTriangle :size="26" :stroke-width="1.8" />
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeDeleteModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeDeleteModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
@@ -406,9 +416,10 @@
           </div>
 
           <form class="delete-form" @submit.prevent="deleteStudentPermanently">
+            <p class="form-help">Fields marked * are required.</p>
             <div class="form-group">
-              <label>Type DELETE to confirm</label>
-              <input
+              <label for="students-8">Type DELETE to confirm <span aria-hidden="true">*</span></label>
+              <input id="students-8" aria-required="true"
                 v-model="confirmationText"
                 type="text"
                 placeholder="DELETE"
@@ -417,8 +428,8 @@
             </div>
 
             <div class="form-group">
-              <label>Admin Password</label>
-              <input
+              <label for="students-9">Admin Password <span aria-hidden="true">*</span></label>
+              <input id="students-9" aria-required="true"
                 v-model="adminPassword"
                 type="password"
                 placeholder="Enter admin password"
@@ -426,7 +437,7 @@
               />
             </div>
 
-            <p v-if="deleteError" class="error-message">{{ deleteError }}</p>
+            <p v-if="deleteError" class="error-message" role="alert">{{ deleteError }}</p>
 
             <div class="modal-actions">
               <button class="cancel-btn" type="button" @click="closeDeleteModal">

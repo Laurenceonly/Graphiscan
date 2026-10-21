@@ -14,8 +14,8 @@
         </RouterLink>
       </div>
 
-      <p v-if="loading" class="muted-message">Loading result details...</p>
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="loading" class="muted-message" role="status">Loading result details...</p>
+      <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
       <div v-if="!loading && !error && result" class="result-detail-stack">
         <section class="panel-card result-overview-card">

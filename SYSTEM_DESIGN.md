@@ -2,7 +2,30 @@
 
 This records the intended workflow and stack decisions from 2026-09-29. They are not claims that the current app already implements them. See [KNOWLEDGE.md](KNOWLEDGE.md) for current behavior and [PROJECT_PLAN.md](PROJECT_PLAN.md) for work and panel status.
 
+The shared API target is specified in [API_CONTRACT.md](API_CONTRACT.md), drafted 2026-10-19. Health/bootstrap handlers and a shared guard now exist; protected v1 access fails closed until trusted identity/profile adapters are connected. Other v1 routes and Supabase services remain unimplemented. The contract includes source-to-target differences, absent schema capabilities, and unresolved inputs.
+
+The accompanying [OpenAPI and schema artifacts](graphiscan/api/README.md) include all 31 operations (two marked foundation, the rest proposed) and `003_api_contract.sql`. Offline interface checks and isolated PostgreSQL tests passed; the schema remains undeployed. Separate synthetic runtime tests cover the shared guard; provider/session and real database scope enforcement remain open.
+
 ## Target workflow
+
+Scope steering (2026-10-20): user plans to remove the optional guest demo and
+asked to focus on core scope. Stop guest-demo implementation/rehearsal; actual
+UI/API/role removal has not yet occurred. Optional guest descriptions below are
+historical design context pending explicit removal implementation. Core roles
+and the panel-required workflows remain the implementation priority.
+
+Verification checkpoint (2026-10-20): the optional v1 adapter's actual hosted
+read-only CA/TLS and reader/schema-permission preflight passed (24 checks, no
+database writes). Real user Auth/session bootstrap remains pending, as do the
+target write/resource/storage/migration flows below. Existing clients retain
+the MySQL API.
+
+Optional server adapters now implement remote Supabase identity verification and
+current PostgreSQL access snapshots, with unapplied 004 session invalidation.
+They are tested with synthetic HTTP/driver responses and isolated SQL, and remain
+disabled without explicit configuration. Hosted Auth/TLS/grants/concurrency and
+onboarding/session write integration remain release checks; clients still use
+the existing MySQL-backed API.
 
 Decision date: 2026-09-29. This is the target behavior for the admin web app, native mobile app, and Flask API. It follows the numbered comments in `C:\Users\MY_PC\Downloads\GRAPHISCAN_DEFENSE_MINUTES.md` and the agreed Grades 1–3 scope in `GRAPHISCAN_CONTEXT.md`. It is **not** a statement that every step already works in the current code. See `PROJECT_PLAN.md` for implementation status.
 

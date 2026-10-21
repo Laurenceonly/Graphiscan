@@ -18,7 +18,7 @@
         </button>
       </section>
 
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
       <section class="dashboard-highlight-grid">
         <RouterLink class="dashboard-highlight-card primary" to="/admin/results">

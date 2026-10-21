@@ -17,6 +17,7 @@
         </p>
       </div>
 
+      <RouterLink to="/access" class="hosted-access-link">Sign in to the new workspace</RouterLink>
       <form class="mobile-login-form" @submit.prevent="loginUser">
         <div class="form-group">
           <label>Email Address</label>

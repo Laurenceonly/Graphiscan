@@ -29,6 +29,8 @@ graphiscan/config.py
 *.log
 /.local-tools/
 /.local-backups/
+/.playwright-cli/
+/output/playwright/
 
 # Private uploads, datasets, and generated ML artifacts
 graphiscan/static/uploads/
@@ -54,3 +56,4 @@ graphiscan/training_results/
 .DS_Store
 Thumbs.db
 *.local
+graphiscan/model/deployment.local.json

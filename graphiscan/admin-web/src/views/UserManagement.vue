@@ -49,6 +49,7 @@
                 v-model="search"
                 type="text"
                 placeholder="Search users"
+                aria-label="Search users"
               />
             </div>
           </div>
@@ -70,7 +71,7 @@
           </div>
 
           <div class="user-filter-controls">
-            <select v-model="roleFilter" class="user-filter-select">
+            <select aria-label="Filter by role" v-model="roleFilter" class="user-filter-select">
               <option value="all">All roles</option>
               <option value="admin">Administrators</option>
               <option value="teacher">Teachers</option>
@@ -85,9 +86,9 @@
           </div>
         </div>
 
-        <p v-if="loading" class="muted-message">Loading users...</p>
-        <p v-if="error" class="error-message">{{ error }}</p>
-        <p v-if="success" class="success-message">{{ success }}</p>
+        <p v-if="loading" class="muted-message" role="status">Loading users...</p>
+        <p v-if="error" class="error-message" role="alert">{{ error }}</p>
+        <p v-if="success" class="success-message" role="status">{{ success }}</p>
 
         <div
           v-if="!loading && !error && filteredUsers.length > 0"
@@ -213,7 +214,7 @@
         </div>
       </div>
 
-      <div v-if="showAddModal" class="modal-backdrop">
+      <div v-if="showAddModal" v-dialog="closeAddModal" class="modal-backdrop">
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
@@ -222,15 +223,18 @@
               <p>Create an account and assign a role.</p>
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeAddModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeAddModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
 
           <form class="admin-form-grid" @submit.prevent="createUser">
+            <p class="form-help full-field">Fields marked * are required.</p>
             <div class="form-group">
-              <label>Full Name</label>
-              <input
+              <label for="user-management-1">Full Name <span aria-hidden="true">*</span></label>
+              <input id="user-management-1" aria-required="true"
                 v-model="newUser.fullname"
                 type="text"
                 placeholder="Enter full name"
@@ -238,8 +242,8 @@
             </div>
 
             <div class="form-group">
-              <label>Email Address</label>
-              <input
+              <label for="user-management-2">Email Address <span aria-hidden="true">*</span></label>
+              <input id="user-management-2" aria-required="true"
                 v-model="newUser.email"
                 type="email"
                 placeholder="Enter email address"
@@ -247,8 +251,8 @@
             </div>
 
             <div class="form-group">
-              <label>Role</label>
-              <select v-model="newUser.role">
+              <label for="user-management-3">Role <span aria-hidden="true">*</span></label>
+              <select id="user-management-3" aria-required="true" v-model="newUser.role">
                 <option value="">Select role</option>
                 <option value="admin">Administrator</option>
                 <option value="teacher">Teacher</option>
@@ -259,8 +263,8 @@
             </div>
 
             <div class="form-group">
-              <label>Contact Number</label>
-              <input
+              <label for="user-management-4">Contact Number</label>
+              <input id="user-management-4"
                 v-model="newUser.contact_no"
                 type="text"
                 placeholder="Optional contact number"
@@ -268,16 +272,19 @@
             </div>
 
             <div class="form-group full-field">
-              <label>Password</label>
+              <label for="user-management-5">Password <span aria-hidden="true">*</span></label>
 
               <div class="admin-password-input">
-                <input
+                <input id="user-management-5" aria-required="true"
                   v-model="newUser.password"
                   :type="showAddPassword ? 'text' : 'password'"
                   placeholder="Create password"
                 />
 
-                <button type="button" @click="showAddPassword = !showAddPassword">
+                <button type="button" :aria-label="showAddPassword ? 'Hide password' : 'Show password'"
+                  :aria-pressed="showAddPassword"
+                  aria-controls="user-management-5"
+                  @click="showAddPassword = !showAddPassword">
                   <EyeOff v-if="showAddPassword" :size="15" :stroke-width="1.8" />
                   <Eye v-else :size="15" :stroke-width="1.8" />
                   {{ showAddPassword ? 'Hide' : 'Show' }}
@@ -309,16 +316,21 @@
             </div>
 
             <div class="form-group full-field">
-              <label>Confirm Password</label>
+              <label for="user-management-6">Confirm Password <span aria-hidden="true">*</span></label>
 
               <div class="admin-password-input">
-                <input
+                <input id="user-management-6"
+                  :aria-invalid="Boolean(newUser.confirm_password && newUser.password !== newUser.confirm_password) || undefined"
+                  :aria-describedby="newUser.confirm_password && newUser.password !== newUser.confirm_password ? 'user-management-6-mismatch' : undefined" aria-required="true"
                   v-model="newUser.confirm_password"
                   :type="showConfirmAddPassword ? 'text' : 'password'"
                   placeholder="Re-enter password"
                 />
 
-                <button type="button" @click="showConfirmAddPassword = !showConfirmAddPassword">
+                <button type="button" :aria-label="showConfirmAddPassword ? 'Hide confirmation password' : 'Show confirmation password'"
+                  :aria-pressed="showConfirmAddPassword"
+                  aria-controls="user-management-6"
+                  @click="showConfirmAddPassword = !showConfirmAddPassword">
                   <EyeOff v-if="showConfirmAddPassword" :size="15" :stroke-width="1.8" />
                   <Eye v-else :size="15" :stroke-width="1.8" />
                   {{ showConfirmAddPassword ? 'Hide' : 'Show' }}
@@ -327,13 +339,13 @@
 
               <p
                 v-if="newUser.confirm_password && newUser.password !== newUser.confirm_password"
-                class="field-warning"
+                id="user-management-6-mismatch" class="field-warning" role="status"
               >
                 Passwords do not match.
               </p>
             </div>
 
-            <p v-if="addError" class="error-message full-field">{{ addError }}</p>
+            <p v-if="addError" class="error-message full-field" role="alert">{{ addError }}</p>
 
             <div class="modal-actions full-field">
               <button class="cancel-btn" type="button" @click="closeAddModal">
@@ -348,7 +360,7 @@
         </section>
       </div>
 
-      <div v-if="showStatusModal" class="modal-backdrop">
+      <div v-if="showStatusModal" v-dialog="closeStatusModal" class="modal-backdrop">
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
@@ -360,6 +372,7 @@
             <button
               class="modal-close-btn"
               type="button"
+              aria-label="Close dialog"
               :disabled="statusActionLoading"
               @click="closeStatusModal"
             >
@@ -386,7 +399,7 @@
               <p>This account will lose access until restored or approved again.</p>
             </div>
 
-            <p v-if="statusActionError" class="error-message">
+            <p v-if="statusActionError" class="error-message" role="alert">
               {{ statusActionError }}
             </p>
 
@@ -413,14 +426,16 @@
         </section>
       </div>
 
-      <div v-if="showDeleteModal" class="modal-backdrop">
+      <div v-if="showDeleteModal" v-dialog="closeDeleteModal" class="modal-backdrop">
         <section class="danger-modal">
           <div class="danger-modal-head">
             <div class="danger-icon">
               <AlertTriangle :size="26" :stroke-width="1.8" />
             </div>
 
-            <button class="modal-close-btn" type="button" @click="closeDeleteModal">
+            <button class="modal-close-btn"
+              type="button"
+              aria-label="Close dialog" @click="closeDeleteModal">
               <X :size="18" :stroke-width="1.8" />
             </button>
           </div>
@@ -444,9 +459,10 @@
           </div>
 
           <form class="delete-form" @submit.prevent="deleteUserPermanently">
+            <p class="form-help">Fields marked * are required.</p>
             <div class="form-group">
-              <label>Type DELETE to confirm</label>
-              <input
+              <label for="user-management-7">Type DELETE to confirm <span aria-hidden="true">*</span></label>
+              <input id="user-management-7" aria-required="true"
                 v-model="confirmationText"
                 type="text"
                 placeholder="DELETE"
@@ -455,8 +471,8 @@
             </div>
 
             <div class="form-group">
-              <label>Admin Password</label>
-              <input
+              <label for="user-management-8">Admin Password <span aria-hidden="true">*</span></label>
+              <input id="user-management-8" aria-required="true"
                 v-model="adminPassword"
                 type="password"
                 placeholder="Enter admin password"
@@ -464,7 +480,7 @@
               />
             </div>
 
-            <p v-if="deleteError" class="error-message">{{ deleteError }}</p>
+            <p v-if="deleteError" class="error-message" role="alert">{{ deleteError }}</p>
 
             <div class="modal-actions">
               <button class="cancel-btn" type="button" @click="closeDeleteModal">

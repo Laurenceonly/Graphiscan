@@ -18,13 +18,14 @@
           </p>
         </div>
 
+        <RouterLink to="/access" class="hosted-access-link">Sign in to the new workspace</RouterLink>
         <form class="modern-login-form" @submit.prevent="loginAdmin">
           <div class="form-group">
-            <label>Email Address</label>
+            <label for="login-1">Email Address</label>
 
             <div class="input-wrap">
               <Mail :size="18" :stroke-width="1.8" />
-              <input
+              <input id="login-1"
                 v-model="email"
                 type="email"
                 placeholder="Enter admin email"
@@ -35,12 +36,12 @@
           </div>
 
           <div class="form-group">
-            <label>Password</label>
+            <label for="login-2">Password</label>
 
             <div class="input-wrap login-password-wrap">
               <LockKeyhole :size="18" :stroke-width="1.8" />
 
-              <input
+              <input id="login-2"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Enter password"
@@ -51,6 +52,9 @@
               <button
                 class="login-password-toggle"
                 type="button"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                :aria-pressed="showPassword"
+                aria-controls="login-2"
                 @click="showPassword = !showPassword"
               >
                 <EyeOff v-if="showPassword" :size="15" :stroke-width="1.8" />
@@ -65,8 +69,8 @@
             <span>Administrator accounts only.</span>
           </div>
 
-          <p v-if="error" class="error-message">{{ error }}</p>
-          <p v-if="success" class="success-message">{{ success }}</p>
+          <p v-if="error" class="error-message" role="alert">{{ error }}</p>
+          <p v-if="success" class="success-message" role="status">{{ success }}</p>
 
           <button class="login-submit-btn" type="submit" :disabled="loading">
             <LoaderCircle
@@ -119,7 +123,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import {
   Eye,
   EyeOff,

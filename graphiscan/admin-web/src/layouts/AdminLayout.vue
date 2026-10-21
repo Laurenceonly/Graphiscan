@@ -70,7 +70,7 @@
       </section>
     </main>
 
-    <div v-if="showLogoutModal" class="modal-backdrop">
+    <div v-if="showLogoutModal" v-dialog="closeLogoutModal" class="modal-backdrop">
       <section class="logout-confirm-modal">
         <div class="danger-modal-head">
           <div class="danger-icon">
@@ -79,6 +79,7 @@
 
           <button
             class="modal-close-btn"
+            aria-label="Close logout confirmation"
             type="button"
             :disabled="logoutLoading"
             @click="closeLogoutModal"
@@ -164,7 +165,19 @@ async function openMenu() {
 function onKeydown(event) {
   if (event.key === 'Escape' && isMenuOpen.value) {
     closeMenu()
-    menuButtonRef.value?.focus()
+    nextTick(() => menuButtonRef.value?.focus())
+  } else if (event.key === 'Tab' && isMenuOpen.value) {
+    const controls = [...sidebarRef.value.querySelectorAll('a[href], button')]
+      .filter(element => !element.disabled && element.getClientRects().length)
+    const first = controls[0]
+    const last = controls.at(-1)
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last?.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first?.focus()
+    }
   }
 }
 
