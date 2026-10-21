@@ -5,6 +5,7 @@ import userApi from '../api/userApi'
 import ForgotPassword from '../views/ForgotPassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import Login from '../views/Login.vue'
+import HostedAccess from '../views/HostedAccess.vue'
 import Profile from '../views/Profile.vue'
 
 import TeacherDashboard from '../views/teacher/TeacherDashboard.vue'
@@ -29,6 +30,7 @@ import GuestDashboard from '../views/guest/GuestDashboard.vue'
 import GuestDemoScreening from '../views/guest/GuestDemoScreening.vue'
 
 const routes = [
+  { path: '/access', component: HostedAccess },
   {
     path: '/',
     redirect: '/login'

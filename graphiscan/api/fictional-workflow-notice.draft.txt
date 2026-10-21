@@ -1,0 +1,57 @@
+GraphiScan fictional workflow test notice
+Proposed version: graphiscan-workflow-test-v1
+Status: DRAFT FOR REVIEW — not published or approved
+
+This is a development test for specifically issued fictional GraphiScan admin,
+teacher, expert and parent accounts. The operator uses these accounts to test
+different roles. They do not represent actual staff, clinicians, guardians or
+children. Use only the named synthetic school/student fixture and generated
+handwriting test images. Do not enter real student names, handwriting, school
+records, health information or other personal records.
+
+The test covers sign-in, mandatory first-login password change, explicit notice
+acceptance, school/student links, handwriting upload, model selection, expert
+assignment and review, and parent access after validation. The test records
+fictional account profiles and relationships, the synthetic student's details,
+normalized test images, model outputs and model identity, human-entered test
+reviews and recommendations, report history, and related audit activity.
+
+Supabase Auth manages test credentials and sessions. The application stores
+test records in PostgreSQL and generated images in private Storage. The API
+checks account status, onboarding, role and current record relationships.
+Images are requested through the authorized API. These implemented controls
+are being tested; this notice does not certify production protections.
+
+The teacher account can submit samples for its assigned synthetic student.
+The admin account can manage assignments only for the designated synthetic
+school. The assigned expert can enter a test review. The linked parent can
+access a result only while its current review is Validated. A later Flagged
+review removes subsequent parent access through the API. Previously downloaded
+copies cannot be recalled by that change. Test reviewers must label their
+remarks and recommendations as fictional and must not provide advice about a
+real child.
+
+GraphiScan's current hosted models produce Normal or High Potential screening
+labels. Outputs are not a diagnosis or evidence about any real person's health.
+This exercise does not authorize collection of real student data, guardian
+participation on behalf of a child, model training, research reuse, or production
+deployment. Completing notice acceptance does not grant permissions or establish
+that the workflow has passed testing.
+
+The operator must keep passwords and session tokens private and outside chat,
+screenshots, commits and reports. Test accounts start with temporary passwords
+chosen and stored privately by the operator. Each new account must complete its
+own password-change and explicit notice-acceptance steps; no acceptance is
+inserted automatically.
+
+You may decline by leaving the test without accepting. Questions about this
+fictional exercise go to the GraphiScan project team through the existing project
+contact. No real-user privacy contact, retention duration or legal approval is
+asserted here. Test records and audit history may persist until the operator
+performs a separately reviewed cleanup; automatic deletion is not promised.
+
+The system records the accepted version and server timestamp. A different
+published version requires a new explicit acceptance. Earlier acceptances stay
+associated with their original text. Real-user purposes, participant permissions,
+responsible institution, recipients, retention and request procedures require
+separate review before any real-data use.

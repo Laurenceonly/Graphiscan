@@ -52,13 +52,14 @@
                 v-model="search"
                 type="text"
                 placeholder="Search results"
+                aria-label="Search results"
               />
             </div>
           </div>
         </div>
 
-        <p v-if="loading" class="muted-message">Loading screening results...</p>
-        <p v-if="error" class="error-message">{{ error }}</p>
+        <p v-if="loading" class="muted-message" role="status">Loading screening results...</p>
+        <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
         <div
           v-if="!loading && !error && filteredResults.length > 0"

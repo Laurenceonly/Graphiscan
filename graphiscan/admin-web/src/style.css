@@ -21,12 +21,14 @@
   --blue-50: #eef8ff;
   --blue-100: #dff2ff;
   --blue-300: #7cc8f8;
-  --blue-500: #2f80b9;
+  --blue-500: #286fa2;
   --blue-700: #145c8f;
 
   --success: #16a34a;
+  --success-text: #15803d;
   --warning: #f59e0b;
   --danger: #e11d48;
+  --danger-text: #be123c;
 
   --app-width: 1600px;
   --sidebar-width: 256px;
@@ -288,7 +290,7 @@ textarea {
   border: none;
   border-radius: 14px;
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 0.86rem;
   font-weight: 500;
   cursor: pointer;
@@ -352,7 +354,7 @@ textarea {
   padding: 8px 12px;
   border-radius: 999px;
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
   border: 1px solid #bbf7d0;
   font-size: 0.78rem;
   font-weight: 500;
@@ -1192,7 +1194,7 @@ textarea {
 .validation-row.success,
 .status.success {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .clean-status-row.warning,
@@ -1206,7 +1208,7 @@ textarea {
 .validation-row.danger,
 .status.danger {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 
@@ -1608,7 +1610,7 @@ td .action-text {
 .role-badge.expert,
 .result-badge.success {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .result-badge.warning {
@@ -1618,7 +1620,7 @@ td .action-text {
 
 .result-badge.danger {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .confidence-cell {
@@ -1868,7 +1870,7 @@ td .action-text {
   padding: 12px;
   border-radius: 14px;
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 0.88rem;
   font-weight: 400;
 }
@@ -1878,7 +1880,7 @@ td .action-text {
   padding: 12px;
   border-radius: 14px;
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
   font-size: 0.88rem;
   font-weight: 400;
 }
@@ -2144,7 +2146,7 @@ td .action-text {
   border: none;
   border-radius: 999px;
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 0.78rem;
   font-weight: 500;
   cursor: pointer;
@@ -2226,7 +2228,7 @@ td .action-text {
   place-items: center;
   border-radius: 18px;
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .modal-close-btn {
@@ -2256,7 +2258,7 @@ td .action-text {
   padding: 6px 10px;
   border-radius: 999px;
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 0.76rem;
   font-weight: 500;
 }
@@ -2646,17 +2648,17 @@ td .action-text {
 }
 
 .password-rules li.passed {
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .password-rules li.passed::before {
   content: "●";
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .field-warning {
   margin: 0;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 0.78rem;
 }
 
@@ -2774,11 +2776,11 @@ td .action-text {
 
 .success-action-btn {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .success-action-btn:hover {
-  background: var(--success);
+  background: var(--success-text);
   color: var(--white);
 }
 
@@ -2967,7 +2969,7 @@ td .action-text {
 
 .action-category-badge.delete {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .action-category-badge.guardian {
@@ -3936,11 +3938,11 @@ td .action-text {
 }
 
 .progress-summary-row.success span {
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .progress-summary-row.danger span {
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .recent-screening-list {
@@ -4056,7 +4058,7 @@ td .action-text {
 
 .user-summary-icon.success {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .user-summary-icon.warning {
@@ -4066,7 +4068,7 @@ td .action-text {
 
 .user-summary-icon.danger {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .user-summary-card span {
@@ -4536,11 +4538,11 @@ td .action-text {
 }
 
 .follow-up-yes {
-  color: var(--danger) !important;
+  color: var(--danger-text) !important;
 }
 
 .follow-up-no {
-  color: var(--success) !important;
+  color: var(--success-text) !important;
 }
 
 .result-side-link {
@@ -4631,7 +4633,7 @@ td .action-text {
 
 .user-summary-icon.danger {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .user-summary-icon.warning {
@@ -4641,7 +4643,7 @@ td .action-text {
 
 .user-summary-icon.success {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .admin-progress-main-grid {
@@ -4856,11 +4858,11 @@ td .action-text {
 }
 
 .follow-up-yes {
-  color: var(--danger) !important;
+  color: var(--danger-text) !important;
 }
 
 .follow-up-no {
-  color: var(--success) !important;
+  color: var(--success-text) !important;
 }
 
 @media (max-width: 1250px) {
@@ -4955,7 +4957,7 @@ td .action-text {
 
 .user-summary-icon.success {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .user-summary-icon.warning {
@@ -4965,7 +4967,7 @@ td .action-text {
 
 .user-summary-icon.danger {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 @media (max-width: 760px) {
@@ -5089,7 +5091,7 @@ td .action-text {
 
 .action-category-badge.validations {
   background: #ecfdf3;
-  color: var(--success);
+  color: var(--success-text);
 }
 
 .action-category-badge.guardian {
@@ -5100,7 +5102,7 @@ td .action-text {
 .action-category-badge.password,
 .action-category-badge.delete {
   background: #fff1f2;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 @media (max-width: 760px) {
@@ -5720,4 +5722,24 @@ body.admin-nav-open {
   .sidebar {
     transition: none;
   }
+}
+
+/* Accessible controls and modal focus, preserving the existing layout. */
+body.admin-dialog-open { overflow: hidden; }
+:is(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--blue-700);
+  outline-offset: 3px;
+}
+.sidebar :where(button, a):focus-visible { outline-color: var(--blue-300); }
+.modal-close-btn { width: 44px; height: 44px; min-width: 44px; flex-shrink: 0; }
+.admin-password-input button { min-height: 44px; }
+.modern-login-form .login-password-toggle { height: 44px; min-height: 44px; }
+.panel-card .form-help, .form-help { margin: 0 0 16px; color: var(--muted); font-size: 0.875rem; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+@media (max-width: 760px) {
+  .modal-backdrop { padding: 12px; }
+  .modal-backdrop :where(input, select, textarea) { font-size: 16px; }
+  .modal-backdrop :where(button), .settings-actions button,
+  .guardian-link-btn, .table-actions button, .filter-chip, .logout-btn { min-height: 44px; }
+  .standard-modal, .danger-modal, .logout-confirm-modal { overscroll-behavior: contain; }
 }

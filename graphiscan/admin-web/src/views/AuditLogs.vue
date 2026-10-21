@@ -44,6 +44,7 @@
                 v-model="search"
                 type="text"
                 placeholder="Search logs"
+                aria-label="Search logs"
               />
             </div>
           </div>
@@ -65,7 +66,7 @@
           </div>
 
           <div class="user-filter-controls">
-            <select v-model="roleFilter" class="user-filter-select">
+            <select aria-label="Filter by role" v-model="roleFilter" class="user-filter-select">
               <option value="all">All roles</option>
               <option value="admin">Administrators</option>
               <option value="teacher">Teachers</option>
@@ -82,8 +83,8 @@
           </div>
         </div>
 
-        <p v-if="loading" class="muted-message">Loading audit logs...</p>
-        <p v-if="error" class="error-message">{{ error }}</p>
+        <p v-if="loading" class="muted-message" role="status">Loading audit logs...</p>
+        <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
         <div
           v-if="!loading && !error && filteredLogs.length > 0"

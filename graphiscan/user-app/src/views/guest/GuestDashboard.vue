@@ -33,7 +33,7 @@
       <section class="guest-preview-grid">
         <RouterLink
           class="guest-preview-card"
-          to="/guest/demo-screening"
+          to="/guest/demo"
           aria-label="Open demo screening workflow"
         >
           <div class="guest-preview-icon">
@@ -51,7 +51,7 @@
 
         <RouterLink
           class="guest-preview-card"
-          to="/guest/demo-screening"
+          to="/guest/demo"
           aria-label="Open demo report structure"
         >
           <div class="guest-preview-icon">

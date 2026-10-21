@@ -1,0 +1,24 @@
+{
+  "status": "Proposed integration cases; metadata validation does not execute Flask authorization",
+  "cases": [
+    {"id":"no_identity","method":"GET","path":"/students","actor":"unauthenticated","expected_status":401},
+    {"id":"disabled_account","method":"GET","path":"/screenings","actor":"disabled_teacher","expected_status":403},
+    {"id":"password_gate","method":"GET","path":"/students","actor":"teacher_must_change_password","expected_status":403,"error_code":"PASSWORD_CHANGE_REQUIRED"},
+    {"id":"agreement_gate","method":"POST","path":"/screenings","actor":"teacher_without_current_agreement","expected_status":403,"error_code":"PRIVACY_ACCEPTANCE_REQUIRED"},
+    {"id":"researcher_no_grant","method":"POST","path":"/accounts","actor":"researcher_without_accounts_manage","expected_status":403},
+    {"id":"permission_escalation_denied","method":"PATCH","path":"/accounts/{user_id}","actor":"account_manager_without_permissions_manage","expected_status":403},
+    {"id":"teacher_other_student","method":"GET","path":"/students/{student_id}","actor":"unassigned_teacher","expected_status":404},
+    {"id":"parent_other_child","method":"GET","path":"/students/{student_id}/history","actor":"unlinked_parent","expected_status":404},
+    {"id":"parent_pending_image","method":"GET","path":"/screenings/{result_id}/image","actor":"linked_parent_pending_review","expected_status":404},
+    {"id":"parent_flagged_report","method":"GET","path":"/reports/{report_id}","actor":"linked_parent_flagged_review","expected_status":404},
+    {"id":"expert_unassigned","method":"PATCH","path":"/screenings/{result_id}/review","actor":"unassigned_expert","expected_status":404},
+    {"id":"admin_not_expert","method":"PATCH","path":"/screenings/{result_id}/review","actor":"admin","expected_status":403},
+    {"id":"stale_review","method":"PATCH","path":"/screenings/{result_id}/review","actor":"assigned_expert_stale_revision","expected_status":409,"error_code":"STALE_REVISION"},
+    {"id":"forged_upload_classification","method":"POST","path":"/screenings","actor":"assigned_teacher_forged_score_fields","expected_status":422},
+    {"id":"retry_payload_changed","method":"POST","path":"/screenings","actor":"assigned_teacher_reused_key_changed_payload","expected_status":409,"error_code":"IDEMPOTENCY_CONFLICT"},
+    {"id":"demo_not_official","method":"POST","path":"/demo-screenings","actor":"guest_valid_demo","expected_status":200,"postcondition":"No official sample/result/report/review rows"},
+    {"id":"parent_validated","method":"GET","path":"/screenings/{result_id}","actor":"linked_parent_current_validated_review","expected_status":200},
+    {"id":"revoked_session","method":"GET","path":"/students","actor":"signed_out_session_with_unexpired_jwt","expected_status":401},
+    {"id":"superseded_agreement","method":"POST","path":"/me/privacy-acceptance","actor":"active_password_changed_stale_agreement_version","expected_status":409,"error_code":"AGREEMENT_CHANGED"}
+  ]
+}

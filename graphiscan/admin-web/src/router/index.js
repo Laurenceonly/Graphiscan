@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Login from '../views/Login.vue'
+import HostedAccess from '../views/HostedAccess.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import UserManagement from '../views/UserManagement.vue'
 import AllResults from '../views/AllResults.vue'
@@ -12,6 +13,7 @@ import AdminProgressDetails from '../views/AdminProgressDetails.vue'
 import AdminSettings from '../views/AdminSettings.vue'
 
 const routes = [
+  { path: '/access', component: HostedAccess },
   {
     path: '/',
     redirect: '/login'
@@ -71,7 +73,7 @@ const routes = [
   name: 'AdminSettings',
   component: AdminSettings,
   meta: {
-    requiresAdmin: true
+    requiresAuth: true
   }
 }
 ]

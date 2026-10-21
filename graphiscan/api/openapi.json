@@ -1,0 +1,5702 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GraphiScan proposed shared API",
+    "version": "0.1.0-draft",
+    "description": "Local foundation includes sessions, onboarding, directory, screening reads and upload/review/assignment/model/request/image handlers. Applied migrations through atomic 013+014 have passed restricted hosted metadata/privilege checks. Private Storage, supported pinned model/evaluation metadata and authenticated hosted/device verification remain required. No production cutover/deployment has occurred."
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Relative v1 base; local foundation, no hosted application deployment"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "getHealth",
+        "tags": [
+          "health"
+        ],
+        "description": "Implemented process liveness only. Does not assert identity, database or model readiness.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "security": []
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "getMe",
+        "tags": [
+          "me"
+        ],
+        "description": "Implemented bootstrap handler with injected trusted adapters. Default unconfigured backend returns 503 for bearer requests. Active profiles can read onboarding state; unavailable accounts receive a minimal 403 error without record data.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "verified_identity"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      }
+    },
+    "/me/password": {
+      "post": {
+        "operationId": "changePassword",
+        "summary": "changePassword",
+        "tags": [
+          "me"
+        ],
+        "description": "Verify current credential, change Auth password, clear first-change flag only after confirmed success and revoke old sessions. Differences/matching checked by server. Return next_action=sign_in.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResultResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChange"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "logout",
+        "tags": [
+          "session"
+        ],
+        "description": "Verify bearer, commit durable revocation of only its session before provider local sign-out. Available regardless of active/onboarding status. Always clear client state; provider failure returns PROVIDER_SIGNOUT_PENDING with API access already revoked.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResultResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "verified_identity"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      }
+    },
+    "/privacy-agreement": {
+      "get": {
+        "operationId": "getAgreement",
+        "summary": "getAgreement",
+        "tags": [
+          "privacy-agreement"
+        ],
+        "description": "Return current approved, published, hash-matching notice for the verified subject after password change. Temporary test notices are bound to their fictional subject.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgreementResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      }
+    },
+    "/me/privacy-acceptance": {
+      "post": {
+        "operationId": "acceptAgreement",
+        "summary": "acceptAgreement",
+        "tags": [
+          "me"
+        ],
+        "description": "Require accepted=true and current agreement version. Recheck session/account/password/subject scope in the acceptance transaction. Repeated acceptance preserves server timestamp; stale version returns AGREEMENT_CHANGED.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptanceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyAcceptance"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "get": {
+        "operationId": "listAccounts",
+        "summary": "listAccounts",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Role"
+            }
+          },
+          {
+            "name": "account_status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AccountStatus"
+            }
+          },
+          {
+            "name": "school_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "accounts.manage"
+      },
+      "post": {
+        "operationId": "createAccount",
+        "summary": "createAccount",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "description": "Reuse for the same logical action. Bound to actor, operation and request digest; no plaintext secrets persisted."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created after successful commit.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              },
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Canonical created resource path."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "accounts.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{user_id}": {
+      "patch": {
+        "operationId": "updateAccount",
+        "summary": "updateAccount",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Protect self/last administrator and grant ceilings. Server checks expected_revision and advances it. Additional permission authority required for grant changes.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "accounts.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountUpdate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{user_id}/temporary-password": {
+      "post": {
+        "operationId": "resetTemporaryPassword",
+        "summary": "resetTemporaryPassword",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Write-only credential reset; revoke affected old sessions, set must_change_password, preserve consent history, and check expected_revision.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "accounts.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemporaryPassword"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schools": {
+      "get": {
+        "operationId": "listSchools",
+        "summary": "listSchools",
+        "tags": [
+          "schools"
+        ],
+        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "description": "Use the returned next_cursor with the same filters and limit; expires after 30 minutes or API restart."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "description": "Case-insensitive literal substring; wildcard characters are literal."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchoolList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      },
+      "post": {
+        "operationId": "createSchool",
+        "summary": "createSchool",
+        "tags": [
+          "schools"
+        ],
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created after successful commit.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              },
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Canonical created resource path."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchoolResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "schools.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchoolCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schools/{school_id}": {
+      "patch": {
+        "operationId": "updateSchool",
+        "summary": "updateSchool",
+        "tags": [
+          "schools"
+        ],
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchoolResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "schools.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchoolUpdate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schools/{school_id}/assignment-options": {
+      "get": {
+        "operationId": "getAssignmentOptions",
+        "summary": "getAssignmentOptions",
+        "tags": [
+          "schools"
+        ],
+        "description": "Implemented minimum actor-specific eligible identities, filtered before timestamp/UUID pagination. Requires current session/onboarding and assignments.manage for the school, or teacher membership. Teachers receive self and explicitly eligible active parents; administrative actors receive only explicitly eligible active teacher/parent/expert candidates, with school membership for teachers/experts. Membership alone grants no school-wide account search. Response data contains only user_id, full_name, role. Signed actor/session/school/limit-bound cursors expire after 30 minutes or API restart. No eligibility is created.",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignmentOptionList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher"
+        ],
+        "x-record-scope": "Only identities explicitly eligible for this actor, school and permitted assignment operation; no global account directory."
+      }
+    },
+    "/students": {
+      "get": {
+        "operationId": "listStudents",
+        "summary": "listStudents",
+        "tags": [
+          "students"
+        ],
+        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "description": "Use the returned next_cursor with the same filters and limit; expires after 30 minutes or API restart."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "description": "Case-insensitive literal substring; wildcard characters are literal."
+          },
+          {
+            "name": "school_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          {
+            "name": "grade_level",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      },
+      "post": {
+        "operationId": "createStudent",
+        "summary": "createStudent",
+        "tags": [
+          "students"
+        ],
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "description": "Reuse for the same logical action. Bound to actor, operation and request digest; no plaintext secrets persisted."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created after successful commit.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              },
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Canonical created resource path."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher"
+        ],
+        "x-record-scope": "Authorized school. Teachers are always assigned from identity; admin creation must provide an eligible teacher.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/{student_id}": {
+      "get": {
+        "operationId": "getStudent",
+        "summary": "getStudent",
+        "tags": [
+          "students"
+        ],
+        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors.",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      },
+      "patch": {
+        "operationId": "updateStudent",
+        "summary": "updateStudent",
+        "tags": [
+          "students"
+        ],
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher"
+        ],
+        "x-record-scope": "Assigned student and permitted fields; assignment/school changes require explicit management authority.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentUpdate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/models": {
+      "get": {
+        "operationId": "listModels",
+        "summary": "listModels",
+        "tags": [
+          "models"
+        ],
+        "description": "Model metadata only. No weights, private paths, arbitrary artifact publication or unsupported three-class availability.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata."
+      }
+    },
+    "/screenings": {
+      "post": {
+        "operationId": "createScreening",
+        "summary": "createScreening",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Synchronous completed official assessment. Pin model identity/decision rule, validate image, serialize student completion, commit result/review/report/audit/request state together. No partial official records. Limits are deployment-configured and must be published before capture is enabled.",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "description": "Reuse for the same logical action. Bound to actor, operation and request digest; no plaintext secrets persisted."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created after successful commit.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              },
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Canonical created resource path."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "415": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "teacher"
+        ],
+        "x-record-scope": "Current teacher/student assignment rechecked before transactional completion.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ScreeningUpload"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listScreenings",
+        "summary": "listScreenings",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "student_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          {
+            "name": "school_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          {
+            "name": "grade_level",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            }
+          },
+          {
+            "name": "validation_status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Pending",
+                "Validated",
+                "Flagged"
+              ]
+            }
+          },
+          {
+            "name": "model_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          {
+            "name": "task_type",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Filter before pagination/counts. Parent projection is linked and currently Validated only, regardless of requested filters."
+      }
+    },
+    "/screening-requests/{idempotency_key}": {
+      "get": {
+        "operationId": "getScreeningRequest",
+        "summary": "getScreeningRequest",
+        "tags": [
+          "screening-requests"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "idempotency_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningRequestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "teacher"
+        ],
+        "x-record-scope": "Submitting actor and screenings.create operation only. Reauthorize completed result before returning its reference."
+      }
+    },
+    "/screenings/{result_id}": {
+      "get": {
+        "operationId": "getScreening",
+        "summary": "getScreening",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Current authorized assignment; parent link AND currently Validated status."
+      }
+    },
+    "/students/{student_id}/history": {
+      "get": {
+        "operationId": "getHistory",
+        "summary": "getHistory",
+        "tags": [
+          "students"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "oldest"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Authorized dated history; parent release filtering precedes pagination/counts. No automatic improvement claims."
+      }
+    },
+    "/screenings/{result_id}/expert-assignment": {
+      "patch": {
+        "operationId": "assignExpert",
+        "summary": "assignExpert",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Check screening revision. Change assignment without overwriting reviewer authorship. Advance both screening and current-review revisions.",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "assignments.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpertAssignment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/screenings/{result_id}/review": {
+      "patch": {
+        "operationId": "reviewScreening",
+        "summary": "reviewScreening",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Human remarks required; human recommendation optional. Append immutable review history. A new Flagged state immediately removes subsequent parent result/report/image access.",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "description": "Reuse for the same logical action. Bound to actor, operation and request digest; no plaintext secrets persisted."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "expert"
+        ],
+        "x-record-scope": "Currently assigned/explicitly authorized expert only; current review revision required.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewWrite"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{report_id}": {
+      "get": {
+        "operationId": "getReport",
+        "summary": "getReport",
+        "tags": [
+          "reports"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Authorized report; parent link AND currently Validated review required. Report snapshot does not bypass current release checks."
+      }
+    },
+    "/screenings/{result_id}/image": {
+      "get": {
+        "operationId": "getImage",
+        "summary": "getImage",
+        "tags": [
+          "screenings"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Reauthorize every image request, including parent link/current Validated review. Derive object from authorized result; accept no storage paths or bearer query parameters."
+      }
+    },
+    "/demo-screenings": {
+      "post": {
+        "operationId": "runDemo",
+        "summary": "runDemo",
+        "tags": [
+          "demo-screenings"
+        ],
+        "description": "Enabled guest demonstration only. No student identifiers, official result/report/sample rows or retained official image.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "415": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DemoUpload"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/summary": {
+      "get": {
+        "operationId": "getSummary",
+        "summary": "getSummary",
+        "tags": [
+          "summary"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          {
+            "name": "grade_level",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "x-record-scope": "Administrative grant/role scope; parent aggregates contain released records only and reveal no hidden counts."
+      }
+    },
+    "/audit-logs": {
+      "get": {
+        "operationId": "listAudit",
+        "summary": "listAudit",
+        "tags": [
+          "audit-logs"
+        ],
+        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actor_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEntryList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "proposed",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-permission": "audit.read"
+      }
+    },
+    "/session/login": {
+      "post": {
+        "operationId": "loginSession",
+        "summary": "loginSession",
+        "tags": [
+          "session"
+        ],
+        "description": "Public credential exchange; verify returned provider identity and current issued active profile before returning tokens. Onboarding restrictions remain enforced by protected routes. No credential logging or client-provided roles.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session/refresh": {
+      "post": {
+        "operationId": "refreshSession",
+        "summary": "refreshSession",
+        "tags": [
+          "session"
+        ],
+        "description": "Public credential exchange; verify returned provider identity and current issued active profile before returning tokens. Onboarding restrictions remain enforced by protected routes. No credential logging or client-provided roles.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [],
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ],
+        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Refresh"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "ApiError": {
+        "description": "Structured error; code and authorization context determine the client action.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            },
+            "description": "Protected responses must not be cached."
+          },
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Present on rate limits or an in-progress request."
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Verified Supabase identity plus durable server-side profile/session/onboarding/scope checks; JWT role metadata is not authority."
+      }
+    },
+    "schemas": {
+      "PermissionGrant": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "permission_key": {
+            "type": "string",
+            "enum": [
+              "accounts.manage",
+              "permissions.manage",
+              "schools.manage",
+              "assignments.manage",
+              "audit.read"
+            ]
+          },
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "permission_key",
+          "school_id"
+        ]
+      },
+      "Id": {
+        "type": "string",
+        "pattern": "^[1-9][0-9]{0,18}$",
+        "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+      },
+      "UserId": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "Timestamp": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "Revision": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "Score": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert",
+          "guest"
+        ]
+      },
+      "AccountStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "pending",
+          "disabled",
+          "rejected"
+        ]
+      },
+      "Task": {
+        "type": "string",
+        "enum": [
+          "binary",
+          "three_class"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "next_action": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "fields"
+            ]
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "error",
+          "request_id"
+        ]
+      },
+      "Page": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "next_cursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "next_cursor"
+        ]
+      },
+      "Onboarding": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "must_change_password": {
+            "type": "boolean"
+          },
+          "required_agreement_version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "accepted_agreement_version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "next_action": {
+            "type": "string",
+            "enum": [
+              "change_password",
+              "accept_privacy",
+              "ready",
+              "agreement_unavailable"
+            ]
+          }
+        },
+        "required": [
+          "must_change_password",
+          "required_agreement_version",
+          "accepted_agreement_version",
+          "next_action"
+        ]
+      },
+      "Me": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "school_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          "onboarding": {
+            "$ref": "#/components/schemas/Onboarding"
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "role",
+          "account_status",
+          "permissions",
+          "school_ids",
+          "onboarding"
+        ]
+      },
+      "Account": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "permission_grants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionGrant"
+            }
+          },
+          "school_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            }
+          },
+          "onboarding": {
+            "$ref": "#/components/schemas/Onboarding"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "role",
+          "account_status",
+          "revision",
+          "permissions",
+          "permission_grants",
+          "school_ids",
+          "onboarding",
+          "created_at"
+        ]
+      },
+      "School": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "school_id",
+          "name",
+          "revision",
+          "created_at"
+        ]
+      },
+      "Student": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "student_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true
+          },
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "teacher_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "student_id",
+          "full_name",
+          "age",
+          "school_id",
+          "grade_level",
+          "teacher_id",
+          "parent_id",
+          "revision",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "AssignmentOption": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "teacher",
+              "parent",
+              "expert"
+            ]
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "role"
+        ]
+      },
+      "Evaluation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "evaluation_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "split_key": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "split_unit": {
+            "type": "string",
+            "enum": [
+              "image",
+              "writer"
+            ]
+          },
+          "writer_separation_verified": {
+            "type": "boolean"
+          },
+          "test_accuracy": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "evaluation_id",
+          "task_type",
+          "split_key",
+          "split_unit",
+          "writer_separation_verified",
+          "test_accuracy"
+        ]
+      },
+      "DecisionRule": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "high_potential_threshold"
+                ]
+              },
+              "threshold": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "kind",
+              "threshold"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "argmax"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "model_key": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "model_version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "architecture": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "class_labels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Normal",
+                "Low Potential",
+                "High Potential"
+              ]
+            },
+            "minItems": 2,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "preprocessing_key": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "decision_rule": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecisionRule"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "provenance": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "legacy_unverified"
+            ]
+          },
+          "is_selectable": {
+            "type": "boolean"
+          },
+          "is_default": {
+            "type": "boolean"
+          },
+          "evaluation": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Evaluation"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "model_id",
+          "model_key",
+          "model_version",
+          "architecture",
+          "task_type",
+          "class_labels",
+          "preprocessing_key",
+          "decision_rule",
+          "provenance",
+          "is_selectable",
+          "is_default",
+          "evaluation"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "binary"
+                ]
+              },
+              "class_labels": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Normal",
+                    "High Potential"
+                  ]
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true
+              }
+            }
+          },
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "three_class"
+                ]
+              },
+              "class_labels": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Normal",
+                    "Low Potential",
+                    "High Potential"
+                  ]
+                },
+                "minItems": 3,
+                "maxItems": 3,
+                "uniqueItems": true
+              }
+            }
+          }
+        ]
+      },
+      "BinaryScores": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "normal": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "high_potential": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "normal",
+          "high_potential"
+        ]
+      },
+      "ThreeClassScores": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "normal": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "low_potential": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "high_potential": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "normal",
+          "low_potential",
+          "high_potential"
+        ]
+      },
+      "ClassScores": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/BinaryScores"
+          },
+          {
+            "$ref": "#/components/schemas/ThreeClassScores"
+          },
+          {
+            "type": "object",
+            "nullable": true,
+            "enum": [
+              null
+            ]
+          }
+        ],
+        "description": "Known full vectors sum to 1 within 0.00001. Null means unavailable historical evidence."
+      },
+      "Review": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "Validated",
+              "Flagged"
+            ]
+          },
+          "assigned_expert_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "expert_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "expert_recommendation": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "follow_up_needed": {
+            "type": "boolean"
+          },
+          "validation_date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "provenance": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "legacy_unverified"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "assigned_expert_id",
+          "expert_id",
+          "remarks",
+          "expert_recommendation",
+          "follow_up_needed",
+          "validation_date",
+          "revision",
+          "provenance"
+        ]
+      },
+      "ReportReference": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "report_type": {
+            "type": "string",
+            "enum": [
+              "Initial Screening",
+              "Follow-up Screening"
+            ]
+          }
+        },
+        "required": [
+          "report_id",
+          "report_type"
+        ]
+      },
+      "Screening": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "result_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "student_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "sample_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "model": {
+            "$ref": "#/components/schemas/Model"
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Low Potential",
+              "High Potential"
+            ]
+          },
+          "class_scores": {
+            "$ref": "#/components/schemas/ClassScores"
+          },
+          "predicted_class_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "nullable": true
+          },
+          "decision_rule": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecisionRule"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "date_generated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "report": {
+            "$ref": "#/components/schemas/ReportReference"
+          },
+          "review": {
+            "$ref": "#/components/schemas/Review"
+          },
+          "provenance": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "legacy_unverified"
+            ]
+          }
+        },
+        "required": [
+          "result_id",
+          "student_id",
+          "sample_id",
+          "revision",
+          "model",
+          "task_type",
+          "classification",
+          "class_scores",
+          "predicted_class_score",
+          "decision_rule",
+          "date_generated",
+          "report",
+          "review",
+          "provenance"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "binary"
+                ]
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "Normal",
+                  "High Potential"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/BinaryScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "three_class"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ThreeClassScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskClassification"
+          }
+        ]
+      },
+      "SchoolContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "school_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          }
+        },
+        "required": [
+          "school_id",
+          "school_name",
+          "grade_level"
+        ]
+      },
+      "Report": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "result_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "student_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "report_type": {
+            "type": "string",
+            "enum": [
+              "Initial Screening",
+              "Follow-up Screening"
+            ]
+          },
+          "date_generated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "school_context": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SchoolContext"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "model": {
+            "$ref": "#/components/schemas/Model"
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Low Potential",
+              "High Potential"
+            ]
+          },
+          "class_scores": {
+            "$ref": "#/components/schemas/ClassScores"
+          },
+          "predicted_class_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "nullable": true
+          },
+          "review": {
+            "$ref": "#/components/schemas/Review"
+          },
+          "provenance": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "legacy_unverified"
+            ]
+          }
+        },
+        "required": [
+          "report_id",
+          "result_id",
+          "student_id",
+          "report_type",
+          "date_generated",
+          "school_context",
+          "model",
+          "task_type",
+          "classification",
+          "class_scores",
+          "predicted_class_score",
+          "review",
+          "provenance"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskClassification"
+          }
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "binary"
+                ]
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "Normal",
+                  "High Potential"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/BinaryScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "three_class"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ThreeClassScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "ScreeningRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "processing",
+              "completed",
+              "failed"
+            ]
+          },
+          "result_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds.",
+            "nullable": true
+          },
+          "error_code": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          }
+        },
+        "required": [
+          "state",
+          "result_id",
+          "error_code"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "processing"
+                ]
+              },
+              "result_id": {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              },
+              "error_code": {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            },
+            "description": "While processing, result_id must be null."
+          },
+          {
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "completed"
+                ]
+              },
+              "result_id": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+              },
+              "error_code": {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "failed"
+                ]
+              },
+              "result_id": {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              },
+              "error_code": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        ]
+      },
+      "Demo": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "is_demo": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "model": {
+            "$ref": "#/components/schemas/Model"
+          },
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Low Potential",
+              "High Potential"
+            ]
+          },
+          "class_scores": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BinaryScores"
+              },
+              {
+                "$ref": "#/components/schemas/ThreeClassScores"
+              }
+            ]
+          },
+          "predicted_class_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "decision_rule": {
+            "$ref": "#/components/schemas/DecisionRule"
+          }
+        },
+        "required": [
+          "is_demo",
+          "model",
+          "task_type",
+          "classification",
+          "class_scores",
+          "predicted_class_score",
+          "decision_rule"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskClassification"
+          }
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "binary"
+                ]
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "Normal",
+                  "High Potential"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/BinaryScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "three_class"
+                ]
+              },
+              "class_scores": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ThreeClassScores"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Summary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "total_students": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_screenings": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "school_id": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]{0,18}$",
+                  "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds.",
+                  "nullable": true
+                },
+                "grade_level": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3,
+                  "nullable": true
+                },
+                "validation_status": {
+                  "type": "string",
+                  "enum": [
+                    "Pending",
+                    "Validated",
+                    "Flagged",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "school_id",
+                "grade_level",
+                "validation_status",
+                "count"
+              ]
+            }
+          }
+        },
+        "required": [
+          "total_students",
+          "total_screenings",
+          "groups"
+        ]
+      },
+      "AuditEntry": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "log_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "resource_type": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "resource_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "log_id",
+          "actor_id",
+          "action",
+          "resource_type",
+          "resource_id",
+          "request_id",
+          "created_at"
+        ]
+      },
+      "Agreement": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "version",
+          "title",
+          "content",
+          "published_at"
+        ]
+      },
+      "Acceptance": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "agreement_version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "agreement_version",
+          "accepted_at"
+        ]
+      },
+      "ActionResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "next_action": {
+            "type": "string",
+            "enum": [
+              "sign_in",
+              "signed_out"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "next_action"
+        ]
+      },
+      "PasswordChange": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "current_password": {
+            "type": "string",
+            "minLength": 1,
+            "writeOnly": true
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "writeOnly": true
+          },
+          "confirm_password": {
+            "type": "string",
+            "minLength": 1,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "current_password",
+          "new_password",
+          "confirm_password"
+        ]
+      },
+      "PrivacyAcceptance": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "agreement_version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "accepted": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "agreement_version",
+          "accepted"
+        ]
+      },
+      "AccountCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "temporary_password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "writeOnly": true
+          },
+          "school_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "role",
+          "temporary_password",
+          "school_ids"
+        ]
+      },
+      "AccountUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "school_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+            },
+            "uniqueItems": true
+          },
+          "permission_grants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionGrant"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "expected_revision"
+        ],
+        "minProperties": 2,
+        "description": "Explicit permission_grants replacement additionally requires permissions.manage and the actor grant ceiling. An omitted grant field leaves grants unchanged; an empty array revokes them."
+      },
+      "TemporaryPassword": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "temporary_password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "writeOnly": true
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "temporary_password",
+          "expected_revision"
+        ]
+      },
+      "SchoolCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "SchoolUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "maxLength": 200
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          }
+        },
+        "required": [
+          "name",
+          "expected_revision"
+        ]
+      },
+      "StudentCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "maxLength": 200
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32767
+          },
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "teacher_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "full_name",
+          "age",
+          "school_id",
+          "grade_level"
+        ]
+      },
+      "StudentUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "maxLength": 200
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32767
+          },
+          "school_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "teacher_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "expected_revision"
+        ],
+        "minProperties": 2
+      },
+      "ExpertAssignment": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "assigned_expert_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "assigned_expert_id",
+          "expected_revision"
+        ]
+      },
+      "ReviewWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Validated",
+              "Flagged"
+            ]
+          },
+          "remarks": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "expert_recommendation": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "nullable": true
+          },
+          "follow_up_needed": {
+            "type": "boolean"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "status",
+          "remarks",
+          "follow_up_needed",
+          "expected_revision"
+        ]
+      },
+      "ScreeningUpload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "student_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "model_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "handwriting_image": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "student_id",
+          "handwriting_image"
+        ]
+      },
+      "DemoUpload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
+          },
+          "handwriting_image": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "handwriting_image"
+        ]
+      },
+      "TaskClassification": {
+        "type": "object",
+        "required": [
+          "task_type",
+          "classification"
+        ],
+        "properties": {
+          "task_type": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Low Potential",
+              "High Potential"
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "binary"
+                ]
+              },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "Normal",
+                  "High Potential"
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "task_type": {
+                "type": "string",
+                "enum": [
+                  "three_class"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MeResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Me"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "AccountResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "SchoolResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/School"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "duplicate_name"
+              ]
+            },
+            "maxItems": 1,
+            "uniqueItems": true,
+            "description": "Mutation warning only, checked within actor-readable scope; not a merge or identity match."
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "StudentResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Student"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "duplicate_name"
+              ]
+            },
+            "maxItems": 1,
+            "uniqueItems": true,
+            "description": "Mutation warning only, checked within actor-readable scope; not a merge or identity match."
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "ScreeningResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Screening"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "ReportResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Report"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "ReviewResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Review"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "DemoResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Demo"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Summary"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "AgreementResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Agreement"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "AcceptanceResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Acceptance"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "ActionResultResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ActionResult"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "ScreeningRequestResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ScreeningRequest"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "AccountList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "SchoolList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/School"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "StudentList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Student"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "ScreeningList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Screening"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "ModelList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "AssignmentOptionList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssignmentOption"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "AuditEntryList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEntry"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "request_id"
+        ]
+      },
+      "HealthResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Health"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Login": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "Refresh": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "refresh_token"
+        ]
+      },
+      "Session": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refresh_token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "token_type": {
+            "type": "string",
+            "enum": [
+              "bearer"
+            ]
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400
+          }
+        },
+        "required": [
+          "access_token",
+          "refresh_token",
+          "token_type",
+          "expires_in"
+        ]
+      },
+      "SessionResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Session"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "data",
+          "request_id"
+        ]
+      }
+    }
+  },
+  "x-policy-status": {
+    "privacy": "Approved text/version pending; no placeholder content.",
+    "permanent_delete": "Unresolved; no v1 DELETE operations specified.",
+    "upload_limits": "Measured deployment limits pending; capture remains unavailable until configured."
+  }
+}

@@ -14,8 +14,8 @@
         </RouterLink>
       </div>
 
-      <p v-if="loading" class="muted-message">Loading student progress...</p>
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="loading" class="muted-message" role="status">Loading student progress...</p>
+      <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
       <template v-if="!loading && !error && student">
         <section class="user-summary-grid admin-progress-summary-grid-clean">

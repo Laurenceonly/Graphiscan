@@ -8,8 +8,8 @@
         </div>
       </div>
 
-      <p v-if="loading" class="muted-message">Loading student progress...</p>
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="loading" class="muted-message" role="status">Loading student progress...</p>
+      <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
       <template v-if="!loading && !error">
         <section class="user-summary-grid admin-progress-stat-grid">
@@ -48,6 +48,7 @@
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search progress"
+                aria-label="Search progress"
                 />
               </div>
             </div>
@@ -55,7 +56,7 @@
 
           <div class="admin-progress-filter-panel">
             <div class="user-filter-controls">
-              <select v-model="validationFilter" class="user-filter-select">
+              <select aria-label="Filter by validation" v-model="validationFilter" class="user-filter-select">
                 <option value="all">All validations</option>
                 <option value="pending">Pending ({{ validationCounts.pending }})</option>
                 <option value="validated">Validated ({{ validationCounts.validated }})</option>

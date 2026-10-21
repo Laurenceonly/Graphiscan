@@ -21,12 +21,13 @@
             </div>
           </div>
 
+          <p class="form-help">Fields marked * are required.</p>
           <form class="admin-form-grid settings-password-form" @submit.prevent="changeAdminPassword">
             <div class="form-group full-field">
-              <label>Current Password</label>
+              <label for="admin-settings-1">Current Password <span aria-hidden="true">*</span></label>
 
               <div class="admin-password-input">
-                <input
+                <input id="admin-settings-1" aria-required="true"
                   v-model="passwordForm.current_password"
                   :type="showCurrentPassword ? 'text' : 'password'"
                   placeholder="Enter current password"
@@ -35,6 +36,9 @@
 
                 <button
                   type="button"
+                  :aria-label="showCurrentPassword ? 'Hide current password' : 'Show current password'"
+                  :aria-pressed="showCurrentPassword"
+                  aria-controls="admin-settings-1"
                   @click="showCurrentPassword = !showCurrentPassword"
                 >
                   <EyeOff v-if="showCurrentPassword" :size="15" :stroke-width="1.8" />
@@ -45,10 +49,10 @@
             </div>
 
             <div class="form-group full-field">
-              <label>New Password</label>
+              <label for="admin-settings-2">New Password <span aria-hidden="true">*</span></label>
 
               <div class="admin-password-input">
-                <input
+                <input id="admin-settings-2" aria-required="true"
                   v-model="passwordForm.new_password"
                   :type="showNewPassword ? 'text' : 'password'"
                   placeholder="Create new password"
@@ -57,6 +61,9 @@
 
                 <button
                   type="button"
+                  :aria-label="showNewPassword ? 'Hide new password' : 'Show new password'"
+                  :aria-pressed="showNewPassword"
+                  aria-controls="admin-settings-2"
                   @click="showNewPassword = !showNewPassword"
                 >
                   <EyeOff v-if="showNewPassword" :size="15" :stroke-width="1.8" />
@@ -68,10 +75,12 @@
             </div>
 
             <div class="form-group full-field">
-              <label>Confirm New Password</label>
+              <label for="admin-settings-3">Confirm New Password <span aria-hidden="true">*</span></label>
 
               <div class="admin-password-input">
-                <input
+                <input id="admin-settings-3"
+                  :aria-invalid="Boolean(passwordForm.confirm_password && passwordForm.new_password !== passwordForm.confirm_password) || undefined"
+                  :aria-describedby="passwordForm.confirm_password && passwordForm.new_password !== passwordForm.confirm_password ? 'admin-settings-3-mismatch' : undefined" aria-required="true"
                   v-model="passwordForm.confirm_password"
                   :type="showConfirmPassword ? 'text' : 'password'"
                   placeholder="Re-enter new password"
@@ -80,6 +89,9 @@
 
                 <button
                   type="button"
+                  :aria-label="showConfirmPassword ? 'Hide confirmation password' : 'Show confirmation password'"
+                  :aria-pressed="showConfirmPassword"
+                  aria-controls="admin-settings-3"
                   @click="showConfirmPassword = !showConfirmPassword"
                 >
                   <EyeOff v-if="showConfirmPassword" :size="15" :stroke-width="1.8" />
@@ -90,7 +102,7 @@
 
               <p
                 v-if="passwordForm.confirm_password && passwordForm.new_password !== passwordForm.confirm_password"
-                class="field-warning"
+                id="admin-settings-3-mismatch" class="field-warning" role="status"
               >
                 New passwords do not match.
               </p>
@@ -119,11 +131,11 @@
               </ul>
             </div>
 
-            <p v-if="changePasswordError" class="error-message full-field">
+            <p v-if="changePasswordError" class="error-message full-field" role="alert">
               {{ changePasswordError }}
             </p>
 
-            <p v-if="changePasswordSuccess" class="success-message full-field">
+            <p v-if="changePasswordSuccess" class="success-message full-field" role="status">
               {{ changePasswordSuccess }}
             </p>
 
