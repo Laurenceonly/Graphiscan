@@ -1,12 +1,9 @@
 <template>
   <section class="hosted-screenings" aria-labelledby="screenings-title" :aria-busy="busy">
-    <h2 id="screenings-title">Screening results</h2>
+    <header class="admin-page-header"><h2 id="screenings-title">Screening results</h2></header>
     <p v-if="!canManage">Screening records require permission to manage assignments for the relevant school.</p>
     <template v-else>
-      <section class="user-summary-grid" aria-label="Loaded screening counts">
-        <article class="user-summary-card"><div><span>Screenings loaded</span><strong>{{ loaded ? rows.length : '—' }}</strong></div></article>
-        <article v-for="value in ['Pending','Validated','Flagged']" :key="value" class="user-summary-card"><div><span>{{ value }} loaded</span><strong>{{ loaded ? rows.filter(row => row.review?.status === value).length : '—' }}</strong></div></article>
-      </section>
+      <AdminSummaryCards :items="[{label:'Screenings loaded',value:loaded ? rows.length : '—'},...['Pending','Validated','Flagged'].map(value => ({label:value+' loaded',value:loaded ? rows.filter(row => row.review?.status === value).length : '—'}))]" label="Loaded screening counts" />
       <form class="screening-filters" @submit.prevent="loadList(false)">
         <label>Validation status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option>Pending</option><option>Validated</option><option>Flagged</option></select></label>
         <label>Grade<select v-model="grade" :disabled="busy"><option value="">All grades</option><option v-for="value in 3" :key="value" :value="String(value)">Grade {{ value }}</option></select></label>
@@ -71,6 +68,7 @@
 
 <script setup>
 import RefreshButton from '../../../shared/RefreshButton.vue'
+import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { formatScore, formatReportType } from '../utils/hosted-screenings.mjs'
 const props = defineProps({ client: { type: Object, required: true }, profile: { type: Object, required: true } })

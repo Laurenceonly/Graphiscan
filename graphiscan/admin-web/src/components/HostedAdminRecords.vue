@@ -1,9 +1,7 @@
 <template>
   <section class="hosted-admin-records" :aria-labelledby="kind + '-title'">
-    <header class="page-header hosted-page-header"><h1 :id="kind + '-title'" tabindex="-1">{{ accounts ? 'Users' : 'Audit Logs' }}</h1><div class="account-page-actions"><RefreshButton :busy="busy" :disabled="!allowed || saving || reconcileNeeded || loadingEditor" @click="load(false)" /><button v-if="accounts && allowed" type="button" class="primary-action-btn" :disabled="busy || saving || reconcileNeeded || loadingEditor" @click="openCreator">Add user</button></div></header>
-    <section v-if="allowed && accounts" class="user-summary-grid hosted-record-stats" aria-label="Loaded account counts">
-      <article v-for="card in cards" :key="card.label" class="user-summary-card"><div><span>{{ card.label }}</span><strong>{{ loaded ? card.count : '—' }}</strong></div></article>
-    </section>
+    <header class="page-header hosted-page-header admin-page-header"><h1 :id="kind + '-title'" tabindex="-1">{{ accounts ? 'Users' : 'Audit Logs' }}</h1><div class="account-page-actions"><RefreshButton :busy="busy" :disabled="!allowed || saving || reconcileNeeded || loadingEditor" @click="load(false)" /><button v-if="accounts && allowed" type="button" class="primary-action-btn" :disabled="busy || saving || reconcileNeeded || loadingEditor" @click="openCreator">Add user</button></div></header>
+    <AdminSummaryCards v-if="allowed && accounts" :items="cards.map(card => ({label:card.label,value:loaded ? card.count : '—'}))" label="Loaded account counts" />
     <section class="clean-panel hosted-record-panel">
       <form v-if="allowed" class="hosted-record-filters" :class="{ 'audit-filters': !accounts }" @submit.prevent="load(false)">
         <label>{{ accounts ? 'Search users' : 'Search activity' }}<input v-model="search" type="search" maxlength="120" :disabled="busy" /></label>
@@ -60,6 +58,7 @@
 </template>
 <script setup>
 import RefreshButton from '../../../shared/RefreshButton.vue'
+import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
 import AccountAssignmentAccess from './AccountAssignmentAccess.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'

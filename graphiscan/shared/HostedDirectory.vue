@@ -1,10 +1,8 @@
 <template>
   <section class="directory" aria-labelledby="directory-title" :aria-busy="busy">
-    <h2 id="directory-title">{{ adminPresentation ? (tab === 'students' ? 'Students' : 'Schools') : 'Schools and students' }}</h2>
-    <section v-if="adminPresentation && tab === 'students'" class="user-summary-grid" aria-label="Loaded student counts">
-      <article class="user-summary-card"><div><span>Students loaded</span><strong>{{ studentsLoaded ? students.length : '—' }}</strong></div></article>
-      <article v-for="grade in 3" :key="grade" class="user-summary-card"><div><span>Grade {{ grade }} loaded</span><strong>{{ studentsLoaded ? students.filter(student => Number(student.grade_level) === grade).length : '—' }}</strong></div></article>
-    </section>
+    <header v-if="adminPresentation" class="admin-page-header"><h2 id="directory-title">{{ tab === 'students' ? 'Students' : 'Schools' }}</h2></header>
+    <h2 v-else id="directory-title">Schools and students</h2>
+    <AdminSummaryCards v-if="adminPresentation && tab === 'students'" :items="[{label:'Students loaded',value:studentsLoaded ? students.length : '—'},...[1,2,3].map(grade => ({label:'Grade '+grade+' loaded',value:studentsLoaded ? students.filter(student => Number(student.grade_level) === grade).length : '—'}))]" label="Loaded student counts" />
     <nav class="directory-nav" aria-label="Workspace records">
       <button type="button" :aria-pressed="tab === 'students'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'students'; closeForm()">Students</button>
       <button type="button" :aria-pressed="tab === 'schools'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'schools'; closeForm()">Schools</button>
@@ -83,6 +81,7 @@
 
 <script setup>
 import RefreshButton from './RefreshButton.vue'
+import AdminSummaryCards from './AdminSummaryCards.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { createStudentSubmission } from './directory-submission.mjs'
 const props=defineProps({ client:{type:Object,required:true},profile:{type:Object,required:true},adminPresentation:Boolean,signOut:{type:Function,default:null} })
