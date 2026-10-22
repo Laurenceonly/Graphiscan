@@ -1,5 +1,16 @@
 # GraphiScan resume checkpoint
 
+Latest UI publication2026-10-22: frontend commit `35cd998` is on remote
+`chore/admin-hosted-verification`; Vercel production deployment
+`dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` READY. Public login/CSS200 and new alignment
+selectors confirmed. Main/Render still have the earlier merged API source.
+The `hostedadmin` controlled session now opens about:blank; fixture browser-memory
+state/reset listener is gone. No reset/delete completion was observed. After
+private sign-in, locate the one clearly labeled GraphiScan Admin Check fixture,
+inspect latest details/operations before continuing, and never recreate/replay it
+blindly. Last confirmed state active/unused/no school memberships. Earlier notes
+that the reset dialog is still open are superseded.
+
 Latest UI steering2026-10-22: admin is desktop browser first, responsive fallback;
 Expo is native Android, not a web release. Updated account forms/actions/Audit
 filters in3 admin source files; build passes. Separate `uialignment` Chromium
