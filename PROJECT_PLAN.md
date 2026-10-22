@@ -1,5 +1,10 @@
 # GraphiScan project plan and panel tracker
 
+Users role choices2026-10-22: Administrator, Teacher, Parent and Expert. User
+requested removal of Researcher/Guest from selectable Users roles. Source/build/
+fictional browser checks complete on `fix/admin-user-role-options`; publish via
+the normal PR/Vercel flow. Existing accounts/history retain their stored roles.
+
 ## Current admin-first release — 2026-10-22
 
 Presentation decision: desktop browser admin is primary; responsive layout is a

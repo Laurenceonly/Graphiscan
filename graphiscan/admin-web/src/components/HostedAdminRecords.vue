@@ -27,7 +27,7 @@
         <header><div><h2 id="account-editor-title">{{ creating ? 'Add user' : 'Edit account' }}</h2><p>{{ creating ? 'The user must change their temporary password and accept the Data Privacy Agreement before accessing features.' : 'Role, status and access changes sign this user out.' }}</p></div><button type="button" class="editor-close" aria-label="Close account editor" :disabled="saving || reconcileNeeded" @click="closeEditor"><X :size="18" :stroke-width="1.8" aria-hidden="true" /></button></header>
         <label>Full name<input v-model="draft.full_name" type="text" maxlength="200" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
         <label v-if="creating">Email address<input v-model="draft.email" type="email" maxlength="254" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
-        <div class="account-role-fields" :class="{'account-role-fields-pair':!creating}"><label>Role<select v-model="draft.role" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-for="item in editableRoles" :key="item" :value="item">{{ roleName(item) }}</option></select></label><label v-if="!creating">Status<select v-model="draft.account_status" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label></div>
+        <div class="account-role-fields" :class="{'account-role-fields-pair':!creating}"><label>Role<select v-model="draft.role" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-if="!creating && !editableRoles.includes(draft.role)" :value="draft.role" disabled hidden>{{ roleName(draft.role) }}</option><option v-for="item in editableRoles" :key="item" :value="item">{{ roleName(item) }}</option></select></label><label v-if="!creating">Status<select v-model="draft.account_status" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label></div>
         <template v-if="creating">
           <div class="account-field-group"><label>School (optional)<select v-model="draft.school_id" :disabled="saving || reconcileNeeded || schoolsBusy"><option value="">No school assignment</option><option v-for="school in schools" :key="school.school_id" :value="String(school.school_id)">{{ school.name }}</option></select></label>
           <p v-if="schoolsError" role="status">{{ schoolsError }}</p>
@@ -66,7 +66,8 @@ const props=defineProps({kind:{type:String,required:true},client:{type:Object,re
 const emit=defineEmits(['access-change','navigation-block'])
 const accounts=computed(()=>props.kind==='accounts')
 const allowed=computed(()=>props.profile.permissions?.includes(accounts.value?'accounts.manage':'audit.read'))
-const roles=['admin','researcher','teacher','parent','expert','guest']
+const userRoles=['admin','teacher','parent','expert']
+const roles=computed(()=>accounts.value?userRoles:['admin','researcher','teacher','parent','expert','guest'])
 const statuses=['active','pending','disabled','rejected']
 const search=ref(''),role=ref(''),status=ref(''),rows=ref([]),cursor=ref(null),busy=ref(false),loaded=ref(false),error=ref(''),notice=ref('')
 const editor=ref(null),selected=ref(null),saving=ref(false),editorError=ref(''),reconcileNeeded=ref(false)
@@ -74,7 +75,7 @@ const creating=ref(false),schools=ref([]),schoolsBusy=ref(false),schoolsError=re
 const loadingEditor=ref(false),actionTarget=ref(null),actionKind=ref(''),actionStatus=ref(''),actionBlocked=ref(false)
 const draft=reactive({full_name:'',role:'',account_status:'',email:'',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
 let creationKey=null
-const editableRoles=computed(()=>props.profile.role==='admin'?roles:roles.filter(item=>!['admin','researcher'].includes(item)))
+const editableRoles=computed(()=>props.profile.role==='admin'?userRoles:userRoles.filter(item=>item!=='admin'))
 const normalized=value=>JSON.stringify([...value].map(item=>typeof item==='string'?item:{permission_key:item.permission_key,school_id:item.school_id??null}).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))))
 const hasChanges=computed(()=>!!selected.value&&(creating.value || draft.full_name.trim().replace(/\s+/g,' ')!==selected.value.full_name||draft.role!==selected.value.role||draft.account_status!==selected.value.account_status||normalized(draft.school_ids)!==normalized(selected.value.school_ids||[])||normalized(draft.permission_grants)!==normalized(selected.value.permission_grants||[])))
 const canEditPermissions=computed(()=>props.profile.permissions?.includes('permissions.manage')&&selected.value?.user_id!==props.profile.user_id)
