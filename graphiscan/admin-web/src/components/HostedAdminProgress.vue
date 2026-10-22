@@ -1,6 +1,6 @@
 <template>
   <section class="hosted-progress compact-page">
-    <header class="page-header compact-header"><h1 tabindex="-1">Student Progress</h1></header>
+    <header class="page-header compact-header admin-page-header"><h1 tabindex="-1">Student Progress</h1></header>
     <section class="panel-card compact-panel">
       <h2>Assessment history</h2>
       <form class="history-toolbar" @submit.prevent="loadHistory(false)">
