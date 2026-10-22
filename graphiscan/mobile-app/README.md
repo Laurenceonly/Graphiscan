@@ -49,6 +49,16 @@ is used only by the explicit legacy adapter.
 
 ## Evidence and remaining work
 
+### Browser layout preview
+
+For an engineering preview on this computer, run `npm.cmd run preview` and open
+`http://localhost:5174`. This command enables a local Metro proxy restricted to
+the configured GraphiScan public `/api/v1/` API. It forwards required bearer/body
+headers without logging or retaining them. Native builds keep calling the public
+HTTPS origin directly; production browser-origin settings stay unchanged.
+Use the localhost address consistently and refresh after restarting Metro.
+
+
 On2026-10-22, TypeScript checking and Android JavaScript/Hermes export passed.
 This produces a bundle, **not an APK**. Fictional browser layout review is an
 engineering aid; it is not Android device, camera, keyboard or authentication
