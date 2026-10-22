@@ -48,4 +48,4 @@ function Navigation() {
     </Stack.Group>}</Stack.Navigator>
   </NavigationContainer>
 }
-export default function App() { return process.env.EXPO_PUBLIC_API_MODE === 'hosted' ? <HostedApp/> : <SafeAreaProvider><SessionProvider><Navigation /></SessionProvider></SafeAreaProvider> }
+export default function App() { return process.env.EXPO_PUBLIC_API_MODE === 'legacy' ? <SafeAreaProvider><SessionProvider><Navigation /></SessionProvider></SafeAreaProvider> : <HostedApp/> }
