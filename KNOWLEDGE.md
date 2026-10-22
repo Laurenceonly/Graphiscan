@@ -1,5 +1,14 @@
 # GRAPHISCAN system knowledge
 
+Admin presentation priority (2026-10-22): user confirmed desktop browser admin,
+with responsive fallback; Expo targets native Android. Account management now has
+a640px desktop Edit dialog, paired Role/Status, aligned permission controls,
+grouped help, sticky separated footers, aligned row actions and Audit filters.
+Admin build passed;25 fictional Chromium dialog samples across1440/1366/1024/
+390/320 widths fit and kept footers visible. Four Audit widths had no measured
+horizontal overflow. This is UI evidence, separate from live account operations;
+production reset/delete is still awaiting private issuer-password confirmation.
+
 Hosted action evidence (2026-10-22): actual admin UI checks against Render/Supabase
 created one fictional teacher (201, forced password change), edited name and
 synthetic-school membership (200), disabled/reactivated (both200), and removed
