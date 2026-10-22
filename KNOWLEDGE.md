@@ -1,3 +1,5 @@
+Local preview fix2026-10-22: use npm.cmd run preview from graphiscan/mobile-app and http://localhost:5174. Opt-in Metro proxy fixes browser-origin blockage; actual credential-free browser API probe passed. Native HTTPS defaults and production CORS are unchanged. Real sign-in still needs user verification.
+
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
 and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,
