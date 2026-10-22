@@ -22,17 +22,12 @@
     <p v-if="message" role="status">{{ message }}</p>
 
     <div v-show="section === 'dashboard'" class="dashboard-page modern-admin-dashboard">
-      <section class="dashboard-toolbar">
+      <section class="dashboard-toolbar admin-page-header">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
         <RefreshButton :busy="refreshing" @click="refreshDashboard" />
       </section>
       <p v-if="screening.error || directory.error" class="workspace-alert" role="alert">Some dashboard information could not be loaded. Refresh to try again.</p>
-      <section class="dashboard-highlight-grid" aria-label="Loaded record counts">
-        <button v-for="card in cards" :key="card.label" type="button" class="dashboard-highlight-card" @click="navigate(card.target)">
-          <span class="workspace-metric"><span>{{ card.label }}</span><strong>{{ card.value }}</strong></span>
-          <span class="highlight-icon"><component :is="card.icon" :size="18" /></span>
-        </button>
-      </section>
+      <AdminSummaryCards :items="cards" label="Loaded record counts" interactive @select="navigate($event.target)" />
       <section v-if="!screening.rows.length" class="clean-panel dashboard-empty-panel" aria-labelledby="dashboard-empty-title" aria-live="polite">
         <div class="dashboard-empty-copy">
           <span class="dashboard-empty-icon"><FileText :size="21" aria-hidden="true" /></span>
@@ -90,7 +85,7 @@
       <HostedScreenings ref="screeningsRef" :client="client" :profile="profile" @access-change="refreshAccount" @snapshot="screening = $event" />
     </section>
     <section v-show="section === 'settings'" class="workspace-account">
-      <header class="page-header workspace-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><RefreshButton :busy="busy" @click="refreshAccount" /></header>
+      <header class="page-header workspace-page-header admin-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><RefreshButton :busy="busy" @click="refreshAccount" /></header>
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
     <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" @access-change="refreshAccount" @open-result="openResult" />
@@ -100,6 +95,7 @@
 
 <script setup>
 import RefreshButton from '../../../shared/RefreshButton.vue'
+import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, ref } from 'vue'
 import { AlertTriangle, ArrowUpRight, ChevronRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
 import brandLogo from '../assets/graphiscan-logo.png'
@@ -188,7 +184,8 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .nav-link.router-link-active { background:var(--blue-50); color:var(--blue-700); font-weight:600; }
 .nav-link.router-link-active::before { content:''; position:absolute; left:0; top:11px; bottom:11px; width:3px; background:var(--blue-700); border-radius:3px; }
 .hosted-workspace :deep(.nav-link.router-link-active .nav-icon) { color:var(--blue-700); }
-.hosted-workspace :deep(.logout-btn) { margin-top:auto; justify-content:flex-start; padding:10px 14px; border:0; background:#fff1f2; }
+.hosted-workspace :deep(.logout-btn) { position:relative; margin-top:auto; justify-content:center; padding:10px 38px; border:0; background:#fff1f2; }
+.hosted-workspace :deep(.logout-btn > svg) { position:absolute; left:14px; }
 .hosted-workspace :deep(.logout-btn:hover) { background:var(--danger); color:white; }
 .hosted-workspace :deep(.sidebar-close-btn) { color:var(--text); background:var(--page-bg); }
 .hosted-workspace :deep(.topbar) { display:flex; min-height:72px; height:72px; padding:0 32px; justify-content:flex-start; background:var(--white); border-bottom:1px solid var(--border); }
@@ -197,20 +194,10 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .workspace-breadcrumb strong { color:var(--text); font-weight:500; }
 .modern-admin-dashboard { gap:var(--workspace-section-gap); }
 .dashboard-toolbar { align-items:center; gap:20px; min-height:44px; padding:0; }
-.dashboard-toolbar h1,.workspace-account h1 { display:flex;align-items:center;min-height:44px;margin:0; font-size:var(--admin-page-title); font-weight:600; line-height:1.25; letter-spacing:-.025em; }
 .dashboard-toolbar p { margin:8px 0 0; font-size:14px; }
 .dashboard-toolbar .workspace-scope { display:block; margin-top:10px; }
 .workspace-scope { margin:0; color:var(--muted); font-size:12px; }
 .workspace-alert { padding:14px 16px; color:var(--danger-text); background:var(--white); border:1px solid var(--control-border); border-radius:8px; }
-.dashboard-highlight-grid { gap:var(--workspace-control-gap); }
-.dashboard-highlight-card { position:relative; display:grid; grid-template-columns:1fr auto; align-items:start; gap:8px; min-height:var(--workspace-metric-height); padding:var(--workspace-metric-padding); border-radius:14px; border:1px solid var(--border); text-align:left; cursor:pointer; font-family:inherit; background:white; box-shadow:0 2px 3px rgb(17 24 39 / .015); }
-.dashboard-highlight-card:hover { border-color:var(--control-border); box-shadow:none; }
-.workspace-metric { margin:0; }
-.workspace-metric > span { min-height:20px; }
-.dashboard-highlight-card .highlight-icon { display:grid; place-items:center; flex:none; margin:0; width:26px; height:26px; border:0; border-radius:7px; color:var(--blue-700); background:transparent; }
-.dashboard-highlight-card span { font-size:13px; }
-.dashboard-highlight-card strong { margin-top:14px; font-size:28px; line-height:1; font-weight:600; }
-.dashboard-highlight-card:last-child .highlight-icon { color:var(--danger-text); background:#fff1f2; }
 .workspace-dashboard-grid { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(285px,1fr); gap:var(--workspace-section-gap); align-items:start; }
 .workspace-dashboard-primary,.workspace-dashboard-secondary { display:grid; gap:var(--workspace-section-gap); min-width:0; }
 .clean-panel { padding:var(--workspace-card-padding); border:1px solid var(--border); border-radius:14px; box-shadow:0 2px 3px rgb(17 24 39 / .015); }
@@ -308,13 +295,22 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(:is(.hosted-record-panel,.compact-panel,.hosted-security)) { padding:var(--workspace-card-padding); }
 .hosted-workspace :deep(.hosted-security) { margin:0; }
 .hosted-workspace :deep(.compact-panel h2) { margin-bottom:var(--workspace-section-gap); }
+
+/* One page rhythm for every hosted section; dialogs keep their own layout. */
+.hosted-workspace :deep(:is(.modern-admin-dashboard,.hosted-admin-records,.hosted-progress,.workspace-account,.directory,.hosted-screenings)) { display:flex; flex-direction:column; gap:var(--workspace-section-gap); min-width:0; margin:0; }
+.hosted-workspace :deep(.content :is(.directory,.hosted-screenings) > :not(dialog):not(.directory-editor)) { margin-block:0; }
+.hosted-workspace :deep(.content .admin-page-header) { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-auto-rows:minmax(48px,auto); align-items:center; gap:16px; flex:none; min-height:48px; margin:0; padding:0; }
+.hosted-workspace :deep(.content .admin-page-header :is(h1,h2)) { display:block; min-height:0; margin:0; padding:0; font:600 var(--admin-page-title)/1.25 var(--font-ui); letter-spacing:-.025em; }
+.hosted-workspace :deep(.admin-page-header > div) { min-width:0; }
+.hosted-workspace :deep(.admin-page-header .account-page-actions) { width:auto; flex-wrap:nowrap; }
+.hosted-workspace :deep(.admin-page-header .account-page-actions > button) { width:auto; flex:none; }
+.hosted-workspace :deep(.admin-page-header :is(.primary-action-btn,.soft-action-btn)) { min-height:48px; }
+.hosted-workspace :deep(.hosted-security) { max-width:none; border-radius:14px; }
+.hosted-workspace :deep(.account-editor-form select option) { color:var(--text); background:var(--white); font:400 14px/1.5 var(--font-ui); }
 .hosted-workspace :deep(.hosted-security form) { gap:var(--workspace-control-gap); }
 .hosted-workspace :deep(.user-summary-card span) { font-size:13px; }
 .hosted-workspace :deep(.user-summary-card strong) { font-size:28px; }
 .hosted-workspace :deep(.hosted-record-panel) { border-radius:14px; }
-.hosted-workspace :deep(.page-header) { min-height:44px; flex-direction:row; align-items:center; justify-content:space-between; }
-.hosted-workspace :deep(.page-header h1) { display:flex;align-items:center;min-height:44px;margin:0; font:600 var(--admin-page-title)/1.25 var(--font-ui); letter-spacing:-.025em; }
-.hosted-workspace :deep(:is(#directory-title,#screenings-title)) { display:flex;align-items:center;min-height:44px;margin:0 0 24px;font:600 var(--admin-page-title)/1.25 var(--font-ui);letter-spacing:-.025em; }
 .hosted-workspace :deep(:is(.hosted-security h2,.compact-panel h2,.clean-panel h2)) { font:600 var(--admin-section-title)/1.4 var(--font-ui); }
 .hosted-workspace :deep(.hosted-record-filters) { margin-top:0;margin-bottom:0;padding:0;background:transparent; }
 .hosted-workspace :deep(:is(.directory-filters,.screening-filters,.hosted-record-filters,.history-toolbar) label) { font:500 14px/1.5 var(--font-ui); }
@@ -371,5 +367,9 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
   .hosted-workspace :deep(.recent-screening-item) { padding:16px; }
   .hosted-workspace :deep(.hosted-record-panel) { padding:var(--workspace-card-padding); }
   .hosted-workspace :deep(.directory-filters) { grid-template-columns:1fr; }
+}
+@media (max-width:380px) {
+  .hosted-workspace :deep(.content .admin-page-header:has(.account-page-actions)) { grid-template-columns:minmax(0,1fr); }
+  .hosted-workspace :deep(.content .admin-page-header .account-page-actions) { justify-content:flex-start; }
 }
 </style>

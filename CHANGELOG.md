@@ -1,5 +1,16 @@
 # GraphiScan change log
 
+## 2026-10-22 - Unify hosted admin page and metric alignment
+
+- Added shared AdminSummaryCards for Dashboard, Users, Students and Results, replacing separate card markup. Labels, values, padding, borders, card heights and responsive columns now share one component. All hosted page headings use one header layout; removed conflicting title rules. Schools, Progress, Audit Logs and Settings use the same page start and heading size. Centered the Logout label independently of its icon. Explicit role option typography uses the shared form font/colors; local inspection showed all four Add User selections already share the same controls and dimensions.
+- Verified local fictional Chromium views at1440/390/320, including Schools. At1440 every header starts x272/y100 with48px height and title y106.5; all four summary grids start y172 with112px cards and number y225. At390 headers and summary grids also match; at320 Users/Audit actions wrap below the title with consistent title positioning. No horizontal page overflow observed. Logout label midpoint differs by less than0.01px. Inspected desktop and narrow screenshots; no real account writes.
+- Admin build passed (1834 modules), git diff whitespace check passed. This is source/preview evidence; hosted publication requires the UI branch merge. Existing database migrations and API behavior are unchanged. Broader hosted assignment/credential and data/model/device/manuscript gates remain open.
+
+## 2026-10-22 - Confirm assignment-access merge and public deployment
+
+- GitHub confirms PR#5 merged as1c8154c. Public admin login/bundle returned200 and production asset index-B9jBHXyt.js contains the new assignment dialog and endpoint path. Render GET on the assignment-access route returned401 AUTHENTICATION_REQUIRED using fictional identifiers and no credentials. No data mutation ran.
+- Signed-in grant/revoke, assignment options, school denial and audit behavior remain unverified on the hosted deployment. Last database preflight remains38 passing checks after021. Documentation receipt saved locally; no new SQL required.
+
 ## 2026-10-22 - Resume publication after role-choice merge
 
 - GitHub confirms PR#4 merged as b25d170. Fetched origin/main; assignment-access branch retains all role-choice changes. Saving the previously verified assignment API/admin, migrations020/021, contract checks and rollout documentation for a follow-up PR. No schema reruns or production account mutations occurred.
