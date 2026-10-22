@@ -1,5 +1,17 @@
 # GraphiScan resume checkpoint
 
+Latest UI follow-up2026-10-22: PR#2 merged as `ac903c4` before the account-actions
+change in `d0e30e8`, so the main deployment omitted it. A clean branch
+`fix/admin-edit-account-actions`, based on `origin/main`, now carries the UI and
+checkpoint docs without generated `output/vercel-admin` files. Users rows show
+Edit only; the Edit dialog holds Disable/Activate, Reset password and Delete for
+other manageable accounts. The clean-branch production build passed (1830 modules)
+and includes the action label. Existing fictional preview evidence covers1440/
+1366/390/320, confirmation/cancel return, one open dialog, visible footers and
+the unsaved-edit guard. The change is not yet in a PR or production. No live
+account mutation occurred. Real fixture/reset/delete reconciliation still
+requires private sign-in.
+
 Latest UI publication2026-10-22: frontend commit `35cd998` is on remote
 `chore/admin-hosted-verification`; Vercel production deployment
 `dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` READY. Public login/CSS200 and new alignment
