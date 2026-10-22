@@ -269,7 +269,7 @@ async function changeAdminPassword() {
 
       setTimeout(() => {
         clearAdminSession()
-        router.replace('/login')
+        router.replace('/legacy-login')
       }, 900)
     } else {
       changePasswordError.value = response.data.message || 'Unable to change password.'

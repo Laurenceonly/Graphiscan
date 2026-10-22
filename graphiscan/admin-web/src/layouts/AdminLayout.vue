@@ -10,15 +10,18 @@
 
     <aside id="admin-navigation" ref="sidebarRef" class="sidebar" :class="{ 'is-open': isMenuOpen }" aria-label="Admin navigation">
       <div class="brand">
+        <slot name="brand">
         <div>
-          <h1>GRAPHI<span>SCAN</span></h1>
+          <h1>Graphi<span>Scan</span></h1>
           <p>Admin Workspace</p>
         </div>
+        </slot>
         <button class="sidebar-close-btn" type="button" aria-label="Close navigation" @click="closeMenu">
           <X :size="20" :stroke-width="1.8" />
         </button>
       </div>
 
+      <slot name="navigation" :close-menu="closeMenu">
       <div
         v-for="section in navigationSections"
         :key="section.label"
@@ -43,6 +46,7 @@
         </nav>
       </div>
 
+      </slot>
       <button class="logout-btn" type="button" @click="openLogoutModal">
         <LogOut :size="16" :stroke-width="1.8" />
         <span>Logout</span>
@@ -62,7 +66,7 @@
         >
           <Menu :size="21" :stroke-width="1.8" />
         </button>
-        <span class="mobile-header-brand">GraphiScan</span>
+        <slot name="topbar"><span class="mobile-header-brand">GraphiScan</span></slot>
       </header>
 
       <section class="content">
@@ -72,11 +76,8 @@
 
     <div v-if="showLogoutModal" v-dialog="closeLogoutModal" class="modal-backdrop">
       <section class="logout-confirm-modal">
-        <div class="danger-modal-head">
-          <div class="danger-icon">
-            <AlertTriangle :size="26" :stroke-width="1.8" />
-          </div>
-
+        <div class="standard-modal-head">
+          <h2>Log out?</h2>
           <button
             class="modal-close-btn"
             aria-label="Close logout confirmation"
@@ -89,9 +90,7 @@
         </div>
 
         <div class="danger-modal-copy">
-          <span>Confirm Logout</span>
-          <h2>Log out?</h2>
-          <p>You will need to sign in again to access the admin workspace.</p>
+          <p>You will need to sign in again to access the workspace.</p>
         </div>
 
         <div class="logout-modal-actions">
@@ -123,7 +122,6 @@ import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import adminApi from '../api/adminApi'
 import {
-  AlertTriangle,
   FileText,
   GraduationCap,
   History,
@@ -138,6 +136,7 @@ import {
 
 const router = useRouter()
 const route = useRoute()
+const props = defineProps({ signOut: { type: Function, default: null } })
 
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
@@ -276,6 +275,12 @@ function clearAdminSession() {
 async function logoutAdmin() {
   logoutLoading.value = true
 
+  if (props.signOut) {
+    try { await props.signOut() }
+    finally { logoutLoading.value = false; showLogoutModal.value = false }
+    return
+  }
+
   try {
     await adminApi.post('/logout')
   } catch (err) {
@@ -286,7 +291,7 @@ async function logoutAdmin() {
     showLogoutModal.value = false
     logoutLoading.value = false
 
-    router.replace('/login')
+    router.replace('/legacy-login')
   }
 }
 </script>

@@ -35,9 +35,9 @@ async function main() {
     check(method !== 'DELETE', 'Unresolved deletion policy acquired an endpoint');
     if (['/health','/session/login','/session/refresh'].includes(route)) check(op.security.length === 0, 'Public session/liveness declaration mismatch');
     else check((op.security || spec.security).some(s=>s.BearerAuth), `Missing auth declaration: ${route}`);
-    const expectedStatus = (['/health', '/me', '/privacy-agreement', '/schools', '/students', '/students/{student_id}', '/schools/{school_id}/assignment-options','/screenings','/screenings/{result_id}','/students/{student_id}/history','/reports/{report_id}','/models','/screening-requests/{idempotency_key}','/screenings/{result_id}/image'].includes(route) && method === 'GET') ||
+    const expectedStatus = (['/health', '/me', '/privacy-agreement', '/schools', '/students', '/students/{student_id}', '/schools/{school_id}/assignment-options','/screenings','/screenings/{result_id}','/students/{student_id}/history','/reports/{report_id}','/models','/screening-requests/{idempotency_key}','/screenings/{result_id}/image','/accounts','/audit-logs'].includes(route) && method === 'GET') ||
       (['/me/password', '/me/privacy-acceptance','/session/login','/session/refresh','/session/logout','/schools','/students','/screenings'].includes(route) && method === 'POST') ||
-      (['/schools/{school_id}','/students/{student_id}','/screenings/{result_id}/review','/screenings/{result_id}/expert-assignment'].includes(route) && method === 'PATCH') ? 'foundation' : 'proposed';
+      (['/schools/{school_id}','/students/{student_id}','/screenings/{result_id}/review','/screenings/{result_id}/expert-assignment','/accounts/{user_id}'].includes(route) && method === 'PATCH') ? 'foundation' : 'proposed';
     check(op['x-implementation-status'] === expectedStatus, 'Runtime implementation status drift');
     for (const name of [...route.matchAll(/\{([^}]+)\}/g)].map(m=>m[1])) {
       check(op.parameters.some(p=>p.in==='path' && p.name===name && p.required), 'Missing required path parameter');

@@ -23,6 +23,7 @@ graphiscan/config.py
 **/dist/
 **/dist-ssr/
 **/build/
+**/.vercel/
 **/.gradle/
 *.apk
 *.aab

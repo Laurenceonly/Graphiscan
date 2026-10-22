@@ -1,12 +1,17 @@
 <template>
   <section class="directory" aria-labelledby="directory-title" :aria-busy="busy">
-    <h2 id="directory-title">Schools and students</h2>
+    <h2 id="directory-title">{{ adminPresentation ? (tab === 'students' ? 'Students' : 'Schools') : 'Schools and students' }}</h2>
+    <section v-if="adminPresentation && tab === 'students'" class="user-summary-grid" aria-label="Loaded student counts">
+      <article class="user-summary-card"><div><span>Students loaded</span><strong>{{ studentsLoaded ? students.length : '—' }}</strong></div></article>
+      <article v-for="grade in 3" :key="grade" class="user-summary-card"><div><span>Grade {{ grade }} loaded</span><strong>{{ studentsLoaded ? students.filter(student => Number(student.grade_level) === grade).length : '—' }}</strong></div></article>
+    </section>
     <nav class="directory-nav" aria-label="Workspace records">
       <button type="button" :aria-pressed="tab === 'students'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'students'; closeForm()">Students</button>
       <button type="button" :aria-pressed="tab === 'schools'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'schools'; closeForm()">Schools</button>
-      <button type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
+      <RefreshButton v-if="adminPresentation" :busy="busy" :disabled="frozen || schoolUncertain" @click="refreshRecords" />
+      <button v-else type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
     </nav>
-    <p v-if="error" role="alert" class="directory-error">{{ error }}</p>
+    <p v-if="error && !(adminPresentation && formKind)" role="alert" class="directory-error">{{ error }}</p>
     <button v-if="error" type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Retry loading records</button>
     <p v-if="message" role="status" class="directory-message">{{ message }}</p>
     <template v-if="tab === 'students'">
@@ -18,17 +23,30 @@
       </form>
       <div class="directory-toolbar"><p>{{ studentsLoaded ? students.length + ' students loaded' : 'Student records not loaded' }}</p><button v-if="canWriteStudents" type="button" :disabled="busy || frozen || schoolUncertain" @click="newStudent">Add student</button></div>
       <p v-if="studentsLoaded && !students.length && !busy">No students are available for this account and these filters.</p>
-      <ul class="directory-list"><li v-for="student in students" :key="student.student_id"><div><strong>{{ student.full_name }}</strong><span>{{ schoolName(student.school_id) }} · Grade {{ student.grade_level }}</span></div><button type="button" :disabled="busy || frozen || schoolUncertain" @click="viewStudent(student.student_id)">{{ canWriteStudents ? 'View or edit' : 'View details' }}</button></li></ul>
+      <div v-if="adminPresentation && students.length" class="table-wrapper compact-table-scroll hosted-students-table" role="region" aria-label="Student records" tabindex="0">
+        <table><thead><tr><th>Student</th><th>School</th><th>Grade</th><th>Teacher</th><th>Parent / Guardian</th><th>Action</th></tr></thead><tbody>
+          <tr v-for="student in students" :key="student.student_id">
+            <td data-label="Student"><div class="user-cell"><span class="user-avatar">{{ student.full_name?.charAt(0) || 'S' }}</span><div><strong>{{ student.full_name }}</strong><small class="table-subtext">Student {{ student.student_id }}</small></div></div></td>
+            <td data-label="School">{{ schoolName(student.school_id) }}</td><td data-label="Grade">Grade {{ student.grade_level }}</td>
+            <td data-label="Teacher">{{ student.teacher_name || (student.teacher_id ? 'Assigned' : 'Not assigned') }}</td><td data-label="Parent / Guardian">{{ student.parent_name || (student.parent_id ? 'Linked parent' : 'Not linked') }}</td>
+            <td data-label="Action"><button type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="viewStudent(student.student_id)">{{ canWriteStudents ? 'View or edit' : 'View details' }}</button></td>
+          </tr>
+        </tbody></table>
+      </div>
+      <ul v-else-if="!adminPresentation" class="directory-list"><li v-for="student in students" :key="student.student_id"><div><strong>{{ student.full_name }}</strong><span>{{ schoolName(student.school_id) }} · Grade {{ student.grade_level }}</span></div><button type="button" :disabled="busy || frozen || schoolUncertain" @click="viewStudent(student.student_id)">{{ canWriteStudents ? 'View or edit' : 'View details' }}</button></li></ul>
       <button v-if="studentCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadStudents(true)">Load more students</button>
     </template>
     <template v-else>
       <div class="directory-toolbar"><p>{{ schoolsLoaded ? schools.length + ' schools loaded' : 'School records not loaded' }}</p><button v-if="canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="newSchool">Add school</button></div>
       <p v-if="schoolsLoaded && !schools.length && !busy">No schools are available for this account.</p>
-      <ul class="directory-list"><li v-for="school in schools" :key="school.school_id"><strong>{{ school.name }}</strong><button v-if="canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></li></ul>
+      <div v-if="adminPresentation && schools.length" class="table-wrapper compact-table-scroll hosted-schools-table" role="region" aria-label="School records" tabindex="0"><table><thead><tr><th>School</th><th>School ID</th><th v-if="canWriteSchools">Action</th></tr></thead><tbody><tr v-for="school in schools" :key="school.school_id"><td data-label="School"><strong>{{ school.name }}</strong></td><td data-label="School ID">{{ school.school_id }}</td><td v-if="canWriteSchools" data-label="Action"><button type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></td></tr></tbody></table></div>
+      <ul v-else-if="!adminPresentation" class="directory-list"><li v-for="school in schools" :key="school.school_id"><strong>{{ school.name }}</strong><button v-if="canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></li></ul>
     </template>
     <button v-if="schoolCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadSchools(true)">Load more schools</button>
-    <section v-if="formKind" ref="formRegion" tabindex="-1" class="directory-editor" aria-labelledby="editor-title">
-      <h3 id="editor-title">{{ formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? 'Student details' : 'Add student') }}</h3>
+    <component :is="adminPresentation ? 'dialog' : 'section'" v-if="formKind" ref="formRegion" tabindex="-1" class="directory-editor" :class="{ 'hosted-directory-modal': adminPresentation }" aria-labelledby="editor-title" @cancel="cancelEditor">
+      <component :is="adminPresentation ? 'h2' : 'h3'" id="editor-title">{{ formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? 'Student details' : 'Add student') }}</component>
+      <button v-if="adminPresentation" type="button" class="directory-modal-close" aria-label="Close dialog" :disabled="busy || frozen || schoolUncertain" @click="closeForm"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+      <p v-if="adminPresentation && error" role="alert" class="directory-error">{{ error }}</p>
       <template v-if="formKind === 'student' && !canWriteStudents">
         <dl><dt>Name</dt><dd>{{ draft.full_name }}</dd><dt>School</dt><dd>{{ schoolName(draft.school_id) }}</dd><dt>Grade</dt><dd>{{ draft.grade_level }}</dd><dt>Age</dt><dd>{{ draft.age ?? 'Not recorded' }}</dd></dl>
         <button type="button" @click="closeForm">Close details</button>
@@ -50,22 +68,32 @@
         <p v-if="frozen" role="status">Saving could not be confirmed. Retry this same submission before starting another. Keep this page open.</p>
         <p v-if="conflict" role="status">The record changed. Reloading will replace your unsaved form with the latest record.</p>
         <p v-if="schoolUncertain" role="status">Saving this school could not be confirmed. Refresh the school list and check for it before trying again.</p>
-        <div class="directory-actions"><button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : 'Save' }}</button><button v-if="conflict || schoolUncertain" type="button" :disabled="busy" @click="reloadRecord">{{ schoolUncertain ? 'Refresh school list' : 'Reload record' }}</button><button v-if="!frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button></div>
+        <div class="directory-actions">
+          <button v-if="adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
+          <button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : 'Save' }}</button>
+          <button v-if="conflict || schoolUncertain" type="button" :disabled="busy" @click="reloadRecord">{{ schoolUncertain ? 'Refresh school list' : 'Reload record' }}</button>
+          <button v-if="!adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
+        </div>
+        <button v-if="adminPresentation && signOut && (frozen || schoolUncertain)" type="button" class="directory-signout" :disabled="busy" @click="signOut">Sign out</button>
       </form>
-    </section>
-    <p class="directory-hint directory-footnote">Records and assignment choices reflect your current account permissions.</p>
+    </component>
+    <p v-if="!adminPresentation" class="directory-hint directory-footnote">Records and assignment choices reflect your current account permissions.</p>
   </section>
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import RefreshButton from './RefreshButton.vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { createStudentSubmission } from './directory-submission.mjs'
-const props=defineProps({ client:{type:Object,required:true},profile:{type:Object,required:true} })
-const emit=defineEmits(['access-change','navigation-block'])
+const props=defineProps({ client:{type:Object,required:true},profile:{type:Object,required:true},adminPresentation:Boolean,signOut:{type:Function,default:null} })
+const emit=defineEmits(['access-change','navigation-block','snapshot'])
 const tab=ref('students'),busy=ref(false),error=ref(''),message=ref(''),students=ref([]),schools=ref([]),options=ref([])
 const studentCursor=ref(null),schoolCursor=ref(null),optionCursor=ref(null),search=ref(''),filterSchool=ref(''),filterGrade=ref('')
 const studentsLoaded=ref(false),schoolsLoaded=ref(false)
+watch(() => ({ students: students.value.length, schools: schools.value.length, records: students.value, studentsLoaded: studentsLoaded.value, schoolsLoaded: schoolsLoaded.value, hasMore: Boolean(studentCursor.value || schoolCursor.value), busy: busy.value, error: error.value }), value => emit('snapshot', value), { immediate: true })
 const formKind=ref(''),editing=ref(null),formRegion=ref(null),frozen=ref(false),conflict=ref(false),schoolUncertain=ref(false)
+watch(formKind,async value=>{if(!props.adminPresentation)return;document.body.classList.toggle('hosted-directory-dialog-open',Boolean(value));if(value){await nextTick();if(formRegion.value&&!formRegion.value.open)formRegion.value.showModal()}},{flush:'post'})
+function cancelEditor(event){if(!props.adminPresentation)return;event.preventDefault();if(!busy.value&&!frozen.value&&!schoolUncertain.value)closeForm()}
 const draft=reactive({full_name:'',age:8,grade_level:1,school_id:'',teacher_id:'',parent_id:''})
 const isTeacher=computed(()=>props.profile.role==='teacher')
 const canWriteStudents=computed(()=>isTeacher.value || props.profile.permissions.includes('assignments.manage'))
@@ -110,7 +138,8 @@ function save(){return run(async()=>{
 })}
 function beforeUnload(event){if(submission.pending||schoolUncertain.value){event.preventDefault();event.returnValue=''}}
 onMounted(()=>{window.addEventListener('beforeunload',beforeUnload);refreshRecords()})
-onBeforeUnmount(()=>{alive=false;emit('navigation-block',false);window.removeEventListener('beforeunload',beforeUnload)})
+onBeforeUnmount(()=>{alive=false;if(props.adminPresentation)document.body.classList.remove('hosted-directory-dialog-open');emit('navigation-block',false);window.removeEventListener('beforeunload',beforeUnload)})
+defineExpose({ refresh: refreshRecords, showTab(value) { tab.value=value;closeForm() } })
 </script>
 
 <style scoped>

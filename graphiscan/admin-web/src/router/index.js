@@ -13,13 +13,22 @@ import AdminProgressDetails from '../views/AdminProgressDetails.vue'
 import AdminSettings from '../views/AdminSettings.vue'
 
 const routes = [
-  { path: '/access', component: HostedAccess },
+  { path: '/access', redirect: '/login' },
   {
     path: '/',
     redirect: '/login'
   },
   {
     path: '/login',
+    component: HostedAccess
+  },
+  {
+    // Reuse the same view instance so hosted tokens stay in memory.
+    path: '/workspace',
+    component: HostedAccess
+  },
+  {
+    path: '/legacy-login',
     component: Login
   },
   {
@@ -101,18 +110,18 @@ router.beforeEach((to) => {
       clearAdminSession()
 
       return {
-        path: '/login',
+        path: '/legacy-login',
         query: { session: 'expired' }
       }
     }
 
     if (!isAuthenticated || !token) {
       clearAdminSession()
-      return '/login'
+      return '/legacy-login'
     }
   }
 
-  if (to.path === '/login' && isAuthenticated && token) {
+  if (to.path === '/legacy-login' && isAuthenticated && token) {
     return '/admin/dashboard'
   }
 })

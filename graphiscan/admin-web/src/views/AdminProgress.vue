@@ -37,10 +37,7 @@
             </div>
 
             <div class="user-toolbar">
-              <button class="soft-action-btn" type="button" @click="loadProgress">
-                <RefreshCw :size="15" :stroke-width="1.8" />
-                Refresh
-              </button>
+              <RefreshButton :busy="loading" @click="loadProgress" />
 
               <div class="search-field">
                 <Search :size="16" :stroke-width="1.8" />
@@ -156,6 +153,7 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
@@ -164,7 +162,6 @@ import {
   Eye,
   FileQuestion,
   FileText,
-  RefreshCw,
   Search,
   Users
 } from 'lucide-vue-next'

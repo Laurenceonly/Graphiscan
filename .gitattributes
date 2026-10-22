@@ -1,0 +1,6 @@
+# The evaluated model manifest pins exact source bytes, including line endings.
+# Preserve the trusted runtime bytes on Windows and Linux checkouts.
+graphiscan/predict.py -text whitespace=cr-at-eol
+graphiscan/v1_models.py -text whitespace=cr-at-eol
+graphiscan/v1_uploads.py -text whitespace=cr-at-eol
+graphiscan/model/class_names.json -text whitespace=cr-at-eol

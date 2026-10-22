@@ -118,6 +118,8 @@ Temporary test-use implementation (2026-10-20): user authorized a distinct ficti
 
 An actor cannot grant a role, school scope, or permission they are not authorized to issue. Permission changes require a separate `permissions.manage` grant; changing the word `role` is insufficient. `PATCH /accounts/{user_id}` may explicitly replace `permission_grants`, an array of `{permission_key, school_id}` objects; null school scope is global. Omission leaves grants unchanged, while an empty array revokes them. Check the actor's grant ceiling and apply the replacement with its account revision in one transaction. Bootstrap `permissions`/`school_ids` are navigation projections, not a substitute for these scoped server records. Bootstrap/admin-recovery procedures and private delivery of temporary credentials require implementation documentation before pilot onboarding.
 
+Account update source implementation (2026-10-21): `PATCH /api/v1/accounts/{user_id}` now accepts revision-checked name, role, account status, school memberships, and permission-grant replacement. The protected SQL capability rechecks current session/onboarding/global `accounts.manage`, enforces role/grant ceilings and school existence, rejects self privilege/scope changes, serializes last-active-admin protection, invalidates affected sessions, and audits the change transactionally. Admin list rows now include account revision; the admin Users page edits name/role/status. `017_account_management.sql` is an unapplied hosted migration and requires a separate function-only `graphiscan_admin_writer` connection. Local synthetic API/SQL checks passed; no hosted account write was performed. Account creation and temporary-password reset remain open.
+
 ## 3. Record access and ownership
 
 Permissions and assignments below are server-side records. `GET /me` exposes them for navigation convenience, not as client authority. Grant names are proposed technical identifiers for the already agreed permissions, not implicit powers granted to every researcher.
@@ -220,7 +222,7 @@ implement upload, review mutation or private image access.
 | `POST /session/logout` | Revoke current application/provider session; clear local client state even on transport failure |
 | `GET /privacy-agreement` | Current approved agreement, subject to the onboarding order |
 | `POST /me/privacy-acceptance` | Current-version acceptance after password gate |
-| `GET /accounts` | `accounts.manage`; filters `q`, `role`, `account_status`, `school_id` within grant scope |
+| `GET /accounts` | Implemented hosted read-only list with global `accounts.manage`; filters `q`, `role`, `account_status`; signed cursor pagination |
 | `POST /accounts` | Admin-issued temporary account; returns account metadata only |
 | `PATCH /accounts/{user_id}` | Authorized profile/role/status/school changes with `expected_revision`; explicit `permission_grants` replacement additionally needs `permissions.manage`; protect own/last active admin and grant ceilings |
 | `POST /accounts/{user_id}/temporary-password` | Authorized temporary reset with write-only `temporary_password` and `expected_revision`; require first change again, revoke old access, retain agreement history |
@@ -243,7 +245,7 @@ implement upload, review mutation or private image access.
 | `GET /screenings/{result_id}/image` | Reauthorized image stream, private storage; no arbitrary storage path accepted |
 | `POST /demo-screenings` | Enabled guest demo only; multipart image/model, no student ID, no official rows/report |
 | `GET /summary` | Authorized counts grouped by school/grade/review as permitted; parent totals include released records only |
-| `GET /audit-logs` | Explicit `audit.read` within administrative scope; allowlisted actor/category/date filters, no credential/private payload logging |
+| `GET /audit-logs` | Implemented hosted read-only list with global `audit.read`; filters `q`, `role`; signed cursor pagination; no credential/private payload logging |
 
 Permanent-delete routes are deliberately **unresolved**, not silently converted to archive or cascades. Current MySQL admin routes delete linked rows/files; the target PostgreSQL draft uses `ON DELETE RESTRICT`. Decide retention, deletion authority, audit preservation, reauthentication and restore implications before specifying or implementing v1 deletion. Existing routes remain unchanged by this document. Model publication/default changes likewise remain controlled deployment actions until the evaluation registry is ready; a model selector does not authorize weight uploads from clients.
 

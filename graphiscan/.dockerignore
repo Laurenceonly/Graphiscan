@@ -1,0 +1,17 @@
+# Only the hosted runtime and privately provisioned model artifacts may enter.
+**
+!requirements-hosted.txt
+!requirements-admin.txt
+!hosted_api.py
+!gunicorn.conf.py
+!api_v1.py
+!predict.py
+!v1_*.py
+!db/
+!db/postgres/
+!db/postgres/access_snapshot.sql
+!model/
+!model/class_names.json
+!model/deployment.local.json
+!model/versions/
+!model/versions/*.keras

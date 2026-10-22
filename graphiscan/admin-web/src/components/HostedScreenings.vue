@@ -3,22 +3,33 @@
     <h2 id="screenings-title">Screening results</h2>
     <p v-if="!canManage">Screening records require permission to manage assignments for the relevant school.</p>
     <template v-else>
+      <section class="user-summary-grid" aria-label="Loaded screening counts">
+        <article class="user-summary-card"><div><span>Screenings loaded</span><strong>{{ loaded ? rows.length : '—' }}</strong></div></article>
+        <article v-for="value in ['Pending','Validated','Flagged']" :key="value" class="user-summary-card"><div><span>{{ value }} loaded</span><strong>{{ loaded ? rows.filter(row => row.review?.status === value).length : '—' }}</strong></div></article>
+      </section>
       <form class="screening-filters" @submit.prevent="loadList(false)">
         <label>Validation status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option>Pending</option><option>Validated</option><option>Flagged</option></select></label>
         <label>Grade<select v-model="grade" :disabled="busy"><option value="">All grades</option><option v-for="value in 3" :key="value" :value="String(value)">Grade {{ value }}</option></select></label>
-        <button type="submit" :disabled="busy">Refresh results</button>
+        <RefreshButton type="submit" :busy="busy" />
       </form>
       <p v-if="error" role="alert" class="screening-error">{{ error }}</p>
       <p v-if="message" role="status">{{ message }}</p>
       <p v-if="busy" role="status">Loading or saving screening records…</p>
-      <p v-if="!loaded && !busy">Screening results have not loaded. Use Refresh results to try again.</p>
+      <p v-if="!loaded && !busy">Screening results have not loaded. Use Refresh to try again.</p>
       <p v-if="loaded && !rows.length && !busy">No screening results are available for your account and these filters.</p>
-      <ul class="screening-list">
-        <li v-for="row in rows" :key="row.result_id">
-          <div><strong>{{ row.classification }}</strong><span>Student {{ row.student_id }} · {{ reportType(row.report?.report_type) }}</span><span>{{ row.review?.status || 'Not recorded' }} · {{ date(row.date_generated) }}</span></div>
-          <button type="button" :disabled="busy" @click="openDetail(row.result_id)">View result {{ row.result_id }}</button>
-        </li>
-      </ul>
+      <div v-if="rows.length" class="table-wrapper compact-table-scroll hosted-results-table" role="region" aria-label="Screening records" tabindex="0">
+        <table><thead><tr><th>Student</th><th>Screening type</th><th>Classification</th><th>Predicted-class score</th><th>Validation</th><th>Date</th><th>Action</th></tr></thead><tbody>
+          <tr v-for="row in rows" :key="row.result_id">
+            <td data-label="Student"><div class="user-cell"><span class="user-avatar">S</span><strong>Student {{ row.student_id }}</strong></div></td>
+            <td data-label="Screening type">{{ reportType(row.report?.report_type) }}</td>
+            <td data-label="Classification"><span class="result-badge" :class="classificationTone(row.classification)">{{ row.classification }}</span></td>
+            <td data-label="Predicted-class score">{{ score(row.predicted_class_score) }}</td>
+            <td data-label="Validation"><span class="result-badge" :class="statusTone(row.review?.status)">{{ row.review?.status || 'Not recorded' }}</span></td>
+            <td data-label="Date">{{ date(row.date_generated) }}</td>
+            <td data-label="Action"><button type="button" class="small-action-btn" :aria-label="'View result ' + row.result_id" :disabled="busy" @click="openDetail(row.result_id)">View</button></td>
+          </tr>
+        </tbody></table>
+      </div>
       <button v-if="cursor" type="button" :disabled="busy" @click="loadList(true)">Load more results</button>
       <section v-if="detail" ref="detailRegion" class="screening-detail" tabindex="-1" aria-labelledby="screening-detail-title">
         <div class="screening-actions"><h3 id="screening-detail-title">Result {{ detail.result_id }}</h3><button type="button" :disabled="busy" @click="openDetail(detail.result_id)">Reload details</button><button type="button" :disabled="busy" @click="closeDetail">Close details</button></div>
@@ -59,16 +70,20 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { formatScore, formatReportType } from '../utils/hosted-screenings.mjs'
 const props = defineProps({ client: { type: Object, required: true }, profile: { type: Object, required: true } })
-const emit = defineEmits(['access-change'])
+const emit = defineEmits(['access-change', 'snapshot'])
 const canManage = computed(() => ['admin', 'researcher'].includes(props.profile.role) && props.profile.permissions?.includes('assignments.manage'))
 const busy=ref(false), error=ref(''), message=ref(''), loaded=ref(false), rows=ref([]), cursor=ref(null)
 const status=ref(''), grade=ref(''), detail=ref(null), student=ref(null), detailRegion=ref(null)
 const experts=ref([]), optionCursor=ref(null), optionsLoaded=ref(false), selectedExpert=ref(''), mustReload=ref(false), imageUrl=ref('')
 let alive=true, filters={}
+watch(() => ({ rows: rows.value, loaded: loaded.value, hasMore: Boolean(cursor.value), busy: busy.value, error: error.value, allowed: canManage.value }), value => emit('snapshot', value), { deep: true, immediate: true })
 const score=formatScore, reportType=formatReportType
+function statusTone(value){return value==='Validated'?'success':value==='Flagged'?'danger':value==='Pending'?'warning':'secondary'}
+function classificationTone(value){const label=String(value||'').toLowerCase();return label==='normal'?'success':label.includes('high potential')||label.includes('potential dysgraphia')?'danger':'secondary'}
 const assignmentChanged=computed(() => selectedExpert.value !== (detail.value?.review?.assigned_expert_id || ''))
 const validSelection=computed(() => !selectedExpert.value || experts.value.some(person => person.user_id === selectedExpert.value))
 function date(value) { if(!value)return 'Not recorded'; const parsed=new Date(value); return Number.isNaN(parsed.getTime()) ? 'Not recorded' : parsed.toLocaleString() }
@@ -135,6 +150,7 @@ watch(canManage, allowed=>{
   else {closeDetail();rows.value=[];cursor.value=null;loaded.value=false;error.value='';message.value=''}
 },{immediate:true})
 onBeforeUnmount(()=>{alive=false;clearImage()})
+defineExpose({ openResult: openDetail, refresh: loadList })
 </script>
 
 <style scoped>
