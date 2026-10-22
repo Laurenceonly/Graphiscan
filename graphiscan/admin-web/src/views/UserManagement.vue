@@ -74,7 +74,6 @@
               <option value="teacher">Teachers</option>
               <option value="parent">Parents</option>
               <option value="expert">Experts</option>
-              <option value="guest">Guests</option>
             </select>
 
             <button class="clear-filter-btn" type="button" @click="clearFilters">
@@ -253,7 +252,6 @@
                 <option value="teacher">Teacher</option>
                 <option value="parent">Parent / Guardian</option>
                 <option value="expert">Expert / SPED</option>
-                <option value="guest">Guest</option>
               </select>
             </div>
 
