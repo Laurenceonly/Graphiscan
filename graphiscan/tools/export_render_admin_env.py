@@ -67,6 +67,7 @@ def export(frontend_origin):
     env_file.touch()
     for key, value in values.items():
         set_key(str(env_file), key, value)
+    (output / 'admin-api.json').write_text(json.dumps(values), encoding='utf-8')
     if ca_bytes:
         (output / 'graphiscan-db-root.crt').write_bytes(ca_bytes)
     print(json.dumps({'status': 'private-render-bundle-prepared', 'values_printed': False,

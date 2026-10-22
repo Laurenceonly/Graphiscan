@@ -26,13 +26,13 @@ configured; it does not provide online inference in this deployment.
 
 ## Database rollout
 
-Migrations017 and018 are installed and catalog-verified. Apply corrected
-`db/postgres/019_admin_account_lifecycle.sql` once as the schema owner. The first
-generated019 copy had damaged dollar quotes; the corrected complete file compiled
-against an empty disposable PostgreSQL schema with001–018 and all five lifecycle
-catalog flags passed. That compilation is not live reset/delete verification.
+Migrations017-019 are installed and catalog-verified. Following the user's
+successful019 application, the restricted read-only checker passed all33 checks
+and reported issuance/lifecycle installation true. Do not rerun017,018 or019.
+The corrected019 had previously compiled against an empty disposable schema;
+neither catalog checks nor compilation establish live reset/delete behavior.
 
-Then run the restricted read-only checker:
+For a future read-only installation review, the checker is:
 
 ```powershell
 python .\graphiscan\tools\check_v1_admin_writer.py --connect

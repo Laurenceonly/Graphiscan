@@ -1,5 +1,15 @@
 # GraphiScan resume checkpoint
 
+## Latest hosting handoff - 2026-10-22
+
+-019 installed: restricted read-only checker passed all33 checks. Do not rerun017-019. No live reset/delete evidence.
+- Commit `57c8cba` pushed; PR#1 open/mergeable against main, no CI checks reported. Keep open until hosted admin verification. One subsequent helper change adds private JSON export.
+- Ignored `.local-tools/render-private/` contains environment/JSON values and a database CA. Never print/commit these. Render needs the CA as Secret File `graphiscan-db-root.crt`; DSNs use `/etc/secrets/graphiscan-db-root.crt` with verify-full.
+- Controlled Playwright `render` session remains at `/login`; brought forward and asked user to sign in privately. No service/config upload/deployment yet. Vercel admin domain verified as `graphiscan-admin.vercel.app`; only use the actual owned Render service URL for the frontend API origin.
+- Local API019 restart not confirmed:5002 remained occupied after stopping an identified owned listener. Inspect exact remaining listener/process before stopping anything. Avoid killing unrelated Python processes. Model hosting and Expo remain deferred.
+
+This checkpoint supersedes the older pending019 and uncommitted-source notes below.
+
 ## Active admin completion and deployment — 2026-10-22
 
 - User deferred Expo and requested remaining admin work, then deployment. Implemented019 lifecycle source, account detail/school/permission editor and status/reset/delete dialogs. New reset/delete operations require issuer password, durable gates and one provider write; deletion limited to unused accounts without assignments/history. Source hardens role/pending-account checks and update validation ordering. No actual reset/delete performed.
