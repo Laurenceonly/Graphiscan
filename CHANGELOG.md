@@ -1,5 +1,28 @@
 # GraphiScan change log
 
+## 2026-10-22 - Resume publication after role-choice merge
+
+- GitHub confirms PR#4 merged as b25d170. Fetched origin/main; assignment-access branch retains all role-choice changes. Saving the previously verified assignment API/admin, migrations020/021, contract checks and rollout documentation for a follow-up PR. No schema reruns or production account mutations occurred.
+- Latest hosted database verification remains38 passing read-only checks after021. Local607 contract/507 isolated SQL checks,77 focused Python cases, admin build and fictional responsive preview evidence are recorded above/below. Hosted deployment and actual assignment workflow remain pending.
+
+## 2026-10-22 - Migration021 verification passed; pause requested
+
+- User applied021. Actual `check_v1_admin_writer.py --connect --require-assignment-access` returned `admin-writer-setup-passed`: all38 checks passed, including020 functions, exact runtime grants, assignment table protection and read-only writer connection/settings. No database writes ran.
+- Local regression reproduced the leftover Supabase privileges and verified021 removes them:607 contract and507 isolated SQL checks passed (74 account-administration checks). Earlier absent020/pending021 entries are historical.
+- User requested continuation later after checks. Matching assignment-access API/admin source remains local on `feat/admin-assignment-access`; not committed, pushed or deployed. PR#4 role choices remains OPEN as last checked. Resume by saving/reviewing this branch and arranging matching deployment, then controlled authenticated hosted assignment verification. Broader data/model/privacy/device/manuscript and credential gates remain open.
+
+## 2026-10-22 - Verify installed020 and prepare privilege correction021
+
+- User reported020 success. The actual read-only hosted check confirms all four assignment functions installed, guarded ownership/search paths, exact runtime function grants and PUBLIC denial. Existing017-019 checks passed. Full readiness remains blocked by the assignment table protection check.
+- Read-only catalog diagnosis confirmed row security enabled, but `anon`, `authenticated` and `service_role` each retain TRUNCATE, REFERENCES and TRIGGER on `assignment_eligibilities`. Prepared `021_assignment_table_privileges.sql` to revoke only those nine leftover default privileges. No account data, secrets or rows were read or changed;021 has not been applied. After applying021, rerun the required020 preflight before publishing the matching API/admin.
+
+## 2026-10-22 - Prepare explicit assignment eligibility management
+
+- Implemented scoped GET/PATCH `/accounts/{user_id}/assignment-access`, `AssignmentAccessService` and backend composition. Prepared unapplied020 with guarded read/write helpers and exact function-only grants. The operator needs global account management plus school assignment management; role/membership/active-state checks, protected actor ceilings, candidate revisions and credential-operation locks are repeated in SQL. Changes and audit commit together; no-op saves leave revision/audit unchanged. No permissions/memberships are seeded and existing student/result assignments remain intact.
+- Added Manage assignment access inside Edit account, with paginated assigning-account search, current/effective eligibility, allow/remove controls and uncertain-save read reconciliation. Existing Users role choices from PR#4 remain intact. Added the API contract, rollout runbook and optional/required020 read-only catalog checks. Incorporated the previously saved local account verification work from `2e215f6`.
+- Verification:607 contract/506 isolated PostgreSQL checks passed, including35 new eligibility cases;77 focused Python cases passed across API/admin/issuance/backend/factory and rollout checks. Admin build passed (1832 modules). Fictional Chromium at1440/390/320 passed grant/revoke, scope errors, cancellation, dirty-edit guards, lost-response recovery without replay, fit and visible footers; screenshots inspected. Nine intercepted saves, no actual provider/database mutation.
+- Actual restricted hosted check:017-019 metadata passed;020 absent, expected status `migration-required` with27 passing checks and one missing020 flag. No schema or account writes ran. Install only020, run `check_v1_admin_writer.py --connect --require-assignment-access`, then publish matching API/admin source and exercise authorized hosted behavior. Installed schema remains019. Historical data/images, hosted reset/delete, approved privacy publication, model hosting, native device and manuscript dependencies remain open.
+
 ## 2026-10-22 - Limit Users role choices
 
 - Removed Researcher and Guest from hosted Users Add/Edit choices and Users role filters. The available choices are Administrator, Teacher, Parent and Expert. Removed Guest from the older UserManagement creation/filter controls too. Existing accounts with an older role retain their current value through a disabled hidden option, so opening/saving unrelated fields cannot silently convert their role. Audit history retains its role filters.

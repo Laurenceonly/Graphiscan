@@ -1,5 +1,10 @@
 # GraphiScan admin web
 
+Prepared assignment setup2026-10-22: Edit > Manage assignment access uses the new
+scoped GET/PATCH account eligibility API. It needs020 installed before publication;
+actual metadata still shows019 as latest. Source/build and fictional1440/390/320
+grant/revoke/recovery previews pass. See [rollout and prerequisites](../api/ASSIGNMENT_ACCESS.md).
+
 Current published checkpoint (2026-10-22): admin is live at
 https://graphiscan-admin.vercel.app/login and uses the Render Free API. User
 confirmed hosted login/dashboard; PR#1 merged and Render follows main. Migrations

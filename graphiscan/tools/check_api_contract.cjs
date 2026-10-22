@@ -1,5 +1,5 @@
-// Offline validation of proposed artifacts. Does not import app.py/config.py,
-// contact MySQL/Supabase, or claim that v1 handlers enforce these declarations.
+// Offline contract and isolated PostgreSQL validation. Does not import config.py
+// or contact MySQL/Supabase; source coverage is separate from hosted evidence.
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert/strict');
@@ -25,19 +25,23 @@ async function main() {
     check(validator(value) === expected, `Schema case ${name} expected ${expected}: ${JSON.stringify(validator.errors)}`);
   };
   const ops = Object.entries(spec.paths).flatMap(([route, methods]) => Object.entries(methods).map(([method, op]) => ({route, method: method.toUpperCase(), op})));
-  check(ops.length === 33, 'Endpoint count changed; reconcile the prose contract');
+  const runtimeSource = fs.readFileSync(path.join(root, 'graphiscan/api_v1.py'), 'utf8');
+  const runtimeOps = new Set([...runtimeSource.matchAll(/@api\.(get|post|patch|delete)\(['"]([^'"]+)['"]\)/g)]
+    .map(m => m[1].toUpperCase()+' '+m[2].replace(/<([^>]+)>/g,'{$1}')));
+  const proposedOps = new Set(['GET /summary', 'POST /demo-screenings']);
+  check(ops.length === runtimeOps.size + proposedOps.size, 'Runtime/OpenAPI operation count drift');
   check(new Set(ops.map(x=>x.op.operationId)).size === ops.length, 'Duplicate operation ID');
   const prose = fs.readFileSync(path.join(root, 'API_CONTRACT.md'), 'utf8');
   const catalogue = prose.split('## 5. Endpoint catalogue')[1].split('## 6.')[0];
   const proseOps = [...catalogue.matchAll(/`(GET|POST|PATCH|DELETE) (\/[^` ]+)`/g)].map(m=>m[1]+' '+m[2]);
   check(JSON.stringify(proseOps.sort()) === JSON.stringify(ops.map(x=>x.method+' '+x.route).sort()), 'Prose/OpenAPI endpoint drift');
   for (const {route, method, op} of ops) {
-    check(method !== 'DELETE', 'Unresolved deletion policy acquired an endpoint');
+    check(method !== 'DELETE' || route === '/accounts/{user_id}', 'Unreviewed resource deletion acquired an endpoint');
     if (['/health','/session/login','/session/refresh'].includes(route)) check(op.security.length === 0, 'Public session/liveness declaration mismatch');
     else check((op.security || spec.security).some(s=>s.BearerAuth), `Missing auth declaration: ${route}`);
-    const expectedStatus = (['/health', '/me', '/privacy-agreement', '/schools', '/students', '/students/{student_id}', '/schools/{school_id}/assignment-options','/screenings','/screenings/{result_id}','/students/{student_id}/history','/reports/{report_id}','/models','/screening-requests/{idempotency_key}','/screenings/{result_id}/image','/accounts','/audit-logs'].includes(route) && method === 'GET') ||
-      (['/me/password', '/me/privacy-acceptance','/session/login','/session/refresh','/session/logout','/schools','/students','/screenings'].includes(route) && method === 'POST') ||
-      (['/schools/{school_id}','/students/{student_id}','/screenings/{result_id}/review','/screenings/{result_id}/expert-assignment','/accounts/{user_id}'].includes(route) && method === 'PATCH') ? 'foundation' : 'proposed';
+    const operation = method+' '+route;
+    check(runtimeOps.has(operation) || proposedOps.has(operation), 'Undeclared implementation status: '+operation);
+    const expectedStatus = runtimeOps.has(operation) ? 'foundation' : 'proposed';
     check(op['x-implementation-status'] === expectedStatus, 'Runtime implementation status drift');
     for (const name of [...route.matchAll(/\{([^}]+)\}/g)].map(m=>m[1])) {
       check(op.parameters.some(p=>p.in==='path' && p.name===name && p.required), 'Missing required path parameter');
@@ -75,8 +79,14 @@ async function main() {
   accept('AccountCreate', account, true);
   accept('AccountCreate', {...account,temporary_password:'weak'}, false);
   accept('AccountCreate', {...account,email:'not-an-email'}, false);
-  accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'accounts.manage',school_id:'1'}]}, true);
+  accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'accounts.manage',school_id:'1'}]}, false);
+  accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'accounts.manage',school_id:null}]}, true);
+  accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'assignments.manage',school_id:'1'}]}, true);
   accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'unknown.power',school_id:null}]}, false);
+  const assignment={actor_id:'00000000-0000-4000-8000-000000000001',school_id:'1',expected_revision:1,eligible:true};
+  accept('AssignmentAccessWrite', assignment, true);
+  accept('AssignmentAccessWrite', {...assignment,eligible:'true'}, false);
+  accept('AssignmentAccessWrite', {...assignment,expected_revision:0}, false);
   for(const {op} of ops)for(const response of Object.values(op.responses)){
     const json=response.content?.['application/json']?.schema;
     if(!json)continue;
@@ -179,6 +189,9 @@ async function main() {
     await require('./check_v1_directory_writes_sql.cjs')({db, root, U});
     await require('./check_v1_assignment_options_sql.cjs')({db, root, U});
     await require('./check_v1_screenings_sql.cjs')({db, root, U, validateRow:(name,row)=>{
+      const validator=ajv.compile(schemas[name]);return {ok:validator(row),errors:validator.errors};
+    }});
+    await require('./check_v1_admin_sql.cjs')({db, root, U, validateRow:(name,row)=>{
       const validator=ajv.compile(schemas[name]);return {ok:validator(row),errors:validator.errors};
     }});
   } finally { await db.close(); }

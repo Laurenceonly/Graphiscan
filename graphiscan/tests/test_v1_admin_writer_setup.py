@@ -15,11 +15,13 @@ ISSUANCE = dict.fromkeys(('issuance_functions_installed', 'guarded_issuance_func
     'issuance_table_protected'), True)
 LIFECYCLE = dict.fromkeys(('lifecycle_functions_installed', 'guarded_lifecycle_functions',
     'lifecycle_exact_runtime_grants', 'lifecycle_public_denied', 'lifecycle_table_protected'), True)
+ASSIGNMENT = dict.fromkeys(('assignment_functions_installed', 'assignment_guarded_functions',
+    'assignment_exact_runtime_grants', 'assignment_public_denied', 'assignment_table_protected'), True)
 
 
 def reader_rows():
     return [CONNECTION, {'installed': True}, CATALOG,
-            {'installed': False}, {'installed': False}]
+            {'installed': False}, {'installed': False}, {'installed': False}]
 
 
 class AdminWriterSetupTests(unittest.TestCase):
@@ -77,7 +79,7 @@ class AdminWriterSetupTests(unittest.TestCase):
 
     def test_optional_issuance_and_lifecycle_catalogs_are_checked(self):
         self.cursor.fetchone.side_effect = [CONNECTION, {'installed': True}, CATALOG,
-            {'installed': True}, ISSUANCE, {'installed': True}, LIFECYCLE]
+            {'installed': True}, ISSUANCE, {'installed': True}, LIFECYCLE, {'installed': False}]
         report = setup.run(True)
         self.assertEqual(report['status'], 'writer-configuration-required')
         self.assertTrue(report['account_issuance_migration_installed'])
@@ -95,6 +97,26 @@ class AdminWriterSetupTests(unittest.TestCase):
         self.assertEqual(report['status'], 'blocked')
         service.repository.connect.assert_not_called()
         self.assertFalse(report['database_writes'])
+
+    def test_assignment_catalog_is_checked_when_present(self):
+        self.cursor.fetchone.side_effect = [CONNECTION, {'installed': True}, CATALOG,
+            {'installed': False}, {'installed': False}, {'installed': True}, ASSIGNMENT]
+        report = setup.run(True)
+        self.assertEqual(report['status'], 'writer-configuration-required')
+        self.assertTrue(report['assignment_access_migration_installed'])
+        self.assertTrue(all(check['status'] == 'pass' for check in report['checks']))
+
+    def test_assignment_privilege_failure_blocks_writer(self):
+        self.cursor.fetchone.side_effect = [CONNECTION, {'installed': True}, CATALOG,
+            {'installed': False}, {'installed': False}, {'installed': True},
+            dict(ASSIGNMENT, assignment_exact_runtime_grants=False)]
+        service = Mock()
+        self.backend.admin_write_service = service
+        self.assertEqual(setup.run(True)['status'], 'blocked')
+        service.repository.connect.assert_not_called()
+
+    def test_required_assignment_migration_does_not_pass_when_absent(self):
+        self.assertEqual(setup.run(True, require_assignment_access=True)['status'], 'migration-required')
 
 
 if __name__ == '__main__':
