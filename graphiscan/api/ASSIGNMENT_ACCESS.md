@@ -1,21 +1,19 @@
-Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
-role-choice removal is on main. Migrations020 and021 are applied; the last hosted
-read-only preflight passed all38 checks. Assignment-access API/admin source is
-being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
-607 contract/507 isolated SQL and77 focused Python checks plus admin build and
-fictional responsive previews passed. Next: merge/deploy matching source, then
-controlled authenticated hosted assignment checks. Earlier absent/pending SQL
-and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
-manuscript and credential verification remain separate release gates.
+Current handoff2026-10-22: migrations020/021 are applied and the last hosted
+read-only preflight passed38 checks. PR#5 assignment API/admin and PR#6 shared
+page/card styling are merged. Public bundle index-BMML1qyx.js contains the shared
+cards, headers and centered Logout; public login returned200. Authenticated
+assignment/permission/audit and reset/delete checks remain open. Expo integration
+can begin against the deployed API; hosted inference is disabled, real-use privacy
+publication is pending, and historical MySQL data/image transfer is incomplete.
+No additional numbered migration is currently prepared. Do not rerun020/021.
 # Assignment eligibility administration
 
 Prepared2026-10-22. Source, isolated PostgreSQL and fictional browser checks pass.
-Migration020 is installed: actual restricted catalog checks confirm all four
-functions, guarded ownership/search paths, exact runtime grants and PUBLIC denial.
-Readiness remains blocked by leftover TRUNCATE/REFERENCES/TRIGGER table privileges
-for anon/authenticated/service_role. RLS is enabled. Migration021 removes those
-privileges and awaits user application. The agent performed only read-only hosted
-checks; no account or eligibility mutation occurred.
+Migrations020/021 are installed. The actual restricted hosted preflight passed
+all38 checks, including guarded functions, exact runtime grants, PUBLIC denial,
+table protection and writer connection settings. PR#5 published the matching
+API/admin source. Authenticated hosted grant/revoke and scope/audit verification
+remain open; the agent performed no real eligibility mutation.
 
 The Users editor provides **Manage assignment access** within Account actions.
 Select a school and an assigning account, check the current state, then allow or
@@ -85,11 +83,8 @@ the check attempt, with an operator notice and the stale account editor cleared.
 
 ## Rollout
 
-1. The user has applied020. Apply only
-   [021_assignment_table_privileges.sql](../db/postgres/021_assignment_table_privileges.sql)
-   using the reviewed schema owner in SQL Editor. It revokes leftover default
-   TRUNCATE/REFERENCES/TRIGGER privileges without changing records or functions.
-   Do not rerun020.
+1. The configured project already has020 and021. The latter removed leftover
+   default TRUNCATE/REFERENCES/TRIGGER privileges. Do not rerun either migration.
 2. From `graphiscan/`, run the current checkout's read-only check:
 
    ```powershell
@@ -100,8 +95,7 @@ the check attempt, with an operator notice and the stale account editor cleared.
    `assignment_access_migration_installed: true`. The new preflight also detects
    incomplete function sets, unexpected execution grants and direct table access.
    Existing private reader/admin-writer settings are reused; no new key is needed.
-3. Publish the matching API and admin source through the normal main-branch
-   deployment. Check actual authenticated eligibility allow/remove, options and
+3. Matching API/admin source is published through PR#5. Check actual authenticated eligibility allow/remove, options and
    denied-scope behavior with a deliberately fictional account in an already
    authorized school. Source/preview evidence does not replace this hosted check.
 
@@ -111,8 +105,8 @@ This work imports no records or images and does not publish privacy acceptances.
 
 ## Local evidence
 
--607 contract and506 isolated PostgreSQL checks pass, including35 assignment
-  access cases and73 account-administration cases. SQL projections match OpenAPI.
+-607 contract and507 isolated PostgreSQL checks passed, including35 assignment
+  access cases and74 account-administration cases. SQL projections match OpenAPI.
 -77 focused Python cases passed across assignment/admin/issuance/API/backend and
   hosted-app factory checks, including partial/missing020 rollout handling.
 - Admin production build passed. Fictional Chromium at1440/390/320 exercised
@@ -120,6 +114,6 @@ This work imports no records or images and does not publish privacy acceptances.
   lost-response reconciliation without replay and visible responsive footers.
   Nine intercepted saves were fictional; no real mutation occurred.
 
-Hosted021 application/full preflight, authenticated mutation, distributed concurrency, real
+Authenticated mutation, distributed concurrency, real
 role workflows, historical cutover, model hosting, Android/device and manuscript
 evidence remain open in [CURRENT_REQUIREMENTS.md](../../CURRENT_REQUIREMENTS.md).
