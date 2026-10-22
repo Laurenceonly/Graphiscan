@@ -7,7 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     HOME=/tmp
 
 WORKDIR /app
-COPY requirements-hosted.txt ./
+COPY requirements-hosted.txt requirements-admin.txt ./
 RUN pip install --no-cache-dir -r requirements-hosted.txt
 
 # The context allowlist excludes configuration, datasets and student images.

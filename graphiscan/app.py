@@ -47,7 +47,7 @@ CORS(app, resources={
             "http://10.120.208.249:5174"
         ],
         "allow_headers": ["Content-Type", "Authorization", "Idempotency-Key"],
-        "methods": ["GET", "POST", "PATCH", "OPTIONS"]
+        "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
     }
 })
 

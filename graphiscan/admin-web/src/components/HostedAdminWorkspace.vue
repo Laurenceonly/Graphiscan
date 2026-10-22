@@ -24,7 +24,7 @@
     <div v-show="section === 'dashboard'" class="dashboard-page modern-admin-dashboard">
       <section class="dashboard-toolbar">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
-        <button type="button" class="workspace-refresh" :disabled="refreshing" @click="refreshDashboard"><RefreshCcw :size="15" /> Refresh</button>
+        <RefreshButton :busy="refreshing" @click="refreshDashboard" />
       </section>
       <p v-if="screening.error || directory.error" class="workspace-alert" role="alert">Some dashboard information could not be loaded. Refresh to try again.</p>
       <section class="dashboard-highlight-grid" aria-label="Loaded record counts">
@@ -90,17 +90,18 @@
       <HostedScreenings ref="screeningsRef" :client="client" :profile="profile" @access-change="refreshAccount" @snapshot="screening = $event" />
     </section>
     <section v-show="section === 'settings'" class="workspace-account">
-      <header class="page-header workspace-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><button type="button" class="workspace-refresh" :disabled="busy" @click="refreshAccount">Refresh account</button></header>
+      <header class="page-header workspace-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><RefreshButton :busy="busy" @click="refreshAccount" /></header>
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
     <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" @access-change="refreshAccount" @open-result="openResult" />
-    <HostedAdminRecords v-if="section === 'users' || section === 'audit'" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" />
+    <HostedAdminRecords v-if="section === 'users' || section === 'audit'" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" />
   </AdminLayout>
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, nextTick, ref } from 'vue'
-import { AlertTriangle, ArrowUpRight, ChevronRight, FileText, GraduationCap, History, LayoutDashboard, RefreshCcw, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
+import { AlertTriangle, ArrowUpRight, ChevronRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
 import brandLogo from '../assets/graphiscan-logo.png'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import HostedDirectory from '../../../shared/HostedDirectory.vue'
@@ -201,8 +202,6 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .dashboard-toolbar .workspace-scope { display:block; margin-top:10px; }
 .workspace-scope { margin:0; color:var(--muted); font-size:12px; }
 .workspace-alert { padding:14px 16px; color:var(--danger-text); background:var(--white); border:1px solid var(--control-border); border-radius:8px; }
-.workspace-refresh { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 14px; border:1px solid var(--control-border); border-radius:8px; background:var(--white); color:var(--text-soft); font:500 14px/1.5 var(--font-ui); cursor:pointer; }
-.workspace-refresh:disabled { opacity:.6; cursor:default; }
 .dashboard-highlight-grid { gap:var(--workspace-control-gap); }
 .dashboard-highlight-card { position:relative; display:grid; grid-template-columns:1fr auto; align-items:start; gap:8px; min-height:var(--workspace-metric-height); padding:var(--workspace-metric-padding); border-radius:14px; border:1px solid var(--border); text-align:left; cursor:pointer; font-family:inherit; background:white; box-shadow:0 2px 3px rgb(17 24 39 / .015); }
 .dashboard-highlight-card:hover { border-color:var(--control-border); box-shadow:none; }

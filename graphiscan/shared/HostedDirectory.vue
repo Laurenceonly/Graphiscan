@@ -8,7 +8,8 @@
     <nav class="directory-nav" aria-label="Workspace records">
       <button type="button" :aria-pressed="tab === 'students'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'students'; closeForm()">Students</button>
       <button type="button" :aria-pressed="tab === 'schools'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'schools'; closeForm()">Schools</button>
-      <button type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
+      <RefreshButton v-if="adminPresentation" :busy="busy" :disabled="frozen || schoolUncertain" @click="refreshRecords" />
+      <button v-else type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
     </nav>
     <p v-if="error && !(adminPresentation && formKind)" role="alert" class="directory-error">{{ error }}</p>
     <button v-if="error" type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Retry loading records</button>
@@ -44,6 +45,7 @@
     <button v-if="schoolCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadSchools(true)">Load more schools</button>
     <component :is="adminPresentation ? 'dialog' : 'section'" v-if="formKind" ref="formRegion" tabindex="-1" class="directory-editor" :class="{ 'hosted-directory-modal': adminPresentation }" aria-labelledby="editor-title" @cancel="cancelEditor">
       <component :is="adminPresentation ? 'h2' : 'h3'" id="editor-title">{{ formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? 'Student details' : 'Add student') }}</component>
+      <button v-if="adminPresentation" type="button" class="directory-modal-close" aria-label="Close dialog" :disabled="busy || frozen || schoolUncertain" @click="closeForm"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
       <p v-if="adminPresentation && error" role="alert" class="directory-error">{{ error }}</p>
       <template v-if="formKind === 'student' && !canWriteStudents">
         <dl><dt>Name</dt><dd>{{ draft.full_name }}</dd><dt>School</dt><dd>{{ schoolName(draft.school_id) }}</dd><dt>Grade</dt><dd>{{ draft.grade_level }}</dd><dt>Age</dt><dd>{{ draft.age ?? 'Not recorded' }}</dd></dl>
@@ -66,7 +68,12 @@
         <p v-if="frozen" role="status">Saving could not be confirmed. Retry this same submission before starting another. Keep this page open.</p>
         <p v-if="conflict" role="status">The record changed. Reloading will replace your unsaved form with the latest record.</p>
         <p v-if="schoolUncertain" role="status">Saving this school could not be confirmed. Refresh the school list and check for it before trying again.</p>
-        <div class="directory-actions"><button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : 'Save' }}</button><button v-if="conflict || schoolUncertain" type="button" :disabled="busy" @click="reloadRecord">{{ schoolUncertain ? 'Refresh school list' : 'Reload record' }}</button><button v-if="!frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button></div>
+        <div class="directory-actions">
+          <button v-if="adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
+          <button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : 'Save' }}</button>
+          <button v-if="conflict || schoolUncertain" type="button" :disabled="busy" @click="reloadRecord">{{ schoolUncertain ? 'Refresh school list' : 'Reload record' }}</button>
+          <button v-if="!adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
+        </div>
         <button v-if="adminPresentation && signOut && (frozen || schoolUncertain)" type="button" class="directory-signout" :disabled="busy" @click="signOut">Sign out</button>
       </form>
     </component>
@@ -75,6 +82,7 @@
 </template>
 
 <script setup>
+import RefreshButton from './RefreshButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { createStudentSubmission } from './directory-submission.mjs'
 const props=defineProps({ client:{type:Object,required:true},profile:{type:Object,required:true},adminPresentation:Boolean,signOut:{type:Function,default:null} })

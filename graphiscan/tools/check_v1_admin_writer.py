@@ -48,7 +48,30 @@ def run(connect=False):
                          'other_application_functions_denied')
                 if not all([check(name, info.get(name)) for name in names]):
                     return report
+                cursor.execute("SELECT to_regprocedure('public.graphiscan_begin_account_issuance(uuid,uuid,uuid,jsonb)') IS NOT NULL OR to_regprocedure('public.graphiscan_complete_account_issuance(uuid,uuid,uuid,uuid,uuid)') IS NOT NULL AS installed")
+                issuance_installed = (cursor.fetchone() or {}).get('installed') is True
+                report['account_issuance_migration_installed'] = issuance_installed
+                if issuance_installed:
+                    cursor.execute((APP / 'db/postgres/018_account_issuance_preflight.sql').read_text(encoding='utf-8'))
+                    issuance_info = cursor.fetchone() or {}
+                    issuance_names = ('issuance_functions_installed', 'guarded_issuance_functions',
+                                      'writer_can_issue', 'issuance_other_roles_denied',
+                                      'issuance_public_denied', 'issuance_table_protected')
+                    if not all([check(name, issuance_info.get(name)) for name in issuance_names]):
+                        return report
         service = getattr(backend, 'admin_write_service', None)
+        with backend.repository.connect() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT to_regprocedure('public.graphiscan_get_admin_account(uuid,uuid,uuid)') IS NOT NULL OR to_regprocedure('public.graphiscan_begin_admin_account_operation(uuid,uuid,uuid,uuid,text,bigint,uuid)') IS NOT NULL AS installed")
+                lifecycle_installed = (cursor.fetchone() or {}).get('installed') is True
+                report['account_lifecycle_migration_installed'] = lifecycle_installed
+                if lifecycle_installed:
+                    cursor.execute((APP / 'db/postgres/019_admin_account_lifecycle_preflight.sql').read_text(encoding='utf-8'))
+                    info = cursor.fetchone() or {}
+                    names = ('lifecycle_functions_installed', 'guarded_lifecycle_functions',
+                             'lifecycle_exact_runtime_grants', 'lifecycle_public_denied', 'lifecycle_table_protected')
+                    if not all([check(name, info.get(name)) for name in names]):
+                        return report
         if service is None:
             report['status'] = 'writer-configuration-required'
             return report

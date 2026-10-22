@@ -1,5 +1,13 @@
 # Hosted deployment preparation
 
+Current admin release preparation (2026-10-22): user resumed deployment after
+admin completion. Vercel CLI login is confirmed and existing GitHub PR#1 targets
+the preparation branch. Render remains at login; no service/deployment or server
+secret transfer has occurred. See `ADMIN_RELEASE.md` for the current019 rollout
+and admin-only release checklist. `render.yaml` now includes a private Auth-key
+placeholder required for hosted issuance/reset/delete. Model hosting remains
+separate and must stay free.
+
 ## Current decision, 2026-10-22
 
 The user requires free model hosting. The previously recorded Cloud Run choice
@@ -11,6 +19,31 @@ Admin: Vue/Vite on Vercel, sourced from GitHub. Data, Auth and private handwriti
 images: the existing Supabase project. Android: installed Expo app built through
 EAS. The public API origin must be HTTPS in both clients. A localhost origin does
 not work for a public deployment.
+
+## Free-host review and immediate focus, 2026-10-22
+
+User reconfirmed that admin is the immediate focus. Finish the real admin/API/
+Supabase workflow and Vercel publication before expanding model-host work. A
+temporary admin-only API can run with `GRAPHISCAN_REQUIRE_MODEL=false` and no
+model manifest; this does not establish online screening. The model host remains
+unselected. Recommendations below are research, not deployed/verified behavior.
+
+| Service | Current documented offer | Project assessment |
+| --- | --- | --- |
+| Render | Free web service,512MB RAM; sleeps after15 idle minutes | First candidate for the lightweight admin API; existing TensorFlow models need memory measurements. |
+| Hugging Face | Regular CPU Docker/Gradio Space creation now requires a paid plan; eligible personal accounts have a free ZeroGPU exception | Do not treat CPU Basic's FREE hardware label as a free account-level deployment. ZeroGPU uses Gradio and targets PyTorch, so it is not a direct replacement for this Flask/TensorFlow app. |
+| Modal | Starter includes $30 monthly credits; payment method required; spend limits stop additional out-of-pocket workloads | Candidate for the model-enabled backend if card verification is acceptable and the no-spend setting is confirmed before use. |
+| Oracle Cloud | Always Free ARM allocation currently equivalent to2 OCPUs/12GB RAM; card verification and capacity restrictions | More memory, but requires VM administration and ARM/TensorFlow/container checks. |
+| Railway | Free plan has $1 monthly credit and0.5GB RAM per service | Small allowance and same memory concern; not the first model-host candidate. |
+| Koyeb | One free512MB instance; card verification and paid signup-plan pitfalls | No clear memory advantage over Render for these models. |
+
+Official sources checked2026-10-22:
+- https://render.com/docs/free and https://render.com/docs/compute-plans
+- https://huggingface.co/docs/hub/spaces-overview and https://huggingface.co/docs/hub/en/spaces-zerogpu
+- https://modal.com/pricing , https://modal.com/docs/guide/billing and https://modal.com/docs/guide/budgets
+- https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm and https://www.oracle.com/cloud/free/
+- https://docs.railway.com/pricing/plans
+- https://www.koyeb.com/docs/reference/instances and https://www.koyeb.com/docs/faqs/pricing
 
 ## Backend container
 

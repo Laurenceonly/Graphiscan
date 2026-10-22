@@ -5702,3 +5702,185 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
   .guardian-link-btn, .table-actions button, .filter-chip, .logout-btn { min-height: 44px; }
   .standard-modal, .danger-modal, .logout-confirm-modal { overscroll-behavior: contain; }
 }
+
+/* Shared admin filter/form controls, including hosted pages and native dialogs. */
+.admin-shell { --admin-dialog-padding: 24px; }
+.admin-shell .main-panel :is(input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="file"], [type="range"], [type="color"], [type="button"], [type="submit"]), select, textarea) {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  border-color: var(--control-border);
+  border-radius: var(--control-radius);
+}
+
+.admin-shell .main-panel :is(input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="file"], [type="range"], [type="color"], [type="button"], [type="submit"]), select) {
+  min-height: 48px;
+  padding: 10px 16px;
+}
+
+.admin-shell .main-panel select:not([multiple]) {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-inline-end: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+}
+
+/* The password visibility button shares the field's outer border. */
+.admin-shell .main-panel .security-input input { min-height: 46px; border-radius: 0; }
+.admin-shell .main-panel .security-input button { min-height: 46px; }
+
+@media (max-width: 760px), (pointer: coarse) {
+  .admin-shell .main-panel :is(input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="file"], [type="range"], [type="color"], [type="button"], [type="submit"]), select, textarea) {
+    font-size: 16px;
+  }
+}
+
+@media (forced-colors: active) {
+  .admin-shell .main-panel select:not([multiple]) {
+    -webkit-appearance: auto;
+    appearance: auto;
+    background-image: none;
+    padding-inline-end: 16px;
+  }
+}
+
+/* Dialogs share the workspace's typography and alignment. */
+.admin-shell .modal-backdrop { padding: 16px; backdrop-filter: none; }
+.admin-shell :is(.standard-modal, .danger-modal, .logout-confirm-modal, .account-editor) {
+  max-height: calc(100dvh - 32px);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+.admin-shell :is(.standard-modal-head, .danger-modal-head) {
+  padding: var(--admin-dialog-padding) var(--admin-dialog-padding) 0;
+  gap: 16px;
+}
+.admin-shell .standard-modal-head h2,
+.admin-shell .danger-modal-copy h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+}
+.admin-shell .standard-modal-head > div { min-width: 0; }
+.admin-shell .standard-modal-head p { margin-top: 8px; font-size: 14px; }
+.admin-shell .standard-modal-head span { padding: 0; margin-bottom: 8px; background: none; font-size: 13px; }
+.admin-shell .danger-modal-copy { padding: 16px var(--admin-dialog-padding) 0; }
+.admin-shell .danger-modal-copy > p { margin-top: 8px; font-size: 14px; }
+.admin-shell .logout-confirm-modal .danger-modal-copy { padding-top: 0; }
+.admin-shell .logout-confirm-modal .danger-modal-copy > p { margin-top: 4px; }
+.admin-shell .danger-icon { width: 40px; height: 40px; border-radius: 8px; }
+.admin-shell .danger-icon svg { width: 20px; height: 20px; }
+.admin-shell .delete-target-card { border-radius: 8px; background: var(--white); }
+.admin-shell :is(.admin-form-grid, .delete-form, .status-confirm-body, .student-view-body) {
+  padding: 20px var(--admin-dialog-padding) var(--admin-dialog-padding);
+  gap: 20px;
+}
+.admin-shell .main-panel .account-editor-form { padding: var(--admin-dialog-padding); gap: 20px; }
+.admin-shell :is(.account-editor-form, .directory-editor) label { font-size: 14px; font-weight: 500; }
+.admin-shell :is(.modal-close-btn, .editor-close),
+.admin-shell .account-editor-form button.editor-close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+.admin-shell .standard-modal-head .modal-close-btn,
+.admin-shell .account-editor-form .editor-close { margin: -8px -8px 0 0; }
+.admin-shell :is(.modal-close-btn, .editor-close):hover:not(:disabled) { background: var(--blue-50); }
+.admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+.admin-shell .logout-modal-actions { padding: 24px var(--admin-dialog-padding) var(--admin-dialog-padding); }
+.admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) > :is(button, a) {
+  width: auto;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: var(--control-radius);
+  box-shadow: none;
+  font: 500 14px/1.5 var(--font-ui);
+  text-align: center;
+}
+.admin-shell :is(.modal-actions, .logout-modal-actions) .cancel-btn { border: 1px solid var(--control-border); background: var(--white); color: var(--text-soft); }
+.admin-shell .main-panel dialog.hosted-directory-modal.directory-editor {
+  padding: var(--admin-dialog-padding);
+  border-radius: 12px;
+  max-height: calc(100dvh - 32px);
+}
+.admin-shell .main-panel dialog.hosted-directory-modal #editor-title { padding-right: 44px; margin-bottom: 24px; font-size: 20px; line-height: 1.35; }
+.admin-shell .main-panel .hosted-directory-modal .directory-hint { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.admin-shell .main-panel .hosted-directory-modal .directory-modal-close {
+  position: absolute;
+  top: calc(var(--admin-dialog-padding) - 8px);
+  right: calc(var(--admin-dialog-padding) - 8px);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+}
+.admin-shell .main-panel .hosted-directory-modal .directory-modal-close:hover:not(:disabled) { background: var(--blue-50); }
+
+/* Ordinary refresh actions share one presentation across hosted and legacy pages. */
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  align-self: center;
+  box-sizing: border-box;
+  gap: 8px;
+  height: 48px;
+  min-height: 48px;
+  min-width: 112px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--text-soft);
+  box-shadow: none;
+  font: 500 14px/1.5 var(--font-ui);
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button svg { flex: 0 0 16px; width: 16px; height: 16px; }
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button span { margin: 0; padding: 0; border: 0; background: transparent; font: inherit; color: inherit; letter-spacing: inherit; }
+.admin-shell .main-panel .screening-filters button.admin-refresh-button { align-self: end; }
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button:hover:not(:disabled) { background: var(--blue-50); border-color: var(--control-border); color: var(--text); }
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button:focus-visible { outline: 3px solid var(--blue-700); outline-offset: 3px; }
+:is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button:disabled { opacity: .6; cursor: default; }
+@media (max-width: 760px) {
+  .admin-shell { --admin-dialog-padding: 20px; }
+  .admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) > :is(button, a) { min-width: 0; }
+  .admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) > :only-child { grid-column: 1 / -1; }
+}

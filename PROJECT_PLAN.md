@@ -1,5 +1,25 @@
 # GraphiScan project plan and panel tracker
 
+## Current admin-first release — 2026-10-22
+
+- User deferred Expo and requested admin completion, then deployment.
+- Implemented source: account details/school/permission editing, disable/activate confirmation, reauthenticated temporary-password reset and unused-account deletion; existing dashboard, directory, results/progress, audit and settings flows retained.
+- Database:017/018 installed; corrected019 compiled locally with catalog checks, hosted019 rollout awaiting confirmation. No live reset/delete evidence yet.
+- Evidence: both Vue builds pass, eight Python source files parse and production admin-only factory loads routes; fictional action dialogs reviewed at1440/390px. Actual Add user completion was confirmed earlier.
+- Deployment: Vercel authenticated; existing PR#1 on `deploy/free-hosting`. Render Free API blueprint/private configuration export prepared; Render login still required. No deployment or private configuration transfer yet. Hosted model inference remains separate/free; no APK exists.
+
+Older timeline checkpoints below are historical. Use `graphiscan/api/ADMIN_RELEASE.md` and the newest CHANGELOG entry for the active release scope.
+
+Hosted Add user milestone (2026-10-22): user-created account confirmed by actual read-only reconciliation (1 Auth identity,1 app profile,0 Auth-only identities). Creation completion is observed after local API routing fix. Next: new account password/privacy gates in role-appropriate client, then live Edit/status behavior. Delete/password reset and deployment remain pending; source uncommitted.
+
+Local account setup (2026-10-22):018 verified and user saved server Auth secret; account issuance service loads and local API5002 is running (health200, anonymous accounts401, admin5173 reachable). Remaining: private sign-in and authenticated Add user/Edit verification. No real account writes or deployment occurred; provider-key validity is not yet established.
+
+Account rollout (2026-10-22): user applied018 and actual restricted read-only checker passed28 catalog/permission/session checks. Schema installation is through018. Remaining activation: private server Auth secret setup, API start/restart and live account-flow verification. No real account creation/deletion or deployment occurred. Do not rerun017/018.
+
+Account management source update (2026-10-22): Add user UI/API and unapplied migration018 prepared with durable Auth issuance reservation, first-login password gate, optional memberships and no automatic grants. Edit recovery/navigation tightened. Admin build passed and fictional responsive dialog reviewed. Activation requires reviewed018, private server Auth secret and live backend verification; no SQL mutation tests or real account writes occurred. Delete/password reset remain pending. Installed schema remains through017; deployment paused.
+
+Current admin refinement (2026-10-22): implemented shared control/dialog sizing and ordinary refresh-button presentation across hosted and legacy admin pages. Six hosted and five legacy refresh views inspected at1440/390px; both Vue builds passed. Changes remain local/uncommitted. Deployment and provider setup remain paused.
+
 Latest budget direction (2026-10-22): model hosting must be free. Cloud Run provider selection is on hold while a suitable free host and account/card constraints are resolved. Portable Flask/model container packaging, stable pagination signatures and exact model-source byte preservation are prepared;35 focused Python checks and admin build passed. No container build/live deployment or APK exists. Save latest source on `deploy/free-hosting`; keep its Vercel auto-deployment disabled until a public API origin is ready. See `graphiscan/api/HOSTING.md`.
 
 Current hosting direction (2026-10-22): follow the agreed `SYSTEM_DESIGN.md` stack: admin Vue/Vite on Vercel; Flask/Gunicorn and TensorFlow/Keras together on Google Cloud Run; Supabase PostgreSQL/Auth/private Storage; Expo/EAS Android builds. GitHub is the source repository. Vercel admin project creation/Git connection is prepared, but no code is staged/committed/pushed and no service is deployed. The provisional separate Vercel API project is not the selected backend host. Cloud Run access/billing/container/model provisioning, private server configuration, public API origins, hosted checks and mobile release remain pending.

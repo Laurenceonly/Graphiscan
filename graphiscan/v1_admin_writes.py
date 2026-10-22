@@ -1,5 +1,6 @@
 """Account administration writes with database-side authorization and revisions."""
 import json
+import logging
 import re
 from uuid import UUID
 
@@ -10,6 +11,8 @@ STATUSES = {'active', 'pending', 'disabled', 'rejected'}
 PERMISSIONS = {'accounts.manage', 'permissions.manage', 'schools.manage',
                'assignments.manage', 'audit.read'}
 ERRORS = {
+    'ACCOUNT_OPERATION_PENDING': (409, 'This account has an unfinished credential operation. Check its status before making more changes.', None),
+    'ACCOUNT_IN_USE': (409, 'This account has assignments or history. Disable it to preserve those records.', None),
     'INVALID_ACCOUNT_ID': (422, 'Supply a valid account ID.', None),
     'AUTHENTICATION_REQUIRED': (401, 'Sign in to continue.', None),
     'ACCOUNT_UNAVAILABLE': (403, 'This account is unavailable.', None),
@@ -153,5 +156,7 @@ class PostgresAdminWriteRepository:
                     cursor.execute(sql, params)
                     row = cursor.fetchone()
             return row
-        except Exception:
+        except Exception as error:
+            logging.getLogger(__name__).error('admin_database_failure type=%s sqlstate=%s',
+                                             type(error).__name__, getattr(error, 'sqlstate', None))
             raise BackendUnavailable() from None

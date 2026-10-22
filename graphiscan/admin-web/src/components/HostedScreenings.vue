@@ -10,12 +10,12 @@
       <form class="screening-filters" @submit.prevent="loadList(false)">
         <label>Validation status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option>Pending</option><option>Validated</option><option>Flagged</option></select></label>
         <label>Grade<select v-model="grade" :disabled="busy"><option value="">All grades</option><option v-for="value in 3" :key="value" :value="String(value)">Grade {{ value }}</option></select></label>
-        <button type="submit" :disabled="busy">Refresh results</button>
+        <RefreshButton type="submit" :busy="busy" />
       </form>
       <p v-if="error" role="alert" class="screening-error">{{ error }}</p>
       <p v-if="message" role="status">{{ message }}</p>
       <p v-if="busy" role="status">Loading or saving screening records…</p>
-      <p v-if="!loaded && !busy">Screening results have not loaded. Use Refresh results to try again.</p>
+      <p v-if="!loaded && !busy">Screening results have not loaded. Use Refresh to try again.</p>
       <p v-if="loaded && !rows.length && !busy">No screening results are available for your account and these filters.</p>
       <div v-if="rows.length" class="table-wrapper compact-table-scroll hosted-results-table" role="region" aria-label="Screening records" tabindex="0">
         <table><thead><tr><th>Student</th><th>Screening type</th><th>Classification</th><th>Predicted-class score</th><th>Validation</th><th>Date</th><th>Action</th></tr></thead><tbody>
@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { formatScore, formatReportType } from '../utils/hosted-screenings.mjs'
 const props = defineProps({ client: { type: Object, required: true }, profile: { type: Object, required: true } })

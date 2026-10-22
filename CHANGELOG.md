@@ -1,5 +1,77 @@
 # GraphiScan change log
 
+## 2026-10-22 - Finish admin account action source and resume deployment
+
+- User deferred Expo verification and requested admin completion followed by deployment. Added migration019, `v1_admin_lifecycle.py`, guarded account detail/operation-status/reset/delete routes, and hosted Users controls for school/permission editing, disable/activate, temporary-password reset and unused-account deletion. Issuer password verification and a durable pending gate precede provider reset/delete. Self/protected administrator operations are denied; deletion is refused for accounts with sessions or referenced assignments/history. Old sessions remain revoked. Pending provider outcomes require operator reconciliation and are never automatically replayed.
+- Migration019 hardens017 updates against researcher changes to admin/researcher accounts and unfinished credential operations, and moves grant-revocation validation before membership mutations. All public account/private helper grants are bounded by new019 preflight checks. Migration018 remains installed;019 rollout is pending a fresh hosted check. The initial generated019 copy damaged dollar quotes and regex endings through JavaScript replacement-string interpretation. Rebuilt the complete function using literal callbacks from017; corrected019 DDL compiled against disposable PostgreSQL with001–018 and all five lifecycle catalog flags passed. No hosted account reset/delete was performed.
+- UI: added restrained confirmation dialogs with issuer reauthentication, DELETE confirmation, status recovery and pending-operation references. Existing role checks remain server-authoritative. Shared client allows90 seconds for free-host sign-in cold starts. Updated both Flask CORS compositions for DELETE and added private Auth placeholder to `render.yaml`. Added ignored-bundle export helper for portable restricted DB connections/CA certificate handling; it has not uploaded any configuration.
+- Verification: final admin/user production builds passed; fictional desktop/390px action-dialog presentations inspected, including visible footers. Eight changed Python modules parsed; admin-only production factory loads all account routes/services. Pending-source scan found no configured secret values. No functional unit/integration tests or live reset/delete actions were run. Existing user-created account remains the sole confirmed issuance. Vercel login and open GitHub PR#1 confirmed; Render is at login. No deployment or secret transfer occurred. Model hosting remains separate/free; Expo postponed.
+
+## 2026-10-22 - Confirm user-created hosted account
+
+- After the stale API replacement, user reported completion. Actual read-only Auth-marker/profile reconciliation found1 issued Auth identity,1 matching application profile and0 Auth-only identities; scan complete. No names/emails/credentials were printed and the agent performed no account mutation. This establishes a completed hosted issuance exists, not first-login password/privacy behavior or role-flow parity.
+- Next user signs in with the new account in the client appropriate to its role, changes the temporary password and completes the Data Privacy Agreement; these runtime gates remain unverified for this account. Edit/disable/reactivate live behavior and deletion/password reset remain separate work. Source remains local/uncommitted and deployment paused.
+
+## 2026-10-22 - Replace stale local API missing Create user route
+
+- Root cause of the generic Create user error: the actual5002 listener was an older GraphiScan Flask process without `POST /api/v1/accounts`. It returned HTTP405 HTML, causing the hosted client's generic fallback. The earlier newly started runners did not replace that listener. Verified the exact stale process identity before stopping it, stopped the owned diagnostic runner, and started current v1 source (exec session59639).
+- Operational request probe now receives401 JSON for an anonymous POST to `/api/v1/accounts` instead of405 HTML, proving route registration and authentication denial; OPTIONS200. No authenticated create was replayed or user/provider/database record changed by the agent. Saved Auth key had independently passed a read-only admin request. Email provider was not the identified cause. User must refresh/sign in and retry the intended creation; successful issuance remains unverified.
+- Added a loopback port-in-use guard to ignored local runner to avoid claiming startup over an existing listener. Credential-safe error diagnostics remain in API/admin write source. No unit/integration tests or deployment occurred.
+
+## 2026-10-22 - Trace Create user failure without replaying the request
+
+- User confirmed the failure occurs on Create user. Read-only Auth-marker/profile reconciliation found zero identities created through the new issuance flow and zero matching/orphan profiles. This does not establish whether an email reservation exists. No creation request was replayed.
+- Added credential-safe failure diagnostics: unexpected API exceptions log only request ID, exception class and code frame locations; admin database errors log class/SQLSTATE; Auth create rejection logs HTTP status only. No messages, locals, bodies, emails, passwords or keys are logged. Restarted owned loopback API with an ignored local diagnostic log, session86485, health200. Await a single same-email user retry to capture the failing stage; no root-cause fix is claimed. No tests or real account/database/provider writes occurred.
+
+## 2026-10-22 - Investigate reported account request error
+
+- User reported “request could not be completed”; exact failing action/status remains requested. Read-only diagnostics confirmed local admin API origin5002, API health200, and saved server Auth secret accepted by Supabase Auth admin read (HTTP200, response body/private data omitted). Flask3.1.3/Werkzeug3.1.8 support the request body-limit setter. No account-creation request was replayed, no provider/database writes occurred, and no fix is claimed. Need the failing action (sign-in, opening Users, or Create user) and corresponding error to continue diagnosis.
+
+## 2026-10-22 - Load private issuance configuration and start local API
+
+- User saved the server Auth secret through the hidden-prompt helper. Backend loaded the account issuance service successfully without exposing its key. Started the loopback-only v1 Flask API at127.0.0.1:5002 through ignored `.local-tools/run_v1_admin_local.py` (debug/reloader disabled, exact local5173 CORS, no legacy MySQL routes). Process session60099 was active at this checkpoint.
+- Read-only HTTP checks: API health200, anonymous account-list401, admin preview5173 login200. These establish local availability and anonymous denial, not provider-key validity or authenticated creation. No real accounts/records were created or changed by the agent. Supabase018 catalog checks remain passed; next is private sign-in and account-flow verification. Source remains uncommitted; deployment stays paused.
+
+## 2026-10-22 - Verify migration018 installation
+
+- User reported018 succeeded. Actual restricted read-only checker confirmed both issuance functions are installed and passed all28 reported reader/writer/catalog checks, including fixed-path guarded functions, intended writer grants, denial for other runtime roles/PUBLIC, and protected issuance-table access. Overall `admin-writer-setup-passed`; issuance migration installed=true. No agent database writes or real account operations occurred. Do not rerun017/018.
+- Local presence-only check found the server Auth secret is not configured. Next: user saves the same-project `sb_secret_` key privately using `tools/configure_v1_account_issuance.py`, then starts/restarts the hosted API. Account creation/live Auth remains unverified; deployment remains paused.
+
+## 2026-10-22 - Reconfirm migration017 against the live catalog
+
+- User resumed account setup and questioned whether017 had been applied. Ran the existing restricted read-only writer/catalog checker against the configured Supabase database: `migration_017_installed` passed, overall `admin-writer-setup-passed`, and all reported privilege/session checks passed. Optional018 issuance capabilities are absent (`account_issuance_migration_installed=false`). No records, grants, schema or credentials were changed. Do not rerun017;018 rollout remains pending.
+
+## 2026-10-22 - Save checkpoint and pause account rollout
+
+- User requested to continue later. Saved the completed local admin/account work, actual verification, Python sandbox correction and remaining migration018/private Auth setup in `RESUME.md`. Migration018 is still unapplied; installed schema remains through017. No new tests, provider/database writes, credentials, commit/push or deployment occurred. Preserve the current uncommitted work and resume only when requested.
+
+## 2026-10-22 - Correct Python sandbox diagnosis
+
+- Read-only checks outside the workspace sandbox confirmed the base interpreter exists and the root virtualenv runs Python3.11.9. Parsed the five changed backend/setup Python files successfully. No Python repair or reinstall is needed; earlier missing-executable output was caused by sandbox access restrictions. Corrected the account rollout notes. No tests, provider/database writes, credential changes or deployment occurred. Migration018 and private Auth secret setup remain pending.
+
+## 2026-10-22 - Prepare Add user and tighten Edit recovery
+
+- Added source migration018 (`db/postgres/018_account_issuance.sql`), `v1_account_issuance.py`, guarded `POST /api/v1/accounts`, optional server-only Auth provider configuration and a hidden-prompt setup helper. A committed email/request reservation precedes one Auth create; completion verifies provider-controlled metadata, then creates an active must-change-password profile, optional school memberships and audit row. No permissions/privacy acceptance are seeded; passwords/hashes are not stored, existing identities are not attached, and uncertain operations require private operator reconciliation. Migration018 is unapplied; no real Auth key/account was created.
+- Hosted Users has an Add user dialog using existing modal styling. Edit now includes network-uncertain failures in recovery, freezes fields while reconciling, blocks section/route navigation during saves/reconciliation, and closes recovery only after a successful filtered user-list refresh. Existing name/role/status PATCH remains. Delete and password reset were not added.
+- Updated OpenAPI, safe environment template, `api/ADMIN_WRITES.md`, writer checker and catalog preflights. The shared v1 blueprint serves both existing Flask and hosted factory paths; legacy MySQL behavior is unchanged. Issuance remains unavailable without separate server Auth configuration.
+- Verification: final admin build and whitespace check passed. Fictional browser-only Add user presentation inspected at1440/390/320px with no page errors; phone screenshot inspected and final footer/viewport adjustment reviewed. No unit/integration/SQL mutation tests were added or run. Initial sandboxed Python execution failed; a follow-up outside the sandbox confirmed Python3.11.9 works and all five changed Python files parse successfully. Migration018, live Auth issuance/Edit and operator recovery remain unverified. All changes remain local/uncommitted; deployment paused.
+
+## 2026-10-22 - Refine admin controls, dialogs and refresh actions
+
+- Standardized admin inputs/selects with 48px fields, inset chevrons and 14px desktop/16px phone field text. Unified dialog title/close/footer alignment, removed repeated badges and generic warnings, simplified logout copy, and added a guarded admin directory close button. Existing save, deletion, reconciliation, navigation and access handlers remain in place.
+- Added shared graphiscan/shared/RefreshButton.vue for ordinary refresh actions in hosted Dashboard, Users, Audit Logs, Students/Schools, Results and Settings, plus the legacy dashboard/users/students/audit/progress views. Admin onboarding uses an optional shared access slot; the user application retains its default controls. Labels are Refresh/Refreshing…, with one icon and shared neutral 48px presentation. Fixed header stretching that had made some buttons about66px tall and reset inherited header label styling. Recovery actions retain their specific wording.
+- Verification: admin and user Vue production builds passed after final changes; UI diff whitespace check passed. Browser-only fictional sessions inspected six hosted page refresh buttons and five legacy page buttons at1440/390px: all measured48px high,14px text,16px icons,8px corners and10px16px padding. Desktop screenshot inspected. Earlier dialog review passed244 layout/focus checks; directory uncertain-save/close/signout safeguards passed at six widths, and compact logout spacing/close checks passed at1440/390px. No real account/data writes or deployment occurred. Changes remain local and uncommitted; deployment remains paused.
+## 2026-10-22 - Pause deployment to clarify admin-first work
+
+- User asked whether admin and API must be developed together. Deployment work is paused for clarification: admin presentation/features can be refined first, while a functioning public admin later requires a public API for Supabase-backed sign-in/records.
+- Before the pause, added uncommitted `render.yaml` (explicit free plan, admin-only mode, private environment placeholders), `graphiscan/requirements-admin.txt` and Render Python-version selection; shared the lightweight requirements with the full-model requirements/container context. No checks have run for these latest packaging changes. Source commit/push checkpoint remains `1905309`/`4e11ab9`; newer deployment/research files are local and uncommitted.
+- Render was opened in a Playwright browser and is at its login page. No Render login, account/service creation, credential transfer or deployment occurred. Do not continue provider setup until the user resumes it. Existing GitHub draft PR can remain unmerged while admin work is reviewed.
+
+## 2026-10-22 - Compare free hosts and reconfirm admin priority
+
+- User reconfirmed admin as the immediate focus and requested a broader free-host comparison. Checked current official Render, Hugging Face, Modal, Oracle Cloud, Railway and Koyeb documentation; recorded offers, limits, sources and project-fit judgments in `graphiscan/api/HOSTING.md`. Render is a proposed first candidate for a temporary lightweight admin-only API; Modal/Oracle are possible model-backend candidates depending on card/account constraints. No provider was selected or deployed by this research.
+- No code, model, secrets or hosted records changed. No tests were run for this documentation/research update. Full-model memory use and provider eligibility remain unverified; preserve the $0 model-hosting requirement.
+
 ## 2026-10-22 - Prepare portable hosting and require free model hosting
 
 - Git handoff: source commit `1905309` was created and successfully pushed to `origin/deploy/free-hosting`. Staged-source scan found no configured secrets/private file types; the four staged model-runtime/class-mapping blobs exactly match the existing evaluated manifest. The main branch was not moved. Remaining untracked `output/` build artifacts were excluded. No deployment was triggered by the preparation branch configuration.

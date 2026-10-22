@@ -1,0 +1,44 @@
+# Admin API only. Model hosting remains a separate, unfinished release step.
+services:
+  - type: web
+    name: graphiscan-admin-api
+    runtime: python
+    plan: free
+    region: singapore
+    branch: deploy/free-hosting
+    rootDir: graphiscan
+    buildCommand: pip install -r requirements-admin.txt
+    startCommand: gunicorn --config gunicorn.conf.py 'hosted_api:create_app()'
+    healthCheckPath: /api/v1/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: GRAPHISCAN_V1_BACKEND
+        value: supabase-postgres
+      - key: GRAPHISCAN_REQUIRE_MODEL
+        value: "false"
+      - key: GRAPHISCAN_V1_SUPABASE_URL
+        sync: false
+      - key: GRAPHISCAN_V1_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: GRAPHISCAN_V1_DATABASE_URL
+        sync: false
+      - key: GRAPHISCAN_V1_PASSWORD_DATABASE_URL
+        sync: false
+      - key: GRAPHISCAN_V1_ADMIN_DATABASE_URL
+        sync: false
+      - key: GRAPHISCAN_V1_SUPABASE_AUTH_SECRET_KEY
+        sync: false
+      - key: GRAPHISCAN_V1_STORAGE_BUCKET
+        sync: false
+      - key: GRAPHISCAN_V1_S3_ENDPOINT
+        sync: false
+      - key: GRAPHISCAN_V1_S3_REGION
+        sync: false
+      - key: GRAPHISCAN_V1_S3_ACCESS_KEY_ID
+        sync: false
+      - key: GRAPHISCAN_V1_S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: GRAPHISCAN_V1_CURSOR_SECRET
+        sync: false
+      - key: GRAPHISCAN_CORS_ALLOWED_ORIGINS
+        sync: false
