@@ -1,5 +1,13 @@
 # GraphiScan shared API contract
 
+Current declaration review (2026-10-22): OpenAPI contains36 operations,34 marked
+foundation and2 proposed (`/summary`, `/demo-screenings`). These are source
+declarations, not36 verified hosted workflows. Schema through019 is installed;
+admin/API publication and user-reported login/dashboard are recorded in the
+latest CHANGELOG. Guest demo is excluded from current core work. Use
+[CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md) for remaining integration
+and release gates; old operation counts/setup statuses below are historical.
+
 Latest assignment setup checkpoint (2026-10-20): 011 is user-reported applied and all ten independent hosted read-only metadata/zero-identity checks passed. No writes, credentials, grants or records changed. Updated API5002 is running (session 99903): live health 200, unauthenticated options 401 and admin /access 200. Next: user signs in with the existing fictional Auth account/current password and confirms Students/Schools sections. Empty scope can be correct; no automatic management grant or populated-write evidence is implied. Overall rough progress remains 35%. Older installation-pending notes below are historical; do not repeat SQL/password/seed setup.
 
 

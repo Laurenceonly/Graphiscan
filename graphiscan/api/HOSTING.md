@@ -1,5 +1,25 @@
 # Hosted deployment preparation
 
+Production source update (2026-10-22): PR#1 merged as `2ddb85f`, Render's existing
+Free service now follows main, and deployment `dep-dbcmoj3rjlhs73e180n0` succeeded
+and reported live. Local `render.yaml` matches main. Older preparation-branch
+instructions below are historical; the former branch has not been deleted.
+
+User subsequently confirmed hosted admin login/dashboard works (2026-10-22).
+The deployment gate for PR#1 merge is satisfied. Render still tracks
+`deploy/free-hosting`; preserve it until the service source is switched after
+merge. This confirmation does not establish full account/Storage/model behavior.
+
+Live admin pilot (2026-10-22): `https://graphiscan-admin.vercel.app/login`
+uses `https://graphiscan-admin-api.onrender.com`. Render Free/Singapore service
+`srv-dbcm8kqvcj2c73f4ou6g` reported Live from `a3be7a5`; Vercel production
+deployment `dpl_Dwy8mZ6Gdbxe3orr6JhudtpFL6rY` is READY. Private server settings
+and database CA Secret File were uploaded without printing values. Public login,
+API liveness and exact-origin login preflight returned200. Authenticated hosted
+dashboard/records/Auth/Storage behavior is still awaiting user private sign-in.
+Model inference is disabled; no APK or model-host deployment is implied.
+Earlier preparation-only checkpoints below are historical.
+
 Current admin release preparation (2026-10-22): user resumed deployment after
 admin completion. Vercel CLI login is confirmed and existing GitHub PR#1 targets
 the preparation branch. Render remains at login; no service/deployment or server

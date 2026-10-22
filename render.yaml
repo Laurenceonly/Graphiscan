@@ -5,7 +5,7 @@ services:
     runtime: python
     plan: free
     region: singapore
-    branch: deploy/free-hosting
+    branch: main
     rootDir: graphiscan
     buildCommand: pip install -r requirements-admin.txt
     startCommand: gunicorn --config gunicorn.conf.py 'hosted_api:create_app()'

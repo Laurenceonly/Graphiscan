@@ -2,6 +2,12 @@
 
 ## Current data-migration status (2026-10-21)
 
+Updated2026-10-22: hosted schema is installed through019 and current admin/API
+are published. The historical record/image transfer, identity mapping,
+reconciliation and rollback described here are still incomplete. Do not rerun
+earlier migrations based on older checkpoints below. MySQL repair remains paused
+by user direction; this requirements audit does not resume live-file repair.
+
 Hosted schema migrations are installed through017. The migration017 account-writer role and connection passed the actual read-only hosted preflight; no account or student records were changed. The local MySQL port3306 had no listening server during the latest check. The repository contains only the schema-only snapshot dated2026-07-28, not a fresh logical export. No import program or data transfer is complete.
 
 Next: start the intended XAMPP MySQL instance, pause uploads and record edits, and run the verified backup/restore rehearsal in [BACKUP_RESTORE.md](BACKUP_RESTORE.md). Then inspect only schema, counts, key integrity and mapping exceptions to build a dry-run import. Real account mapping to Supabase Auth UUIDs, school/grade normalization, image-to-private-Storage transfer, approved privacy wording and reconciliation/rollback all remain prerequisites to importing real student data. Keep the source database intact until the target reconciliation and rollback rehearsal pass.
