@@ -1,6 +1,9 @@
 """Synthetic runtime checks; no config, database, JWT service or student data."""
 
+import json
+import re
 import unittest
+from pathlib import Path
 from dataclasses import replace
 from uuid import UUID
 
@@ -35,6 +38,19 @@ class SyntheticBackend:
 
 
 class V1Tests(unittest.TestCase):
+    def test_registered_routes_match_foundation_contract(self):
+        spec = json.loads((Path(__file__).resolve().parents[1] / 'api/openapi.json').read_text(encoding='utf-8'))
+        declared = {(method.upper(), path) for path, methods in spec['paths'].items()
+                    for method, operation in methods.items()
+                    if operation['x-implementation-status'] == 'foundation'}
+        actual = set()
+        for rule in self.app.url_map.iter_rules():
+            if not rule.endpoint.startswith('api_v1.') or rule.rule.startswith('/api/v1/test-'):
+                continue
+            path = re.sub(r'<(?:[^:>]+:)?([^>]+)>', r'{\1}', rule.rule.removeprefix('/api/v1'))
+            actual.update((method, path) for method in rule.methods - {'HEAD', 'OPTIONS'})
+        self.assertEqual(actual, declared)
+
     def setUp(self):
         self.backend = SyntheticBackend()
         self.app = Flask(__name__)

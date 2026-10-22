@@ -1,12 +1,19 @@
 # GraphiScan shared API contract
 
-Current declaration review (2026-10-22): OpenAPI contains36 operations,34 marked
+Current declaration review (2026-10-22): OpenAPI contains38 operations,36 marked
 foundation and2 proposed (`/summary`, `/demo-screenings`). These are source
-declarations, not36 verified hosted workflows. Schema through019 is installed;
+declarations, not38 verified hosted workflows. Schema through019 is installed;
+two new assignment-access operations require prepared020, currently absent.
 admin/API publication and user-reported login/dashboard are recorded in the
 latest CHANGELOG. Guest demo is excluded from current core work. Use
 [CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md) for remaining integration
 and release gates; old operation counts/setup statuses below are historical.
+
+Verification update2026-10-22: the checker now compares source routes and
+declarations, and a Python test compares Flask's registered routes with the
+foundation contract.607 contract checks,506 isolated SQL checks (including35
+eligibility and73 account cases) and77 focused Python checks pass. These do not
+prove hosted020 installation, credential actions or a migrated legacy dataset.
 
 Latest assignment setup checkpoint (2026-10-20): 011 is user-reported applied and all ten independent hosted read-only metadata/zero-identity checks passed. No writes, credentials, grants or records changed. Updated API5002 is running (session 99903): live health 200, unauthenticated options 401 and admin /access 200. Next: user signs in with the existing fictional Auth account/current password and confirms Students/Schools sections. Empty scope can be correct; no automatic management grant or populated-write evidence is implied. Overall rough progress remains 35%. Older installation-pending notes below are historical; do not repeat SQL/password/seed setup.
 
@@ -210,15 +217,16 @@ restart, and use descending created_at/numeric ID keysets. Current scope is
 rechecked on each page. No unfiltered counts or result data are returned.
 See [directory setup and limits](graphiscan/api/DIRECTORY_ACCESS.md).
 
-Screening GET implementation now covers list/detail, student history and report
-JSON through a function-only reader capability in prepared migration 012 (not
-yet applied to the hosted project). Current student links scope teachers/parents;
+Screening GET implementation covers list/detail, student history and report
+JSON through a function-only reader capability; migration012 is installed as
+part of the current schema-through019 checkpoint. Current student links scope teachers/parents;
 parents require current Validated review before pagination; experts require the
 individual screening's current assignment. Admin/researcher reads use scoped
 assignments.manage. Historic model identity comes from the frozen result
 snapshot; unverified identity stays unknown. See
-[screening read setup and limits](graphiscan/api/SCREENING_READS.md). This does not
-implement upload, review mutation or private image access.
+[screening read setup and limits](graphiscan/api/SCREENING_READS.md). Separate
+source handlers implement upload, review and private image access; the public
+admin-only backend has model inference disabled.
 
 | Method / path | Contract / access |
 | --- | --- |
@@ -233,7 +241,12 @@ implement upload, review mutation or private image access.
 | `GET /accounts` | Implemented hosted read-only list with global `accounts.manage`; filters `q`, `role`, `account_status`; signed cursor pagination |
 | `POST /accounts` | Admin-issued temporary account; returns account metadata only |
 | `PATCH /accounts/{user_id}` | Authorized profile/role/status/school changes with `expected_revision`; explicit `permission_grants` replacement additionally needs `permissions.manage`; protect own/last active admin and grant ceilings |
+| `GET /accounts/{user_id}` | Current managed-account details, school memberships, permission grants and credential-operation gate; global `accounts.manage` |
+| `GET /accounts/{user_id}/assignment-access` | Explicit `actor_id`/`school_id` eligibility state; operator needs global `accounts.manage` and school `assignments.manage`; requires020 |
+| `PATCH /accounts/{user_id}/assignment-access` | Set `eligible` for an explicit actor/school plus `expected_revision`; check current roles/membership/actor scope, audit atomically; eligibility permits selection and preserves existing assignments; requires020 |
+| `DELETE /accounts/{user_id}` | Reauthenticated removal of an unused account only, with `expected_revision`, typed DELETE confirmation and durable operation UUID; preserve linked/history-bearing accounts |
 | `POST /accounts/{user_id}/temporary-password` | Authorized temporary reset with write-only `temporary_password` and `expected_revision`; require first change again, revoke old access, retain agreement history |
+| `GET /account-operations/{operation_id}` | Issuing administrator's durable reset/delete operation status and completion receipt; no credentials |
 | `GET /schools` | Actor-authorized school directory; guest has no private student summaries |
 | `POST /schools`, `PATCH /schools/{school_id}` | `schools.manage`; nonblank name; revision on update |
 | `GET /schools/{school_id}/assignment-options` | Minimum eligible teacher/parent/expert identities for an explicitly permitted assignment operation; no unrestricted account search |
@@ -255,7 +268,12 @@ implement upload, review mutation or private image access.
 | `GET /summary` | Authorized counts grouped by school/grade/review as permitted; parent totals include released records only |
 | `GET /audit-logs` | Implemented hosted read-only list with global `audit.read`; filters `q`, `role`; signed cursor pagination; no credential/private payload logging |
 
-Permanent-delete routes are deliberately **unresolved**, not silently converted to archive or cascades. Current MySQL admin routes delete linked rows/files; the target PostgreSQL draft uses `ON DELETE RESTRICT`. Decide retention, deletion authority, audit preservation, reauthentication and restore implications before specifying or implementing v1 deletion. Existing routes remain unchanged by this document. Model publication/default changes likewise remain controlled deployment actions until the evaluation registry is ready; a model selector does not authorize weight uploads from clients.
+The only implemented v1 deletion is an unused account, under migration019's
+reauthenticated durable operation. Existing sessions, assignments, consent or
+other public foreign-key history prevent deletion; disable accounts that hold
+records. Student, school, screening and report deletion remain unspecified.
+Model publication/default changes remain controlled deployment actions; a model
+selector does not authorize weight uploads from clients.
 
 ## 6. Upload, retry, and assessment transaction
 

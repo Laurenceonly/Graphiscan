@@ -42,6 +42,7 @@
         </template>
         <section v-if="!creating && selected.user_id !== profile.user_id && canManage(selected)" class="account-editor-actions" aria-labelledby="account-editor-actions-title">
           <h3 id="account-editor-actions-title">Account actions</h3>
+          <button v-if="profile.permissions?.includes('assignments.manage')" type="button" class="soft-action-btn" :disabled="accountActionsDisabled" @click="openAction(selected,'assignments')">Manage assignment access</button>
           <p v-if="hasChanges">Save your changes before using these actions.</p>
           <div class="account-editor-action-buttons">
             <button type="button" class="soft-action-btn" :disabled="accountActionsDisabled" @click="openAction(selected,'status',selected.account_status === 'active' ? 'disabled' : 'active')">{{ selected.account_status === 'active' ? 'Disable account' : 'Activate account' }}</button>
@@ -53,12 +54,14 @@
         <footer><button type="button" class="soft-action-btn" :disabled="saving || reconcileNeeded" @click="closeEditor">Cancel</button><button type="submit" class="primary-action-btn" :disabled="saving || busy || (!reconcileNeeded && !hasChanges)">{{ saving ? (creating ? 'Creating…' : 'Saving…') : reconcileNeeded ? 'Check user list' : creating ? 'Create user' : 'Save changes' }}</button></footer>
       </form>
     </dialog>
-    <AccountActionDialog v-if="actionTarget" :client="client" :target="actionTarget" :action="actionKind" :status="actionStatus" @close="closeAction" @completed="actionCompleted" @navigation-block="actionBlocked=$event" @access-change="emit('access-change')" />
+    <AccountActionDialog v-if="actionTarget && actionKind !== 'assignments'" :client="client" :target="actionTarget" :action="actionKind" :status="actionStatus" @close="closeAction" @completed="actionCompleted" @navigation-block="actionBlocked=$event" @access-change="emit('access-change')" />
+    <AccountAssignmentAccess v-if="actionTarget && actionKind === 'assignments'" :client="client" :target="actionTarget" :profile="profile" :schools="editorSchools" :school-note="schoolsError" @close="closeAction" @completed="actionCompleted" @navigation-block="actionBlocked=$event" @access-change="emit('access-change')" />
   </section>
 </template>
 <script setup>
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
+import AccountAssignmentAccess from './AccountAssignmentAccess.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { X } from 'lucide-vue-next'

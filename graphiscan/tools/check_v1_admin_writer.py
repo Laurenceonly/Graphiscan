@@ -13,9 +13,10 @@ CATALOG_SQL = (APP / 'db/postgres/017_account_management_preflight.sql').read_te
 SIGNATURE = 'public.graphiscan_update_account(uuid,uuid,uuid,jsonb,uuid)'
 
 
-def run(connect=False):
+def run(connect=False, require_assignment_access=False):
     report = {'status': 'blocked', 'checks': [], 'database_writes': False,
-              'network_attempted': False, 'scope': '017 catalog and optional read-only writer login; no records'}
+              'network_attempted': False, 'scope': '017 and optional018-020 catalogs; read-only writer login; no records',
+              'assignment_access_required': require_assignment_access}
 
     def check(name, value):
         report['checks'].append({'name': name, 'status': 'pass' if value is True else 'fail'})
@@ -72,6 +73,20 @@ def run(connect=False):
                              'lifecycle_exact_runtime_grants', 'lifecycle_public_denied', 'lifecycle_table_protected')
                     if not all([check(name, info.get(name)) for name in names]):
                         return report
+                cursor.execute("SELECT to_regprocedure('public.graphiscan_get_assignment_access(uuid,uuid,uuid,uuid,bigint)') IS NOT NULL OR to_regprocedure('public.graphiscan_set_assignment_access(uuid,uuid,uuid,uuid,bigint,bigint,boolean,uuid)') IS NOT NULL AS installed")
+                assignment_installed = (cursor.fetchone() or {}).get('installed') is True
+                report['assignment_access_migration_installed'] = assignment_installed
+                if require_assignment_access and not assignment_installed:
+                    check('migration_020_installed', False)
+                    report['status'] = 'migration-required'
+                    return report
+                if assignment_installed:
+                    cursor.execute((APP / 'db/postgres/020_assignment_access_preflight.sql').read_text(encoding='utf-8'))
+                    info = cursor.fetchone() or {}
+                    names = ('assignment_functions_installed', 'assignment_guarded_functions',
+                             'assignment_exact_runtime_grants', 'assignment_public_denied', 'assignment_table_protected')
+                    if not all([check(name, info.get(name)) for name in names]):
+                        return report
         if service is None:
             report['status'] = 'writer-configuration-required'
             return report
@@ -103,6 +118,8 @@ if __name__ == '__main__':
     load_dotenv(APP / '.env')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--connect', action='store_true')
-    report = run(parser.parse_args().connect)
+    parser.add_argument('--require-assignment-access', action='store_true', help='Require020 instead of treating it as optional')
+    args = parser.parse_args()
+    report = run(args.connect, args.require_assignment_access)
     print(json.dumps(report, indent=2))
     sys.exit(0 if report['status'] in {'ready-to-connect', 'admin-writer-setup-passed'} else 1)

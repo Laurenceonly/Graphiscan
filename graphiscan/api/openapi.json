@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "GraphiScan proposed shared API",
+    "title": "GraphiScan shared API",
     "version": "0.1.0-draft",
-    "description": "Local foundation includes sessions, onboarding, directory, screening reads and upload/review/assignment/model/request/image handlers. Applied migrations through atomic 013+014 have passed restricted hosted metadata/privilege checks. Private Storage, supported pinned model/evaluation metadata and authenticated hosted/device verification remain required. No production cutover/deployment has occurred."
+    "description": "Source foundation includes sessions, onboarding, directory, screening and account administration. Schema through019 is installed; the admin-only API is published with model inference disabled. Source and isolated checks are distinct from authenticated hosted/provider/device verification. Historical data/image cutover, trusted assignment eligibility provisioning and model/mobile release remain open. Assignment eligibility management source requires prepared migration020; hosted installation remains through019."
   },
   "servers": [
     {
       "url": "/api/v1",
-      "description": "Relative v1 base; local foundation, no hosted application deployment"
+      "description": "Relative v1 base; available capabilities depend on trusted server configuration"
     }
   ],
   "security": [
@@ -3443,6 +3443,213 @@
           }
         }
       }
+    },
+    "/accounts/{user_id}/assignment-access": {
+      "get": {
+        "operationId": "getAccountAssignmentAccess",
+        "summary": "Read assignment eligibility",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "actor_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UserId"
+            }
+          },
+          {
+            "name": "school_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-permission": "accounts.manage",
+        "responses": {
+          "200": {
+            "description": "Authorized result; no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AssignmentAccess"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-record-scope": "Only an explicit actor/candidate pair within the operator assignment-management school scope."
+      },
+      "patch": {
+        "operationId": "setAccountAssignmentAccess",
+        "summary": "Set assignment eligibility",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AssignmentAccess"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Only an explicit actor/candidate pair within the operator assignment-management school scope.",
+        "x-permission": "accounts.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignmentAccessWrite"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3509,6 +3716,34 @@
         "required": [
           "permission_key",
           "school_id"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "permission_key": {
+                "enum": [
+                  "accounts.manage",
+                  "permissions.manage",
+                  "audit.read"
+                ]
+              },
+              "school_id": {
+                "enum": [
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "permission_key": {
+                "enum": [
+                  "schools.manage",
+                  "assignments.manage"
+                ]
+              }
+            }
+          }
         ]
       },
       "Id": {
@@ -6245,12 +6480,77 @@
           "current_password",
           "confirmation"
         ]
+      },
+      "AssignmentAccessWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "actor_id",
+          "school_id",
+          "expected_revision",
+          "eligible"
+        ],
+        "properties": {
+          "actor_id": {
+            "$ref": "#/components/schemas/UserId"
+          },
+          "school_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "expected_revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "eligible": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AssignmentAccess": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "actor_id",
+          "candidate_id",
+          "school_id",
+          "revision",
+          "candidate_role",
+          "eligible",
+          "effective",
+          "can_grant"
+        ],
+        "properties": {
+          "actor_id": {
+            "$ref": "#/components/schemas/UserId"
+          },
+          "candidate_id": {
+            "$ref": "#/components/schemas/UserId"
+          },
+          "school_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "candidate_role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "effective": {
+            "type": "boolean"
+          },
+          "can_grant": {
+            "type": "boolean"
+          }
+        },
+        "description": "eligible is a stored actor/candidate/school link; effective also requires current active roles, membership and actor authority. can_grant describes current prerequisites. This link permits selection, not record access or guardian verification."
       }
     }
   },
   "x-policy-status": {
     "privacy": "Approved text/version pending; no placeholder content.",
-    "permanent_delete": "Unresolved; no v1 DELETE operations specified.",
+    "permanent_delete": "Unused-account deletion only, with reauthentication, durable operation receipts and history protection. Other resource deletion remains unspecified.",
     "upload_limits": "Measured deployment limits pending; capture remains unavailable until configured."
   }
 }
