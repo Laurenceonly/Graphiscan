@@ -1,5 +1,12 @@
 # Hosted account management
 
+Current evidence (2026-10-22): schema through019 is installed and API/admin are
+published. Authorized UI checks created a fictional teacher201 (forced password
+change), edited name/synthetic-school membership200, disabled/reactivated200,
+and removed the test membership200. Reset dialog is prepared for private issuer
+password entry, with no result observed yet; deletion and complete role flows
+remain unverified. Do not follow older pending018/019 setup instructions below.
+
 ## Current admin completion work
 
 Source now includes current-account detail, school/permission editing,

@@ -1,5 +1,46 @@
 # GraphiScan resume checkpoint
 
+## Active hosted admin checks - 2026-10-22
+
+- On `chore/admin-hosted-verification`, created from fetched merged main while
+  preserving all pending docs/blueprint edits. No other person's records changed.
+- Browser session `hostedadmin`, tab0, is signed in at production `/workspace`.
+  Browser-memory `window.graphiscanAdminVerification` tracks the sole fictional
+  account identity and successful states; never print whole object or passwords.
+- Actual UI: Users200; create201/active/must_change_password; edit name and
+  synthetic-school membership200; disable/reactivate200; remove membership200.
+  Test account is active, unused, no school memberships, not signed in.
+- Reset dialog prepared with generated test password. User asked to enter their
+  admin current password and click Reset password once. No response observed yet.
+  Do not read password fields, sign out, reload, repeat creation or replay provider
+  actions. `.local-tools/hosted_account_check_progress.js` reads only sanitized
+  reset/delete outcomes; response capture was attached in the prepare script.
+- After reset outcome, prepare unused-delete for this exact fixture and request
+  private current-password entry again. Then audit and school/student eligibility
+  checks remain. Existing admin has no permission editor; no grant escalation.
+- Isolated `test_v1_admin_*.py`: initial15 tests had one stale mock failure;
+  corrected optional018/019 rows plus2 tests; all17 pass. No runtime code changed.
+
+Latest requirements review (2026-10-22): see `CURRENT_REQUIREMENTS.md` for all16
+panel commitments, architecture gaps, evidence and recommended next order. All35
+prior project Markdown files were reviewed; current summaries reconcile the live
+hosting/019/main status while old dated history remains. Next proposed work:
+save pending hosting docs/blueprint against main, verify hosted admin actions and
+assignment eligibility, then resume existing Expo and free model hosting/core
+teacher-expert-parent flow. No new tests or mutations ran. Do not rerun SQL or
+resume paused MySQL repair because an older runbook says setup is pending.
+
+Latest production handoff (2026-10-22): PR#1 confirmed MERGED as `2ddb85f`. Switched existing Render Free service `srv-dbcm8kqvcj2c73f4ou6g` to `main`; deployment `dep-dbcmoj3rjlhs73e180n0` from merge commit reported succeeded/live. Blueprint now locally says main. Old branch preserved; no need to keep it for the service source. Hosting/checkpoint/blueprint edits are uncommitted on local `deploy/free-hosting`; save/reconcile them against merged main before future source changes. No new tests/real account mutations. Older pending-merge/branch-switch entries below are historical.
+
+Latest user confirmation (2026-10-22): user replied "works" to the hosted private login/dashboard request. Treat hosted login/dashboard as user-confirmed; no agent full-workflow verification. PR#1 can now be merged. Agent has not merged it. Preserve `deploy/free-hosting` until Render's source is switched deliberately after merge. Live reset/delete, private Storage, model hosting and Expo remain separate.
+
+## Live hosting checkpoint - 2026-10-22
+
+- Render login completed via existing GitHub session. Installed Render GitHub integration for Graphiscan only. API deployed on $0 Free/Singapore: `https://graphiscan-admin-api.onrender.com`, service `srv-dbcm8kqvcj2c73f4ou6g`, deployment `dep-dbcm8livcj2c73f4p1b0` from `a3be7a5`, status Live. Fifteen private settings and CA Secret File are uploaded; do not print them or reimport blindly.
+- Vercel production admin deployed/READY at `https://graphiscan-admin.vercel.app/login`, deployment `dpl_Dwy8mZ6Gdbxe3orr6JhudtpFL6rY`. Production VITE_HOSTED_API_ORIGIN points to the owned Render API. Isolated tracked frontend-only deployment copy is ignored at `.local-tools/vercel-admin-source-a3be7a5` (49 inspected upload files).
+- Observed login HTTP200/Vue root/no Vercel auth redirect; API health200 and exact-origin login preflight200. `hostedadmin` Playwright browser is on the public login; `render` browser has service deploy page. Asked user to sign in privately and confirm dashboard before merging PR#1. Do not read/password-log form values or claim authenticated workflow completion. No agent real account mutation or new tests.
+-019 installed/passed33 read-only checks. Do not rerun migrations. Main unmerged. Render tracks preparation branch; after merge, deliberately switch its source branch to main if that is the agreed production branch. Model inference disabled and Expo deferred. Older no-deployment/sign-in-blocked checkpoints are historical.
+
 ## Latest hosting handoff - 2026-10-22
 
 -019 installed: restricted read-only checker passed all33 checks. Do not rerun017-019. No live reset/delete evidence.

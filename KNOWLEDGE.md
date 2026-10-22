@@ -1,5 +1,30 @@
 # GRAPHISCAN system knowledge
 
+Hosted action evidence (2026-10-22): actual admin UI checks against Render/Supabase
+created one fictional teacher (201, forced password change), edited name and
+synthetic-school membership (200), disabled/reactivated (both200), and removed
+that membership (200, empty school_ids). Existing people/records/grants were not
+changed. This admin lacks the permission editor, which stays hidden. Reset dialog
+is ready for user-entered current-password verification; no reset/delete outcome
+observed yet. The fictional account remains active/unused with no memberships.
+Seventeen isolated admin tests pass after correcting outdated018/019 mock rows
+and adding privilege-denial coverage; no runtime access rules changed.
+
+Requirements reconciliation (2026-10-22): `CURRENT_REQUIREMENTS.md` is the current
+cross-document requirement/evidence map (all35 prior project Markdown files and
+16 panel commitments). It distinguishes installed schema from data cutover,
+source actions from verified hosted flows, local binary model catalogue from
+disabled public inference, and Expo source from an APK/device release. Next
+recommended step is hosted admin lifecycle/assignment verification, then existing
+Expo integration and free model-capable hosting. No new tests/mutations ran for
+the review; the next-work order is a proposal, not completed implementation.
+
+Production source handoff (2026-10-22): PR#1 is confirmed merged as `2ddb85f`. The existing Render Free service now follows `main`; branch-change deployment `dep-dbcmoj3rjlhs73e180n0` from that merge commit reported succeeded/live. `render.yaml` is locally aligned to main. The preparation branch was not deleted. Earlier instructions to keep it because Render still follows it are superseded. Checkpoint/blueprint edits remain local/uncommitted; user-confirmed hosted login/dashboard remains the authenticated evidence, with full account/Storage/model checks separate.
+
+User confirmation (2026-10-22): in response to the private hosted sign-in/dashboard check, user reported "works". Hosted login/dashboard success is user-reported; full account mutations, private Storage and model behavior are not thereby verified. The deployment gate for PR#1 merge is satisfied; no merge has been performed by the agent. Keep the preparation branch while Render still deploys from it.
+
+Live admin pilot (2026-10-22): Vue admin is published at `https://graphiscan-admin.vercel.app/login` and uses the owned lightweight API `https://graphiscan-admin-api.onrender.com`. Render service `srv-dbcm8kqvcj2c73f4ou6g` is Free/Singapore, deployed from `a3be7a5` on `deploy/free-hosting`; private environment/CA settings were uploaded without exposing values. Vercel deployment `dpl_Dwy8mZ6Gdbxe3orr6JhudtpFL6rY` is READY. Observed: public login200 with Vue root, API health200 and login CORS preflight200 for the exact admin origin; browser title GraphiScan Admin. Authenticated dashboard/record/Auth/Storage operations remain unverified on these public hosts; user private sign-in is requested before PR merge. Model inference is explicitly disabled on this admin-only service. GitHub integration is selected-repository only. Earlier no-deployment/login-blocked checkpoints are historical.
+
 Deployment checkpoint (2026-10-22): migration019 is installed on Supabase. After the user's successful application, the restricted read-only checker reported all33 checks passed and both issuance/lifecycle installation flags true; no database writes occurred. Do not repeat017,018 or019. Commit `57c8cba` is pushed to `deploy/free-hosting`; PR#1 remains open against main, mergeable with no reported CI checks. An ignored private Render environment/CA bundle is prepared but has not been uploaded. Vercel's verified admin domain is `graphiscan-admin.vercel.app`; no hosted deployment is confirmed. Render's controlled browser still shows `/login`, so authenticated service creation is blocked on user sign-in. The local019 API restart is not confirmed because5002 remained occupied. Earlier pending019/uncommitted checkpoints below are historical. Live reset/delete and hosted workflow verification remain open.
 
 Current admin/deployment source (2026-10-22): user deferred Expo and resumed admin completion/deployment.019 adds private account detail, school/permission editor, disable/activate confirmations, gated temporary-password reset and deletion limited to unused/unreferenced accounts. Durable credential gates revoke old sessions; uncertain provider writes require operator reconciliation. Protected roles/self/last-admin checks remain on the server;019 also fixes update validation ordering before membership writes. Corrected019 compiled locally and five catalog flags passed after fixing an initial generated dollar-quote error; installed hosted019 is not yet confirmed. Both Vue builds and eight-file Python parse/factory/source-secret review passed; new dialog layouts inspected with fictional data. No live reset/delete, deployment or private configuration upload occurred. Vercel CLI authenticated, PR#1 open, Render at login; see `api/ADMIN_RELEASE.md` for current scope and limits.

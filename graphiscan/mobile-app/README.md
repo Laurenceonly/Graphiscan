@@ -1,5 +1,15 @@
 # GraphiScan React conversion
 
+Current planning checkpoint (2026-10-22): this conversion already has hosted
+onboarding/read/upload/review source. Resume it after the hosted admin action
+checks; use `EXPO_PUBLIC_API_MODE=hosted` and the public HTTPS API origin
+`https://graphiscan-admin-api.onrender.com` for the next integrated build.
+This configuration has not been built/verified in this audit. Current public API
+has inference disabled, so online upload screening needs model-capable hosting.
+No APK/physical Android release is established. Migrations through019 are already
+installed; older unapplied012-015/local-only instructions below are historical.
+See `../../CURRENT_REQUIREMENTS.md` for the active order and approval dependencies.
+
 Current hosted checkpoint(2026-10-20): migrations through015 are applied and restricted-read-only preflight verified;3 fictional teacher/expert/parent profiles and separate4-account notice are installed. Admin fresh sign-in/newnotice/synthetic directory check is user-reported successful. Hosted web is running at **http://localhost:5174**(session77508), with EXPO_PUBLIC_API_MODE=hosted and public origin http://127.0.0.1:5002. Root200/bundle/actual login rendering/CORS verified without entering credentials. First complete each role's own temporary-password change, fresh sign-in and explicit notice acceptance; teacher first, then expert/parent. Full populated upload/review/release/device/deployment remains unverified. Do not rerun migrations or use MySQL login for this flow; XAMPP is unnecessary. Older unapplied/setup-pending notes below are historical.
 
 For this web launch: `$env:EXPO_PUBLIC_API_MODE='hosted'`; `$env:EXPO_PUBLIC_HOSTED_API_ORIGIN='http://127.0.0.1:5002'`; then `npm.cmd run web -- --port 5174 --localhost`. Use the localhost frontend address; this launch did not listen on127.0.0.1. The current agent session also uses CI/offline/BROWSER=none, so source changes require a restart. No secret belongs in public Expo variables.

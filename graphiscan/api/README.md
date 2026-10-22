@@ -1,5 +1,12 @@
 # Shared API artifacts and runtime foundation
 
+Current reconciliation (2026-10-22): OpenAPI declares34 foundation operations
+and2 proposed operations. Migrations through019 are installed; admin/API are
+published and hosted admin login/dashboard is user-confirmed. Public inference
+is disabled on the admin-only Render service. Earlier unapplied012-014 and
+operation-count checkpoints below are historical; do not repeat setup. Full
+hosted role/write/Storage flows remain open. See `../../CURRENT_REQUIREMENTS.md`.
+
 Latest local implementation: 26 of33 operations now have foundation handlers, including upload/review/assignment, models, request recovery and private images. **The atomic 013+014 bundle is prepared but unapplied.** Apply only 013_014_screening_writes.sql once, then preflight/restart. React hosted actions are connected; private Storage, pinned supported model/reviewed registry evidence, user-role setup, real hosted/device checks and deployment remain pending. See [screening writes](SCREENING_WRITES.md); do not treat these local checks as live screening evidence.
 
 Latest verification (2026-10-20): 012 is user-reported applied and all 22 independent hosted read-only metadata/privilege/nonexistent-identity checks passed. Updated API5002 session54308 returns health200 and all four unauthenticated screening read routes401/no-store. No application writes or repeated setup; authenticated populated/device/write checks remain pending. Earlier unapplied/restart notes below are superseded.

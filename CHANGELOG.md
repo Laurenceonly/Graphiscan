@@ -1,5 +1,36 @@
 # GraphiScan change log
 
+## 2026-10-22 - Exercise hosted admin account actions with a fictional account
+
+- User authorized the proposed hosted admin checks. Reused their existing signed-in browser; authenticated Users returned200. Created one clearly labeled fictional teacher account through the actual admin UI: POST201, active, must_change_password=true, no initial school. Edited its name and added the existing synthetic workflow school: PATCH200. Disabled and reactivated it: both PATCH200 with expected states. Removed only its test membership: PATCH200, school_ids empty. No existing person's account, grants, school/student record or credentials were changed.
+- Permission editor is hidden for the signed-in admin's existing grants; did not broaden permissions. Reset dialog is prepared for this fictional account with a generated temporary password; user must enter their own current password and submit privately. At checkpoint no reset response was observed, and no reset/delete is claimed. The active fictional account remains for these remaining checks and has never been signed in. Do not replay an uncertain provider action.
+- Existing isolated admin suite initially ran15 tests with one failure: writer-setup mocks lacked the018/019 optional catalogue result rows. Updated the mocks and added passing-optional-catalogue and denied-lifecycle-grant coverage in `tests/test_v1_admin_writer_setup.py`; rerun passed all17 tests in0.308s, with mocked provider/database only. No runtime authorization was loosened.
+- Reconciled pending hosting/docs changes onto follow-up branch `chore/admin-hosted-verification` based on merged main without overwriting edits. Privileged reset/deletion, audit walkthrough and student/assignment checks remain open; Expo follows the admin slice.
+
+## 2026-10-22 - Reconcile requirements and next work across Markdown
+
+- Reviewed the35 project Markdown files (excluding dependencies/generated/local/skill files), panel's16 commitments, newest deployment evidence and OpenAPI declarations. Added `CURRENT_REQUIREMENTS.md` with evidence boundaries, all16 panel items, remaining architecture/release work, source inventory and recommended execution order.
+- Corrected current summaries in PROJECT_PLAN, WORK_CHECKLIST, SYSTEM_DESIGN, API_CONTRACT, README and client/database runbooks: schema through019, admin/API live, user-confirmed login/dashboard, merged PR and Render main branch. Historical checkpoints remain identifiable; they must not cause repeated migrations. OpenAPI declares34 foundation/2 proposed operations, not34 production-verified workflows.
+- Proposed next order: save hosting handoff and close hosted admin action/eligibility gaps; resume existing Expo; establish free model-capable hosting; verify teacher-upload/expert-review/parent-release/follow-up; finish three-class evidence and reviewed legacy cutover; Android/device/manuscript release evidence. Guest demo stays outside core scope. Approved real-use privacy wording and editable manuscript/deck remain inputs. This is planning, not executed testing or account/data mutation; no new tests ran.
+
+## 2026-10-22 - Switch Render deployment source to merged main
+
+- GitHub confirmed PR#1 MERGED at `2026-10-22T01:39:39Z`, merge commit `2ddb85fa1e17f9bf6af4a0b48f5a05337e4c61a0`. Changed the existing Render service's branch from `deploy/free-hosting` to `main` through its settings; this triggered deployment `dep-dbcmoj3rjlhs73e180n0` from `2ddb85f`.
+- Render reported Deploy succeeded, service live and Build successful with no captured failure-type signals. Plan remains Free; no settings/credentials/account records were changed beyond the source branch. Updated `render.yaml` to match the live main-branch source. No new tests or full authenticated workflow checks were performed.
+- Source-branch handoff is complete. The old preparation branch was not deleted. Hosting/deployment checkpoint documentation and blueprint updates are saved locally; they have not been committed/pushed in this handoff.
+
+## 2026-10-22 - User confirms hosted admin works
+
+- After being asked to sign in privately and confirm the hosted dashboard, the user reported "works". Record this as user-reported hosted login/dashboard success, not an agent-observed full account/Storage workflow. No new tests, account mutations or model inference were performed.
+- The deployment availability gate for merging PR#1 is satisfied. PR has not been merged by the agent. Keep `deploy/free-hosting` while Render still follows that branch; switch Render's source deliberately after the merge. Account reset/delete, other role flows, model hosting and Expo release remain separate verification work.
+
+## 2026-10-22 - Deploy admin pilot to Render Free and Vercel
+
+- User completed GitHub sign-in; continued Render login and installed its GitHub integration with selected access to Laurenceonly/Graphiscan only. Created `graphiscan-admin-api` on the explicitly selected $0 Free plan in Singapore, Python3, branch `deploy/free-hosting`, root `graphiscan`, lightweight requirements and Gunicorn factory. Added15 private settings plus database CA Secret File without printing their values; verified imported settings against the ignored private bundle.
+- Render service `srv-dbcm8kqvcj2c73f4ou6g`, initial deployment `dep-dbcm8livcj2c73f4p1b0` from `a3be7a5`, reported Build successful and Deploy succeeded/Live. Assigned API origin: `https://graphiscan-admin-api.onrender.com`. Public health returned200. This is liveness, not authenticated database/Auth/Storage readiness.
+- Set Vercel production `VITE_HOSTED_API_ORIGIN` to that owned API origin. Deployed from an isolated copy of tracked admin/shared frontend source; inspected49 upload paths, excluding server configuration, uploads and models. Deployment `dpl_Dwy8mZ6Gdbxe3orr6JhudtpFL6rY` is READY and aliased to `https://graphiscan-admin.vercel.app`. Public `/login` returned200 with the Vue app root and no Vercel sign-in redirect. Browser opened the GraphiScan Admin login. API login preflight returned200 with the exact production admin origin.
+- No real login/account mutation or model inference was performed by the agent; no new tests were run. Asked user to sign in privately and confirm the dashboard before merging PR#1. Main remains unmerged. Render Free inactivity can delay requests; existing client sign-in timeout is90 seconds. Expo and model hosting remain separate.
+
 ## 2026-10-22 - Confirm019 installation and resume hosting handoff
 
 - Following the user's successful019 application, the restricted read-only writer checker passed all33 checks, with issuance and lifecycle migrations installed. No database writes or live reset/delete operations were performed. Do not repeat017-019.
