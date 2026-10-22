@@ -1,5 +1,11 @@
 # GraphiScan change log
 
+## 2026-10-22 - Fix local Expo browser API connection
+
+- Diagnosed preview HTTP200 while hosted API preflight omitted localhost origin allowance. Added an opt-in Metro proxy limited to the fixed GraphiScan HTTPS /api/v1/ origin and a `npm run preview` launcher using the same local browser origin. Required bearer/content/idempotency headers stream to the existing API without request-body/token logging or storage; production CORS/native HTTPS defaults are unchanged.
+- Verified actual local proxy empty login422 INVALID_LOGIN and unauthenticated /me401 AUTHENTICATION_REQUIRED; Chromium itself received the empty-login422 JSON from localhost, resolving browser transport blockage without credentials or real record mutation. Node syntax and diff whitespace checks passed. Existing successful native export/typecheck preceded this development-only configuration fix.
+- Preview remains running at http://localhost:5174. User should refresh and sign in privately. Actual issued-user sign-in outcome remains unverified; native/device/model and prior release gates remain open.
+
 ## 2026-10-22 - Connect Expo hosted default and refine native screens
 
 - Used Vue user-app as the role/workflow reference without editing it. App.tsx now selects hosted by default; HostedApp uses the public Render HTTPS origin, with legacy available only by explicit opt-in. No server secret/configuration was bundled. Added AccountSetup for required password change, reauthentication notice and exact versioned server privacy content/consent, including notice reload and unavailable-account state.
