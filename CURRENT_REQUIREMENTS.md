@@ -1,3 +1,12 @@
+Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
+role-choice removal is on main. Migrations020 and021 are applied; the last hosted
+read-only preflight passed all38 checks. Assignment-access API/admin source is
+being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
+607 contract/507 isolated SQL and77 focused Python checks plus admin build and
+fictional responsive previews passed. Next: merge/deploy matching source, then
+controlled authenticated hosted assignment checks. Earlier absent/pending SQL
+and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
+manuscript and credential verification remain separate release gates.
 # GraphiScan current requirements and next steps
 
 Reviewed 2026-10-22 against all35 project Markdown files present before this
@@ -15,6 +24,21 @@ synthetic check, schema installation and real hosted workflow are different fact
 
 ## Current foundation
 
+Assignment access update2026-10-22: source now implements explicit eligibility
+administration through a scoped API and Edit dialog, with prepared020.607 contract/
+506 isolated SQL/77 focused Python checks and responsive preview/build passed.
+Actual hosted metadata now confirms020 installed with function checks passing.
+Leftover TRUNCATE/REFERENCES/TRIGGER grants block table protection; apply prepared021,
+run the required read-only preflight, publish matching source, then verify hosted
+behavior. [Assignment rollout](graphiscan/api/ASSIGNMENT_ACCESS.md) records scope.
+
+Latest verification2026-10-22: PR#3 merged and the public bundle includes the Edit
+actions.574 contract/466 isolated SQL checks and46 focused Python tests pass,
+including current route parity, global-only grant scopes and issuance/reset/delete
+saga boundaries. This is separate from hosted provider/credential verification.
+This earlier check preceded the prepared020 assignment-management slice above;
+school membership alone still does not grant assignment eligibility.
+
 Subsequent authorized hosted checks (2026-10-22): one fictional account was
 created201, edited200, disabled/reactivated200 and had its temporary synthetic
 school membership removed200. Reset/delete still require private issuer-password
@@ -23,10 +47,10 @@ updating stale optional-migration mocks. Other release gaps below remain open.
 
 | Area | Current evidence | Still open |
 | --- | --- | --- |
-| Admin | Vue/Vite refinement and account-action source implemented; Vercel publication and user-reported hosted login/dashboard success | Hosted create/edit/disable/reactivate/reset/unused-delete, permissions, school/student assignments, errors and audit walkthrough |
+| Admin | Vue/Vite refinement and Edit actions published; fictional hosted create/edit/disable/reactivate/membership changes observed | Hosted reset/unused-delete, permissions, school/student assignments, errors and audit walkthrough |
 | API | Lightweight Flask/Gunicorn API Live on Render Free/Singapore; now tracks merged main | Full authenticated role/Storage/write verification; hosted inference explicitly disabled |
-| Supabase | Schema through019 installed; latest account writer/catalog review passed33 read-only checks | Historical MySQL record/image import, identity mapping, reconciliation and rollback |
-| Accounts | Issuance, guarded edits, reset/delete, forced password change and versioned privacy mechanics exist; one user-created Auth/profile pair confirmed | New issued-user onboarding on public hosts; approved real-use agreement; correct scoped permissions/eligibility provisioning |
+| Supabase | Schema through020 installed; assignment function checks pass; leftover table privileges diagnosed | Apply021 and pass full preflight; historical MySQL record/image import, identity mapping, reconciliation and rollback |
+| Accounts | Issuance, guarded edits, reset/delete and onboarding mechanics; eligibility-management source/020 locally verified | Hosted020 rollout and eligibility use, new issued-user onboarding, approved real-use agreement and scoped permission verification |
 | Models | Three binary architectures locally reevaluated on136 test images; catalogue publication checker previously passed12 checks | Free inference host, hosted execution, three-class dataset/evaluation and final deployment |
 | Expo | Conversion scaffold and hosted onboarding/read/upload/review/image source exist; earlier exports/build checks recorded | Public-API integration, core-role parity, physical Android release checks; no APK generated/released |
 | Documentation | Requirements, contracts, runbooks and proposed privacy text available | Editable manuscript/deck, approved wording, diagram revisions and final measured nonfunctional evidence |
@@ -36,8 +60,8 @@ Admin: https://graphiscan-admin.vercel.app/login
 API: https://graphiscan-admin-api.onrender.com
 
 GitHub PR#1 merged as `2ddb85f`; Render's main-branch deployment succeeded/live.
-Local hosting/checkpoint edits and `render.yaml` alignment still need saving to
-Git against merged main. Do not accidentally upload output or private bundles.
+Hosting/checkpoint and `render.yaml` alignment are saved in merged PR#2; PR#3
+contains the published Edit actions. Do not upload generated output or private bundles.
 
 ## All16 panel commitments
 
@@ -73,7 +97,8 @@ Git against merged main. Do not accidentally upload output or private bundles.
   onboard a new user; approved publication/audience setup is a separate dependency.
 - School memberships/permissions do not automatically create every trusted
   assignment eligibility. Directory writes require existing authorized candidate
-  eligibility. Review provisioning before calling all new-account linking complete.
+  eligibility. The new management API/UI requires020 installation and publication;
+  its local tests do not establish hosted new-account linking.
 - Private Storage primitives previously passed a generated-object check; this
   does not establish real hosted screening/image/report authorization end to end.
 - The production composition excludes legacy MySQL routes. Legacy Vue/Capacitor
@@ -82,8 +107,9 @@ Git against merged main. Do not accidentally upload output or private bundles.
 - Guest demo is excluded from the current core work. Do not add it back because
   older diagrams/contracts mention it. `/summary` is proposed; current dashboard
   counts correctly describe loaded records, not verified global totals.
-- OpenAPI declares34 foundation operations and2 proposed operations; those tags
-  describe source coverage, not34 verified production workflows.
+- OpenAPI declares36 foundation operations and2 proposed operations; those tags
+  describe source coverage, not36 verified production workflows. Two foundation
+  operations require the prepared020 migration.
 
 ## Recommended execution order
 
@@ -91,8 +117,9 @@ User reconfirmed presentation targets2026-10-22: admin is desktop browser first,
 with responsive fallback; Expo is native Android. Use web previews only as an
 engineering aid, with APK/device evidence required for mobile completion.
 
-1. **Save the hosting handoff and close hosted admin behavior gaps.** Reconcile
-   pending docs/blueprint changes with main. Walk through a controlled fictional
+1. **Roll out020 and close hosted admin behavior gaps.** Apply only the reviewed020,
+   pass its required read-only preflight and publish matching API/admin source.
+   Walk through a controlled fictional
    account's admin lifecycle and school/student/permission/eligibility actions,
    including audit and denied operations. Fix demonstrated gaps. Do not rerun019.
 2. **Resume the existing Expo conversion.** Configure the deployed HTTPS API,

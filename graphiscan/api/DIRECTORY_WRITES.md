@@ -22,7 +22,10 @@ assignment_eligibilities row. Parent links require an active parent and matching
 actor/candidate/school/parent eligibility. This is trusted administrative eligibility,
 not automatic guardian identity verification. Null clears a parent link. Existing
 historical null teacher links may remain null on edit; creation requires a teacher.
-No endpoint grants permissions, membership or eligibility.
+Directory endpoints grant no permissions, membership or eligibility. The prepared
+account assignment-access endpoints manage explicit eligibility separately under
+global account-management and scoped assignment-management authority; they require
+020. See [ASSIGNMENT_ACCESS.md](ASSIGNMENT_ACCESS.md).
 
 The fixed-path definer function takes SHARE locks on actor/candidate profiles,
 the current notice and applicable eligibility, and UPDATE locks on target records.
