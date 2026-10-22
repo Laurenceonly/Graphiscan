@@ -1,5 +1,12 @@
 # GRAPHISCAN system knowledge
 
+Account-alignment publication2026-10-22: Vercel production is READY at deployment
+`dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` from frontend source `35cd998`. Public login
+and CSS200, with new alignment selectors confirmed. Source is pushed on the
+follow-up branch; Render remains on main. Controlled admin session is now blank,
+so private sign-in/current fixture-state reconciliation is required to resume
+reset/delete checks. No credential-operation outcome is claimed from lost UI state.
+
 Admin presentation priority (2026-10-22): user confirmed desktop browser admin,
 with responsive fallback; Expo targets native Android. Account management now has
 a640px desktop Edit dialog, paired Role/Status, aligned permission controls,

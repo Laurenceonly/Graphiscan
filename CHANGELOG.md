@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-22 - Publish desktop account alignment
+
+- Pushed `chore/admin-hosted-verification` through `35cd998` and manually published the inspected frontend-only source to Vercel production. Deployment `dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` reported READY and aliased to `https://graphiscan-admin.vercel.app`. Public login and stylesheet returned200; new paired-editor/field-group selectors are present. Render still follows merged main; no API code/configuration deployment was performed by this UI publication.
+- The prior controlled `hostedadmin` session now reports about:blank, with no reset/delete outcome retained. No refresh/navigation of that production session was issued by the alignment work. Last confirmed fixture state was active/unused, school memberships empty. Reconcile its current account/operation status after a new private sign-in; do not recreate the account or blindly repeat credential operations. Reset/delete completion remains unverified.
+
 ## 2026-10-22 - Align desktop admin account management
 
 - User clarified: admin is a desktop browser interface with responsive fallback; Expo is the native Android application, not a web deployment target. Recorded that priority in the requirements/system plan.
