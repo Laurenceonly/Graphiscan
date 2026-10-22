@@ -1,5 +1,19 @@
 # GraphiScan resume checkpoint
 
+Latest UI steering2026-10-22: user requested removal of Researcher/Guest options.
+On `fix/admin-user-role-options` from merged main, changed two admin components:
+hosted Add/Edit/Users filters now offer admin/teacher/parent/expert; older user
+creation/filter omits Guest. Existing older role values are preserved rather than
+silently converted. Build and fictional1440/390 previews passed; no real writes.
+Publish this focused branch through its PR/normal Vercel deployment. PR#3 already
+merged as `a5e4827`, and its actions-inside-Edit code is in the public bundle.
+
+Migration work is saved locally on `chore/supabase-admin-checks` as `2e215f6`:
+574 contract/466 isolated SQL/46 focused Python checks pass; scope/route contracts
+are reconciled through019. No020 exists or was applied. The next application
+gap is trusted assignment eligibility management; current memberships alone
+do not provide assignment candidates. Hosted reset/delete needs private sign-in.
+
 Latest UI follow-up2026-10-22: PR#2 merged as `ac903c4` before the account-actions
 change in `d0e30e8`, so the main deployment omitted it. A clean branch
 `fix/admin-edit-account-actions`, based on `origin/main`, now carries the UI and
