@@ -1,5 +1,12 @@
 # GraphiScan change log
 
+## 2026-10-22 - Confirm019 installation and resume hosting handoff
+
+- Following the user's successful019 application, the restricted read-only writer checker passed all33 checks, with issuance and lifecycle migrations installed. No database writes or live reset/delete operations were performed. Do not repeat017-019.
+- Pushed admin/deployment source as `57c8cba` to `deploy/free-hosting`. GitHub PR#1 is open, mergeable, and points to that commit; no CI checks are reported. Main remains unmerged while hosted verification is pending.
+- Prepared an ignored Render environment/JSON/CA bundle using the verified Vercel admin origin. The export helper now also emits a private JSON mapping for upload without printing values. Confirmed all three bundle paths are Git-ignored. No private configuration was uploaded and no hosted service/deployment is confirmed.
+- Resumed the controlled Render browser and brought its login window forward; user authentication is required to create the Free API service. Local019 restart remains unconfirmed because port5002 stayed occupied. No new tests were run during this handoff.
+
 ## 2026-10-22 - Finish admin account action source and resume deployment
 
 - User deferred Expo verification and requested admin completion followed by deployment. Added migration019, `v1_admin_lifecycle.py`, guarded account detail/operation-status/reset/delete routes, and hosted Users controls for school/permission editing, disable/activate, temporary-password reset and unused-account deletion. Issuer password verification and a durable pending gate precede provider reset/delete. Self/protected administrator operations are denied; deletion is refused for accounts with sessions or referenced assignments/history. Old sessions remain revoked. Pending provider outcomes require operator reconciliation and are never automatically replayed.

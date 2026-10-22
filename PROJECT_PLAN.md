@@ -4,9 +4,9 @@
 
 - User deferred Expo and requested admin completion, then deployment.
 - Implemented source: account details/school/permission editing, disable/activate confirmation, reauthenticated temporary-password reset and unused-account deletion; existing dashboard, directory, results/progress, audit and settings flows retained.
-- Database:017/018 installed; corrected019 compiled locally with catalog checks, hosted019 rollout awaiting confirmation. No live reset/delete evidence yet.
+- Database:017-019 installed; actual restricted read-only checker passed all33 checks after019. Do not rerun these migrations. No live reset/delete evidence yet.
 - Evidence: both Vue builds pass, eight Python source files parse and production admin-only factory loads routes; fictional action dialogs reviewed at1440/390px. Actual Add user completion was confirmed earlier.
-- Deployment: Vercel authenticated; existing PR#1 on `deploy/free-hosting`. Render Free API blueprint/private configuration export prepared; Render login still required. No deployment or private configuration transfer yet. Hosted model inference remains separate/free; no APK exists.
+- Deployment: Vercel authenticated; commit `57c8cba` pushed to open PR#1 on `deploy/free-hosting`. Render Free API blueprint and ignored private environment/CA bundle prepared; Render login still required. No deployment or private configuration transfer yet. Hosted model inference remains separate/free; no APK exists.
 
 Older timeline checkpoints below are historical. Use `graphiscan/api/ADMIN_RELEASE.md` and the newest CHANGELOG entry for the active release scope.
 
