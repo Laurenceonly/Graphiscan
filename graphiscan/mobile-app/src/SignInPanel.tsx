@@ -5,12 +5,12 @@ import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 type Props = {
-  email: string; password: string; busy: boolean; error: string
+  email: string; password: string; busy: boolean; error: string; notice?: string
   onEmail: (value: string) => void; onPassword: (value: string) => void
   onSubmit: () => void; onForgotPassword?: () => void
 }
 
-export default function SignInPanel({ email, password, busy, error, onEmail, onPassword, onSubmit, onForgotPassword }: Props) {
+export default function SignInPanel({ email, password, busy, error, notice, onEmail, onPassword, onSubmit, onForgotPassword }: Props) {
   const [visible, setVisible] = useState(false)
   const [focused, setFocused] = useState<'email' | 'password' | null>(null)
   useEffect(() => { if (!password) setVisible(false) }, [password])
@@ -55,12 +55,12 @@ export default function SignInPanel({ email, password, busy, error, onEmail, onP
                 </Pressable>
               </View>
             </View>
+            {!!notice && <Text accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}
             {!!error && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={s.error}>{error}</Text>}
             <Pressable accessibilityRole="button" accessibilityLabel={busy ? 'Signing in...' : 'Sign in'}
               accessibilityState={{ disabled, busy }} disabled={disabled} onPress={onSubmit}
               style={({ pressed }) => [s.submit, pressed && { backgroundColor: '#104d79' }, busy && { opacity: .65 }]}>
               <Text style={s.submitLabel}>{busy ? 'Signing in...' : 'Sign in'}</Text>
-              <MaterialIcons name="arrow-forward" size={19} color="#fff" accessible={false} />
             </Pressable>
             {onForgotPassword && <Pressable accessibilityRole="button" disabled={busy} onPress={onForgotPassword} style={s.forgot}>
               <Text style={s.forgotLabel}>Forgot password?</Text>
@@ -75,25 +75,26 @@ export default function SignInPanel({ email, password, busy, error, onEmail, onP
 
 const s = StyleSheet.create({
   page: { flex: 1, backgroundColor: '#fff' },
-  content: { flexGrow: 1, paddingHorizontal: 26, paddingTop: 24, paddingBottom: 30, width: '100%', maxWidth: 500, alignSelf: 'center' },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 7 },
-  logo: { width: 46, height: 46 },
-  wordmark: { fontSize: 25, fontWeight: '700', letterSpacing: -.8, color: '#101828' },
+  content: { flexGrow: 1, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 32, width: '100%', maxWidth: 600, alignSelf: 'center' },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  logo: { width: 36, height: 36 },
+  wordmark: { fontSize: 22, fontWeight: '700', letterSpacing: -.6, color: '#101828' },
   accent: { color: '#145c8f' },
   main: { flexGrow: 1, justifyContent: 'center', paddingTop: 54, paddingBottom: 88 },
   intro: { alignItems: 'center', gap: 10, marginBottom: 34 },
-  title: { fontSize: 31, lineHeight: 39, fontWeight: '600', letterSpacing: -1, color: '#101828', textAlign: 'center' },
-  subtitle: { fontSize: 14, lineHeight: 22, color: '#667085', textAlign: 'center' },
+  title: { fontSize: 26, lineHeight: 34, fontWeight: '600', letterSpacing: -.5, color: '#101828', textAlign: 'center' },
+  subtitle: { fontSize: 15, lineHeight: 23, color: '#667085', textAlign: 'center' },
   form: { gap: 22 },
   field: { gap: 9 },
-  label: { color: '#344054', fontSize: 13, lineHeight: 19, fontWeight: '500' },
-  inputFrame: { flexDirection: 'row', alignItems: 'center', minHeight: 54, paddingLeft: 15, gap: 11, borderWidth: 1, borderColor: '#dce1e8', borderRadius: 10, backgroundColor: '#fff' },
+  label: { color: '#344054', fontSize: 14, lineHeight: 21, fontWeight: '500' },
+  inputFrame: { flexDirection: 'row', alignItems: 'center', minHeight: 52, paddingLeft: 14, gap: 11, borderWidth: 1, borderColor: '#dce1e8', borderRadius: 10, backgroundColor: '#fff' },
   focused: { borderColor: '#145c8f' },
-  input: { flex: 1, minWidth: 0, height: 52, paddingVertical: 12, paddingRight: 12, color: '#101828', fontSize: 16 },
+  input: { flex: 1, minWidth: 0, height: 50, paddingVertical: 12, paddingRight: 12, color: '#101828', fontSize: 16 },
   eye: { width: 44, height: 50, alignItems: 'center', justifyContent: 'center' },
-  submit: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, minHeight: 54, backgroundColor: '#145c8f', borderRadius: 10, marginTop: 2, paddingHorizontal: 18 },
-  submitLabel: { color: '#fff', fontSize: 15, fontWeight: '600', lineHeight: 22 },
+  submit: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: 52, backgroundColor: '#145c8f', borderRadius: 10, marginTop: 2, paddingHorizontal: 18 },
+  submitLabel: { color: '#fff', fontSize: 14, fontWeight: '500', lineHeight: 21 },
   error: { color: '#a72535', fontSize: 13, lineHeight: 20 },
+  notice: { color: '#145c8f', fontSize: 13, lineHeight: 20 },
   privacy: { marginTop: 28, paddingHorizontal: 10, color: '#8590a2', fontSize: 11, lineHeight: 18, textAlign: 'center' },
   forgot: { minHeight: 44, alignItems: 'center', justifyContent: 'center', marginTop: -12 },
   forgotLabel: { color: '#145c8f', fontSize: 13, fontWeight: '500' },
