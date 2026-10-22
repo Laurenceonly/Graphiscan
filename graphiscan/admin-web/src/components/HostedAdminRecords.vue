@@ -16,14 +16,14 @@
       <p v-if="busy" role="status" class="hosted-record-message">Loading {{ accounts ? 'accounts' : 'activity' }}…</p>
       <p v-if="allowed && loaded && !rows.length && !busy" class="hosted-record-message">{{ accounts ? 'No accounts match these filters.' : 'No activity matches these filters.' }}</p>
       <div v-if="rows.length" class="table-wrapper compact-table-scroll hosted-record-table" role="region" :aria-label="accounts ? 'User accounts' : 'Audit activity'" tabindex="0">
-        <table v-if="accounts"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead><tbody><tr v-for="row in rows" :key="row.user_id"><td data-label="Name"><strong>{{ row.full_name }}</strong><small v-if="row.user_id === profile.user_id" class="table-subtext">Current account</small></td><td data-label="Email">{{ row.email || 'Not available' }}</td><td data-label="Role">{{ roleName(row.role) }}</td><td data-label="Status"><span class="status-badge" :class="row.account_status">{{ capitalize(row.account_status) }}</span></td><td data-label="Registered">{{ date(row.created_at) }}</td><td data-label="Actions"><div class="account-row-actions"><button class="soft-action-btn account-edit" type="button" :disabled="busy || loadingEditor || !canManage(row)" @click="openEditor(row)">Edit</button><template v-if="row.user_id !== profile.user_id && canManage(row)"><button type="button" class="soft-action-btn account-edit" :disabled="busy || loadingEditor" @click="openAction(row,'status',row.account_status === 'active' ? 'disabled' : 'active')">{{ row.account_status === 'active' ? 'Disable' : 'Activate' }}</button><button type="button" class="soft-action-btn account-edit" :disabled="busy || loadingEditor" @click="openAction(row,'reset_password')">Reset password</button><button type="button" class="soft-action-btn account-edit account-delete-link" :disabled="busy || loadingEditor" @click="openAction(row,'delete')">Delete</button></template></div></td></tr></tbody></table>
+        <table v-if="accounts"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead><tbody><tr v-for="row in rows" :key="row.user_id"><td data-label="Name"><strong>{{ row.full_name }}</strong><small v-if="row.user_id === profile.user_id" class="table-subtext">Current account</small></td><td data-label="Email">{{ row.email || 'Not available' }}</td><td data-label="Role">{{ roleName(row.role) }}</td><td data-label="Status"><span class="status-badge" :class="row.account_status">{{ capitalize(row.account_status) }}</span></td><td data-label="Registered">{{ date(row.created_at) }}</td><td data-label="Actions"><div class="account-row-actions"><button class="soft-action-btn account-edit" type="button" :disabled="busy || loadingEditor || !canManage(row)" @click="openEditor(row)">Edit</button></div></td></tr></tbody></table>
         <table v-else><thead><tr><th>Person</th><th>Role</th><th>Action</th><th>Date / Time</th></tr></thead><tbody><tr v-for="row in rows" :key="row.log_id"><td data-label="Person"><strong>{{ row.full_name || 'Former or unknown account' }}</strong></td><td data-label="Role">{{ row.role ? roleName(row.role) : 'Unknown' }}</td><td data-label="Action">{{ row.action }}</td><td data-label="Date / Time">{{ date(row.created_at) }}</td></tr></tbody></table>
       </div>
       <button v-if="cursor" type="button" class="soft-action-btn hosted-load-more" :disabled="busy" @click="load(true)">Load more</button>
       <p v-if="notice" class="hosted-record-message" role="status">{{ notice }}</p>
     </section>
     <dialog v-if="accounts" ref="editor" class="account-editor" :class="{'account-creator':creating}" aria-labelledby="account-editor-title" @cancel="onCancel">
-      <form v-if="selected" class="account-editor-form" @submit.prevent="saveAccount">
+      <form v-if="selected" class="account-editor-form" :inert="loadingEditor" :aria-busy="saving || loadingEditor" @submit.prevent="saveAccount">
         <header><div><h2 id="account-editor-title">{{ creating ? 'Add user' : 'Edit account' }}</h2><p>{{ creating ? 'The user must change their temporary password and accept the Data Privacy Agreement before accessing features.' : 'Role, status and access changes sign this user out.' }}</p></div><button type="button" class="editor-close" aria-label="Close account editor" :disabled="saving || reconcileNeeded" @click="closeEditor"><X :size="18" :stroke-width="1.8" aria-hidden="true" /></button></header>
         <label>Full name<input v-model="draft.full_name" type="text" maxlength="200" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
         <label v-if="creating">Email address<input v-model="draft.email" type="email" maxlength="254" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
@@ -40,6 +40,15 @@
           <fieldset v-if="canEditPermissions" class="account-permission-options" :disabled="saving || reconcileNeeded"><legend>Permissions</legend><div v-for="(grant,index) in draft.permission_grants" :key="index" class="account-permission-row"><label>Permission<select v-model="grant.permission_key" @change="normalizeScope(grant)"><option v-for="item in permissionChoices" :key="item.key" :value="item.key">{{ item.label }}</option></select></label><label>Scope<select v-model="grant.school_id" :disabled="['accounts.manage','permissions.manage','audit.read'].includes(grant.permission_key)"><option :value="null">All schools</option><option v-for="school in editorSchools" :key="school.school_id" :value="String(school.school_id)">{{ school.name }}</option></select></label><button type="button" class="soft-action-btn" :aria-label="'Remove permission ' + (index+1)" @click="draft.permission_grants.splice(index,1)">Remove</button></div><button type="button" class="soft-action-btn" @click="draft.permission_grants.push({permission_key:'schools.manage',school_id:null})">Add permission</button></fieldset>
           <p v-else>Permission changes require permission-management access. Your own access cannot be changed here.</p>
         </template>
+        <section v-if="!creating && selected.user_id !== profile.user_id && canManage(selected)" class="account-editor-actions" aria-labelledby="account-editor-actions-title">
+          <h3 id="account-editor-actions-title">Account actions</h3>
+          <p v-if="hasChanges">Save your changes before using these actions.</p>
+          <div class="account-editor-action-buttons">
+            <button type="button" class="soft-action-btn" :disabled="accountActionsDisabled" @click="openAction(selected,'status',selected.account_status === 'active' ? 'disabled' : 'active')">{{ selected.account_status === 'active' ? 'Disable account' : 'Activate account' }}</button>
+            <button type="button" class="soft-action-btn" :disabled="accountActionsDisabled" @click="openAction(selected,'reset_password')">Reset password</button>
+            <button type="button" class="soft-action-btn account-delete-link" :disabled="accountActionsDisabled" @click="openAction(selected,'delete')">Delete account</button>
+          </div>
+        </section>
         <p v-if="editorError" class="error-message" role="alert">{{ editorError }}</p>
         <footer><button type="button" class="soft-action-btn" :disabled="saving || reconcileNeeded" @click="closeEditor">Cancel</button><button type="submit" class="primary-action-btn" :disabled="saving || busy || (!reconcileNeeded && !hasChanges)">{{ saving ? (creating ? 'Creating…' : 'Saving…') : reconcileNeeded ? 'Check user list' : creating ? 'Create user' : 'Save changes' }}</button></footer>
       </form>
@@ -69,6 +78,7 @@ const editableRoles=computed(()=>props.profile.role==='admin'?roles:roles.filter
 const normalized=value=>JSON.stringify([...value].map(item=>typeof item==='string'?item:{permission_key:item.permission_key,school_id:item.school_id??null}).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))))
 const hasChanges=computed(()=>!!selected.value&&(creating.value || draft.full_name.trim().replace(/\s+/g,' ')!==selected.value.full_name||draft.role!==selected.value.role||draft.account_status!==selected.value.account_status||normalized(draft.school_ids)!==normalized(selected.value.school_ids||[])||normalized(draft.permission_grants)!==normalized(selected.value.permission_grants||[])))
 const canEditPermissions=computed(()=>props.profile.permissions?.includes('permissions.manage')&&selected.value?.user_id!==props.profile.user_id)
+const accountActionsDisabled=computed(()=>saving.value||reconcileNeeded.value||loadingEditor.value||hasChanges.value)
 const permissionChoices=[{key:'accounts.manage',label:'Manage accounts'},{key:'permissions.manage',label:'Manage permissions'},{key:'schools.manage',label:'Manage schools'},{key:'assignments.manage',label:'Assign experts'},{key:'audit.read',label:'Read audit logs'}]
 const editorSchools=computed(()=>[...schools.value,...[...new Set([...draft.school_ids,...draft.permission_grants.map(grant=>grant.school_id).filter(Boolean)])].filter(id=>!schools.value.some(school=>String(school.school_id)===id)).map(id=>({school_id:id,name:'Assigned school '+id}))])
 const cards=computed(()=>accounts.value?[{label:'Accounts loaded',count:rows.value.length},{label:'Active loaded',count:rows.value.filter(row=>row.account_status==='active').length},{label:'Pending loaded',count:rows.value.filter(row=>row.account_status==='pending').length},{label:'Disabled loaded',count:rows.value.filter(row=>row.account_status==='disabled').length}]:[{label:'Activities loaded',count:rows.value.length}])
@@ -117,14 +127,15 @@ async function openEditor(row){
   finally{loadingEditor.value=false}
 }
 async function openAction(row,kind,status=''){
-  if(loadingEditor.value)return
-  loadingEditor.value=true;error.value=''
-  try{const current=await props.client.request('/accounts/'+row.user_id);if(!alive)return;if(current.credential_update_pending)throw new Error('This account has an unfinished credential operation. Contact the system operator.');actionKind.value=kind;actionStatus.value=status;actionTarget.value=current}
-  catch(failure){error.value=failure.message||'Account details could not be loaded.'}
+  if(accountActionsDisabled.value||creating.value||row.user_id===props.profile.user_id||!canManage(row))return
+  loadingEditor.value=true;editorError.value=''
+  try{const current=await props.client.request('/accounts/'+row.user_id);if(!alive)return;if(current.credential_update_pending)throw new Error('This account has an unfinished credential operation. Contact the system operator.');editor.value?.close();actionKind.value=kind;actionStatus.value=status;actionTarget.value=current}
+  catch(failure){editorError.value=failure.message||'Account details could not be loaded.'}
   finally{loadingEditor.value=false}
 }
-function closeAction(message=''){actionTarget.value=null;actionBlocked.value=false;if(message)notice.value=message}
-async function actionCompleted(message){closeAction();await load(false);notice.value=message}
+function clearAction(){actionTarget.value=null;actionBlocked.value=false}
+async function closeAction(message=''){const target=actionTarget.value;clearAction();if(message){clearEditor();notice.value=message;return}if(target)await openEditor(target)}
+async function actionCompleted(message){clearAction();clearEditor();await load(false);notice.value=message}
 async function openCreator(){
   creating.value=true;selected.value={};creationKey=crypto.randomUUID();editorError.value='';reconcileNeeded.value=false
   Object.assign(draft,{full_name:'',role:'teacher',account_status:'active',email:'',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
@@ -135,10 +146,10 @@ async function openCreator(){
   finally{if(alive)schoolsBusy.value=false}
 }
 function clearEditor(){editor.value?.close();selected.value=null;editorError.value='';draft.temporary_password='';creationKey=null}
-function closeEditor(){if(saving.value||reconcileNeeded.value)return;clearEditor()}
-function onCancel(event){if(saving.value||reconcileNeeded.value){event.preventDefault();return}clearEditor()}
+function closeEditor(){if(saving.value||reconcileNeeded.value||loadingEditor.value)return;clearEditor()}
+function onCancel(event){if(saving.value||reconcileNeeded.value||loadingEditor.value){event.preventDefault();return}clearEditor()}
 async function saveAccount(){
-  if(saving.value||!selected.value)return
+  if(saving.value||loadingEditor.value||!selected.value)return
   if(reconcileNeeded.value){
     search.value=creating.value?draft.email.trim():selected.value.email||'';role.value='';status.value=''
     if(await load(false)){reconcileNeeded.value=false;clearEditor();notice.value='User list refreshed. Check the latest records before creating or editing an account again.'}
