@@ -1,5 +1,18 @@
 # GraphiScan change log
 
+## 2026-10-22 - Prepare account actions follow-up after PR merge
+
+- Confirmed why the Edit dialog actions were absent after deployment: PR#2 merged as `ac903c4` before commit `d0e30e8`, which contains the account-actions-inside-Edit change. The merged `main` therefore did not include that UI.
+- Prepared a clean follow-up branch from `origin/main` with the account-actions UI and checkpoint documentation. Generated `output/vercel-admin` assets are excluded. The controls remain limited to accounts the signed-in administrator may manage and are hidden for the current account.
+- Admin production build passed on the clean follow-up branch (`vite build`,1830 modules); the built bundle contains the Account actions section. Earlier fictional Chromium preview covers desktop/narrow layouts and the confirmation/cancel flows. No live account mutation ran.
+- The follow-up is not yet in a pull request or production. Create a new PR; Vercel production should update when that PR is merged to `main`.
+
+## 2026-10-22 - Move account actions inside Edit locally
+
+- User requested one Edit entry for account management. Users rows now show Edit only; the existing Edit dialog contains Disable/Activate, Reset password and Delete account in an Account actions section. Self/protected-role visibility checks and existing confirmations/password/API checks remain. Actions require saved edits; the editor is inert while fresh action details load. Only one native dialog opens at a time; ordinary confirmation cancellation reloads/reopens Edit, completion clears Edit and reloads the list, and unresolved-operation closure preserves its operator reference without reopening an editable stale account.
+- Updated `HostedAdminRecords.vue` and targeted admin CSS. Final admin build passed. Fictional intercepted Chromium preview at1440/1366/390/320 verified Edit-only rows, all three confirmation/cancel return paths, one open dialog, visible footers, horizontal fit, and disabled action buttons after an unsaved name edit. Desktop table/editor screenshots inspected. No live account save/reset/delete occurred in this UI pass.
+- This change is local/uncommitted and not deployed or included in draft PR#2 yet. Existing public site still has the earlier published layout. Real reset/delete verification and fixture reconciliation remain open.
+
 ## 2026-10-22 - Publish desktop account alignment
 
 - Pushed `chore/admin-hosted-verification` through `35cd998` and manually published the inspected frontend-only source to Vercel production. Deployment `dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` reported READY and aliased to `https://graphiscan-admin.vercel.app`. Public login and stylesheet returned200; new paired-editor/field-group selectors are present. Render still follows merged main; no API code/configuration deployment was performed by this UI publication.
