@@ -42,7 +42,7 @@ export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now =
   async function login(email, password) {
     clear()
     const expected = generation
-    await retain(await raw('/session/login', { method: 'POST', body: { email, password } }), expected)
+    await retain(await raw('/session/login', { method: 'POST', body: { email, password }, timeout: 90000 }), expected)
   }
   async function refresh() {
     if (!session) throw failure('Sign in to continue.', 'AUTHENTICATION_REQUIRED', 401)

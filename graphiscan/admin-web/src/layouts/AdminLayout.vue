@@ -76,11 +76,8 @@
 
     <div v-if="showLogoutModal" v-dialog="closeLogoutModal" class="modal-backdrop">
       <section class="logout-confirm-modal">
-        <div class="danger-modal-head">
-          <div class="danger-icon">
-            <AlertTriangle :size="26" :stroke-width="1.8" />
-          </div>
-
+        <div class="standard-modal-head">
+          <h2>Log out?</h2>
           <button
             class="modal-close-btn"
             aria-label="Close logout confirmation"
@@ -93,9 +90,7 @@
         </div>
 
         <div class="danger-modal-copy">
-          <span>Confirm Logout</span>
-          <h2>Log out?</h2>
-          <p>You will need to sign in again to access the admin workspace.</p>
+          <p>You will need to sign in again to access the workspace.</p>
         </div>
 
         <div class="logout-modal-actions">
@@ -127,7 +122,6 @@ import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import adminApi from '../api/adminApi'
 import {
-  AlertTriangle,
   FileText,
   GraduationCap,
   History,

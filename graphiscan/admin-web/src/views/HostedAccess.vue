@@ -21,6 +21,7 @@
       <AdminSignInForm :fields="fields" :busy="busy" :error="error" :message="message" @submit="submit" />
     </template>
     <template #welcome><AdminLoginPanel /></template>
+    <template #refresh-action="{ busy, refresh }"><RefreshButton :busy="busy" @click="refresh" /></template>
     <template #workspace="{ client, profile, refreshAccount, signOut, changePassword, busy, error, message, navigationBlock }">
       <HostedAdminWorkspace :client="client" :profile="profile" :refresh-account="refreshAccount" :sign-out="signOut" :change-password="changePassword" :busy="busy" :error="error" :message="message" @navigation-block="navigationBlock" />
     </template>
@@ -28,6 +29,7 @@
   </div>
 </template>
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HostedAccess from '../../../shared/HostedAccess.vue'

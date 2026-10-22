@@ -39,6 +39,10 @@ SELECT
         SELECT 1 FROM pg_catalog.pg_proc other JOIN pg_catalog.pg_namespace n ON n.oid=other.pronamespace
         WHERE n.nspname='public' AND other.proname LIKE 'graphiscan\_%' ESCAPE '\'
             AND other.oid<>p.oid AND other.prokind='f' AND other.prorettype<>'trigger'::regtype
+            AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_begin_account_issuance(uuid,uuid,uuid,jsonb)')
+            AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_complete_account_issuance(uuid,uuid,uuid,uuid,uuid)')
+            AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_begin_admin_account_operation(uuid,uuid,uuid,uuid,text,bigint,uuid)')
+            AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_complete_admin_account_operation(uuid,uuid,uuid,uuid)')
             AND has_function_privilege(w.oid,other.oid,'EXECUTE')
     ) AS other_application_functions_denied
 FROM writer w CROSS JOIN updater p;

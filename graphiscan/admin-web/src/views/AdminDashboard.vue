@@ -7,15 +7,7 @@
           <p>Current records and expert review activity.</p>
         </div>
 
-        <button
-          class="dash-refresh-btn"
-          type="button"
-          :disabled="loading"
-          @click="loadDashboard"
-        >
-          <RefreshCcw :size="16" :stroke-width="2" />
-          Refresh
-        </button>
+        <RefreshButton :busy="loading" @click="loadDashboard" />
       </section>
 
       <p v-if="error" class="error-message" role="alert">{{ error }}</p>
@@ -176,13 +168,13 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   AlertTriangle,
   FileText,
   GraduationCap,
-  RefreshCcw,
   Users
 } from 'lucide-vue-next'
 import adminApi from '../api/adminApi'

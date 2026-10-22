@@ -38,10 +38,7 @@
               Add User
             </button>
 
-            <button class="soft-action-btn" type="button" @click="loadUsers">
-              <RefreshCw :size="15" :stroke-width="1.8" />
-              Refresh
-            </button>
+            <RefreshButton :busy="loading" @click="loadUsers" />
 
             <div class="search-field">
               <Search :size="16" :stroke-width="1.8" />
@@ -218,9 +215,7 @@
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
-              <span>Create Account</span>
               <h2>Add user</h2>
-              <p>Create an account and assign a role.</p>
             </div>
 
             <button class="modal-close-btn"
@@ -364,7 +359,6 @@
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
-              <span>{{ statusModalKicker }}</span>
               <h2>{{ statusModalTitle }}</h2>
               <p>{{ statusModalMessage }}</p>
             </div>
@@ -389,14 +383,6 @@
                 •
                 {{ formatStatus(selectedStatusUser?.account_status) }}
               </em>
-            </div>
-
-            <div
-              v-if="selectedStatusAction === 'reject' || selectedStatusAction === 'disable'"
-              class="warning-box"
-            >
-              <ShieldAlert :size="18" :stroke-width="1.8" />
-              <p>This account will lose access until restored or approved again.</p>
             </div>
 
             <p v-if="statusActionError" class="error-message" role="alert">
@@ -441,7 +427,6 @@
           </div>
 
           <div class="danger-modal-copy">
-            <span>Permanent Delete</span>
             <h2>Delete user?</h2>
 
             <p>This action is permanent. Related records may be affected.</p>
@@ -452,10 +437,6 @@
               <em>{{ formatRole(selectedUser?.role) }}</em>
             </div>
 
-            <div class="warning-box">
-              <ShieldAlert :size="18" :stroke-width="1.8" />
-              <p>Continue only if you are sure this account should be removed.</p>
-            </div>
           </div>
 
           <form class="delete-form" @submit.prevent="deleteUserPermanently">
@@ -503,6 +484,7 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import adminApi from '../api/adminApi'
 import AdminLayout from '../layouts/AdminLayout.vue'
@@ -514,10 +496,8 @@ import {
   Eye,
   EyeOff,
   Plus,
-  RefreshCw,
   RotateCcw,
   Search,
-  ShieldAlert,
   Trash2,
   UserCheck,
   UserX,
@@ -738,14 +718,6 @@ const strengthClass = computed(() => {
   if (strengthScore.value <= 2) return 'weak'
   if (strengthScore.value <= 4) return 'good'
   return 'strong'
-})
-
-const statusModalKicker = computed(() => {
-  if (selectedStatusAction.value === 'approve') return 'Approve Account'
-  if (selectedStatusAction.value === 'reject') return 'Reject Account'
-  if (selectedStatusAction.value === 'disable') return 'Disable Account'
-  if (selectedStatusAction.value === 'restore') return 'Restore Account'
-  return 'Confirm Action'
 })
 
 const statusModalTitle = computed(() => {

@@ -65,7 +65,7 @@ def create_app(environ=None):
         resources={r"/api/v1/*": {
             "origins": origins,
             "allow_headers": ["Authorization", "Content-Type", "Idempotency-Key"],
-            "methods": ["GET", "POST", "PATCH", "OPTIONS"],
+            "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
             "max_age": 600,
         }},
         supports_credentials=False,

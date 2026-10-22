@@ -71,7 +71,7 @@
       </template>
       <p v-if="error && (profile || !$slots['sign-in'])" class="access-error" role="alert">{{ error }}</p>
       <p v-if="message && (profile || !$slots['sign-in'])" class="access-message" role="status">{{ message }}</p>
-      <div v-if="profile" class="access-actions"><button type="button" :disabled="busy" @click="refreshAccount">Refresh account</button><button type="button" :disabled="busy" @click="signOut">Sign out</button></div>
+      <div v-if="profile" class="access-actions"><slot name="refresh-action" :busy="busy" :refresh="refreshAccount"><button type="button" :disabled="busy" @click="refreshAccount">Refresh account</button></slot><button type="button" :disabled="busy" @click="signOut">Sign out</button></div>
       <p class="access-session-note">For your privacy, reloading this page requires signing in again.</p>
     </section>
     <slot v-if="!profile" name="welcome" />
