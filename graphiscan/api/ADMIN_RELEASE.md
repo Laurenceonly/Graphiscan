@@ -1,5 +1,31 @@
 # Admin pilot release
 
+## Published pilot, 2026-10-22
+
+Actual authorized action slice: fictional-account creation201, name/membership
+edit200, disable/reactivate200, and test membership removal200 passed. Reset
+dialog awaits private issuer-password entry; no reset/delete completion is
+claimed. Existing grants remain unchanged, including hidden permission editor.
+
+Production handoff: PR#1 merged as `2ddb85f`; Render now deploys main. Deployment
+`dep-dbcmoj3rjlhs73e180n0` succeeded/live. Earlier branch-switch instructions in
+this checkpoint are historical; local blueprint/docs align with that source.
+
+User subsequently reported "works" after the private hosted sign-in/dashboard
+request. This is user-confirmed login/dashboard evidence; the PR merge gate is
+satisfied. No full hosted account/Storage workflow is claimed. Keep the source
+branch until Render is deliberately switched after merge.
+
+- Admin: `https://graphiscan-admin.vercel.app/login` (Vercel READY).
+- API: `https://graphiscan-admin-api.onrender.com` (Render Free/Singapore, Live).
+- Database:017-019 installed;33 restricted read-only checks passed.
+- Availability observed: public login200/Vue root, API health200 and exact-origin
+  login preflight200. User private dashboard sign-in is pending before PR#1 merge.
+- Source currently deployed from `a3be7a5`; Render follows `deploy/free-hosting`.
+  Reconcile the service source branch after an approved merge to main.
+- Authenticated writes, private Storage and new-account onboarding are not yet
+  verified on these hosts. Online model inference and Expo release are separate.
+
 ## Scope
 
 Publish the existing Vue admin on Vercel with the lightweight Flask v1 API on

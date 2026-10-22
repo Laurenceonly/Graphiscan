@@ -2,11 +2,21 @@
 
 ## Current admin-first release — 2026-10-22
 
+Hosted verification started: actual fictional-account creation/edit/school
+membership/disable/reactivate/removal passed. Reset/delete pending user private
+issuer-password entry; audit/student/assignment walkthrough remains. Seventeen
+isolated admin tests pass with updated optional-migration mocks. See latest
+CHANGELOG/RESUME for the preserved active fixture and exact evidence.
+
+Current requirements audit: [CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md) reconciles all35 existing project Markdown files and all16 panel commitments. Next: close the hosted admin lifecycle/assignment checks, then resume existing Expo integration, free model hosting and the full teacher/expert/parent workflow. No new tests or mutations ran for this audit.
+
+Production handoff complete: PR#1 merged as `2ddb85f`; Render now follows main and its branch-change deployment succeeded/live. User confirmed hosted login/dashboard. Full account/Storage/model/mobile verification is separate. Blueprint/checkpoint edits are saved locally but not yet committed.
+
 - User deferred Expo and requested admin completion, then deployment.
 - Implemented source: account details/school/permission editing, disable/activate confirmation, reauthenticated temporary-password reset and unused-account deletion; existing dashboard, directory, results/progress, audit and settings flows retained.
 - Database:017-019 installed; actual restricted read-only checker passed all33 checks after019. Do not rerun these migrations. No live reset/delete evidence yet.
 - Evidence: both Vue builds pass, eight Python source files parse and production admin-only factory loads routes; fictional action dialogs reviewed at1440/390px. Actual Add user completion was confirmed earlier.
-- Deployment: Vercel authenticated; commit `57c8cba` pushed to open PR#1 on `deploy/free-hosting`. Render Free API blueprint and ignored private environment/CA bundle prepared; Render login still required. No deployment or private configuration transfer yet. Hosted model inference remains separate/free; no APK exists.
+- Deployment: Render Free/Singapore API is Live at `https://graphiscan-admin-api.onrender.com`; Vercel admin is READY at `https://graphiscan-admin.vercel.app`. Private settings/CA uploaded; frontend-only upload inspected. Public login/health/exact-origin preflight return200; hosted login/dashboard is user-confirmed. PR#1 is merged and Render follows main. Hosted model inference remains disabled; no APK exists.
 
 Older timeline checkpoints below are historical. Use `graphiscan/api/ADMIN_RELEASE.md` and the newest CHANGELOG entry for the active release scope.
 
@@ -296,7 +306,10 @@ Source: [GraphiScan_Defense_Minutes.md](GraphiScan_Defense_Minutes.md) (June 1, 
 
 The minutes specify elementary students grouped by school and grade; Grades 1–3 is the separately recorded project scope. Expo, Supabase, and hosting choices are project architecture decisions, not requirements stated by these minutes.
 
-Status below reflects source inspection. Checks that ran against the application are recorded separately in [KNOWLEDGE.md](KNOWLEDGE.md); the planned hosted system has not been verified against a database.
+The rows below preserve the historical source-inspection baseline. Several
+implementation statuses have since advanced; use the complete current16-item
+matrix in [CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md). Actual hosted
+schema/admin evidence is recorded in the newest CHANGELOG and KNOWLEDGE entries.
 
 | # | Applies to | Manuscript / presentation action | System action and current status |
 | --- | --- | --- | --- |
