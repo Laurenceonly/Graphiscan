@@ -1,3 +1,15 @@
+UI consistency source2026-10-22: fix/admin-user-form-consistency unifies hosted
+page headers and uses shared AdminSummaryCards on Dashboard/Users/Students/Results.
+Logout text is centered. Build and fictional1440/390/320 visual review passed;
+not yet deployed. Database020/021 remain applied; no SQL or real account write ran.
+Resume publication of this UI branch, then hosted assignment/credential checks.
+Deployment verified2026-10-22: PR#5 merged as1c8154c. Public Vercel login and
+bundle returned200; /assets/index-B9jBHXyt.js contains Manage assignment access
+and assignment-access. Render assignment-access GET returned401 with
+AUTHENTICATION_REQUIRED. This proves public assets and unauthenticated route
+behavior, not signed-in grant/revoke or scope enforcement. Last database
+preflight passed38 checks after021. Next: authorized hosted fictional assignment
+workflow and audit/options checks. No SQL rerun or account mutation performed.
 Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
 role-choice removal is on main. Migrations020 and021 are applied; the last hosted
 read-only preflight passed all38 checks. Assignment-access API/admin source is
