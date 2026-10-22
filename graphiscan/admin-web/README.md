@@ -1,5 +1,13 @@
 # GraphiScan admin web
 
+Current published checkpoint (2026-10-22): admin is live at
+https://graphiscan-admin.vercel.app/login and uses the Render Free API. User
+confirmed hosted login/dashboard; PR#1 merged and Render follows main. Migrations
+through019 are installed, account actions are implemented, and no repeated SQL
+setup is needed. Full hosted action/assignment/role verification remains open;
+model inference is disabled on this API. See `../../CURRENT_REQUIREMENTS.md`.
+Older preparation-only and pending017 statements below are historical.
+
 Latest hosting checkpoint (2026-10-22): Vercel admin project/GitHub connection is prepared; no live deployment. The API host must satisfy the user's free model-hosting requirement. See [`HOSTING.md`](../api/HOSTING.md). Schema migrations through017 and the separate admin writer are installed and verified read-only. Older setup-pending statements below are historical. The preparation branch `deploy/free-hosting` has automatic Vercel deployments disabled until a valid public API origin is configured.
 
 Verified setup (2026-10-21): user applied [`016_admin_reads_setup.sql`](../db/postgres/016_admin_reads_setup.sql); all14 independent restricted read-only hosted checks passed. The guarded function, indexes and fictional-admin global `accounts.manage`/`audit.read` grants are installed. **Do not repeat016 or the grant setup.** The current-source hosted API5002 is running; health200 and anonymous new list routes401. Previous sessions were revoked by permission changes, so sign in fresh. Populated UI list confirmation remains pending. For a new disposable project after015, run only that atomic bundle once, not canonical016 separately; it deliberately refuses a different identity or absent workflow-test audience. The bundle/checker queries passed146 isolated SQL checks.

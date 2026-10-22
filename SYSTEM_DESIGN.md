@@ -1,5 +1,19 @@
 # GraphiScan target system design
 
+Presentation decision reconfirmed2026-10-22: design admin for desktop browsers,
+retaining a responsive narrow-window fallback. Expo is a native Android app;
+Expo web previews/exports are development aids and do not establish mobile release.
+
+Current implementation reconciliation (2026-10-22): see
+[CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md). Vue admin is on Vercel;
+lightweight Flask API is on Render Free and follows main; Supabase migrations
+through019 are installed. Hosted admin login/dashboard is user-confirmed.
+Cloud Run is not the selected live admin API host; free model hosting remains
+unresolved and inference is disabled on the current public API. Expo conversion
+source exists; no APK/device release is established. Older implementation-gap,
+unapplied-schema and hosting paragraphs below describe historical baselines;
+the target role/workflow requirements remain commitments.
+
 This records the intended workflow and stack decisions from 2026-09-29. They are not claims that the current app already implements them. See [KNOWLEDGE.md](KNOWLEDGE.md) for current behavior and [PROJECT_PLAN.md](PROJECT_PLAN.md) for work and panel status.
 
 The shared API target is specified in [API_CONTRACT.md](API_CONTRACT.md), drafted 2026-10-19. Health/bootstrap handlers and a shared guard now exist; protected v1 access fails closed until trusted identity/profile adapters are connected. Other v1 routes and Supabase services remain unimplemented. The contract includes source-to-target differences, absent schema capabilities, and unresolved inputs.

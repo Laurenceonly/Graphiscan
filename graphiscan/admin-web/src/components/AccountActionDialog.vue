@@ -3,10 +3,10 @@
     <form class="account-editor-form" @submit.prevent="submit">
       <header><div><h2 id="account-action-title">{{ title }}</h2><p>{{ description }}</p></div><button class="editor-close" type="button" aria-label="Close account action" :disabled="busy || (pending && !checked)" @click="close"><X :size="18" aria-hidden="true" /></button></header>
       <p class="account-action-person"><strong>{{ target.full_name }}</strong><span>{{ target.email }}</span></p>
-      <template v-if="action === 'reset_password'">
+      <div v-if="action === 'reset_password'" class="account-field-group">
         <label>New temporary password<input v-model="temporary" type="password" autocomplete="new-password" minlength="8" maxlength="128" required :disabled="busy || pending" aria-describedby="reset-password-help" /></label>
         <p id="reset-password-help">Use uppercase, lowercase, a number and a symbol. The user must change this password at their next sign-in.</p>
-      </template>
+      </div>
       <label v-if="action === 'delete'">Type DELETE to confirm<input v-model="confirmation" autocomplete="off" required pattern="DELETE" :disabled="busy || pending" /></label>
       <label v-if="action !== 'status'">Your current password<input v-model="password" type="password" autocomplete="current-password" maxlength="4096" required :disabled="busy || pending" /></label>
       <p v-if="error" class="error-message" role="alert">{{ error }}</p>

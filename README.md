@@ -10,12 +10,20 @@ Teachers can manage student records and submit handwriting samples for screening
 
 - **Application:** Flask API, Vue 3 interfaces built with Vite, and an in-progress React Native/Expo app.
 - **Machine learning:** TensorFlow/Keras and image preprocessing in Python.
-- **Data:** The legacy prototype uses MySQL. The Supabase Auth/PostgreSQL v1 schema is installed through migration017; full legacy-data migration and application cutover remain in progress.
+- **Data:** The legacy prototype uses MySQL. The Supabase Auth/PostgreSQL v1 schema is installed through migration019; full legacy-data migration and application cutover remain in progress.
 - **Mobile:** React Native/Expo is the agreed native direction; the existing Vue/Capacitor client remains until role and device parity are verified.
 
 ## Current status
 
-GraphiScan is in active development. Supabase migrations through017 and the separate admin writer are installed and passed restricted read-only verification. Guarded account updates are implemented; actual mutation flows still need hosted verification. Account issuance/password reset, legacy-data/image migration, populated role-flow verification, final model decisions and deployment remain open. The user requires free model hosting; provider selection is pending. See [hosting preparation](graphiscan/api/HOSTING.md). A public link will be added after deployment.
+The [admin pilot](https://graphiscan-admin.vercel.app/login) is published on Vercel
+with a lightweight Flask API on Render Free and existing Supabase Auth/PostgreSQL/
+private Storage. Hosted admin login/dashboard is user-confirmed. Account-action
+source is implemented and migrations through019 passed restricted read-only
+verification; complete hosted action and role workflows still need verification.
+Model inference is disabled on this admin-only API. Free model hosting,
+three-class evaluation, Expo APK/device checks, legacy-data/image cutover and
+manuscript/privacy approval remain open. See [current requirements and next
+steps](CURRENT_REQUIREMENTS.md) and [hosting details](graphiscan/api/HOSTING.md).
 
 ## Responsible use
 
