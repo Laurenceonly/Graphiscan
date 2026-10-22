@@ -1,24 +1,14 @@
-UI consistency source2026-10-22: fix/admin-user-form-consistency unifies hosted
-page headers and uses shared AdminSummaryCards on Dashboard/Users/Students/Results.
-Logout text is centered. Build and fictional1440/390/320 visual review passed;
-not yet deployed. Database020/021 remain applied; no SQL or real account write ran.
-Resume publication of this UI branch, then hosted assignment/credential checks.
-Deployment verified2026-10-22: PR#5 merged as1c8154c. Public Vercel login and
-bundle returned200; /assets/index-B9jBHXyt.js contains Manage assignment access
-and assignment-access. Render assignment-access GET returned401 with
-AUTHENTICATION_REQUIRED. This proves public assets and unauthenticated route
-behavior, not signed-in grant/revoke or scope enforcement. Last database
-preflight passed38 checks after021. Next: authorized hosted fictional assignment
-workflow and audit/options checks. No SQL rerun or account mutation performed.
-Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
-role-choice removal is on main. Migrations020 and021 are applied; the last hosted
-read-only preflight passed all38 checks. Assignment-access API/admin source is
-being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
-607 contract/507 isolated SQL and77 focused Python checks plus admin build and
-fictional responsive previews passed. Next: merge/deploy matching source, then
-controlled authenticated hosted assignment checks. Earlier absent/pending SQL
-and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
-manuscript and credential verification remain separate release gates.
+Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
+v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
+and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,
+list/detail grouping and local sign-out feedback are implemented. Vue user-app
+was read as the behavior reference and is unchanged. TypeScript and Android
+Hermes export passed; fictional browser onboarding and teacher/expert/parent
+layouts were inspected at390/320 with no horizontal overflow. This is not native
+device or real Auth/consent verification. Android SDK exists, connected devices0;
+no APK was generated. Next: review on Android, then hosted role/Storage/actions,
+student-creation parity and model-capable screening. Privacy audience, historical
+data and model/manuscript release gates remain open. SQL020/021 need no rerun.
 # GRAPHISCAN system knowledge
 
 Hosted catalog update2026-10-22: user applied020; read-only verification confirms

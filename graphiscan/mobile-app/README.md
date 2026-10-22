@@ -1,55 +1,76 @@
-# GraphiScan React conversion
+# GraphiScan Expo application
 
-Current planning checkpoint (2026-10-22): this conversion already has hosted
-onboarding/read/upload/review source. Resume it after the hosted admin action
-checks; use `EXPO_PUBLIC_API_MODE=hosted` and the public HTTPS API origin
-`https://graphiscan-admin-api.onrender.com` for the next integrated build.
-This configuration has not been built/verified in this audit. Current public API
-has inference disabled, so online upload screening needs model-capable hosting.
-No APK/physical Android release is established. Migrations through019 are already
-installed; older unapplied012-015/local-only instructions below are historical.
-See `../../CURRENT_REQUIREMENTS.md` for the active order and approval dependencies.
+The native Android conversion lives here. `../user-app` is the Vue reference for
+teacher, expert and parent behavior; `../admin-web` remains the web admin.
 
-Current hosted checkpoint(2026-10-20): migrations through015 are applied and restricted-read-only preflight verified;3 fictional teacher/expert/parent profiles and separate4-account notice are installed. Admin fresh sign-in/newnotice/synthetic directory check is user-reported successful. Hosted web is running at **http://localhost:5174**(session77508), with EXPO_PUBLIC_API_MODE=hosted and public origin http://127.0.0.1:5002. Root200/bundle/actual login rendering/CORS verified without entering credentials. First complete each role's own temporary-password change, fresh sign-in and explicit notice acceptance; teacher first, then expert/parent. Full populated upload/review/release/device/deployment remains unverified. Do not rerun migrations or use MySQL login for this flow; XAMPP is unnecessary. Older unapplied/setup-pending notes below are historical.
+## Current integration
 
-For this web launch: `$env:EXPO_PUBLIC_API_MODE='hosted'`; `$env:EXPO_PUBLIC_HOSTED_API_ORIGIN='http://127.0.0.1:5002'`; then `npm.cmd run web -- --port 5174 --localhost`. Use the localhost frontend address; this launch did not listen on127.0.0.1. The current agent session also uses CI/offline/BROWSER=none, so source changes require a restart. No secret belongs in public Expo variables.
+Hosted mode is now the default and uses the public API at
+`https://graphiscan-admin-api.onrender.com`. No local MySQL server is required.
+Only an explicit `EXPO_PUBLIC_API_MODE=legacy` selects the archival adapter.
+A hosted session never falls back to legacy endpoints.
 
-Hosted upload/review/image actions are now implemented in HostedScreeningActions.tsx. They require the prepared, unapplied atomic 013+014 bundle, private Storage, supported pinned artifact and reviewed model/evaluation metadata. Model choices stay unavailable without setup; no synthetic accuracy/default or fallback to legacy credentials is used. See ../api/SCREENING_WRITES.md. Camera/gallery upload, exact-key review retry, request lookup and protected image actions compile, but authenticated hosted/device behavior remains unverified. Admin expert-assignment UI is separate follow-up work.
-
-This Expo/React Native app converts the existing Vue/Capacitor user app in ../user-app. The existing Vue admin remains the admin interface. This directory is a conversion in progress, not a second product or a completed Supabase cutover.
-
-Hosted read integration is now implemented behind EXPO_PUBLIC_API_MODE=hosted with a separate EXPO_PUBLIC_HOSTED_API_ORIGIN. It reuses shared/hosted-client.mjs for sign-in, first-login password change, versioned privacy acceptance, students, results/history/reports and sign-out. It requires the new, currently unapplied migration 012. See ../api/SCREENING_READS.md. Legacy remains the default until hosted write parity is ready; a hosted session never falls back to legacy writes. Suitable issued user-role accounts and a reviewed notice are still required, without broadening the existing admin-only fictional notice.
-
-## Run locally
-
-Use Node 24, run npm ci, then npm run web or npm start. npm run android requires an Android emulator/device and compatible development client. The scaffold uses Expo SDK 58; do not assume an installed older Expo Go supports it.
-
-Copy .env.example to .env.local only if overriding the API origin. EXPO_PUBLIC_API_ORIGIN is a public HTTP(S) origin, with no path, credentials, query or fragment. Android emulator defaults to http://10.0.2.2:5000; other platforms default to http://127.0.0.1:5000. A phone needs a reachable LAN API during development or deployed HTTPS API. Public Expo variables must never contain database passwords, Auth admin keys or private tokens.
-
-## Conversion map
-
-| Existing Vue workflow | React implementation |
+| Flow | Current source |
 | --- | --- |
-| Login, forgot/reset password | src/screens/Access.tsx |
-| Role dashboards, students, result lists, student history, profile | src/screens/Records.tsx |
-| Teacher student creation and parent selection | src/screens/StudentAdd.tsx |
-| Teacher sample selection/upload | src/screens/Upload.tsx |
-| Teacher/parent result detail, expert validation | src/screens/Result.tsx |
-| Authorized handwriting download | src/export-image.ts |
-| Existing authenticated API requests | src/core/api.ts |
+| Sign-in | Issued teacher, expert and parent accounts; branded native login |
+| Required password change | Server gate, confirmation, private visibility controls and fresh sign-in after success |
+| Privacy agreement | Exact server-published version/content, explicit consent, reload on a changed agreement; no bundled substitute policy |
+| Home | Role-specific actions and counts of loaded records, capped at the requested page size |
+| Students / Children | Scoped list and screening history |
+| Results / Reviews / Reports | Scoped lists, model metadata, expert review, private image and released-report actions |
+| Teacher screening | Existing camera/gallery upload and model selection source; online inference is disabled on the current Render service |
+| Profile | Account refresh and sign-out |
 
-Navigation exposes teacher, expert and parent workflows. Guest registration/demo is excluded. Sessions stay in memory and require a new sign-in after restart. Server role/ownership rules remain authoritative; client navigation is only presentation. Images are fetched through the authenticated download endpoint, never through a public static URL in this client. Native image sharing uses a temporary cache file, cleaned after the share sheet completes.
+Shared spacing, typography, control heights and list rows live in `src/ui.tsx`.
+Onboarding uses `src/AccountSetup.tsx`; hosted navigation/read flows live in
+`src/HostedApp.tsx`. Tokens remain in memory and restart requires sign-in.
+Server role, ownership, onboarding and release rules remain authoritative.
+No credential or consent write automatically replays after a failed connection.
 
-The legacy adapter deliberately targets /api/user and legacy identifiers. Supabase bearer sessions/UUIDs must not be passed into that adapter. Hosted mode now integrates v1 onboarding and screening reads; hosted upload/review/image writes remain pending. Legacy password recovery still relies on the development flow; real email delivery and app-link issuance remain to be connected.
+## Open on Android
 
-Model labels remain Normal and High Potential. Stored legacy scores already use percent units; small values are not multiplied by 100. No clinical probability, AI recommendation, three-model selector or unrecorded screening type is invented. Expert recommendation is entered by the expert, as required by the existing API.
+From the repository root, run:
 
-Results, details and dated history display recorded Initial Screening/Follow-up Screening from the reports table through the existing API. Missing, conflicting or unsupported labels show Screening type not recorded. Visible list order never determines the type: a parent's earliest reviewed report can correctly be Follow-up. This read projection does not fix concurrent upload assignment; hosted transactional writes remain pending.
+```powershell
+Set-Location .\graphiscan\mobile-app
+npm.cmd start -- --lan
+```
 
-## Verification and remaining work
+Open the development session on the phone using a native client compatible with
+this project's installed Expo SDK58, or use an Android emulator. The phone must
+reach Metro on the development computer. The API itself already uses public
+HTTPS. An incompatible Expo Go version requires a compatible native client;
+this source change does not generate one.
 
-Run npm run typecheck, npm test and npm run export. Export produces web assets and an Android JavaScript bundle, not an APK or device verification. Camera, permissions, keyboard/back behavior, image sharing, reset links and authenticated role flows require device testing. Launcher artwork is still generated scaffold artwork pending approved branding. History is a dated list; chart/report parity needs review against the retained Vue views. School assignment and panel additions require the hosted API integration rather than fields the legacy API cannot persist.
+Optional public overrides are documented in `.env.example`. Do not put database
+passwords, Auth administrator keys or private tokens into `EXPO_PUBLIC_*` values.
+The hosted default works without an environment file. The legacy origin setting
+is used only by the explicit legacy adapter.
 
-No upload or other write retries automatically after a failed connection. Check the saved records before repeating an uncertain write. Existing legacy upload storage, process-local sessions and broad CORS handling remain backend migration work before deployment; this conversion does not claim production protections.
+## Evidence and remaining work
 
-Reference: https://docs.expo.dev/get-started/create-a-project/
+On2026-10-22, TypeScript checking and Android JavaScript/Hermes export passed.
+This produces a bundle, **not an APK**. Fictional browser layout review is an
+engineering aid; it is not Android device, camera, keyboard or authentication
+verification. No real passwords, consents, reviews or student records were changed
+by that preview. The local SDK is present; no Android device was connected at the
+latest check.
+
+Before native release:
+
+- Complete issued-user onboarding and scoped teacher/expert/parent flows on a
+  physical Android device, including font scaling, keyboard, back navigation,
+  network failure, sign-out, private image sharing and camera permissions.
+- Keep the current fictional privacy audience intact. Approved real-use agreement
+  publication and account audience setup are still separate dependencies.
+- Verify hosted assignment, report release and expert review with authorized
+  accounts. New hosted student-creation UI and full Vue feature parity remain
+  follow-up work; the old creation screen still targets the legacy API.
+- Enable a reviewed model-capable backend before claiming online handwriting
+  screening. Preserve recorded binary classes and model scores; do not invent a
+  Low Potential class, diagnosis or accuracy figure.
+- Produce and verify an Android APK. Historical data/image migration and final
+  manuscript evidence remain tracked in `../../CURRENT_REQUIREMENTS.md`.
+
+The existing `typecheck`, `test` and `export` scripts remain available. The test
+suite was not run in this UI/integration session.

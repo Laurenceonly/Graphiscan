@@ -1,5 +1,17 @@
 # GraphiScan change log
 
+## 2026-10-22 - Connect Expo hosted default and refine native screens
+
+- Used Vue user-app as the role/workflow reference without editing it. App.tsx now selects hosted by default; HostedApp uses the public Render HTTPS origin, with legacy available only by explicit opt-in. No server secret/configuration was bundled. Added AccountSetup for required password change, reauthentication notice and exact versioned server privacy content/consent, including notice reload and unavailable-account state.
+- Added role-aware Home/read-count summaries and native tabs (teacher screening, expert reviews, parent reports/children), consistent palette/type/spacing/controls, aligned metric values, list press feedback, grouped model/expert detail sections, accessible tab labels, safe-area-aware tab sizing and local sign-out feedback. Removed duplicate page headings and redundant submit arrow. Missing follow-up values now remain Not recorded. Server record/role/onboarding/release checks remain authoritative; no legacy fallback from a hosted session.
+- Verification: final TypeScript check and Android Hermes export passed (932 modules,19 assets). This is a JavaScript bundle, not an APK. Fictional browser engineering preview completed password change -> fresh sign-in -> explicit versioned consent -> teacher Home; two intercepted fictional writes, zero real writes. Teacher/expert/parent Home, student and detail layouts reviewed at390/320 with no horizontal overflow; screenshots inspected. No unit suite ran in this UI session. Local Android SDK is available but connected-device count was0. Native keyboard/camera/back/share and hosted real-role behavior remain unverified.
+- Updated mobile README/config example and handoff requirements. Hosted student-creation parity, online model hosting, real-use privacy publication, historical data/images, physical Android release and manuscript evidence remain open. No SQL/schema or real account/consent/review mutation occurred.
+
+## 2026-10-22 - Confirm shared admin deployment and Expo handoff
+
+- GitHub confirms PR#6 merged as3fa78ec. Actual public login returned200; production bundle index-BMML1qyx.js contains shared summary cards and its stylesheet contains common page headers and centered Logout. No real account mutation or schema change ran.
+- Database020/021 retain their last38-check passing receipt. There is no prepared next numbered migration. Remaining admin work is authenticated assignment/scope/audit and reset/delete verification; historical MySQL record/image cutover and approved privacy publication remain unfinished. Expo integration can begin against the published API while these gates stay open. Hosted inference remains disabled, so this handoff does not claim end-to-end mobile screening or release readiness.
+
 ## 2026-10-22 - Unify hosted admin page and metric alignment
 
 - Added shared AdminSummaryCards for Dashboard, Users, Students and Results, replacing separate card markup. Labels, values, padding, borders, card heights and responsive columns now share one component. All hosted page headings use one header layout; removed conflicting title rules. Schools, Progress, Audit Logs and Settings use the same page start and heading size. Centered the Logout label independently of its icon. Explicit role option typography uses the shared form font/colors; local inspection showed all four Add User selections already share the same controls and dimensions.
