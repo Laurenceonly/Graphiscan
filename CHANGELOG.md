@@ -1,5 +1,12 @@
 # GraphiScan change log
 
+## 2026-10-22 - Align desktop admin account management
+
+- User clarified: admin is a desktop browser interface with responsive fallback; Expo is the native Android application, not a web deployment target. Recorded that priority in the requirements/system plan.
+- Updated `AccountActionDialog.vue`, `HostedAdminRecords.vue` and admin `style.css`: grouped field/help content, consistent header/close alignment and account context, separated sticky footers,640px desktop Edit dialog with paired Role/Status, aligned permission/scope/remove controls, two-column row actions, and correct three-column Audit filters. Narrow layouts stack the fields/actions. Fixed scoped-style conflicts and nested form overflow that initially hid the long editor footer.
+- Verification: final admin production build passed. Separate Chromium preview with fictional intercepted data inspected Users and all five account dialogs at1440/1366/1024/390/320 widths with768px height; all25 final dialog samples had visible footers and fit horizontally. Audit filters inspected at1440/1366/1024/390 with no measured form/document horizontal overflow. Desktop Edit/Users/Audit and narrow dialog screenshots inspected. No live saves/provider actions ran during this visual pass; other browser engines/physical devices were not checked.
+- Existing production reset dialog/session was kept separate from local preview. Reset/delete verification remains pending private issuer-password submission. UI changes are source/build/preview verified at this checkpoint; publication is recorded separately when completed.
+
 ## 2026-10-22 - Exercise hosted admin account actions with a fictional account
 
 - User authorized the proposed hosted admin checks. Reused their existing signed-in browser; authenticated Users returned200. Created one clearly labeled fictional teacher account through the actual admin UI: POST201, active, must_change_password=true, no initial school. Edited its name and added the existing synthetic workflow school: PATCH200. Disabled and reactivated it: both PATCH200 with expected states. Removed only its test membership: PATCH200, school_ids empty. No existing person's account, grants, school/student record or credentials were changed.

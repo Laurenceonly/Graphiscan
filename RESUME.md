@@ -1,5 +1,13 @@
 # GraphiScan resume checkpoint
 
+Latest UI steering2026-10-22: admin is desktop browser first, responsive fallback;
+Expo is native Android, not a web release. Updated account forms/actions/Audit
+filters in3 admin source files; build passes. Separate `uialignment` Chromium
+session uses fictional preview data;25 final dialog samples at1440/1366/1024/
+390/320 widths kept footers visible. Audit filters fit four widths. Do not confuse
+mock visual checks with real saves. Production `hostedadmin` session/reset dialog
+remains separate; original reset/delete still needs private issuer password.
+
 ## Active hosted admin checks - 2026-10-22
 
 - On `chore/admin-hosted-verification`, created from fetched merged main while

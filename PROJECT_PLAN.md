@@ -2,6 +2,11 @@
 
 ## Current admin-first release — 2026-10-22
 
+Presentation decision: desktop browser admin is primary; responsive layout is a
+fallback. Expo is the native Android application; web exports/previews are
+development aids, not its release target. Account dialog/table alignment source,
+build and fictional Chromium review are complete; live reset/delete remains open.
+
 Hosted verification started: actual fictional-account creation/edit/school
 membership/disable/reactivate/removal passed. Reset/delete pending user private
 issuer-password entry; audit/student/assignment walkthrough remains. Seventeen

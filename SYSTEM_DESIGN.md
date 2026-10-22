@@ -1,5 +1,9 @@
 # GraphiScan target system design
 
+Presentation decision reconfirmed2026-10-22: design admin for desktop browsers,
+retaining a responsive narrow-window fallback. Expo is a native Android app;
+Expo web previews/exports are development aids and do not establish mobile release.
+
 Current implementation reconciliation (2026-10-22): see
 [CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md). Vue admin is on Vercel;
 lightweight Flask API is on Render Free and follows main; Supabase migrations

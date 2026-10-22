@@ -87,6 +87,10 @@ Git against merged main. Do not accidentally upload output or private bundles.
 
 ## Recommended execution order
 
+User reconfirmed presentation targets2026-10-22: admin is desktop browser first,
+with responsive fallback; Expo is native Android. Use web previews only as an
+engineering aid, with APK/device evidence required for mobile completion.
+
 1. **Save the hosting handoff and close hosted admin behavior gaps.** Reconcile
    pending docs/blueprint changes with main. Walk through a controlled fictional
    account's admin lifecycle and school/student/permission/eligibility actions,

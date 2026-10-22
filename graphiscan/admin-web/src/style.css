@@ -5843,6 +5843,116 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 }
 .admin-shell .main-panel .hosted-directory-modal .directory-modal-close:hover:not(:disabled) { background: var(--blue-50); }
 
+/* Account management: desktop alignment with narrow-screen fallbacks. */
+.admin-shell .main-panel dialog.account-editor:not(.account-creator):not(.account-action-dialog) {
+  width: min(calc(100% - 32px), 640px);
+}
+.admin-shell .main-panel .account-editor-form {
+  min-width: 0;
+  margin: 0;
+  overflow: visible;
+  grid-template-columns: minmax(0, 1fr);
+}
+.admin-shell .main-panel .account-editor-form > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px;
+  align-items: start;
+  gap: 16px;
+}
+.admin-shell .main-panel .account-editor-form > header > div { min-width: 0; }
+.admin-shell .main-panel .account-editor-form h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.02em;
+}
+.admin-shell .main-panel .account-editor-form p { margin: 0; line-height: 1.6; }
+.admin-shell .main-panel .account-editor-form > header p { margin-top: 8px; }
+.admin-shell .main-panel .account-editor-form label {
+  min-width: 0;
+  margin: 0;
+  gap: 8px;
+  line-height: 1.5;
+}
+.admin-shell .main-panel .account-editor-form :is(input, select) { min-width: 0; margin: 0; }
+.admin-shell .main-panel .account-editor-form .account-field-group { display: grid; min-width: 0; gap: 8px; }
+.admin-shell .main-panel .account-role-fields { display: grid; min-width: 0; gap: 16px; }
+.admin-shell .main-panel .account-role-fields-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.admin-shell .main-panel .account-editor-form .account-action-person {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--control-radius);
+  overflow-wrap: anywhere;
+}
+.admin-shell .main-panel .account-editor-form footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--admin-dialog-padding)) calc(-1 * var(--admin-dialog-padding));
+  padding: 16px var(--admin-dialog-padding);
+  border-top: 1px solid var(--border);
+  background: var(--white);
+}
+.admin-shell .main-panel .account-editor-form footer > button { min-width: 104px; }
+.admin-shell .main-panel .account-editor-form .account-permission-row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+.admin-shell .main-panel .account-permission-row > button {
+  grid-column: auto;
+  min-height: 48px;
+  margin: 0;
+  padding-inline: 12px;
+}
+.admin-shell .main-panel .account-school-options label { align-items: start; line-height: 1.5; }
+.admin-shell .main-panel .account-school-options input[type="checkbox"] { margin-top: 2px; }
+.admin-shell .main-panel .account-row-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 256px;
+  min-width: 0;
+  max-width: 100%;
+}
+.admin-shell .main-panel .account-row-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  font: 500 14px/1.4 var(--font-ui);
+  white-space: nowrap;
+}
+.admin-shell .main-panel .hosted-record-table :is(th, td) { vertical-align: middle; }
+.admin-shell .main-panel .hosted-record-filters.audit-filters {
+  grid-template-columns: minmax(220px, 2fr) minmax(160px, 1fr) auto;
+}
+.admin-shell .main-panel .hosted-record-filters > button { align-self: end; margin: 0; min-height: 48px; }
+@media (max-width: 900px) {
+  .admin-shell .main-panel .hosted-record-filters.audit-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-shell .main-panel .audit-filters > button { grid-column: 1 / -1; justify-self: end; }
+  .admin-shell .main-panel .hosted-record-table td[data-label="Actions"] { display: block; }
+  .admin-shell .main-panel .hosted-record-table td[data-label="Actions"]::before { display: block; margin-bottom: 8px; }
+  .admin-shell .main-panel .account-row-actions { width: 100%; }
+  .admin-shell .main-panel .account-row-actions > button { min-height: 44px; }
+}
+@media (max-width: 760px) {
+  .admin-shell .main-panel .account-role-fields-pair { grid-template-columns: minmax(0, 1fr); }
+  .admin-shell .main-panel .account-editor-form footer > button { min-width: 0; }
+  .admin-shell .main-panel .account-editor-form .account-permission-row { grid-template-columns: minmax(0, 1fr); }
+  .admin-shell .main-panel .account-permission-row > button { justify-self: end; min-height: 44px; }
+}
+@media (max-width: 700px) {
+  .admin-shell .main-panel .hosted-record-filters.audit-filters { grid-template-columns: minmax(0, 1fr); }
+  .admin-shell .main-panel .hosted-record-filters > button { width: 100%; justify-self: stretch; }
+}
+
 /* Ordinary refresh actions share one presentation across hosted and legacy pages. */
 :is(.admin-shell .main-panel, .hosted-admin .access-page .access-actions) button.admin-refresh-button {
   display: inline-flex;
