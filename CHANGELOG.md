@@ -1,11 +1,11 @@
 # GraphiScan change log
 
-## 2026-10-22 - Prepare account actions follow-up after PR merge
+## 2026-10-22 - Open clean account actions follow-up PR
 
 - Confirmed why the Edit dialog actions were absent after deployment: PR#2 merged as `ac903c4` before commit `d0e30e8`, which contains the account-actions-inside-Edit change. The merged `main` therefore did not include that UI.
-- Prepared a clean follow-up branch from `origin/main` with the account-actions UI and checkpoint documentation. Generated `output/vercel-admin` assets are excluded. The controls remain limited to accounts the signed-in administrator may manage and are hidden for the current account.
+- Opened [PR#3](https://github.com/Laurenceonly/Graphiscan/pull/3) from `fix/admin-edit-account-actions` to `main`. It contains one source change commit based on merged `main`; generated `output/vercel-admin` assets are excluded. Deleted the stale `chore/admin-hosted-verification` branch after confirming its only commit beyond merged `main` was copied into the clean follow-up. The controls remain limited to accounts the signed-in administrator may manage and are hidden for the current account.
 - Admin production build passed on the clean follow-up branch (`vite build`,1830 modules); the built bundle contains the Account actions section. Earlier fictional Chromium preview covers desktop/narrow layouts and the confirmation/cancel flows. No live account mutation ran.
-- The follow-up is not yet in a pull request or production. Create a new PR; Vercel production should update when that PR is merged to `main`.
+- Production remains unchanged until PR#3 merges; Vercel should deploy from `main` after merge. Check PR#3's Vercel status before merging. This UI change does not modify Supabase schema or backend permissions.
 
 ## 2026-10-22 - Move account actions inside Edit locally
 

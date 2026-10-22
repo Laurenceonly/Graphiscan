@@ -9,8 +9,9 @@ password and Delete for other manageable accounts; self/protected-role checks
 remain. Unsaved edits disable actions, fresh target details load before existing
 confirmations, and cancellation reloads the editor. Clean-branch production build
 passed with the actions in its bundle; earlier fictional responsive preview
-passed. This follow-up is not yet a PR or production deployment. See the newest
-CHANGELOG entry for current PR status.
+passed. PR#3 is open from `fix/admin-edit-account-actions` to `main`; the stale
+merged feature branch was removed after copying its one required UI commit. This
+change is not yet in production. See the newest CHANGELOG entry for status.
 
 Account-alignment publication2026-10-22: Vercel production is READY at deployment
 `dpl_4E2AwPZ6jYddPXRzGa5GBj1t65c9` from frontend source `35cd998`. Public login
