@@ -232,6 +232,9 @@ def backend_from_environment(environ=None):
         backend.admin_lifecycle_service = AdminLifecycleService(PostgresAdminWriteRepository(connect),
             getattr(backend, 'admin_write_service', None).repository if getattr(backend, 'admin_write_service', None) else None,
             issuer.provider if issuer else None, SupabasePasswordProvider(verifier))
+        from v1_assignment_access import AssignmentAccessService
+        backend.assignment_access_service = AssignmentAccessService(PostgresAdminWriteRepository(connect),
+            getattr(backend, 'admin_write_service', None).repository if getattr(backend, 'admin_write_service', None) else None)
         backend.session_service = SessionService(backend,SupabasePasswordProvider(verifier),
                                                  password_service.repository if password_service else None)
         from v1_directory import DirectoryService

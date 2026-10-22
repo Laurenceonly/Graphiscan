@@ -1,4 +1,24 @@
+Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
+role-choice removal is on main. Migrations020 and021 are applied; the last hosted
+read-only preflight passed all38 checks. Assignment-access API/admin source is
+being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
+607 contract/507 isolated SQL and77 focused Python checks plus admin build and
+fictional responsive previews passed. Next: merge/deploy matching source, then
+controlled authenticated hosted assignment checks. Earlier absent/pending SQL
+and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
+manuscript and credential verification remain separate release gates.
 # GraphiScan resume checkpoint
+
+Latest migration source2026-10-22: on `feat/admin-assignment-access`, based on
+the role-options branch (PR#4), with prior local verification changes incorporated.
+Prepared020, scoped GET/PATCH eligibility API, exact preflight, and Edit > Manage
+assignment access.607 contract/506 SQL/77 focused Python checks passed; build and
+fictional1440/390/320 grant/revoke/uncertain-response previews passed. Actual
+restricted hosted preflight:017-019 metadata passes,020 missing. No hosted writes.
+Next: user applies only020, rerun `check_v1_admin_writer.py --connect
+--require-assignment-access`, publish source, then authenticated controlled
+eligibility/assignment checks. Do not rerun017-019. Hosted reset/delete still
+needs private sign-in; data/model/device/manuscript dependencies remain open.
 
 Latest UI steering2026-10-22: user requested removal of Researcher/Guest options.
 On `fix/admin-user-role-options` from merged main, changed two admin components:
@@ -473,3 +493,11 @@ a guest audit event and cleans up the temporary upload. Actual new inference and
 expert validation submission remain unverified in this rehearsal.
 
 Related records: `PROJECT_PLAN.md`, `WORK_CHECKLIST.md`, `graphiscan/api/HOSTED_PREFLIGHT.md`.
+# Latest hosted checkpoint2026-10-22
+
+020 is installed and function checks pass. Required preflight is blocked by
+leftover TRUNCATE/REFERENCES/TRIGGER privileges for anon/authenticated/service_role
+on assignment_eligibilities (RLS enabled). User should apply only
+`graphiscan/db/postgres/021_assignment_table_privileges.sql`, then rerun
+`check_v1_admin_writer.py --connect --require-assignment-access` before publication.
+021 is prepared, not applied; prior020-absent notes below are historical.

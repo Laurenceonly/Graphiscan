@@ -1,4 +1,33 @@
+Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
+role-choice removal is on main. Migrations020 and021 are applied; the last hosted
+read-only preflight passed all38 checks. Assignment-access API/admin source is
+being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
+607 contract/507 isolated SQL and77 focused Python checks plus admin build and
+fictional responsive previews passed. Next: merge/deploy matching source, then
+controlled authenticated hosted assignment checks. Earlier absent/pending SQL
+and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
+manuscript and credential verification remain separate release gates.
 # GRAPHISCAN system knowledge
+
+Hosted catalog update2026-10-22: user applied020; read-only verification confirms
+its four functions and exact runtime grants. Readiness is blocked by leftover
+TRUNCATE/REFERENCES/TRIGGER grants to anon/authenticated/service_role on
+assignment_eligibilities, despite enabled RLS. Prepared021 removes only those
+privileges; it is not applied. Run the required020 preflight after021 before
+publishing matching application source. Earlier absent020 notes are historical.
+
+Assignment access source2026-10-22: `020_assignment_access.sql` and scoped
+GET/PATCH account assignment-access handlers are prepared. Edit contains a
+Manage assignment access dialog. Global `accounts.manage` plus school
+`assignments.manage` are required; current actor/candidate roles, memberships,
+status, credential locks and candidate revision are rechecked in SQL. Eligibility
+permits future selection; existing record assignments and grants stay intact.
+Saved/effective/can-grant state and read reconciliation prevent blind retries.
+607 contract/506 isolated SQL/77 focused Python checks and admin build passed;
+fictional1440/390/320 previews passed. Actual read-only preflight confirms020
+absent, with017-019 metadata passing. Installed schema remains019; apply only020
+and check `--require-assignment-access` before publishing and hosted verification.
+See `graphiscan/api/ASSIGNMENT_ACCESS.md`. No real mutation ran in this slice.
 
 Users role choice update2026-10-22: hosted Add/Edit and Users filters offer only
 Administrator, Teacher, Parent and Expert. The older creation/filter UI also

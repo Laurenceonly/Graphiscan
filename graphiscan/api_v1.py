@@ -314,6 +314,33 @@ def install_api_v1(app, backend: AccessBackend | None = None):
             raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
         return jsonify(**admin_lifecycle().status(g.v1_identity, operation_id), request_id=g.v1_request_id)
 
+    def account_assignment_access(user_id, write=False):
+        from flask import current_app
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'assignment_access_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        if write:
+            request.max_content_length = 8192
+            if request.args or not request.is_json:
+                raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+            fields = request.get_json(silent=True)
+        else:
+            if any(len(request.args.getlist(key)) != 1 for key in request.args):
+                raise ApiError(422, 'INVALID_QUERY', 'Choose one school and assigning account.')
+            fields = request.args.to_dict()
+        return jsonify(**service.access(g.v1_identity, user_id, fields, write=write,
+            request_id=g.v1_request_id), request_id=g.v1_request_id)
+
+    @api.get('/accounts/<user_id>/assignment-access')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def get_account_assignment_access(user_id):
+        return account_assignment_access(user_id)
+
+    @api.patch('/accounts/<user_id>/assignment-access')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def set_account_assignment_access(user_id):
+        return account_assignment_access(user_id, True)
+
     def perform_admin_account_operation(user_id, action):
         request.max_content_length = 8192
         if request.args or not request.is_json:

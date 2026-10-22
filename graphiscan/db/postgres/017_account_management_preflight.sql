@@ -43,6 +43,7 @@ SELECT
             AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_complete_account_issuance(uuid,uuid,uuid,uuid,uuid)')
             AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_begin_admin_account_operation(uuid,uuid,uuid,uuid,text,bigint,uuid)')
             AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_complete_admin_account_operation(uuid,uuid,uuid,uuid)')
+            AND other.oid IS DISTINCT FROM to_regprocedure('public.graphiscan_set_assignment_access(uuid,uuid,uuid,uuid,bigint,bigint,boolean,uuid)')
             AND has_function_privilege(w.oid,other.oid,'EXECUTE')
     ) AS other_application_functions_denied
 FROM writer w CROSS JOIN updater p;

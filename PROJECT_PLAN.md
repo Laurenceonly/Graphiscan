@@ -1,4 +1,22 @@
+Current publication checkpoint2026-10-22: PR#4 merged as b25d170; Researcher/Guest
+role-choice removal is on main. Migrations020 and021 are applied; the last hosted
+read-only preflight passed all38 checks. Assignment-access API/admin source is
+being saved on feat/admin-assignment-access for a follow-up PR, not yet deployed.
+607 contract/507 isolated SQL and77 focused Python checks plus admin build and
+fictional responsive previews passed. Next: merge/deploy matching source, then
+controlled authenticated hosted assignment checks. Earlier absent/pending SQL
+and pause notes are historical; do not rerun migrations. Data/model/privacy/device/
+manuscript and credential verification remain separate release gates.
 # GraphiScan project plan and panel tracker
+
+Latest migration slice2026-10-22: explicit assignment eligibility source is
+implemented (scoped API, Edit dialog, atomic SQL/audit and020 preflight). Local
+607 contract/506 isolated SQL/77 focused Python checks and responsive browser
+preview/build passed. Hosted metadata confirms020 absent; installed schema019.
+Next is020 owner execution and required read-only rollout check, matching API/
+admin publication and actual scoped behavior. Historical data, credentials,
+model, mobile and manuscript gates remain open. See `api/ASSIGNMENT_ACCESS.md`
+under `graphiscan/` for the rollout and evidence boundaries.
 
 Users role choices2026-10-22: Administrator, Teacher, Parent and Expert. User
 requested removal of Researcher/Guest from selectable Users roles. Source/build/
@@ -350,3 +368,9 @@ The manuscript source and presentation deck are not in this workspace. The minut
 - AI-generated recommendations are no longer produced or displayed in current source. Remove the obsolete database column and any older stored values during migration; expert-authored observations may remain, clearly attributed to the expert.
 - The same account, student, screening, result, and expert-validation rules must apply to the admin website, mobile app, and API. The API is the authority.
 - The older Flask-rendered routes remain reachable in source, so changes to shared behavior must cover or retire those routes before deployment.
+# Current migration checkpoint2026-10-22
+
+020 installed: function installation/security/grants verified read-only. Assignment
+table protection remains blocked by leftover Supabase TRUNCATE/REFERENCES/TRIGGER
+grants;021 is prepared to revoke them. Apply021 and rerun the required preflight
+before deploying the matching assignment-access API/admin. No data mutation ran.

@@ -1,5 +1,12 @@
 # Legacy MySQL to Supabase PostgreSQL
 
+Prepared020 checkpoint2026-10-22: assignment eligibility management source and
+`020_assignment_access.sql` pass local checks. Restricted hosted metadata confirms
+020 installed with function checks passing. Leftover Supabase table privileges
+block full readiness; apply only021 and rerun the required preflight before
+publishing its API/admin feature; see [ASSIGNMENT_ACCESS.md](../api/ASSIGNMENT_ACCESS.md). It imports no
+legacy records/images and does not resume paused MySQL repair.
+
 ## Current data-migration status (2026-10-21)
 
 Updated2026-10-22: hosted schema is installed through019 and current admin/API
