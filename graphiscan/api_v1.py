@@ -119,9 +119,17 @@ def install_api_v1(app, backend: AccessBackend | None = None):
 
     @api.errorhandler(Exception)
     def unexpected_error(error):
+        from flask import current_app
+        from pathlib import Path
+        from traceback import extract_tb
         from werkzeug.exceptions import RequestEntityTooLarge
         if isinstance(error, RequestEntityTooLarge):
             return api_error(ApiError(413, "REQUEST_TOO_LARGE", "The request is too large."))
+        # Never log exception text/locals: provider/driver errors can carry secrets.
+        frames = [(Path(frame.filename).name, frame.lineno, frame.name)
+                  for frame in extract_tb(error.__traceback__)]
+        current_app.logger.error('v1_unexpected_error request_id=%s type=%s frames=%s',
+                                 g.v1_request_id, type(error).__name__, frames)
         # Do not serialize adapter exceptions (which may include credentials/SQL).
         return api_error(ApiError(500, "INTERNAL_ERROR", "The request could not be completed."))
 
@@ -267,6 +275,88 @@ def install_api_v1(app, backend: AccessBackend | None = None):
     @require_access(roles={'admin', 'researcher', 'teacher', 'parent', 'expert'})
     def get_student(student_id):
         return read_directory('student', student_id)
+
+    def read_admin(resource):
+        from flask import current_app
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'admin_read_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return jsonify(**service.read(g.v1_identity, resource, request.args), request_id=g.v1_request_id)
+
+    @api.get('/accounts')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def list_admin_accounts():
+        return read_admin('accounts')
+
+    @api.get('/audit-logs')
+    @require_access(roles={'admin', 'researcher'}, permission='audit.read')
+    def list_admin_audit_logs():
+        return read_admin('audit')
+
+    def admin_lifecycle():
+        from flask import current_app
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'admin_lifecycle_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return service
+
+    @api.get('/accounts/<user_id>')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def get_admin_account(user_id):
+        if request.args:
+            raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
+        return jsonify(**admin_lifecycle().detail(g.v1_identity, user_id), request_id=g.v1_request_id)
+
+    @api.get('/account-operations/<operation_id>')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def get_admin_account_operation(operation_id):
+        if request.args:
+            raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
+        return jsonify(**admin_lifecycle().status(g.v1_identity, operation_id), request_id=g.v1_request_id)
+
+    def perform_admin_account_operation(user_id, action):
+        request.max_content_length = 8192
+        if request.args or not request.is_json:
+            raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+        bearer = request.headers['Authorization'].split()[1]
+        return jsonify(**admin_lifecycle().perform(g.v1_identity, bearer, user_id, action,
+            request.get_json(silent=True), request.headers.get('Idempotency-Key'), g.v1_request_id), request_id=g.v1_request_id)
+
+    @api.post('/accounts/<user_id>/temporary-password')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def reset_admin_account_password(user_id):
+        return perform_admin_account_operation(user_id, 'reset_password')
+
+    @api.delete('/accounts/<user_id>')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def delete_admin_account(user_id):
+        return perform_admin_account_operation(user_id, 'delete')
+
+    @api.post('/accounts')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def create_admin_account():
+        from flask import current_app
+        request.max_content_length = 8192
+        if request.args or not request.is_json:
+            raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'account_issuance_service', None)
+        if service is None:
+            raise ApiError(503, 'ACCOUNT_CREATION_UNAVAILABLE', 'Account creation is not configured. Contact the system operator.')
+        return jsonify(**service.create(g.v1_identity, request.get_json(silent=True),
+            request.headers.get('Idempotency-Key'), g.v1_request_id), request_id=g.v1_request_id), 201
+
+    @api.patch('/accounts/<user_id>')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def update_admin_account(user_id):
+        from flask import current_app
+        request.max_content_length = 32768
+        if request.args or not request.is_json:
+            raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'admin_write_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return jsonify(**service.update(g.v1_identity, user_id, request.get_json(silent=True),
+            g.v1_request_id), request_id=g.v1_request_id)
 
     def write_directory(operation, target=None):
         from flask import current_app

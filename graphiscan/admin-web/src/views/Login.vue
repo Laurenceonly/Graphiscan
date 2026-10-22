@@ -5,20 +5,18 @@
         <div class="login-brand-row">
           <div>
             <h1>GRAPHI<span>SCAN</span></h1>
-            <p>Admin Web Panel</p>
+            <p>Legacy Admin Web Panel</p>
           </div>
         </div>
 
         <div class="login-copy">
-          <span class="login-kicker">Administrator Access</span>
-          <h2>Welcome back</h2>
+          <h2>Legacy admin sign-in</h2>
           <p>
             Sign in to manage users, students, screening results, progress records,
             audit logs, and system settings.
           </p>
         </div>
 
-        <RouterLink to="/access" class="hosted-access-link">Sign in to the new workspace</RouterLink>
         <form class="modern-login-form" @submit.prevent="loginAdmin">
           <div class="form-group">
             <label for="login-1">Email Address</label>
@@ -89,41 +87,14 @@
         </form>
       </div>
 
-      <div class="login-right">
-        <div class="hero-panel">
-          <div class="hero-bg-shape one"></div>
-          <div class="hero-bg-shape two"></div>
-
-          <div class="hero-content">
-            <span>GRAPHISCAN</span>
-            <h2>Handwriting Screening and Progress</h2>
-            <p>
-              A centralized admin workspace for user management, student records,
-              screening records, expert validation, and audit activity.
-            </p>
-          </div>
-
-          <div class="hero-floating-card">
-            <div>
-              <strong>Admin Monitoring</strong>
-              <p>Track screening activity, validation status, progress, and system records.</p>
-            </div>
-
-            <div class="mini-avatars">
-              <span>T</span>
-              <span>P</span>
-              <span>E</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AdminLoginPanel />
     </section>
   </main>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   Eye,
   EyeOff,
@@ -134,6 +105,7 @@ import {
   ShieldCheck
 } from 'lucide-vue-next'
 import adminApi from '../api/adminApi'
+import AdminLoginPanel from '../components/AdminLoginPanel.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -33,10 +33,7 @@
           </div>
 
           <div class="user-toolbar">
-            <button class="soft-action-btn" type="button" @click="loadAuditLogs">
-              <RefreshCw :size="15" :stroke-width="1.8" />
-              Refresh
-            </button>
+            <RefreshButton :busy="loading" @click="loadAuditLogs" />
 
             <div class="search-field">
               <Search :size="16" :stroke-width="1.8" />
@@ -160,6 +157,7 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, onMounted, ref } from 'vue'
 import adminApi from '../api/adminApi'
 import AdminLayout from '../layouts/AdminLayout.vue'
@@ -168,7 +166,6 @@ import {
   FileText,
   FilterX,
   History,
-  RefreshCw,
   Search,
   ShieldCheck,
   UserCog

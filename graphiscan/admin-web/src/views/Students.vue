@@ -38,10 +38,7 @@
               Add Student
             </button>
 
-            <button class="soft-action-btn" type="button" @click="loadPageData">
-              <RefreshCw :size="15" :stroke-width="1.8" />
-              Refresh
-            </button>
+            <RefreshButton :busy="loading" @click="loadPageData" />
 
             <div class="search-field">
               <Search :size="16" :stroke-width="1.8" />
@@ -241,9 +238,7 @@
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
-              <span>Create Student</span>
               <h2>Add student</h2>
-              <p>Create a student record and assign a teacher.</p>
             </div>
 
             <button class="modal-close-btn"
@@ -330,7 +325,6 @@
         <section class="standard-modal">
           <div class="standard-modal-head">
             <div>
-              <span>Guardian Assignment</span>
               <h2>Update guardian</h2>
               <p>Link, change, or remove the parent connected to this student.</p>
             </div>
@@ -398,7 +392,6 @@
           </div>
 
           <div class="danger-modal-copy">
-            <span>Permanent Delete</span>
             <h2>Delete student record?</h2>
 
             <p>This action is permanent. Connected records may be affected.</p>
@@ -409,10 +402,6 @@
               <em>Teacher: {{ getDisplayName(selectedStudent?.teacher_name, 'Not assigned') }}</em>
             </div>
 
-            <div class="warning-box">
-              <ShieldAlert :size="18" :stroke-width="1.8" />
-              <p>Continue only if you are sure this student record should be removed.</p>
-            </div>
           </div>
 
           <form class="delete-form" @submit.prevent="deleteStudentPermanently">
@@ -460,6 +449,7 @@
 </template>
 
 <script setup>
+import RefreshButton from '../../../shared/RefreshButton.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import adminApi from '../api/adminApi'
@@ -470,9 +460,7 @@ import {
   GraduationCap,
   Link2Off,
   Plus,
-  RefreshCw,
   Search,
-  ShieldAlert,
   Trash2,
   UserRound,
   UsersRound,

@@ -474,7 +474,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "description": "Hosted account list. Requires a current active session, completed onboarding, and a global accounts.manage grant. Returns a minimal account projection with optimistic revision. Account updates use the separate PATCH operation and require migration 017 and its writer configuration.",
         "parameters": [
           {
             "name": "limit",
@@ -512,15 +512,6 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/AccountStatus"
-            }
-          },
-          {
-            "name": "school_id",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "pattern": "^[1-9][0-9]{0,18}$",
-              "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
             }
           }
         ],
@@ -574,7 +565,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -584,7 +575,7 @@
           "admin",
           "researcher"
         ],
-        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-record-scope": "Global accounts.manage grant; never client role metadata.",
         "x-permission": "accounts.manage"
       },
       "post": {
@@ -593,7 +584,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "description": "Implemented in source; migration 018 and server-only Supabase Auth secret setup are required. Requires global accounts.manage and current onboarding/session gates. Commits an email reservation before a single Auth admin create; completion verifies provider app metadata and creates an active profile requiring a password change. No automatic grants or email delivery. Pending requests require operator reconciliation; never automatically replay the Auth write.",
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -601,11 +592,10 @@
             "required": true,
             "schema": {
               "type": "string",
-              "minLength": 16,
-              "maxLength": 128,
-              "pattern": "^[A-Za-z0-9_-]+$"
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
             },
-            "description": "Reuse for the same logical action. Bound to actor, operation and request digest; no plaintext secrets persisted."
+            "description": "Stable request UUID bound to actor and non-secret account fields. Completed requests return their stored result; pending requests cannot replay provider writes. Passwords are never persisted."
           }
         ],
         "responses": {
@@ -620,18 +610,25 @@
                   ]
                 },
                 "description": "Protected responses must not be cached."
-              },
-              "Location": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Canonical created resource path."
               }
             },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccountResponse"
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AccountCreated"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "request_id"
+                  ]
                 }
               }
             }
@@ -664,7 +661,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -695,7 +692,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Protect self/last administrator and grant ceilings. Server checks expected_revision and advances it. Additional permission authority required for grant changes.",
+        "description": "Update account name, role, status and school/permission scopes. Requires an active session, completed onboarding and a global accounts.manage grant; permission grant replacement additionally requires permissions.manage. Protects self and the last active administrator and checks expected_revision. Temporary credentials and account creation are separate operations.",
         "parameters": [
           {
             "name": "user_id",
@@ -757,7 +754,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -779,16 +776,14 @@
             }
           }
         }
-      }
-    },
-    "/accounts/{user_id}/temporary-password": {
-      "post": {
-        "operationId": "resetTemporaryPassword",
-        "summary": "resetTemporaryPassword",
+      },
+      "get": {
+        "operationId": "getAdminAccount",
+        "summary": "getAdminAccount",
         "tags": [
           "accounts"
         ],
-        "description": "Write-only credential reset; revoke affected old sessions, set must_change_password, preserve consent history, and check expected_revision.",
+        "description": "Migration019. Current account, school and permission detail under global accounts.manage authorization.",
         "parameters": [
           {
             "name": "user_id",
@@ -800,24 +795,143 @@
             }
           }
         ],
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-permission": "accounts.manage",
         "responses": {
           "200": {
-            "description": "Successful authorized operation.",
-            "headers": {
-              "Cache-Control": {
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                },
-                "description": "Protected responses must not be cached."
-              }
-            },
+            "description": "Authorized result; no-store.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccountResponse"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminAccountDetail"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "request_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteUnusedAccount",
+        "summary": "deleteUnusedAccount",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Migration019. Verify issuer password, protect self/last admin, block accounts with sessions, assignments or history; reserve and disable before one Auth deletion. Pending operations require operator reconciliation.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Reuse the same operation UUID. Never automatically repeat an uncertain provider write."
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-permission": "accounts.manage",
+        "responses": {
+          "200": {
+            "description": "Authorized result; no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "deleted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "user_id",
+                        "deleted"
+                      ]
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "request_id"
+                  ]
                 }
               }
             }
@@ -850,7 +964,48 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAccountDelete"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{user_id}/temporary-password": {
+      "post": {
+        "operationId": "resetTemporaryPassword",
+        "summary": "resetTemporaryPassword",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Migration019. Verify issuer password, durably block old sessions before one provider password update, then require first-login password change. Consent history retained. No credential persistence or automatic write replay.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Reuse the same operation UUID. Never automatically repeat an uncertain provider write."
+          }
+        ],
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -860,14 +1015,64 @@
           "admin",
           "researcher"
         ],
-        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
         "x-permission": "accounts.manage",
+        "responses": {
+          "200": {
+            "description": "Authorized result; no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminAccountDetail"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "request_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TemporaryPassword"
+                "$ref": "#/components/schemas/AdminAccountAction"
               }
             }
           }
@@ -2850,7 +3055,7 @@
         "tags": [
           "audit-logs"
         ],
-        "description": "Proposed, unimplemented. Enforce server-side identity, onboarding, permissions, current record scope and response projection.",
+        "description": "Hosted read-only audit list. Requires a current active session, completed onboarding, and a global audit.read grant. Returns a minimal activity projection.",
         "parameters": [
           {
             "name": "limit",
@@ -2870,36 +3075,18 @@
             }
           },
           {
-            "name": "actor_id",
+            "name": "q",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "maxLength": 120
             }
           },
           {
-            "name": "category",
+            "name": "role",
             "in": "query",
             "schema": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": "\\S"
-            }
-          },
-          {
-            "name": "from",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "$ref": "#/components/schemas/Role"
             }
           }
         ],
@@ -2953,7 +3140,7 @@
             "$ref": "#/components/responses/ApiError"
           }
         },
-        "x-implementation-status": "proposed",
+        "x-implementation-status": "foundation",
         "x-gates": [
           "active_account",
           "password_changed",
@@ -2963,7 +3150,7 @@
           "admin",
           "researcher"
         ],
-        "x-record-scope": "Trusted server grants and current assignments; never client role metadata.",
+        "x-record-scope": "Global audit.read grant; never client role metadata.",
         "x-permission": "audit.read"
       }
     },
@@ -3135,6 +3322,124 @@
                 "$ref": "#/components/schemas/Refresh"
               }
             }
+          }
+        }
+      }
+    },
+    "/account-operations/{operation_id}": {
+      "get": {
+        "operationId": "getAdminAccountOperation",
+        "summary": "getAdminAccountOperation",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Migration019. Read only the current issuer's operation status. This read never retries or completes provider writes.",
+        "parameters": [
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-permission": "accounts.manage",
+        "responses": {
+          "200": {
+            "description": "Authorized result; no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "operation_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "completed"
+                          ]
+                        },
+                        "action": {
+                          "type": "string",
+                          "enum": [
+                            "reset_password",
+                            "delete"
+                          ]
+                        },
+                        "target_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "result": {
+                          "type": "object",
+                          "nullable": true
+                        }
+                      },
+                      "required": [
+                        "operation_id",
+                        "state",
+                        "action",
+                        "target_id",
+                        "result"
+                      ]
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "request_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
           }
         }
       }
@@ -4775,11 +5080,13 @@
           "full_name": {
             "type": "string",
             "minLength": 1,
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "maxLength": 200
           },
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "maxLength": 254
           },
           "role": {
             "$ref": "#/components/schemas/Role"
@@ -4788,7 +5095,8 @@
             "type": "string",
             "minLength": 8,
             "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
-            "writeOnly": true
+            "writeOnly": true,
+            "maxLength": 128
           },
           "school_ids": {
             "type": "array",
@@ -4797,7 +5105,8 @@
               "pattern": "^[1-9][0-9]{0,18}$",
               "description": "Canonical positive PostgreSQL bigint decimal string; server also checks int64 bounds."
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "maxItems": 128
           }
         },
         "required": [
@@ -5398,6 +5707,46 @@
           "request_id"
         ]
       },
+      "AccountListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "email",
+          "role",
+          "account_status",
+          "revision",
+          "created_at"
+        ]
+      },
       "AccountList": {
         "type": "object",
         "additionalProperties": false,
@@ -5405,7 +5754,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Account"
+              "$ref": "#/components/schemas/AccountListItem"
             }
           },
           "page": {
@@ -5548,6 +5897,44 @@
           "request_id"
         ]
       },
+      "AuditListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "log_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "full_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "action": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "log_id",
+          "actor_id",
+          "full_name",
+          "role",
+          "action",
+          "created_at"
+        ]
+      },
       "AuditEntryList": {
         "type": "object",
         "additionalProperties": false,
@@ -5555,7 +5942,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AuditEntry"
+              "$ref": "#/components/schemas/AuditListItem"
             }
           },
           "page": {
@@ -5690,6 +6077,173 @@
         "required": [
           "data",
           "request_id"
+        ]
+      },
+      "AccountCreated": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "type": "string",
+            "enum": [
+              "active"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "must_change_password": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "email",
+          "role",
+          "account_status",
+          "revision",
+          "created_at",
+          "must_change_password"
+        ]
+      },
+      "AdminAccountDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "account_status": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "must_change_password": {
+            "type": "boolean"
+          },
+          "credential_update_pending": {
+            "type": "boolean"
+          },
+          "school_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permission_grants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionGrant"
+            }
+          }
+        },
+        "required": [
+          "user_id",
+          "full_name",
+          "email",
+          "role",
+          "account_status",
+          "revision",
+          "created_at",
+          "must_change_password",
+          "credential_update_pending",
+          "school_ids",
+          "permission_grants"
+        ]
+      },
+      "AdminAccountAction": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "current_password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "writeOnly": true
+          },
+          "temporary_password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "writeOnly": true,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "expected_revision",
+          "current_password",
+          "temporary_password"
+        ]
+      },
+      "AdminAccountDelete": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "current_password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "writeOnly": true
+          },
+          "confirmation": {
+            "type": "string",
+            "enum": [
+              "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "expected_revision",
+          "current_password",
+          "confirmation"
         ]
       }
     }

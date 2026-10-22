@@ -47,7 +47,7 @@ CORS(app, resources={
             "http://10.120.208.249:5174"
         ],
         "allow_headers": ["Content-Type", "Authorization", "Idempotency-Key"],
-        "methods": ["GET", "POST", "PATCH", "OPTIONS"]
+        "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
     }
 })
 
@@ -508,7 +508,7 @@ def login():
         flash("Login successful.", "success")
 
         if user["role"] == "admin":
-            return redirect(f"{VUE_ADMIN_BASE_URL}/login")
+            return redirect(f"{VUE_ADMIN_BASE_URL}/legacy-login")
         elif user["role"] == "teacher":
             return redirect(url_for("teacher_dashboard"))
         elif user["role"] == "expert":

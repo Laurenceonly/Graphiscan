@@ -42,7 +42,7 @@ function Navigation() {
       <Stack.Screen name="Result" component={ResultScreen} options={{ title: 'Screening result' }} />
       <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'Student progress' }} />
     </Stack.Group> : <Stack.Group navigationKey="signed-out">
-      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'GraphiScan' }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'GraphiScan', headerShown: false }} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: 'Forgot password' }} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ title: 'Reset password' }} />
     </Stack.Group>}</Stack.Navigator>

@@ -1,6 +1,8 @@
 # GraphiScan privacy wording: inputs for review
 
 Status: **No approved wording available**, confirmed by the user on 2026-10-20.
+
+2026-10-21 report-preview update: the user requested formal wording without test language for the screenshot. Proposed text is in [PRIVACY_AGREEMENT_DRAFT.md](graphiscan/api/PRIVACY_AGREEMENT_DRAFT.md). It is a draft used only in an isolated browser preview; no hosted agreement was replaced, published or accepted. The review inputs below remain unresolved.
 This is a project input brief, not agreement text, approval or a legal conclusion.
 Nothing here should be published as consent or inserted as a current agreement.
 
