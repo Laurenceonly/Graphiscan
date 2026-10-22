@@ -1,5 +1,11 @@
 # GraphiScan change log
 
+## 2026-10-22 - Limit Users role choices
+
+- Removed Researcher and Guest from hosted Users Add/Edit choices and Users role filters. The available choices are Administrator, Teacher, Parent and Expert. Removed Guest from the older UserManagement creation/filter controls too. Existing accounts with an older role retain their current value through a disabled hidden option, so opening/saving unrelated fields cannot silently convert their role. Audit history retains its role filters.
+- Verification: admin production build passed; fictional Chromium previews at1440/390 confirmed creator/filter options, six existing-account cases (teacher/researcher/guest at both widths), preserved current values, no unsaved changes merely from opening Edit, and horizontal fit. Desktop/narrow screenshots inspected. No real account mutation or schema migration occurred.
+- Source is on `fix/admin-user-role-options`; publication requires merging that branch and Vercel deployment. PR#3 is already merged as `a5e4827`, and the existing public bundle contains the earlier actions-inside-Edit change. Separate migration verification work is saved locally as `2e215f6` on `chore/supabase-admin-checks`.
+
 ## 2026-10-22 - Open clean account actions follow-up PR
 
 - Confirmed why the Edit dialog actions were absent after deployment: PR#2 merged as `ac903c4` before commit `d0e30e8`, which contains the account-actions-inside-Edit change. The merged `main` therefore did not include that UI.

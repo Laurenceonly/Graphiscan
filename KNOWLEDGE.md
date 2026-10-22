@@ -1,5 +1,18 @@
 # GRAPHISCAN system knowledge
 
+Users role choice update2026-10-22: hosted Add/Edit and Users filters offer only
+Administrator, Teacher, Parent and Expert. The older creation/filter UI also
+omits Guest. Existing stored roles remain readable, with a hidden disabled current
+option preventing accidental conversion when editing unrelated fields. Audit
+history keeps its historical role filters. No database migration was needed.
+Build and fictional1440/390 previews passed. Source branch is
+`fix/admin-user-role-options`; production publication follows merge/deployment.
+
+PR#3 is merged as `a5e4827`; the public admin bundle contains the actions inside
+Edit. Migration verification is separately committed locally as `2e215f6` on
+`chore/supabase-admin-checks` (574 contract/466 SQL/46 focused Python checks).
+Explicit assignment eligibility management remains the next application gap.
+
 Account actions follow-up2026-10-22: PR#2 merged as `ac903c4` before the UI
 change in `d0e30e8`, so that merge and deployments from `main` omitted the actions.
 The clean branch `fix/admin-edit-account-actions` is based on `origin/main` and
