@@ -1,11 +1,29 @@
 # GraphiScan consolidated work checklist
 
-## Current reconciliation - 2026-10-22
+## Current reconciliation - 2026-10-23
+
+Continuation: final11 fictional directory browser checks,18 mobile/19 shared
+tests and TypeScript passed. Picker theme recapture/design notes are complete.
+GraphiScan_Pixel_6 API36 emulator and official Expo Go58.0.5 are installed;
+native login rendered in light/dark and dark font_scale1.3. Android height
+keyboard avoidance fixes covered login actions, confirmed in native recapture.
+Final TypeScript/Android export passed1295 modules. Expo Go configuration reload
+failure remains an observed development limitation; fresh-process recovery worked.
+User confirmed private native hosted sign-in after a wait. Role workflows remain
+unverified; the original sign-in latency/cause was not captured.
+npm run preview:android fixes IPv4 localhost
+access through adb reverse. Native hosted roles, APK and physical-device checks
+remain open. Overall estimate remains60–65%.
 
 Use [CURRENT_REQUIREMENTS.md](CURRENT_REQUIREMENTS.md) for the current requirement
 matrix and next steps. Admin/API are published, user confirmed login/dashboard,
-PR#1 is merged and Render follows main. Migrations through019 are installed;
-do not repeat old setup. Full hosted account/assignment actions and role flows,
+Render follows main. Migrations through021 are installed and the last required
+hosted restricted preflight passed38 checks; PR#5 assignment source and PR#6
+shared admin alignment are published. Expo hosted onboarding, role workspaces,
+student create/edit and server filters are implemented locally; no APK exists.
+Full-project planning estimate is approximately60–65%; see the dated workstream
+review in CURRENT_REQUIREMENTS.md. Latest Expo source remains uncommitted.
+Do not repeat old setup. Full hosted account/assignment actions and role flows,
 model hosting/three-class work, Expo APK/device work, legacy-data cutover and
 manuscript/privacy approval remain open. Earlier dated checkpoint paragraphs
 below are historical, not fresh migration instructions. No tests ran for this audit.
@@ -136,7 +154,7 @@ Adapter checkpoint (2026-10-19): optional trusted Auth/PostgreSQL adapters and u
 Runtime foundation (2026-10-19): `/api/v1/health`, `/me`, and a shared guard now exist with synthetic runtime tests for onboarding, account/session denial, explicit grants and callback-based record access. Default identity/profile adapters remain unavailable and deny protected access with 503. This does not complete durable authentication, PostgreSQL query conversion, resource routes, or the proposed 19 end-to-end access scenarios.
 
 - [ ] Finalize shared contracts for accounts, schools, students, screenings, models/versions, reviews, reports, and protected images. `API_CONTRACT.md` and OpenAPI now cover 31 proposed operations; 19 integration cases are specified. Offline validation passed 464 schema/declaration/payload checks. Shared-guard synthetic runtime tests now pass; real-resource integration tests, policy-dependent choices and contract freeze remain open.
-- [x] Apply and verify staged Supabase/PostgreSQL schema through019 in the hosted project. User application and restricted read-only checks are recorded in `CHANGELOG.md`; do not repeat migrations or permission setup. This does not complete legacy data/image migration.
+- [x] Apply and verify staged Supabase/PostgreSQL schema through021 in the hosted project. User application and the last38-check restricted read-only preflight are recorded in `CHANGELOG.md`; do not repeat migrations or permission setup. This does not complete legacy data/image migration.
 - [ ] Complete runtime cutover: retire/convert the remaining MySQL Flask routes, migrate a reviewed copy of records and images, reconcile counts/relationships/history, and test rollback before cutover. Existing Supabase v1 APIs are a parallel path; this is not yet a full MySQL-to-Supabase data or application cutover.
 - [ ] Map old user IDs to Supabase Auth identities; replace in-memory tokens with verified durable authentication. Do not reuse old reset tokens or import password hashes as usable credentials.
 - [ ] Migrate a copy of records and images; reconcile counts, relationships, school/grade assignments, historical reviews, report order, and score units. Preserve historical binary model identity and labels; exclude obsolete AI advice.

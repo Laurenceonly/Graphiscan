@@ -8,6 +8,7 @@ import {createReviewSubmission} from '../../shared/screening-submission.mjs'
 import {Body,Button,Field,Heading,Loading,Notice,Screen,styles} from './ui'
 import {useRecords} from './use-records'
 import {exportImage} from './export-image'
+import {ChoiceRow} from './WorkspaceUI'
 
 type Request=HostedClient['request']
 export function HostedReview({request,id,review,onSaved}:{request:Request;id:string;review:any;onSaved:()=>void}){
@@ -80,17 +81,17 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     try{const state=await request('/screening-requests/'+encodeURIComponent(pending.current.key));if(state.state==='completed'){pending.current=null;setAsset(null);onComplete(state.result_id)}else if(state.state==='failed'){setFailed(true);setMessage('This submission did not complete. You can start another upload.')}else setMessage('The submission is still processing. Check again shortly.')}
     catch(e){setError((e as Error).message)}finally{setHasPending(!!pending.current);setBusy(false)}
   }
-  return <Screen><Heading>Upload handwriting</Heading><Body>Select a student and an available model, then capture or choose one JPG or PNG image.</Body>
+  return <Screen><Body muted>Select a student and an available model, then add a handwriting image.</Body><Heading>Student</Heading>
     {students.loading&&<Loading/>}<Notice error message={students.error}/><Field label="Find a student on this page" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
-    {student&&<Body>Selected student: {student.full_name}</Body>}
-    {(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><Button key={row.student_id} label={row.full_name+' - Grade '+row.grade_level} secondary={student?.student_id!==row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}
+    <View style={{gap:8}}>{(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><ChoiceRow key={row.student_id} label={row.full_name} detail={'Grade '+row.grade_level} selected={student?.student_id===row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}</View>
+    {!students.loading&&!students.error&&!(students.data?.data??[]).some((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase()))&&<Body muted>{search.trim()?'No students match this search on the current page.':'No students are available for your account.'}</Body>}
     {students.data?.page?.next_cursor&&<Button label="Next students" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(students.data.page.next_cursor)}/>}
     {studentCursor&&<Button label="First students page" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(null)}/>}
     <Heading>Screening model</Heading>{models.loading&&<Loading/>}<Notice error message={models.error}/>
-    {(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><Button key={row.model_id} label={row.model_key+' '+row.model_version+(row.is_default?' (default)':'')} secondary={model?.model_id!==row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}
+    <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={row.model_key} detail={'Version '+row.model_version+(row.is_default?' · Default':'')} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
-    <View style={styles.wrap}><Button label="Choose image" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
+    <Heading>Handwriting image</Heading><View style={styles.wrap}><Button label="Choose image" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
     {asset&&<Image source={{uri:asset.uri}} accessibilityLabel="Selected handwriting image" resizeMode="contain" style={{width:'100%',height:280}}/>}
     <Body muted>Use an image up to 10 MB and 16 megapixels. Screening supports expert review and does not establish a diagnosis.</Body>
     <Notice error message={error}/><Notice message={message}/>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useColorScheme } from 'react-native'
+import { Platform, View, useColorScheme, useWindowDimensions } from 'react-native'
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -48,4 +48,11 @@ function Navigation() {
     </Stack.Group>}</Stack.Navigator>
   </NavigationContainer>
 }
-export default function App() { return process.env.EXPO_PUBLIC_API_MODE === 'legacy' ? <SafeAreaProvider><SessionProvider><Navigation /></SessionProvider></SafeAreaProvider> : <HostedApp/> }
+export default function App() {
+  const { width } = useWindowDimensions(), colors = useColors()
+  const app = process.env.EXPO_PUBLIC_API_MODE === 'legacy' ? <SafeAreaProvider><SessionProvider><Navigation /></SessionProvider></SafeAreaProvider> : <HostedApp/>
+  // Browser-only development canvas; native navigation still fills the device.
+  return __DEV__ && Platform.OS === 'web' && width > 600
+    ? <View style={{flex:1,alignItems:'center',backgroundColor:colors.bg}}><View style={{flex:1,width:420,maxWidth:'100%',backgroundColor:colors.surface}}>{app}</View></View>
+    : app
+}

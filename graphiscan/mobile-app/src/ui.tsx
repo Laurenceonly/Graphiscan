@@ -4,11 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
   const dark = useColorScheme() === 'dark'
-  return dark ? { bg: '#111827', surface: '#1f2937', text: '#f8fafc', muted: '#c0ccdd', border: '#4b5a70', primary: '#83cafa', onPrimary: '#102a40', error: '#ffb4b0', normal: '#9bd8ac', high: '#f7cc83' }
-    : { bg: '#f8fafc', surface: '#ffffff', text: '#111827', muted: '#667085', border: '#dce1e8', primary: '#145c8f', onPrimary: '#ffffff', error: '#a72535', normal: '#176b3a', high: '#895500' }
+  const brand={brand:'#095df1',brandPressed:'#074bc2',onBrand:'#ffffff',brandMuted:'#eaf1ff'}
+  return dark ? { ...brand,bg: '#101b2c', surface: '#19283d', text: '#f3f7fc', muted: '#b5c5d8', border: '#3c506a', primary: '#9fc4ff', onPrimary: '#0d2447', soft:'#213754', skeleton:'#334a67',error: '#ffb4b0', normal: '#9bd8ac', normalSurface:'#173f33', high: '#f7cc83', highSurface:'#49381e' }
+    : { ...brand,bg: '#f7faff', surface: '#ffffff', text: '#14263c', muted: '#5c6c81', border: '#dce5ef', primary: '#095df1', onPrimary: '#ffffff', soft:'#e7efff', skeleton:'#d8e4f8',error: '#a72535', normal: '#176b3a', normalSurface:'#e7f4ec', high: '#895500', highSurface:'#fff2d9' }
 }
 export const styles = StyleSheet.create({
-  page: { flex: 1 }, content: { padding: 20, gap: 24, width: '100%', maxWidth: 600, alignSelf: 'center', paddingBottom: 32 },
+  page: { flex: 1 }, content: { padding: 20, gap: 20, width: '100%', maxWidth: 600, alignSelf: 'center', paddingBottom: 32 },
   title: { fontSize: 26, lineHeight: 34, fontWeight: '600', letterSpacing: -.5 }, heading: { fontSize: 18, lineHeight: 26, fontWeight: '600' },
   body: { fontSize: 15, lineHeight: 23 }, hint: { fontSize: 13, lineHeight: 20 }, label: { fontSize: 14, lineHeight: 21, fontWeight: '500' },
   section: { paddingVertical: 16, gap: 12 }, row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
 export function Screen({ children, scroll = true }: { children: React.ReactNode; scroll?: boolean }) {
   const c = useColors()
   return <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.page, { backgroundColor: c.bg }]}>
-    <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
       {scroll ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>{children}</ScrollView> : children}
     </KeyboardAvoidingView>
   </SafeAreaView>
@@ -49,6 +50,7 @@ export function Notice({ message, error = false }: { message: string; error?: bo
   return <Text accessibilityRole={error ? 'alert' : undefined} accessibilityLiveRegion="polite" style={[styles.body, { color: error ? c.error : c.primary }]}>{message}</Text>
 }
 export function Loading() { const c = useColors(); return <ActivityIndicator size="large" color={c.primary} accessibilityLabel="Loading records" /> }
-export function Status({ value }: { value?: string }) {
-  const c = useColors(); return <Text style={[styles.label, { color: value === 'Normal' || value === 'Validated' ? c.normal : value === 'High Potential' || value === 'Flagged' ? c.high : c.muted }]}>{value || 'Pending'}</Text>
+export function Status({ value, prefix }: { value?: string; prefix?: string }) {
+  const c = useColors(),normal=value==='Normal'||value==='Validated',high=value==='High Potential'||value==='Flagged'
+  return <Text style={{alignSelf:'flex-start',borderRadius:6,paddingHorizontal:8,paddingVertical:4,fontSize:12,lineHeight:18,fontWeight:'500',overflow:'hidden',color:normal?c.normal:high?c.high:c.muted,backgroundColor:normal?c.normalSurface:high?c.highSurface:c.soft}}>{prefix?prefix+': ':''}{value || 'Pending'}</Text>
 }

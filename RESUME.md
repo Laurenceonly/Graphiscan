@@ -1,3 +1,118 @@
+## Active continuation — 2026-10-23
+
+User agreed to proceed, then chose an emulator and confirmed Android Studio is
+already installed. Used that SDK/JBR, installed Android16/API36 Google APIs
+x86_64, created GraphiScan_Pixel_6 and installed official Expo Go58.0.5.
+The emulator is running on emulator-5554. Native login rendered in light/dark
+and dark font_scale1.3. Keyboard recapture exposed covered actions;
+SignInPanel/shared Screen now use Android height behavior and the native recapture
+shows password/sign-in above the actual keyboard. Final TypeScript/Hermes export
+passed1295 modules/19 assets/3.4MB, not APK. No agent-entered credentials or
+sign-in submission. User subsequently reported successful private emulator
+sign-in after waiting. Role is requested for the next workflow check; no role,
+onboarding, directory/write or Storage completion is implied. Public API health
+returned200 in1.31s and emulator DNS/ping succeeded; the original sign-in delay
+was not timed and its cause is unconfirmed.
+Metro runs in exec session82600 on8081 with hosted HTTPS API defaults. New
+npm run preview:android fixes confirmed IPv6-only localhost binding with an
+IPv4-first child Node process; status and Android manifest returned200. Native
+bundle loaded1394 modules. Browser preview5174 remains separate and available.
+
+Final11 fictional browser directory checks passed, closing picker-theme recapture.
+TypeScript,18 mobile and19 shared tests passed. Directory design notes extended;
+dist-android is now ignored. Source remains on feat/expo-design-refinement,
+ready for a source checkpoint; publication remains pending. Native login appearance
+smoke checks and user-confirmed hosted sign-in are complete at that scope.
+Next is controlled role/directory/onboarding verification after saving source.
+Known development limitation: font-scale/configuration reload triggered a runtime
+EventEmitter error in expo-modules-core; fresh Expo Go process recovered. The
+underlying cause and standalone native-build behavior are unverified. Preserve
+pending-write recovery state before restarting; none exists in this login session.
+Full role/device/native design approval, model hosting, real privacy publication,
+historical data, physical Android/APK and paper gates remain open. Overall60–65%.
+
+## Latest checkpoint — 2026-10-23
+
+Latest user request: reviewed requirements/plan and asked overall progress and
+remaining work. Recorded approximately60–65% full-project engineering estimate
+in CURRENT_REQUIREMENTS.md, with workstream evidence and remaining gates.
+Corrected stale schema-through019/apply021 summaries in the checklist/plan.
+Documentation/Git-status review only; no runtime tests, mutations, commit or
+deployment. Immediate unfinished slice remains Expo theme recapture/UI review
+and design-doc extension; hosted roles/admin, model, data, privacy, Android/APK
+and paper evidence remain open. Current schema is through021; no rerun needed.
+
+User steering: asked about design skills, then explicitly requested Scrollcraft
+installation for website work. Installed upstream nateherkai/scroll-craft commit
+75d81f74e83692add18cd7a8a8e078b8a887a579 into user-level Codex skills, all24 hashes
+verified. Skill available next turn; no website build/media generation/deploy ran.
+Source folder is retained under ignored .local-tools/scroll-craft-install-20261023.
+
+Before that steering, resumed active migration goal and added hosted Expo
+student create/edit plus server search/school/grade filters. See new HostedStudents,
+HostedStudentEditor, HostedDirectoryControls, core/hosted-directory and shared
+directory-submission files. Preserve teacher/server ownership and scoped guardian
+options. New native picker is installed.18 mobile/19 shared tests,607 contract/
+507 isolated SQL checks, TypeScript, Android export1295 modules and Vue user
+build passed.11 fictional browser workflows/views passed; zero real writes.
+Applied explicit picker surface/background fix after spotting white dropdowns in
+the dark browser preview; final theme recapture and source design-doc extension
+remain. Python runtime unavailable; backend Python source/checks were unchanged.
+
+Working branch remains feat/expo-design-refinement at HEADd69ed3e. All earlier
+UI work and this slice are uncommitted; nothing staged/pushed/merged/deployed.
+Next: follow user website steering with Scrollcraft; when resuming migration,
+finish the small theme recapture/docs checkpoint then actual authorized hosted/
+native validation. Do not rerun SQL020/021. All model/privacy/historical-data/
+manuscript/APK and credential gates remain open.
+
+---
+
+## Saved checkpoint — resume2026-10-23
+
+User requested: finish this slice, save the checkpoint, and commit tomorrow.
+No git add, commit, push, PR merge or deployment was performed in this slice.
+Working branch: `feat/expo-design-refinement`; HEAD `d69ed3e` (includes PR#8 proxy fix).
+
+Finished locally: logo-led white/royal-blue login, shared native workspace layout,
+student/grade context, model/review separation, native tab indicators and feed-style
+skeletons with reduced-motion/lifecycle fallback. DESIGN.md and design.json match
+source. Last TypeScript and Android Hermes export passed (1281 modules,19 assets,
+3.4MB bundle, not an APK). Final29 fictional browser states fit with no pageerrors;
+four final login sizes/themes fit after logo-corner fix, password visibility toggled
+and masking restored without submitting. No real writes. adb devices found0.
+
+Preview: `npm.cmd run preview` from `graphiscan/mobile-app`, then
+http://localhost:5174. It was left running; restart it if needed.
+
+Tomorrow: review the current local login/UI with the user, inspect the diff and
+PR#8 state, then stage only source/docs/assets and commit/push this branch as
+requested. Keep generated output, screenshots, local tools, question/roll data and
+private settings ignored. No SQL migration is needed. Native Impeccable finish
+review remains **recapture** until actual Android phone captures are available;
+real role/model/privacy/Storage workflows and APK/release gates remain separate.
+
+---
+
+Current work2026-10-22: Expo design on local/uncommitted feat/expo-design-refinement.
+User wants white/blue, clean/professional, better composition; user rejected the
+plain-white and blue-header login drafts. Latest instruction: inspect all visible
+cards at https://dribbble.com/search/mobile-ui-login and choose the fit directly.
+48 thumbnails downloaded/visually compared under ignored .local-tools, four
+shortlisted images inspected full size. Latest proposed login is centered logo-led
+white, with tinted fields and royal blue matching the supplied logo (#095df1).
+It awaits user visual feedback. Workspace rows/Home/details/profile/native tabs and
+Reanimated skeletons are implemented. TypeScript/native export passed and latest
+29 fictional browser captures fit with no page errors, including reduced motion.
+Native Impeccable verdict recapture remains because no Android device/AVD captures
+exist. DESIGN.md/design.json describe source, with rejected login distinguished.
+Latest29 fictional browser captures fit and active/reduced-motion behavior was
+checked; source-derived DESIGN.md/design.json are reconciled. Let user review the
+current design locally; next native gate requires device/emulator captures.
+No new commit/push/deployment. PR#8 proxy fix remains open; branch includes it.
+No real writes or new SQL;020/021 do not need rerunning. Full native/model/privacy/
+historical data/manuscript and hosted account-action gates remain open.
+
 Local preview fix2026-10-22: use npm.cmd run preview from graphiscan/mobile-app and http://localhost:5174. Opt-in Metro proxy fixes browser-origin blockage; actual credential-free browser API probe passed. Native HTTPS defaults and production CORS are unchanged. Real sign-in still needs user verification.
 
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS

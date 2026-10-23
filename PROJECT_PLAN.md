@@ -1,3 +1,46 @@
+Continuation2026-10-23: final11 fictional directory browser checks,18 mobile/
+19 shared tests and TypeScript passed. Picker-theme recapture and directory
+design extension are complete. Existing Android Studio now runs a new API36
+GraphiScan_Pixel_6 emulator with Expo Go58.0.5; native login light/dark rendered.
+New preview:android launcher resolves the observed IPv6 Metro/IPv4 adb mismatch.
+Native login at dark font_scale1.3 fits. Android height keyboard avoidance fixed
+covered password/sign-in controls and native recapture confirms their visibility.
+Final TypeScript/Android export passed1295 modules. Expo Go configuration reload
+can fail with EventEmitter startup error; fresh process recovers, cause unverified.
+User confirmed private native hosted sign-in after a wait; role/workflow evidence
+is separate. Original delay cause/timing was not captured.
+Native role workflows, physical-device/APK and all model/data/privacy/paper gates
+remain open; this is initial emulator evidence, not a native release. Overall60–65%.
+
+Progress review2026-10-23: approximately60–65% of the full project, as an
+engineering estimate rather than a measured task score. See the workstream
+table in CURRENT_REQUIREMENTS.md. Current schema through021 is applied and the
+last required hosted preflight passed38 checks; no new numbered migration is
+prepared. Local Expo create/edit/filter source is implemented. Remaining work:
+final UI/theme review and source publication; real hosted admin/onboarding/role/
+Storage workflows; model-capable hosting and three-class evidence; historical
+record/image reconciliation and rollback; Android device/APK checks; approved
+privacy and final manuscript/deck/diagrams. This was a documentation/Git-status
+review, with no new runtime checks or live mutations.
+
+Continuation2026-10-23: hosted native student create/edit and server directory
+filters are implemented and locally checked. Real hosted/device proof remains
+open; a final native-picker theme recapture is pending. User now requested
+Scrollcraft installation for website work: upstream skill installed/24 hashes
+verified, available next turn. No new SQL, live record writes or publication.
+
+Current Expo design2026-10-22: workspace/skeleton source is implemented locally;
+latest logo-led login awaits user visual feedback after the full Dribbble comparison.
+TypeScript/native Hermes export passed;29 fictional browser states fit, including
+reduced-motion skeletons. Impeccable finish review requires Android recapture;
+no device/APK/native approval yet. School grouping/filtering and student-creation
+parity, model hosting, actual scoped role workflows and release evidence remain
+open. No SQL020/021 rerun is needed. See newest CHANGELOG for exact evidence.
+User checkpoint: finish this local design slice, save it and commit tomorrow.
+No staging/commit/push/merge/deployment ran. Next session reviews the current UI,
+checks PR#8 state and saves source through feat/expo-design-refinement. Native
+device captures remain the Impeccable finish-review gate.
+
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
 and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,
@@ -379,9 +422,9 @@ The manuscript source and presentation deck are not in this workspace. The minut
 - AI-generated recommendations are no longer produced or displayed in current source. Remove the obsolete database column and any older stored values during migration; expert-authored observations may remain, clearly attributed to the expert.
 - The same account, student, screening, result, and expert-validation rules must apply to the admin website, mobile app, and API. The API is the authority.
 - The older Flask-rendered routes remain reachable in source, so changes to shared behavior must cover or retire those routes before deployment.
-# Current migration checkpoint2026-10-22
+# Superseded migration checkpoint2026-10-22
 
-020 installed: function installation/security/grants verified read-only. Assignment
-table protection remains blocked by leftover Supabase TRUNCATE/REFERENCES/TRIGGER
-grants;021 is prepared to revoke them. Apply021 and rerun the required preflight
-before deploying the matching assignment-access API/admin. No data mutation ran.
+The earlier020 privilege gap was resolved by user-applied021. The last required
+hosted preflight passed38 checks and matching assignment API/admin source was
+published in merged PR#5. Do not rerun020/021. Actual authenticated assignment
+behavior and historical-data/image cutover remain separate open checks.
