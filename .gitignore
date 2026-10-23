@@ -21,6 +21,7 @@ graphiscan/config.py
 **/.pytest_cache/
 **/node_modules/
 **/dist/
+**/dist-android/
 **/dist-ssr/
 **/build/
 **/.vercel/
@@ -32,6 +33,10 @@ graphiscan/config.py
 /.local-backups/
 /.playwright-cli/
 /output/playwright/
+/.impeccable/config.local.json
+/.impeccable/questions/
+/.impeccable/review/
+/.impeccable/mocks/
 
 # Private uploads, datasets, and generated ML artifacts
 graphiscan/static/uploads/

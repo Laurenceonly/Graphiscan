@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useColors } from './ui'
 
 type Props = {
   email: string; password: string; busy: boolean; error: string; notice?: string
@@ -13,60 +14,58 @@ type Props = {
 export default function SignInPanel({ email, password, busy, error, notice, onEmail, onPassword, onSubmit, onForgotPassword }: Props) {
   const [visible, setVisible] = useState(false)
   const [focused, setFocused] = useState<'email' | 'password' | null>(null)
+  const c = useColors(), dark=useColorScheme()==='dark'
   useEffect(() => { if (!password) setVisible(false) }, [password])
   const disabled = busy || !email.trim() || !password
-  return <SafeAreaView style={s.page}>
-    <StatusBar style="dark" />
-    <KeyboardAvoidingView style={s.page} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+  return <SafeAreaView edges={['top','bottom']} style={[s.page,{backgroundColor:c.surface}]}>
+    <StatusBar style={dark?'light':'dark'} />
+    <KeyboardAvoidingView style={[s.page,{backgroundColor:c.surface}]} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}>
-        <View style={s.brand} accessible accessibilityLabel="GraphiScan">
-          <Image source={require('../assets/graphiscan-logo.png')} style={s.logo} resizeMode="contain" accessible={false} />
-          <Text style={s.wordmark}>Graphi<Text style={s.accent}>Scan</Text></Text>
+        <View style={s.brandRegion}>
+          <View style={s.brand} accessible accessibilityLabel="GraphiScan">
+            <Image source={require('../assets/graphiscan-logo.png')} style={s.logo} resizeMode="contain" accessible={false} />
+            <Text style={[s.wordmark,{color:c.text}]}>Graphi<Text style={{color:c.primary}}>Scan</Text></Text>
+          </View>
         </View>
         <View style={s.main}>
-          <View style={s.intro}>
-            <Text accessibilityRole="header" style={s.title}>Welcome back</Text>
-            <Text style={s.subtitle}>Sign in to your account.</Text>
-          </View>
+          <Text accessibilityRole="header" style={[s.title,{color:c.text}]}>Sign in to your account</Text>
           <View style={s.form}>
             <View style={s.field}>
-              <Text style={s.label}>Email address</Text>
-              <View style={[s.inputFrame, focused === 'email' && s.focused]}>
-                <MaterialIcons name="mail-outline" size={20} color="#77869a" accessible={false} />
+              <Text style={[s.label,{color:c.text}]}>Email address</Text>
+              <View style={[s.inputFrame,{backgroundColor:c.bg,borderColor:focused==='email'?c.primary:c.border}]}>
                 <TextInput accessibilityLabel="Email address" value={email} onChangeText={onEmail}
-                  placeholder="Enter your email" placeholderTextColor="#98a2b3" keyboardType="email-address"
+                  placeholder="Enter your email" placeholderTextColor={c.muted} keyboardType="email-address"
                   autoCapitalize="none" autoCorrect={false} autoComplete="email" textContentType="username"
-                  editable={!busy} style={s.input} onFocus={() => setFocused('email')} onBlur={() => setFocused(null)} />
+                  editable={!busy} style={[s.input,{color:c.text}]} onFocus={() => setFocused('email')} onBlur={() => setFocused(null)} />
               </View>
             </View>
             <View style={s.field}>
-              <Text style={s.label}>Password</Text>
-              <View style={[s.inputFrame, focused === 'password' && s.focused]}>
-                <MaterialIcons name="lock-outline" size={20} color="#77869a" accessible={false} />
+              <Text style={[s.label,{color:c.text}]}>Password</Text>
+              <View style={[s.inputFrame,{backgroundColor:c.bg,borderColor:focused==='password'?c.primary:c.border}]}>
                 <TextInput accessibilityLabel="Password" value={password} onChangeText={onPassword}
-                  placeholder="Your password" placeholderTextColor="#98a2b3" secureTextEntry={!visible}
+                  placeholder="Enter your password" placeholderTextColor={c.muted} secureTextEntry={!visible}
                   autoCapitalize="none" autoCorrect={false} autoComplete="current-password" textContentType="password"
-                  editable={!busy} style={s.input} onSubmitEditing={onSubmit} returnKeyType="go"
+                  editable={!busy} style={[s.input,{color:c.text}]} onSubmitEditing={onSubmit} returnKeyType="go"
                   onFocus={() => setFocused('password')} onBlur={() => setFocused(null)} />
                 <Pressable accessibilityRole="button" accessibilityLabel={visible ? 'Hide password' : 'Show password'}
                   accessibilityState={{ disabled: busy }} disabled={busy}
                   onPress={() => setVisible(value => !value)} style={s.eye}>
-                  <MaterialIcons name={visible ? 'visibility-off' : 'visibility'} size={20} color="#77869a" accessible={false} />
+                  <MaterialIcons name={visible ? 'visibility-off' : 'visibility'} size={20} color={c.muted} accessible={false} />
                 </Pressable>
               </View>
             </View>
-            {!!notice && <Text accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}
-            {!!error && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={s.error}>{error}</Text>}
+            {!!notice && <Text accessibilityLiveRegion="polite" style={[s.notice,{color:c.primary}]}>{notice}</Text>}
+            {!!error && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={[s.error,{color:c.error}]}>{error}</Text>}
             <Pressable accessibilityRole="button" accessibilityLabel={busy ? 'Signing in...' : 'Sign in'}
               accessibilityState={{ disabled, busy }} disabled={disabled} onPress={onSubmit}
-              style={({ pressed }) => [s.submit, pressed && { backgroundColor: '#104d79' }, busy && { opacity: .65 }]}>
-              <Text style={s.submitLabel}>{busy ? 'Signing in...' : 'Sign in'}</Text>
+              style={({ pressed }) => [s.submit,{backgroundColor:pressed?c.brandPressed:c.brand,opacity:disabled ? .7 : 1}]}>
+              <Text style={[s.submitLabel,{color:c.onBrand}]}>{busy ? 'Signing in...' : 'Sign in'}</Text>
             </Pressable>
             {onForgotPassword && <Pressable accessibilityRole="button" disabled={busy} onPress={onForgotPassword} style={s.forgot}>
-              <Text style={s.forgotLabel}>Forgot password?</Text>
+              <Text style={[s.forgotLabel,{color:c.primary}]}>Forgot password?</Text>
             </Pressable>}
           </View>
-          <Text style={s.privacy}>For your privacy, restarting the app requires signing in again.</Text>
+          {!onForgotPassword&&<Text style={[s.help,{color:c.muted}]}>Need help signing in?{ '\n' }Contact your administrator.</Text>}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -74,28 +73,25 @@ export default function SignInPanel({ email, password, busy, error, notice, onEm
 }
 
 const s = StyleSheet.create({
-  page: { flex: 1, backgroundColor: '#fff' },
-  content: { flexGrow: 1, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 32, width: '100%', maxWidth: 600, alignSelf: 'center' },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logo: { width: 36, height: 36 },
-  wordmark: { fontSize: 22, fontWeight: '700', letterSpacing: -.6, color: '#101828' },
-  accent: { color: '#145c8f' },
-  main: { flexGrow: 1, justifyContent: 'center', paddingTop: 54, paddingBottom: 88 },
-  intro: { alignItems: 'center', gap: 10, marginBottom: 34 },
-  title: { fontSize: 26, lineHeight: 34, fontWeight: '600', letterSpacing: -.5, color: '#101828', textAlign: 'center' },
-  subtitle: { fontSize: 15, lineHeight: 23, color: '#667085', textAlign: 'center' },
-  form: { gap: 22 },
+  page: { flex: 1 },
+  content: { flexGrow: 1, justifyContent:'center',paddingHorizontal:28,paddingVertical:32,gap:36,width: '100%', maxWidth: 460, alignSelf: 'center' },
+  brandRegion: { alignItems:'center' },
+  brand: { alignItems: 'center', gap: 4 },
+  logo: { width: 80, height: 80, borderRadius:20 },
+  wordmark: { fontSize: 28,lineHeight:36,fontWeight: '700', letterSpacing: -.6 },
+  main: { gap:24 },
+  title: { fontSize: 22, lineHeight: 30, fontWeight: '600', letterSpacing: -.3,textAlign:'center' },
+  form: { gap: 20 },
   field: { gap: 9 },
-  label: { color: '#344054', fontSize: 14, lineHeight: 21, fontWeight: '500' },
-  inputFrame: { flexDirection: 'row', alignItems: 'center', minHeight: 52, paddingLeft: 14, gap: 11, borderWidth: 1, borderColor: '#dce1e8', borderRadius: 10, backgroundColor: '#fff' },
-  focused: { borderColor: '#145c8f' },
-  input: { flex: 1, minWidth: 0, height: 50, paddingVertical: 12, paddingRight: 12, color: '#101828', fontSize: 16 },
-  eye: { width: 44, height: 50, alignItems: 'center', justifyContent: 'center' },
-  submit: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: 52, backgroundColor: '#145c8f', borderRadius: 10, marginTop: 2, paddingHorizontal: 18 },
-  submitLabel: { color: '#fff', fontSize: 14, fontWeight: '500', lineHeight: 21 },
+  label: { fontSize: 14, lineHeight: 21, fontWeight: '500' },
+  inputFrame: { flexDirection: 'row', alignItems: 'center', minHeight: 56, paddingLeft: 16, borderWidth: 1, borderRadius: 12 },
+  input: { flex: 1, minWidth: 0, minHeight: 54, paddingVertical: 14, paddingRight: 12, fontSize: 16 },
+  eye: { width: 48, minHeight: 54, alignItems: 'center', justifyContent: 'center' },
+  submit: { alignItems: 'center', justifyContent: 'center', minHeight: 56,borderRadius: 12, marginTop: 4, paddingHorizontal: 18 },
+  submitLabel: { fontSize: 15, fontWeight: '600', lineHeight: 22 },
   error: { color: '#a72535', fontSize: 13, lineHeight: 20 },
   notice: { color: '#145c8f', fontSize: 13, lineHeight: 20 },
-  privacy: { marginTop: 28, paddingHorizontal: 10, color: '#8590a2', fontSize: 11, lineHeight: 18, textAlign: 'center' },
-  forgot: { minHeight: 44, alignItems: 'center', justifyContent: 'center', marginTop: -12 },
+  help: { fontSize:13,lineHeight:21,textAlign:'center' },
+  forgot: { minHeight: 48, alignItems: 'center', justifyContent: 'center', marginTop: -12 },
   forgotLabel: { color: '#145c8f', fontSize: 13, fontWeight: '500' },
 })

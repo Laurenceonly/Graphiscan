@@ -8,6 +8,35 @@ publication is pending, and historical MySQL data/image transfer is incomplete.
 No additional numbered migration is currently prepared. Do not rerun020/021.
 # GraphiScan current requirements and next steps
 
+## Overall progress review — 2026-10-23
+
+Full-project progress is approximately **60–65%**, an engineering estimate from
+the requirements and recorded evidence, not a measured task-completion score.
+It includes remaining model, historical-data, native-device, release and paper
+work. Manuscript/deck completion is unverified; earlier 32–56% checkpoints describe
+earlier states. Local implementation and fictional checks receive partial credit;
+they do not establish a completed hosted or Android workflow.
+
+| Workstream | Established so far | Remaining completion work |
+| --- | --- | --- |
+| Admin web | Published refined Vue admin; actual fictional-account create/edit/disable/reactivate and membership changes observed | Hosted reset/unused-delete, permissions, assignment/eligibility and audit walkthrough |
+| Supabase/API/accounts | Migrations through021 applied; last hosted restricted preflight passed38 checks; scoped API, issuance and onboarding source | Real issued-user/role/Storage verification and approved real-use privacy publication; no new numbered migration currently prepared |
+| Expo | Hosted login/gates, role Home/tabs, records, skeletons and teacher student create/edit/filter source; final11 fictional browser directory checks/design extension complete; native login light/dark/large-text and keyboard checks; user-confirmed native hosted sign-in | Remaining parity, native role/UI/hosted verification, configuration-reload failure investigation, physical-device and APK release; source publication pending |
+| Models/screening | Three binary architectures evaluated locally on136 images and integrated in the versioned runtime/catalogue | Free model-capable host, actual hosted screening and the planned evaluated three-class task; public Render inference is disabled |
+| Historical data | Earlier backup/restore evidence and migration design available | Recover authoritative source, map identities, import/reconcile records and private images, rehearse rollback; MySQL repair remains paused |
+| Integration/release | Isolated role/SQL/client checks and Android JavaScript export available | Full teacher upload → expert review → parent release → Follow-up history, concurrency/recovery/access checks, measured targets and physical Android APK verification |
+| Manuscript/presentation | Requirements, runbooks, model evidence and defense-action mapping available | Verify editable paper/deck revisions, objectives, literature, WBS/methodology, use cases, DFD/CFD, final screenshots and measured nonfunctional claims |
+
+Current order: finish the native login smoke checks and save the Expo checkpoint, then complete controlled
+hosted admin/onboarding/role checks and model hosting, followed by the full core
+workflow and Android release. Historical-data and paper work remain required and
+can progress independently when their source/approval inputs are available.
+Scrollcraft is installed; no Scrollcraft website build is claimed or required
+to count the existing application work as complete.
+
+This review read documentation and Git status only. It did not rerun runtime
+checks, inspect authenticated production state, apply SQL, commit or deploy.
+
 Reviewed 2026-10-22 against all35 project Markdown files present before this
 audit, the latest session evidence and the OpenAPI operation declarations.
 Dependencies, generated output, local tools and skill documentation are excluded.
@@ -50,7 +79,7 @@ updating stale optional-migration mocks. Other release gaps below remain open.
 | Supabase | Schema through021 applied; last required preflight passed38 checks | Historical MySQL record/image import, identity mapping, reconciliation and rollback |
 | Accounts | Issuance, guarded edits, reset/delete/onboarding source; assignment-access API/admin published in PR#5 | Hosted eligibility use, new issued-user onboarding, approved real-use agreement and scoped permission verification |
 | Models | Three binary architectures locally reevaluated on136 test images; catalogue publication checker previously passed12 checks | Free inference host, hosted execution, three-class dataset/evaluation and final deployment |
-| Expo | Hosted HTTPS default, branded onboarding, role-aware Home/tabs and refined read screens; TypeScript and Android bundle export passed; fictional layout review | Real hosted/device checks, hosted student-creation parity, model-enabled upload; no APK generated/released |
+| Expo | Hosted HTTPS default/onboarding, role Home/tabs, scoped search/school/grade filters and teacher Add/Edit source; TypeScript/Android export and fictional workflow checks passed | Real hosted/device checks of new directory flow, remaining Vue parity and model-enabled upload; no APK generated/released |
 | Documentation | Requirements, contracts, runbooks and proposed privacy text available | Editable manuscript/deck, approved wording, diagram revisions and final measured nonfunctional evidence |
 
 Admin: https://graphiscan-admin.vercel.app/login
@@ -143,8 +172,9 @@ engineering aid, with APK/device evidence required for mobile completion.
    screenshots/model tables. Manuscript, diagrams, slides and approved privacy
    wording can progress alongside independent engineering work when supplied.
 
-The immediate implementation priority is item1; Expo follows it. Steps describe
-planned work, not newly authorized test/account mutations or completed behavior.
+The 2026-10-23 progress review above supersedes this earlier scheduling priority:
+Expo is already in progress, while hosted admin verification remains open.
+Steps describe planned work, not completed behavior or new account mutations.
 
 ## Markdown coverage
 

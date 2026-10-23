@@ -1,3 +1,59 @@
+Expo/native continuation2026-10-23: final11 fictional directory browser checks,
+18 mobile/19 shared tests and TypeScript passed. Dark picker recapture is closed;
+directory design notes are extended. Existing Android Studio SDK now has an
+Android16/API36 Google APIs x86_64 GraphiScan_Pixel_6 emulator and Expo Go58.0.5.
+Native login rendered in light/dark and at dark font_scale1.3. Native keyboard
+coverage exposed hidden login actions; Android KeyboardAvoidingView height is
+now enabled in SignInPanel/shared Screen and recaptured with actions above IME.
+Final TypeScript/Hermes export passed1295 modules/19 assets/3.4MB, not an APK.
+Expo Go configuration reload produced an expo-modules-core EventEmitter startup
+failure; fresh-process recovery worked, underlying cause remains unverified.
+User reported successful private emulator sign-in after waiting; role and wider
+workflow evidence remain open. Public health200 in1.31s/emulator DNS and ping
+passed. The original delay was not captured; cold start is unconfirmed.
+npm run preview:android uses IPv4-first
+localhost on8081, fixing a reproduced ::1-only Metro/adb reverse mismatch;
+IPv4 status/native manifest200 and1394-module native bundle observed. Native
+role/onboarding/Storage, camera, APK and physical-device checks remain separate.
+No real writes, new SQL or hosted inference change. Progress estimate60–65%.
+
+Progress assessment2026-10-23: requirements/plan/defense minutes/checkpoints and
+Git status reviewed. Full-project estimate approximately60–65%, not a measured
+completion score. CURRENT_REQUIREMENTS.md records established work and remaining
+model/data/hosted/native/release/paper evidence. Earlier percentage and pending
+SQL notes are historical; through021 is applied with the last38-check hosted
+preflight passing. No new tests, authenticated production checks or mutations
+ran for this review. Latest Expo source remains local/uncommitted.
+
+Current continuation2026-10-23: hosted Expo student create/edit and server
+search/school/grade filters are implemented locally through existing v1 routes.
+Scoped school/guardian options, teacher ownership, exact creation retry and
+revision/read reconciliation are preserved.18 mobile/19 shared tests,607 contract/
+507 isolated SQL checks, TypeScript, Android export and Vue user build passed.
+Eleven fictional browser views/workflows passed; native-picker dark-preview theme
+fix was applied afterward and still needs recapture. Native/real hosted mutation
+evidence remains open; no new SQL or live writes. Python is currently unavailable.
+User then requested Scrollcraft for website work. Installed the upstream full
+skill at C:/Users/MY_PC/.codex/skills/scroll-craft, commit75d81f7,24 file hashes
+verified. It is available next turn; no Scrollcraft website has been built yet.
+
+Current Expo design2026-10-22: local/uncommitted feat/expo-design-refinement adds
+role Home/recent records, consistent native rows/type/spacing, student name/grade
+context, selected-tab pills, account/profile/detail refinements and source design
+documentation. Initial loads use Reanimated skeletons with static reduced-motion
+fallback; refresh keeps loaded content. Native export and TypeScript passed;
+29 fictional browser previews had no document overflow/page errors, and reduced
+motion removed the pulse. After comparing all48 visible Dribbble cards, the latest
+login uses a centered supplied logo and white form with the actual logo's royal
+blue (#095df1); it awaits user visual feedback. Fresh Impeccable verdict is recapture because
+Android device/emulator captures are missing; no native approval/APK is claimed.
+Defense minutes were reread; native school grouping/filtering, student creation,
+hosted role/model/privacy/data/release gates remain open. No real writes/new SQL.
+User asked to save the checkpoint and commit tomorrow. Current slice is finished
+locally; no staging, commit, push, merge or deployment occurred. RESUME.md is the
+next-session handoff. Four final login recaptures and final typecheck/native export
+passed after the logo corner fix. Impeccable still requires native Android captures.
+
 Local preview fix2026-10-22: use npm.cmd run preview from graphiscan/mobile-app and http://localhost:5174. Opt-in Metro proxy fixes browser-origin blockage; actual credential-free browser API probe passed. Native HTTPS defaults and production CORS are unchanged. Real sign-in still needs user verification.
 
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
