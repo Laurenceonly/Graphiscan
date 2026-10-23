@@ -311,11 +311,33 @@ Action and student rows have 16-unit padding and a flexible two-line text column
 
 ### Loading skeletons
 
+Coverage extension2026-10-23: choice rows echo student/model selectors, field
+placeholders reserve the52-unit native control, image placeholders reserve300
+units, and heading bars cover dependent student-name reads. Initial hosted and
+legacy lists/history/details, agreement, choices, schools, eligible parents and
+private images use the same feed-style vocabulary. New dependency scopes clear
+the old display before loading; refresh retains current content and its ordinary
+refresh feedback. Save/sign-in/upload actions retain truthful progress labels.
+Fourteen fictional browser views/workflows passed, including dark320 and reduced
+motion. These captures do not establish all native/legacy runtime behavior.
+
 Initial Home records, student lists, screening/history lists, detail records and the agreement gate use the dedicated skeleton color for placeholder bars and avatars on a surface backing. Student lists show three rows with a 40-unit avatar placeholder; screening lists show two rows with a 36-unit avatar and adjacent text placeholders; detail and agreement use one group. Groups use the group radius and clipped contents; each row has padding 16 and gap 12. Bars use the skeleton-bar radius, with default height 14 and local heights 12, 16, 18 and 26 to echo text and status shapes. Widths describe a placeholder pattern rather than real data. A visible loading label, busy progressbar semantics and polite live region announce the state; the decorative bars are hidden from accessibility traversal.
 
 Reanimated (4.7.1) and Worklets (0.13.0), matched to the installed Expo SDK, support the requested pulse. The source animates opacity only: 0% and 100% at 0.5, 50% at 1, duration 1400ms, ease-in-out, repeating. Static opacity is 0.75 until the accessibility preference resolves, when reduced motion is enabled, when the app is not active or when its screen is unfocused. Accessibility and AppState listeners are cleaned up. No layout motion, shimmer gradient, animated dummy content or native performance claim is established. Existing records remain visible while refreshing; FlatList refresh remains native. Other action-level loading indicators retain their native spinner behavior.
 
 The sidecar's self-contained HTML/CSS components are browser translations for the design panel. They resolve the React Native JS colors to literals and show the actual visual relationships. Native icons, ripple, safe-area calculations, font rendering and control behavior require the app runtime. Browser focus-visible outlines in those samples are panel accessibility affordances, not new native design tokens.
+
+### Sign-out confirmation
+
+Manual sign-out uses SignOutAction and a native Modal, with a dialog-labelled
+surface, heading, explanation and Cancel/Sign out actions. The shared surface
+palette, group radius and24-unit padding retain the existing visual system;
+a48%-black scrim separates the dialog from the underlying page. Width is fluid
+with24-unit outer inset, maximum420 and a scrolling90%-height cap. It appears
+without authored motion. Cancel, Escape and Android Back dismiss it; only the
+confirmation calls logout. Recovery forms explain their draft loss. Forced
+session expiry/recovery bypasses confirmation. Browser Cancel/Escape, draft
+retention and exactly-once confirmation passed; native modal/Back remain open.
 
 ## Do's and Don'ts
 

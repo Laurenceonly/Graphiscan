@@ -10,6 +10,11 @@ No additional numbered migration is currently prepared. Do not rerun020/021.
 
 ## Overall progress review — 2026-10-23
 
+Follow-up: user confirmed emulator pages work. Logout confirmation and expanded
+feed-style loading states are implemented locally; TypeScript,18 mobile/19 shared
+tests,14 fictional UI checks and Android export passed. Native modal/Back review
+remains open; no hosted logout/write or full role-workflow completion is implied.
+
 Full-project progress is approximately **60–65%**, an engineering estimate from
 the requirements and recorded evidence, not a measured task-completion score.
 It includes remaining model, historical-data, native-device, release and paper

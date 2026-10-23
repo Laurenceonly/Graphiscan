@@ -7,7 +7,8 @@ import { useSession } from '../session'
 import { useRecords } from '../use-records'
 import { legacyPercent, dateLabel, screeningType } from '../core/presentation'
 import { exportImage } from '../export-image'
-import { Body, Button, Field, Heading, Loading, Notice, Screen, Status, styles } from '../ui'
+import { Body, Button, Field, Heading, Notice, Screen, Status, styles } from '../ui'
+import LoadingSkeleton from '../LoadingSkeleton'
 
 export function ResultScreen({ route }: { route: { params: { id: string } } }) {
   const { api, user } = useSession(), navigation = useNavigation<NativeStackNavigationProp<RootRoutes>>()
@@ -47,13 +48,13 @@ export function ResultScreen({ route }: { route: { params: { id: string } } }) {
     catch (e) { setImageError((e as Error).message) }
     finally { setImageBusy(false) }
   }
-  return <Screen>{record.loading && <Loading />}<Notice error message={record.error} />
+  return <Screen>{record.loading && !result && <LoadingSkeleton kind="detail"/>}<Notice error message={record.error} />
     {result && <><Heading>{result.student_name}</Heading><Body muted>{dateLabel(result.date_generated)} · {result.grade_level || 'Grade not recorded'}</Body>
       <Body>{screeningType(result.report_type)}</Body><Status value={result.classification} /><Body>Reported-class model score: {legacyPercent(result.confidence_score)}</Body>
       <Body>High Potential model score: {legacyPercent(result.dysgraphia_probability)}</Body>
       <Body muted>These are model scores, not a clinical probability or diagnosis.</Body><Status value={result.validation_status} />
       <Button label={imageBusy ? 'Loading image…' : image ? 'Reload handwriting image' : 'View handwriting image'} icon="image" secondary disabled={imageBusy} onPress={loadImage} />
-      <Notice error message={imageError} />{image ? <Image source={{ uri: image }} accessibilityLabel="Handwriting sample for this screening" resizeMode="contain" style={{ width: '100%', height: 320 }} /> : null}
+      <Notice error message={imageError} />{imageBusy&&!image&&<LoadingSkeleton kind="image"/>}{image ? <Image source={{ uri: image }} accessibilityLabel="Handwriting sample for this screening" resizeMode="contain" style={{ width: '100%', height: 320 }} /> : null}
       <Button label="Save handwriting image" secondary disabled={imageBusy} onPress={saveImage} />
       <Heading>Expert review</Heading><Body>Reviewed by: {result.expert_name || 'Not yet reviewed'}</Body>
       <Body>Remarks: {result.remarks || 'Not recorded'}</Body><Body>Recommendation: {result.expert_recommendation || 'Not recorded'}</Body><Body>Follow-up needed: {result.follow_up_needed || 'Not recorded'}</Body>

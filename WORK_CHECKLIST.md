@@ -2,6 +2,12 @@
 
 ## Current reconciliation - 2026-10-23
 
+Logout/loading follow-up: shared manual sign-out confirmation and missing feed
+skeletons implemented; query changes hide stale content and refresh preserves the
+current page.14 fictional UI cases,18 mobile/19 shared tests, TypeScript and
+1296-module Android export passed. Native modal/Back review remains pending.
+User confirmed native pages work before this slice; no actual logout/write ran.
+
 Continuation: final11 fictional directory browser checks,18 mobile/19 shared
 tests and TypeScript passed. Picker theme recapture/design notes are complete.
 GraphiScan_Pixel_6 API36 emulator and official Expo Go58.0.5 are installed;

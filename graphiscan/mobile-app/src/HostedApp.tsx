@@ -16,6 +16,7 @@ import SignInPanel from './SignInPanel'
 import AccountSetup from './AccountSetup'
 import HostedHome from './HostedHome'
 import LoadingSkeleton from './LoadingSkeleton'
+import SignOutAction from './SignOutAction'
 import HostedStudents from './HostedStudents'
 import HostedStudentEditor from './HostedStudentEditor'
 import { AppBrand, Avatar, RecordValue, ScreeningRow, StudentRow, workspaceStyles } from './WorkspaceUI'
@@ -50,7 +51,7 @@ function RecordList({ historyId }: { historyId?: string }) {
   const record=useRecords(()=>request(path+'?limit=25'+(historyId?'&order='+order:'')+(cursor?'&cursor='+encodeURIComponent(cursor):''),{envelope:true}),[request,path,cursor,order])
   function start(){setCursor(null);record.refresh()}
   return <Screen scroll={false}><FlatList data={record.data?.data??[]} keyExtractor={(row:any)=>row.result_id} contentContainerStyle={[styles.content,{gap:0}]}
-    refreshing={record.loading} onRefresh={start}
+    refreshing={record.loading&&record.data!==null} onRefresh={start}
     ListHeaderComponent={historyId||profile.role==='parent'||record.error?<View style={{gap:16,paddingBottom:20}}>
       {profile.role==='parent'&&<Body muted>Only currently reviewed reports for your linked children are shown.</Body>}
       {historyId&&<Button label={order==='newest'?'Show oldest first':'Show newest first'} secondary onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/>}<Notice error message={record.error}/></View>:undefined}
@@ -73,7 +74,7 @@ function Detail({route,report=false}:{route:{params:{id:string}};report?:boolean
   const record=useRecords(()=>request((report?'/reports/':'/screenings/')+encodeURIComponent(route.params.id)),[request,route.params.id,report]),row=record.data
   const student=useRecords(()=>row?.student_id?request('/students/'+encodeURIComponent(row.student_id)):Promise.resolve(null),[request,row?.student_id])
   return <Screen>{record.loading&&!row&&<LoadingSkeleton kind="detail"/>}<Notice error message={record.error}/>{row&&<>
-    <View style={{gap:8}}><Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.data?.full_name||'Student '+row.student_id}</Text><Body muted>{student.data?.grade_level?'Grade '+student.data.grade_level+' / ':''}{screeningType(report?row.report_type:row.report?.report_type)}</Body><Body muted>{dateLabel(row.date_generated)}</Body></View>
+    <View style={{gap:8}}>{student.loading&&!student.data?<LoadingSkeleton kind="heading" label="Loading student details"/>:<Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.data?.full_name||'Student '+row.student_id}</Text>}<Body muted>{student.data?.grade_level?'Grade '+student.data.grade_level+' / ':''}{screeningType(report?row.report_type:row.report?.report_type)}</Body><Body muted>{dateLabel(row.date_generated)}</Body></View>
     <View style={[styles.panel,{borderWidth:0,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap'}]}><Heading>Model output</Heading><Status value={row.classification}/></View>
     <RecordValue label="Reported-class model score" value={hostedPercent(row.predicted_class_score)}/><RecordValue label="High Potential model score" value={hostedPercent(row.class_scores?.high_potential)}/>
     <Body muted>Model scores are not a clinical probability or diagnosis.</Body><View style={{borderTopWidth:1,borderTopColor:colors.border,paddingTop:16,gap:4}}><Body>{row.model.model_key??'Model not recorded'}</Body><Body muted>Version {row.model.model_version??'not recorded'}</Body></View>
@@ -92,7 +93,7 @@ function Profile(){
   async function update(){setBusy(true);setError('');try{await refresh()}catch(e:any){setError(e.message)}finally{setBusy(false)}}
   return <Screen><View style={{alignItems:'center',gap:14,paddingVertical:16}}><Avatar name={profile.full_name} size={72}/><Text accessibilityRole="header" style={[styles.title,{color:c.text,textAlign:'center'}]}>{profile.full_name}</Text></View>
     <View style={[styles.panel,{borderWidth:0,backgroundColor:c.surface}]}><RecordValue label="Account role" value={profile.role==='parent'?'Parent / Guardian':profile.role==='teacher'?'Teacher':'Expert'}/><View style={{borderTopWidth:1,borderTopColor:c.border,paddingTop:16}}><RecordValue label="Account status" value={profile.account_status==='active'?'Active':profile.account_status}/></View></View>
-    <Notice error message={error}/><Button label={busy?'Refreshing...':'Refresh account'} secondary disabled={busy} onPress={update}/><Button label="Sign out" secondary disabled={busy} icon="logout" onPress={()=>logout().catch(e=>setError(e.message))}/></Screen>
+    <Notice error message={error}/><Button label={busy?'Refreshing...':'Refresh account'} secondary disabled={busy} onPress={update}/><SignOutAction disabled={busy} onSignOut={logout} onError={setError}/></Screen>
 }
 function Upload(){const {request}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>();return <HostedUpload request={request} onComplete={id=>navigation.navigate('Screening',{id})}/>}
 function Main(){

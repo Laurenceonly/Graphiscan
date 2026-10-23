@@ -18,7 +18,7 @@ export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:
   function clear(){setSearch('');setSchool(null);setSchoolLabel('');setGrade('');setFilters({...allFilters});setCursor(null);setError('');if(!filters.search&&!filters.school&&!filters.grade&&!cursor)students.refresh()}
   function first(){setCursor(null);if(!cursor)students.refresh()}
   return <Screen scroll={false}><FlatList data={students.data?.data??[]} keyExtractor={row=>row.student_id} contentContainerStyle={[styles.content,{gap:0}]}
-    refreshing={students.loading} onRefresh={first}
+    refreshing={students.loading&&students.data!==null} onRefresh={first}
     ListHeaderComponent={<View style={{gap:16,paddingBottom:20}}>
       <View style={[styles.row,{flexWrap:'wrap'}]}>
         <Button label={showFilters?'Hide filters':'Filters'} secondary icon="filter-list" onPress={()=>setShowFilters(!showFilters)}/>

@@ -5,6 +5,7 @@ import type { HostedClient } from '../../shared/hosted-client.mjs'
 import { Body, Button, Notice, Screen, styles, useColors } from './ui'
 import { AppBrand } from './WorkspaceUI'
 import LoadingSkeleton from './LoadingSkeleton'
+import SignOutAction from './SignOutAction'
 
 type Agreement = { title: string; content: string; version: string }
 type Props = { client: HostedClient; action: string; refresh: () => Promise<void>; logout: () => Promise<void>; passwordChanged: () => void }
@@ -86,7 +87,7 @@ export default function AccountSetup({ client, action, refresh, logout, password
     <Notice error message={error} />
     {(passwordStep || privacy) && <Button label={busy ? 'Saving…' : privacy ? 'Agree and continue' : 'Save password'} disabled={busy || (passwordStep ? !current || !validPassword || !confirm || mismatch : !agreement || !accepted || loading)} onPress={submit} />}
     {!passwordStep && !privacy && <Button label="Check account access" secondary disabled={busy} onPress={async () => { setBusy(true); setError(''); try { await refresh() } catch (failure: any) { setError(failure.message) } finally { setBusy(false) } }} />}
-    <Button label="Sign out" secondary disabled={busy} onPress={() => logout().catch(failure => setError(failure.message))} />
+    <SignOutAction disabled={busy} onSignOut={logout} onError={setError} />
   </Screen>
 }
 const s = StyleSheet.create({
