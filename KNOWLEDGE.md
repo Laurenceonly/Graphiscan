@@ -1,3 +1,14 @@
+Logout/loading2026-10-23: user reports native pages work. Shared SignOutAction
+now confirms manual logout in profiles, account setup and uncertain student forms;
+security-enforced logout remains immediate. Feed skeletons now cover missing
+hosted/legacy choices, fields, headings and images as well as existing lists/
+detail/agreement. useRecords hides other-query data and preserves same-query
+refresh content. TypeScript,18 mobile/19 shared tests,14 fictional browser checks
+and1296-module Android export passed. Native modal automation stopped because
+signed-in Profile was unavailable; no native modal/Back pass or actual logout.
+Earlier source checkpoint e87bf07 is local on feat/expo-design-refinement; newer
+slice remains local and production is unchanged. Full estimate60–65%.
+
 Expo/native continuation2026-10-23: final11 fictional directory browser checks,
 18 mobile/19 shared tests and TypeScript passed. Dark picker recapture is closed;
 directory design notes are extended. Existing Android Studio SDK now has an

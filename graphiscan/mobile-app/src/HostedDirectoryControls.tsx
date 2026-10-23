@@ -5,6 +5,7 @@ import type { HostedClient } from '../../shared/hosted-client.mjs'
 import type { School } from './core/hosted-directory'
 import { useRecords } from './use-records'
 import { Button, Notice, styles, useColors } from './ui'
+import LoadingSkeleton from './LoadingSkeleton'
 
 export type Request=HostedClient['request']
 interface Page<T> { data:T[]; page:{next_cursor:string|null} }
@@ -42,9 +43,8 @@ export function SchoolSelect({request,value,onChange,disabled=false,all=false}:{
   const options=(schools.data?.data??[]).map(school=>({value:school.school_id,label:school.name}))
   if(value&&!options.some(option=>option.value===value.school_id))options.unshift({value:value.school_id,label:value.name})
   return <View style={{gap:12}}>
-    <DirectorySelect label="School" value={value?.school_id??''} options={options} placeholder={all?'All available schools':'Choose a school'} allowEmpty={all} disabled={disabled||schools.loading}
-      onChange={id=>onChange(schools.data?.data.find(school=>school.school_id===id)??(value?.school_id===id?value:null))}/>
-    {schools.loading&&<Text style={[styles.hint,{color:c.muted}]}>Loading schools...</Text>}
+    {schools.loading&&!schools.data?<LoadingSkeleton kind="field" label="Loading schools"/>:<DirectorySelect label="School" value={value?.school_id??''} options={options} placeholder={all?'All available schools':'Choose a school'} allowEmpty={all} disabled={disabled||schools.loading}
+      onChange={id=>onChange(schools.data?.data.find(school=>school.school_id===id)??(value?.school_id===id?value:null))}/>}
     <Notice error message={schools.error}/>
     {!schools.loading&&!schools.error&&!schools.data?.data.length&&!cursor&&<Text style={[styles.hint,{color:c.muted}]}>No schools are currently available to your account.</Text>}
     {Boolean(schools.error)&&<Button label="Reload schools" secondary disabled={disabled} onPress={schools.refresh}/>}

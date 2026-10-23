@@ -7,7 +7,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import type { RootRoutes } from '../navigation-types'
 import { useSession } from '../session'
 import { useRecords } from '../use-records'
-import { Body, Button, Heading, Loading, Notice, Screen, styles } from '../ui'
+import { Body, Button, Heading, Notice, Screen, styles } from '../ui'
+import LoadingSkeleton from '../LoadingSkeleton'
 
 export function UploadScreen() {
   const { api } = useSession(), navigation = useNavigation<NativeStackNavigationProp<RootRoutes>>()
@@ -51,7 +52,7 @@ export function UploadScreen() {
     finally { setBusy(false) }
   }
   return <Screen><Heading>Upload handwriting</Heading><Body>Select the student and a clear JPG or PNG image, up to 10 MB.</Body>
-    {students.loading && <Loading />}<Notice error message={students.error} />
+    {students.loading && !students.data && <LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error} />
     {!students.loading && students.data?.length === 0 && <Body>Add a student before uploading a sample.</Body>}
     <View style={{ gap: 10 }}>{(students.data ?? []).map(row => <Button key={row.student_id} label={row.fullname + ' · ' + row.grade_level} secondary={student !== row.student_id} disabled={busy} onPress={() => setStudent(row.student_id)} />)}</View>
     <View style={styles.wrap}><Button label="Choose image" icon="photo-library" secondary disabled={busy} onPress={() => pick(false)} /><Button label="Use camera" icon="photo-camera" secondary disabled={busy} onPress={() => pick(true)} /></View>

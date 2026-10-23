@@ -85,6 +85,21 @@ is used only by the explicit legacy adapter.
 
 ## Evidence and remaining work
 
+Logout/loading follow-up2026-10-23: manual sign-out opens a shared confirmation
+dialog in hosted/legacy profiles, account setup and pending student forms. Cancel,
+Escape or Android Back close the dialog; Confirm uses the existing logout action.
+Automatic expiry/recovery still closes sessions without prompting. Pending forms
+explain recovery loss before confirmation.
+
+Feed-style initial loading now covers lists/history/details/agreement plus
+student/model choices, schools, eligible parents, student headings and private
+images. Same-query refresh keeps loaded content; changing query/record removes
+the old scope's content until the new response. Save/sign-in/upload progress
+labels remain action states. Motion and reduced-motion/lifecycle fallback are
+unchanged. TypeScript,18 mobile/19 shared tests,14 fictional browser cases and
+Android export1296 modules passed. Native dialog/Back and legacy MySQL runtime
+checks remain separate; no actual logout/record write ran in this follow-up.
+
 Native checkpoint2026-10-23: the API36 emulator booted, Expo Go58.0.5 loaded
 GraphiScan, and login captures were inspected in light/dark and at dark font
 scale1.3. An actual keyboard overlap was fixed by Android height behavior in
@@ -142,5 +157,7 @@ Before native release:
 - Produce and verify an Android APK. Historical data/image migration and final
   manuscript evidence remain tracked in `../../CURRENT_REQUIREMENTS.md`.
 
-The existing `typecheck`, `test` and `export` scripts remain available. The test
-suite was not run in this UI/integration session.
+The existing `typecheck`, `test` and `export` scripts remain available. The latest
+2026-10-23 follow-up passed18 mobile/19 shared tests, TypeScript, Android export
+and25 combined fictional browser views/workflows. This supersedes earlier notes
+that a UI-only slice did not run the unit suite.

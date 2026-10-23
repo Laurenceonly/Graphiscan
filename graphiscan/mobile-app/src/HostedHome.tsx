@@ -25,10 +25,10 @@ export default function HostedHome(p:Props) {
       <MaterialIcons name="arrow-forward" size={24} color="#fff" accessible={false}/>
     </Pressable>
     <Notice error message={p.error}/>
-    <View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>
+    {p.loading&&!p.hasLoaded?<LoadingSkeleton kind="choice" count={teacher?2:1} label="Loading workspace"/>:<View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>
       <ActionRow title={parent?'Children':'Students'} detail={p.loading?'Loading records…':p.error?'Records unavailable':p.students.length+' '+(parent?(p.students.length===1?'linked child':'linked children'):(p.students.length===1?'student':'students'))+' loaded'} icon="groups" onPress={p.onStudents} last={!teacher}/>
       {teacher&&<ActionRow title="Screening results" detail={p.loading?'Loading records…':p.error?'Records unavailable':p.screenings.length+' '+(p.screenings.length===1?'screening':'screenings')+' loaded'} icon="assignment" onPress={p.onResults} last/>}
-    </View>
+    </View>}
     <View style={workspaceStyles.section}>
       <SectionTitle title={parent?'Recent reports':p.role==='expert'?'Recent reviews':'Recent screenings'} action="View all" onPress={p.onResults}/>
       {p.loading&&!p.hasLoaded?<LoadingSkeleton/>:!p.error&&recent.length?<View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>{recent.map((row,index)=>{const student=p.students.find(student=>String(student.student_id)===String(row.student_id));return <ScreeningRow key={row.result_id} record={row} studentName={student?.full_name} grade={student?.grade_level} onPress={()=>p.onRecord(row.result_id)} last={index===recent.length-1}/>})}</View>:

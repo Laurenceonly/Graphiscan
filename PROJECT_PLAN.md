@@ -1,3 +1,10 @@
+Logout/loading2026-10-23: shared confirmation modal and feed skeleton coverage
+implemented across native app source, including hosted/legacy data views and
+query-scoped loading.14 fictional UI checks,18 mobile/19 shared tests, TypeScript
+and1296-module Android export passed. Native dialog/Back check remains open;
+user-reported working pages preceded this change. Source checkpoint e87bf07 is
+saved locally; follow-up publication is pending. Overall60–65%.
+
 Continuation2026-10-23: final11 fictional directory browser checks,18 mobile/
 19 shared tests and TypeScript passed. Picker-theme recapture and directory
 design extension are complete. Existing Android Studio now runs a new API36

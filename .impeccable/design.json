@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T09:33:06.724Z",
+  "generatedAt": "2026-10-23T10:32:53.308Z",
   "title": "Design System: GraphiScan Android",
   "extensions": {
     "colorMeta": {
@@ -525,7 +525,8 @@
     "sourceEvidence": {
       "directory": "HostedStudents.tsx, HostedStudentEditor.tsx and HostedDirectoryControls.tsx extend the existing workspace. Native pickers use explicit theme surface/text roles, a one-unit border, radius 10, minimum height 52 and an 8-unit label gap. Forms and recovery states reuse existing Field, Button, Notice and RecordValue patterns.",
       "verification": "2026-10-23: 11 fictional Chromium directory workflows/views passed at 390/320, including dark picker recapture; no document overflow or application page errors. Intercepted fictional writes only. Native Android review and hosted actions remain unverified.",
-      "native": "2026-10-23: API36 GraphiScan_Pixel_6 with Expo Go58.0.5 rendered login in light/dark and at dark font_scale1.3. Android KeyboardAvoidingView height behavior fixes reproduced covered login actions; actual IME recapture confirms password/sign-in above the keyboard. Font-scale configuration reload produced an expo-modules-core EventEmitter startup failure; fresh process recovered, underlying cause remains unverified. Other native role/form screens and physical device/APK remain open."
+      "native": "2026-10-23: API36 GraphiScan_Pixel_6 with Expo Go58.0.5 rendered login in light/dark and at dark font_scale1.3. Android KeyboardAvoidingView height behavior fixes reproduced covered login actions; actual IME recapture confirms password/sign-in above the keyboard. Font-scale configuration reload produced an expo-modules-core EventEmitter startup failure; fresh process recovered, underlying cause remains unverified. Other native role/form screens and physical device/APK remain open.",
+      "logoutLoading": "2026-10-23: SignOutAction confirms manual logout across profiles/onboarding/student recovery, with Cancel/Escape/Android Back dismissal and forced-expiry bypass. Feed skeletons extend to choice/field/image/heading and hosted/legacy initial data loads. Scope-bound records retain refresh content. 14 fictional browser cases passed including dark320, reduced motion, Cancel/Escape, pending draft retention and exactly-once confirmation. Native modal/Back remains unverified; Android export1296 modules passed."
     }
   },
   "components": [

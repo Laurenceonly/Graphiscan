@@ -1,3 +1,28 @@
+## Logout/loading follow-up — 2026-10-23
+
+User confirmed native pages work and requested logout confirmation plus feed
+skeletons on all loading screens. Implemented shared SignOutAction across manual
+logout buttons (profiles, account setup, pending student-form recovery). Existing
+forced expiry/recovery logout remains immediate. Added choice/field/image/heading
+skeletons and completed hosted/legacy data-loading gaps. useRecords scopes data
+and errors to dependencies, retaining current content only for same-query refresh.
+No initial refresh spinner over skeletons; motion/reduced-motion fallback unchanged.
+
+TypeScript,18 mobile/19 shared tests and14 fictional browser cases passed;
+Cancel/Escape retains session/draft, confirmation sends one logout each, and
+reduced-motion skeletons stay static. Android export1296 modules/19 assets/3.4MB
+passed, not APK. Existing11 fictional directory regression views/workflows also
+passed after the hook change (25 combined browser cases). No actual writes.
+Native modal automation found no signed-in
+Profile and stopped without navigation/logout, so native modal/Back review remains.
+Screenshots are ignored under .impeccable/review. Current UI source is local;
+earlier full Expo checkpoint is e87bf07 on feat/expo-design-refinement.
+
+Next: review new dialog/loading on the emulator, then controlled role/core workflow,
+model hosting and release gates. Existing configuration-reload failure remains
+open; do not reset/restart a session with uncertain writes without reconciliation.
+Public API/model/privacy/data/paper limits and approximately60–65% estimate remain.
+
 ## Active continuation — 2026-10-23
 
 User agreed to proceed, then chose an emulator and confirmed Android Studio is

@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { View } from 'react-native'
 import { useSession } from '../session'
 import { useRecords } from '../use-records'
-import { Body, Button, Field, Heading, Loading, Notice, Screen, styles } from '../ui'
+import { Body, Button, Field, Heading, Notice, Screen, styles } from '../ui'
+import LoadingSkeleton from '../LoadingSkeleton'
 
 export function StudentAddScreen() {
   const { api } = useSession(), parents = useRecords(() => api.parents(), [api])
@@ -27,7 +28,7 @@ export function StudentAddScreen() {
       <Field label="Age" value={age} onChangeText={setAge} editable={!busy} keyboardType="number-pad" maxLength={2} />
       <Body>Grade level</Body><View style={styles.wrap}>{['Grade 1', 'Grade 2', 'Grade 3'].map(value => <Button key={value} label={value} secondary={grade !== value} disabled={busy} onPress={() => setGrade(value)} />)}</View>
       <Heading>Linked parent</Heading><Body muted>Select an existing parent account, or leave unassigned.</Body>
-      {parents.loading && <Loading />}<Notice error message={parents.error} />
+      {parents.loading && !parents.data && <LoadingSkeleton kind="choice" label="Loading eligible parents"/>}<Notice error message={parents.error} />
       <Button label="Unassigned" secondary={parent !== null} disabled={busy} onPress={() => setParent(null)} />
       {(parents.data ?? []).map(row => <Button key={row.user_id} label={row.fullname} secondary={parent !== row.user_id} disabled={busy} onPress={() => setParent(row.user_id)} />)}
       <Notice error message={error} /><Button label={busy ? 'Saving…' : 'Save student'} disabled={busy} onPress={save} />

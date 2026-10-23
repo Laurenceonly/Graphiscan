@@ -6,6 +6,7 @@ import { createStudentSubmission, type StudentCreateDraft } from '../../shared/d
 import { Body, Button, Field, Heading, Notice, Screen, styles } from './ui'
 import { RecordValue } from './WorkspaceUI'
 import LoadingSkeleton from './LoadingSkeleton'
+import SignOutAction from './SignOutAction'
 import { DirectorySelect, SchoolSelect, grades, useScopedPage, type Request } from './HostedDirectoryControls'
 import { studentPayload, type AssignmentOption, type School, type Student, type StudentForm } from './core/hosted-directory'
 import { useRecords } from './use-records'
@@ -78,9 +79,9 @@ export default function HostedStudentEditor({request,teacherId,id,onHistory,onCa
       <Body muted>{id?'School changes are managed by an administrator. You remain the assigned teacher.':'You will be the assigned teacher. Creation requires current membership in the selected school.'}</Body>
     </View>
     <View style={{gap:12}}>
-      <DirectorySelect label="Parent / Guardian (optional)" value={form.parent} options={parentOptions} placeholder="No linked parent" disabled={locked||options.loading||!form.school} onChange={value=>{setParentName(parentOptions.find(option=>option.value===value)?.label??'');update('parent',value)}}/>
+      {options.loading&&!options.data&&form.school?<LoadingSkeleton kind="field" label="Loading eligible parents"/>:<DirectorySelect label="Parent / Guardian (optional)" value={form.parent} options={parentOptions} placeholder="No linked parent" disabled={locked||options.loading||!form.school} onChange={value=>{setParentName(parentOptions.find(option=>option.value===value)?.label??'');update('parent',value)}}/>}
       <Body muted>Only parent accounts eligible for this school and your account appear. Contact an administrator if a parent is missing.</Body>
-      {options.loading&&<Body muted>Loading eligible parents...</Body>}<Notice error message={options.error}/>
+      <Notice error message={options.error}/>
       {Boolean(options.error)&&<Button label="Reload eligible parents" secondary disabled={locked} onPress={options.refresh}/>}
       {(options.data?.page.next_cursor||optionCursor)&&<View style={styles.wrap}>
         {options.data?.page.next_cursor&&<Button label="More eligible people" secondary disabled={locked||options.loading} onPress={()=>setOptionCursor(options.data!.page.next_cursor)}/>}
@@ -92,6 +93,6 @@ export default function HostedStudentEditor({request,teacherId,id,onHistory,onCa
     {reloadRequired?<Button label="Reload current student" disabled={record.loading} onPress={reload}/>:
       <Button label={busy?'Saving...':pending?'Retry same submission':'Save student'} disabled={busy||!form.school||Boolean(id)&&!dirty} onPress={save}/>}
     {!pending&&!reloadRequired&&<Button label="Cancel" secondary disabled={busy} onPress={onCancel}/>}
-    {(pending||reloadRequired)&&<><Body muted>Signing out clears this form. Check Students before creating another record.</Body><Button label="Sign out" secondary disabled={busy} onPress={()=>logout().catch(failure=>setError(failure.message))}/></>}
+    {(pending||reloadRequired)&&<><Body muted>Signing out clears this form. Check Students before creating another record.</Body><SignOutAction disabled={busy} onSignOut={logout} onError={setError} message="Signing out clears this unconfirmed form. Check Students before creating another record."/></>}
   </Screen>
 }

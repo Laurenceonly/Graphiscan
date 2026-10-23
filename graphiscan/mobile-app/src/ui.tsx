@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme, type TextInputProps } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme, type TextInputProps } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
@@ -49,7 +49,6 @@ export function Notice({ message, error = false }: { message: string; error?: bo
   const c = useColors(); if (!message) return null
   return <Text accessibilityRole={error ? 'alert' : undefined} accessibilityLiveRegion="polite" style={[styles.body, { color: error ? c.error : c.primary }]}>{message}</Text>
 }
-export function Loading() { const c = useColors(); return <ActivityIndicator size="large" color={c.primary} accessibilityLabel="Loading records" /> }
 export function Status({ value, prefix }: { value?: string; prefix?: string }) {
   const c = useColors(),normal=value==='Normal'||value==='Validated',high=value==='High Potential'||value==='Flagged'
   return <Text style={{alignSelf:'flex-start',borderRadius:6,paddingHorizontal:8,paddingVertical:4,fontSize:12,lineHeight:18,fontWeight:'500',overflow:'hidden',color:normal?c.normal:high?c.high:c.muted,backgroundColor:normal?c.normalSurface:high?c.highSurface:c.soft}}>{prefix?prefix+': ':''}{value || 'Pending'}</Text>
