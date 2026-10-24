@@ -1,5 +1,5 @@
-import React from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme, type TextInputProps } from 'react-native'
+import React, { useState } from 'react'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
@@ -32,17 +32,24 @@ export function Body({ children, muted = false }: { children: React.ReactNode; m
   const c = useColors(); return <Text style={[styles.body, { color: muted ? c.muted : c.text }]}>{children}</Text>
 }
 export function Heading({ children }: { children: React.ReactNode }) { const c = useColors(); return <Text accessibilityRole="header" style={[styles.heading, { color: c.text }]}>{children}</Text> }
-export function Button({ label, onPress, disabled = false, secondary = false, icon }: { label: string; onPress: () => void; disabled?: boolean; secondary?: boolean; icon?: React.ComponentProps<typeof MaterialIcons>['name'] }) {
+export function Button({ label, onPress, disabled = false, secondary = false, icon, style }: { label: string; onPress: () => void; disabled?: boolean; secondary?: boolean; icon?: React.ComponentProps<typeof MaterialIcons>['name']; style?: StyleProp<ViewStyle> }) {
   const c = useColors()
   return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => [styles.button, { backgroundColor: secondary ? c.surface : c.primary, borderColor: c.border, borderWidth: secondary ? 1 : 0, opacity: disabled ? .55 : pressed ? .8 : 1 }]}>
+    style={({ pressed }) => [styles.button, { backgroundColor: secondary ? c.surface : c.primary, borderColor: c.border, borderWidth: secondary ? 1 : 0, opacity: disabled ? .55 : pressed ? .8 : 1 }, style]}>
     {icon && <MaterialIcons name={icon} size={22} color={secondary ? c.primary : c.onPrimary} />}
     <Text style={[styles.label, { color: secondary ? c.primary : c.onPrimary, flexShrink:1, textAlign:'center' }]}>{label}</Text>
   </Pressable>
 }
-export function Field({ label, ...props }: TextInputProps & { label: string }) {
-  const c = useColors(); return <View style={{ gap: 8 }}><Text style={[styles.label, { color: c.text }]}>{label}</Text>
-    <TextInput accessibilityLabel={label} placeholderTextColor={c.muted} {...props} style={[styles.input, { color: c.text, borderColor: c.border, backgroundColor: c.surface }, props.multiline && { minHeight: 110, textAlignVertical: 'top' }, props.style]} />
+export function Field({ label, search = false, ...props }: TextInputProps & { label: string; search?: boolean }) {
+  const c = useColors(),[focused,setFocused]=useState(false)
+  const input=<TextInput accessibilityLabel={label} placeholderTextColor={c.muted}
+    autoCapitalize={search?'none':undefined} autoCorrect={search?false:undefined} returnKeyType={search?'search':undefined}
+    {...props} onFocus={event=>{if(search)setFocused(true);props.onFocus?.(event)}} onBlur={event=>{if(search)setFocused(false);props.onBlur?.(event)}}
+    style={[styles.input, { color: c.text, borderColor: c.border, backgroundColor: c.surface }, search&&{flex:1,minWidth:0,minHeight:50,borderWidth:0,paddingHorizontal:0,outlineWidth:0}, props.multiline && { minHeight: 110, textAlignVertical: 'top' }, props.style]} />
+  return <View style={{ gap: 8 }}><Text style={[styles.label, { color: c.text }]}>{label}</Text>
+    {search?<View style={[styles.input,{borderColor:focused?c.primary:c.border,backgroundColor:c.surface,flexDirection:'row',alignItems:'center',gap:12,paddingVertical:0}]}>
+      <MaterialIcons name="search" size={20} color={c.muted} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"/>{input}
+    </View>:input}
   </View>
 }
 export function Notice({ message, error = false }: { message: string; error?: boolean }) {

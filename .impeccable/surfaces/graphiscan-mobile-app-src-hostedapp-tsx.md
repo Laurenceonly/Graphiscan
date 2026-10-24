@@ -60,6 +60,21 @@ Loading uses pale-blue row skeletons during initial requests, a 1400ms opacity
 pulse, and static placeholders for reduced motion/background/unfocused state.
 Existing records stay visible during refresh. No minimum artificial wait is added.
 
+Continuation2026-10-24: Students/Children now fill the loading viewport for every
+hosted role; legacy Students/progress also opt in. Student and screening rows keep
+their respective densities. Shared search fields use a decorative20-unit Material
+icon and a name-search placeholder with an accessible label and focused frame.
+Four fictional browser cases verified roles, size/theme/motion, search/Enter/clear
+and request outcomes. Native hosted-student light/dark-font1.3 loading captures
+passed; separate native search-field capture is not claimed verified.
+
+Results refinement2026-10-24: screening placeholders now continue through the
+measured list height, avoiding the former two-row block and large blank area.
+Five fictional browser role/height/theme/motion cases passed, together with
+loaded/empty/error/refresh checks. Native loading-only light and dark/font1.3
+captures fill the content area while keeping navigation visible. Source remains
+local; actual model submission and the full role workflow are still unverified.
+
 Defense minutes checked: keep issued accounts/password/privacy gates, readable
 recorded classifications, attributed expert notes, server Initial/Follow-up labels,
 and server-provided model selection. Grade appears in student rows. Native school

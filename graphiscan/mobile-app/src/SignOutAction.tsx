@@ -1,11 +1,15 @@
 import React, { useRef, useState } from 'react'
-import { Modal, ScrollView, Text, View } from 'react-native'
+import { Modal, ScrollView, Text, View, useWindowDimensions } from 'react-native'
 import { Body, Button, styles, useColors } from './ui'
 
 export default function SignOutAction({ onSignOut, onError, disabled = false, message }: {
   onSignOut: () => Promise<void>; onError: (message: string) => void; disabled?: boolean; message?: string
 }) {
   const c = useColors(), [open, setOpen] = useState(false), [busy, setBusy] = useState(false), inFlight = useRef(false)
+  const { width, fontScale } = useWindowDimensions()
+  const stacked = width < 320 || fontScale > 1.4
+  const actionColumnStyle = { flex: stacked ? undefined : 1, minWidth: 0 }
+  const actionStyle = { flexGrow: stacked ? undefined : 1, minHeight: Math.max(52, Math.ceil(21 * fontScale + 26)) }
   async function confirm() {
     if (inFlight.current || disabled) return
     inFlight.current = true; setOpen(false); setBusy(true)
@@ -21,9 +25,9 @@ export default function SignOutAction({ onSignOut, onError, disabled = false, me
           <ScrollView contentContainerStyle={{ padding: 24, gap: 16 }} keyboardShouldPersistTaps="handled">
             <Text accessibilityRole="header" style={[styles.heading, { color: c.text }]}>Sign out of GraphiScan?</Text>
             <Body>{message || 'You will need to sign in again to access your account.'}</Body>
-            <View style={[styles.wrap, { justifyContent: 'flex-end' }]}>
-              <Button label="Cancel" secondary onPress={() => setOpen(false)} />
-              <Button label="Sign out" disabled={disabled} onPress={confirm} />
+            <View style={{ flexDirection: stacked ? 'column' : 'row', alignItems: 'stretch', gap: 12 }}>
+              <View style={actionColumnStyle}><Button label="Cancel" secondary style={actionStyle} onPress={() => setOpen(false)} /></View>
+              <View style={actionColumnStyle}><Button label="Sign out" style={actionStyle} disabled={disabled} onPress={confirm} /></View>
             </View>
           </ScrollView>
         </View>

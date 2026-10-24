@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, Text, View, useWindowDimensions } from 'react-native'
 import { Body, Button, Field, Notice, Screen, styles, useColors } from './ui'
 import { StudentRow } from './WorkspaceUI'
 import LoadingSkeleton from './LoadingSkeleton'
@@ -8,6 +8,7 @@ import { studentQuery, type School, type Student, type StudentFilters } from './
 
 const allFilters:StudentFilters={search:'',school:'',grade:''}
 export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:{request:Request;teacher:boolean;onHistory:(id:string)=>void;onEdit:(id:string)=>void;onAdd:()=>void}) {
+  const {height:windowHeight}=useWindowDimensions(),[listHeight,setListHeight]=useState(0)
   const c=useColors(),[showFilters,setShowFilters]=useState(false),[search,setSearch]=useState(''),[school,setSchool]=useState<School|null>(null)
   const [grade,setGrade]=useState(''),[filters,setFilters]=useState<StudentFilters>({...allFilters}),[schoolLabel,setSchoolLabel]=useState(''),[cursor,setCursor]=useState<string|null>(null),[error,setError]=useState('')
   const students=useScopedPage<Student>(request,studentQuery(filters,cursor))
@@ -18,6 +19,7 @@ export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:
   function clear(){setSearch('');setSchool(null);setSchoolLabel('');setGrade('');setFilters({...allFilters});setCursor(null);setError('');if(!filters.search&&!filters.school&&!filters.grade&&!cursor)students.refresh()}
   function first(){setCursor(null);if(!cursor)students.refresh()}
   return <Screen scroll={false}><FlatList data={students.data?.data??[]} keyExtractor={row=>row.student_id} contentContainerStyle={[styles.content,{gap:0}]}
+    onLayout={event=>setListHeight(event.nativeEvent.layout.height)}
     refreshing={students.loading&&students.data!==null} onRefresh={first}
     ListHeaderComponent={<View style={{gap:16,paddingBottom:20}}>
       <View style={[styles.row,{flexWrap:'wrap'}]}>
@@ -25,7 +27,7 @@ export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:
         {teacher&&<Button label="Add student" icon="add" onPress={onAdd}/>}
       </View>
       {showFilters&&<View style={{gap:16}}>
-        <Field label="Search students" value={search} onChangeText={setSearch} maxLength={120} returnKeyType="search" onSubmitEditing={apply}/>
+        <Field search label="Search students" placeholder="Search by student name" value={search} onChangeText={setSearch} maxLength={120} returnKeyType="search" onSubmitEditing={apply}/>
         <SchoolSelect request={request} value={school} onChange={setSchool} all/>
         <DirectorySelect label="Grade" value={grade} options={grades} placeholder="All grades" onChange={setGrade}/>
         <Notice error message={error}/>
@@ -38,7 +40,7 @@ export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:
       <Notice error message={students.error}/>
       {Boolean(students.error)&&<Button label="Reload students" secondary disabled={students.loading} onPress={students.refresh}/>}
     </View>}
-    ListEmptyComponent={students.loading?<LoadingSkeleton kind="student" count={3}/>:!students.error?<Body muted>No students are available for your account and these filters.</Body>:undefined}
+    ListEmptyComponent={students.loading?<LoadingSkeleton kind="student" count={3} fillHeight={listHeight||windowHeight}/>:!students.error?<Body muted>No students are available for your account and these filters.</Body>:undefined}
     renderItem={({item})=><StudentRow student={item} onPress={()=>onHistory(item.student_id)} onEdit={teacher?()=>onEdit(item.student_id):undefined}/>}
     ListFooterComponent={<View style={{gap:12,paddingTop:20}}>
       {students.data?.page.next_cursor&&<Button label="Next students page" disabled={students.loading} onPress={()=>setCursor(students.data!.page.next_cursor)}/>}

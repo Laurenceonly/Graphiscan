@@ -1,3 +1,70 @@
+Saved resume checkpoint2026-10-24: user is stopping for later. See RESUME.md first.
+Overall estimate approximately65%. PR#9 model release is on main and Render logs
+confirm verified private model fetch/successful one-thread startup; user saw the
+model choices. Actual hosted inference and full role workflow remain unverified.
+Latest all-role list loading/search/logout UI and documentation are local; a scoped
+local checkpoint is being saved. Emulator cold boot restored GraphiScan sign-in;
+runtime reload issue remains open. No old migration/provider setup needs rerunning.
+Older dated checkpoint paragraphs below are historical and may state superseded
+pending steps; use the latest resume/status rather than repeating completed work.
+
+Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
+and source release are complete locally. PR#9 merged as4d2e3b1; fresh private
+fetch and60 release tests/24 SQL checks pass. User reported publication SQL
+success; authenticated hosted models remain unverified. Render activation is
+being guided manually because browser controls expose no provider. See
+graphiscan/api/MODEL_ACTIVATION.md for the exact current sequence/rollback.
+Latest: corrected user-supplied GRAPHISCAN_MODEL_V1_MANIFEST key to the instructed
+GRAPHISCAN_V1_MODEL_MANIFEST. User reports success after REQUIRE_MODELtrue;
+02:28:16UTC logs confirm verified three-model bundle, one-thread sync startup,
+health200 and Live. Environment values not independently read. Fresh public probe:
+health200 in1.03s, me401/models401. Next authenticated fictional teacher screening,
+expert review, parent visibility and Follow-up. Actual inference remains unverified.
+Earlier: user confirmed the bucket/Python variables saved. The09:31:40GMT+8 deployment
+failed: supplied logs show admin-only dependencies and old start command, then
+required-model validation failure. Earlier Live status did not verify the model
+build step. Public health200/me401/models401 still pass. Recovery/settings edit
+pending: REQUIRE_MODELfalse plus clear MODEL_MANIFEST; verify the actual LiteRT
+build log before enabling both again. Root render.yaml remains admin-only;
+Blueprint management is unverified. Hosted inference remains unverified.
+
+Earlier Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
+is installed; Dockerfile.lite built locally. Enforced512MiB/no-swap/no-network/
+one-CPU full-API fictional probes passed with generated16MP white and detailed
+noise images, no TensorFlow/external calls/OOM kill. Default kernel peak RSS was
+491.57MiB for noise. Full Linux numerical parity then passed all136 images/all3
+models with zero class changes and max score error8.41e-6. Adopted builtin ResNet
+CPU kernels with a distinct schema3 runtime-kind/source pin; final serving image
+peaked422.59MiB on the same capped noise probe.48 runtime/access/write tests,
+12 Linux bundle tests and24 isolated catalogue cutover/rollback checks passed.
+Private Supabase artifact bucket now holds six verified chunks/four model files
+(121266151 bytes). Build fetch uses existing server-only S3 keys, strict paths,
+streamed size/SHA checks and a bucket separate from student images. Public bundle
+descriptor/evaluation contain hashes/aggregate metrics only. No hosted catalogue
+SQL, API configuration or deployment changed; original Keras pins/manifest and
+local .env remain intact. Release worktree feat/litert-hosting starts at main97f1cce.
+Overall60-65%; private fetch roundtrip, release/cutover and real role workflow remain open.
+
+Model-host continuation2026-10-23: user authorized online screening work. Existing
+Python3.11.9 runs outside the sandbox; no reinstall. Synthetic pinned-runtime
+profile completed: all3 cached peak799.12MiB resident/1597.96MiB private on Windows,
+warm0.405–0.808s. This exceeds Render Free512MB locally and is not a Linux/hosted
+measurement. FP32 LiteRT copies now passed all136 images/all3 architectures with
+zero class disagreements and max score error9.15e-6. New optional schema3
+v1_lite_models.py preserves the binary mapping/.75 rule and original source pins,
+with distinct converted identities and one serialized cached network. v1_backend
+dispatches schema3 while retaining the existing schema1/2 factory. Separate
+requirements-lite.txt/Dockerfile.lite and guarded staging/profiling tools exist;
+47 model/access/composition/upload regression tests passed. Real adapter synthetic
+peak253.79MiB resident; fictional full API/sequential generated16MP probe peaked
+472.22MiB resident/567.66MiB private without TensorFlow or external calls. These
+are Windows measurements, not Linux512MB fit or authenticated workflow evidence.
+Original model/source pins, manifest/environment, registry, SQL, server secrets
+and deployment are unchanged; public inference stays disabled. WSL2 engine/kernel
+exist but no Linux distribution is installed. Next: Linux limit/package checks,
+private model provisioning and reviewed new-version catalogue cutover, then role
+workflow. Card preference remains unspecified; continue the no-charge route.
+
 Logout/loading2026-10-23: user reports native pages work. Shared SignOutAction
 now confirms manual logout in profiles, account setup and uncertain student forms;
 security-enforced logout remains immediate. Feed skeletons now cover missing

@@ -63,3 +63,4 @@ graphiscan/training_results/
 Thumbs.db
 *.local
 graphiscan/model/deployment.local.json
+graphiscan/model/*.local.json

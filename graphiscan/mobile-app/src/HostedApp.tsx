@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useRef, useState } from 'react'
-import { FlatList, Pressable, Text, View, useColorScheme } from 'react-native'
+import { FlatList, Pressable, Text, View, useColorScheme, useWindowDimensions } from 'react-native'
 import { NavigationContainer, DarkTheme, DefaultTheme, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator, type NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createBottomTabNavigator, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
@@ -45,17 +45,19 @@ function Home() {
 }
 function RecordList({ historyId }: { historyId?: string }) {
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
+  const {height:windowHeight}=useWindowDimensions(),[listHeight,setListHeight]=useState(0)
   const students=useRecords(()=>request('/students?limit=100',{envelope:true}),[request])
   const [cursor,setCursor]=useState<string|null>(null),[order,setOrder]=useState('newest')
   const path=historyId?'/students/'+encodeURIComponent(historyId)+'/history':'/screenings'
   const record=useRecords(()=>request(path+'?limit=25'+(historyId?'&order='+order:'')+(cursor?'&cursor='+encodeURIComponent(cursor):''),{envelope:true}),[request,path,cursor,order])
   function start(){setCursor(null);record.refresh()}
   return <Screen scroll={false}><FlatList data={record.data?.data??[]} keyExtractor={(row:any)=>row.result_id} contentContainerStyle={[styles.content,{gap:0}]}
+    onLayout={event=>setListHeight(event.nativeEvent.layout.height)}
     refreshing={record.loading&&record.data!==null} onRefresh={start}
     ListHeaderComponent={historyId||profile.role==='parent'||record.error?<View style={{gap:16,paddingBottom:20}}>
       {profile.role==='parent'&&<Body muted>Only currently reviewed reports for your linked children are shown.</Body>}
       {historyId&&<Button label={order==='newest'?'Show oldest first':'Show newest first'} secondary onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/>}<Notice error message={record.error}/></View>:undefined}
-    ListEmptyComponent={record.loading?<LoadingSkeleton/>:!record.error?<Body>No screening records are available for your account.</Body>:undefined}
+    ListEmptyComponent={record.loading?<LoadingSkeleton fillHeight={listHeight||windowHeight}/>:!record.error?<Body>No screening records are available for your account.</Body>:undefined}
     renderItem={({item,index}:any)=>{const student=students.data?.data.find((student:any)=>student.student_id===item.student_id);return <ScreeningRow record={item} studentName={student?.full_name} grade={student?.grade_level} last={index===(record.data?.data.length??0)-1} onPress={()=>navigation.navigate('Screening',{id:item.result_id})}/>}}
     ListFooterComponent={<View style={{gap:12,paddingTop:20}}>{record.data?.page?.next_cursor&&<Button label="Next page" onPress={()=>setCursor(record.data.page.next_cursor)}/>}{cursor&&<Button label="Return to first page" secondary onPress={start}/>}</View>}/></Screen>
 }

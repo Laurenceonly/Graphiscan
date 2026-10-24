@@ -1,3 +1,227 @@
+# Resume checkpoint — 2026-10-24
+
+User requested saving this session to resume later. Overall full-project estimate:
+approximately65%, an engineering judgment rather than a measured task score.
+
+## Start here next session
+
+1. Read this checkpoint and latest CHANGELOG.md before acting. Preserve the local
+   UI changes and unrelated SQL017/021 formatting edits. Current working branch
+   is feat/expo-design-refinement. A local UI/documentation checkpoint is being
+   committed in this session; no new push, merge or UI deployment is requested.
+2. Resume the first actual model-upload test when the user has a JPG/PNG sample.
+   Use the existing issued fictional teacher/test-student fixture and MobileNetV2.
+   An emulator can receive an image from the PC and use Choose image. Successful
+   submission/result retrieval is still unverified; visible model choices are
+   user-confirmed, not proof of inference. Do not use real student data for previews.
+3. After that passes, verify assigned expert review, released parent visibility,
+   private image access, and a second upload recorded as Follow-up. Record actual
+   evidence, access denials and recovery/concurrency results before increasing
+   completion status. The current task is binary Normal/High Potential; the
+   planned three-class dataset/evaluation remains separate work.
+4. Finish native logout/Back/search/role checks, physical-device/APK release,
+   remaining admin permission/reset/delete/audit checks, historical data/image
+   reconciliation, approved privacy and manuscript/slide/diagram work.
+
+## Saved deployment and local state
+
+- Model source PR#9 is merged on main as4d2e3b13bec932e722a12b128541a4c1f8fe4465.
+  Three private LiteRT models passed local Linux parity and the capped512MiB
+  serving probe; private build fetch verifies all3. User reported catalogue SQL
+  success. Latest supplied Render logs show verified bundle, one worker/thread,
+  sync startup, health200 and Live after the corrected manifest key. Public
+  health200/protected me401/models401 passed. User saw model choices in the app.
+  Actual authenticated prediction and the full role workflow are not verified.
+- Existing Render service: graphiscan-admin-api; API origin
+  https://graphiscan-admin-api.onrender.com. Effective build command is
+  sh tools/build_lite_host.sh. Startup uses gunicorn.conf.py with one worker and
+  one thread. Correct environment key is GRAPHISCAN_V1_MODEL_MANIFEST, value
+  model/deployment.litert.local.json; user followed REQUIRE_MODELtrue activation.
+  Artifact bucket setting is GRAPHISCAN_MODEL_ARTIFACT_BUCKET with value
+  graphiscan-model-artifacts. PYTHON_VERSION3.11.9. Do not copy secrets into notes.
+- Root render.yaml still has old admin-only commands; service Blueprint control
+  is unverified. Before any future Blueprint sync, reconcile it with the verified
+  dashboard settings. No provider change or model re-provisioning is needed.
+- Migrations through021 are applied; last hosted restricted preflight38 passed.
+  Do not rerun old migrations or catalogue publication merely to resume.
+- Local UI: balanced logout confirmation; full-height Results/Reviews/Reports,
+  Students/Children and history skeletons; small search icons, name hints and
+  focused frames. Latest TypeScript/four role browser cases passed; earlier five
+  Results cases passed. Native loading previews pass light/dark/font1.3. Native
+  logout/Back and separate search-field capture remain unverified. Changes are
+  available locally and have not been pushed with this checkpoint.
+- Emulator: GraphiScan_Pixel_6/API36, Expo Go58.0.5. A cold boot recovered an
+  unresponsive emulator and Expo Go runtime-not-ready/ExpoCrypto error. Latest
+  native capture confirms GraphiScan sign-in is visible. Root cause remains open;
+  no app data was wiped. Display restored to light/font1.0/animation scale1.0.
+- Main Metro uses localhost8081 via npm run preview:android in graphiscan/mobile-app.
+  Background launcher currently remains running. Temporary5174/8082 review servers
+  and browser review were stopped. If the PC/session restarts, use the existing
+  launcher and AVD rather than reinstalling Android Studio or dependencies.
+- Model copies/tooling still appear as local modified/untracked files on this older
+  UI branch, but their release is already in PR#9/main. Preserve them; reconcile
+  main before preparing a later UI PR. Never stage private weights, local manifests,
+  credentials, student images/data or ignored review/validation outputs.
+
+Earlier dated checkpoints below are history; this section takes precedence.
+
+## Results loading refinement — 2026-10-24
+
+Latest: user extended the request to Students and other roles, plus minimal
+search affordances. Hosted Students/Children and legacy Students/progress now use
+viewport-filling loading; Results/Reviews/Reports/history already share it. Field
+has an opt-in search icon/hint/focused frame used by directory, upload and legacy
+search. Final TypeScript and four fictional browser role/size/theme/motion plus
+search/Enter/clear/refresh/error checks pass; native student loading captures pass
+light/dark-font1.3. Separate native search-field capture remains unverified.
+Emulator stopped during review; existing AVD was reopened/reconnected. Cause not
+established. A subsequent Expo Go runtime-not-ready/ExpoCrypto error and stalled
+guest commands recovered after a cold boot with no data wipe. Native capture
+confirms GraphiScan sign-in is visible again. Underlying reload issue is not fixed
+in source. All source remains local; actual model submission is still deferred.
+
+User deferred the actual handwriting upload test, then requested loading fill
+the Results screen. Local LoadingSkeleton/HostedApp/screens/Records changes use
+measured list height to continue screening skeleton rows through the viewport.
+TypeScript, clean layout/whitespace checks and five fictional browser role/size/
+theme/motion captures passed, including loaded/empty/error/retained refresh.
+Native loading-only preview captures pass in light and dark/font_scale1.3 on the
+existing Pixel6; OS settings restored and GraphiScan reopened afterward. No real
+records were written or source published. Actual hosted inference and full
+teacher/expert/parent/Follow-up workflow remain deferred/unverified.
+
+## Linux continuation — 2026-10-24
+
+Latest activation update: user supplied wrong GRAPHISCAN_MODEL_V1_MANIFEST key,
+then reported successful deployment after instructed correction to
+GRAPHISCAN_V1_MODEL_MANIFEST. This follows REQUIRE_MODELtrue instruction; actual
+environment values not independently read.02:28:16UTC logs confirm verified
+models3 bundle, sync one-thread startup, health200 and Live. Fresh public probe:
+health200 in1.03s/me401/models401. Next authenticated fictional teacher screening,
+expert review, parent visibility and Follow-up; no actual inference verified yet.
+
+Latest: PR#9 merged as4d2e3b13bec932e722a12b128541a4c1f8fe4465; source commit2253be8
+is in the isolated release worktree. Fresh private fetch verified all files.
+The release completed60 tests/24 SQL checks; no-ML admin startup health200 and
+anonymous models401 passed. User reported successful execution of publication
+SQL in Supabase; this is user-confirmed, not yet authenticated hosted verification.
+Browser tools expose no providers and Computer Use setting was unavailable to
+the user, so guide normal Render UI. User confirmed the artifact-bucket variable
+graphiscan-model-artifacts and PYTHON_VERSION3.11.9 are saved; REQUIRE_MODELfalse.
+User reported Live at2026-10-24 09:14:15GMT+8, but subsequent activation failed
+at09:31:40GMT+8 on4d2e3b1. Supplied logs prove the old admin-only build/start
+commands still ran and required-model validation failed. Public health200 in1.22s
+and anonymous me401/models401 still pass. Current step: REQUIRE_MODELfalse and
+clear MODEL_MANIFEST together, then save actual service build/start commands;
+require private-model-bundle-ready/models3 evidence before re-enabling. Root
+render.yaml is still admin-only; Blueprint management is unverified. Sequence
+and rollback in graphiscan/api/MODEL_ACTIVATION.md. No hosted inference or role
+workflow success yet; estimate60-65%. Preserve unrelated local017/021 formatting
+edits as well as the existing modal fix; neither was included in PR#9.
+
+Separate free WSL2 Debian13 GraphiScanValidation is installed, stored in ignored
+.local-tools/wsl-validation. Podman5.4.2 built Dockerfile.lite successfully:
+localhost/graphiscan-lite:validation, image
+d6cae7c670312f4ffa03ded70ba6f117dea259065cbce5d2f7e8101fed53f81d.
+No Docker Desktop/global .wslconfig or production credentials were needed.
+
+Two actual Linux512MiB cgroup tests passed with one CPU/no swap/no network:
+.local-tools/linux-validation/host-512m.json (16MP white,475.4MiB peak RSS) and
+host-512m-noise.json (16MP deterministic four-tone noise/6701064-byte PNG,
+491.57MiB peak RSS). No external calls, TensorFlow import or OOM kill. Kernel
+container peaks reached512MiB including charged file cache; headroom is narrow.
+These do not establish actual Gunicorn/networked/authenticated upload capacity.
+
+Completed full Linux comparison with --verify-existing /copies --compare
+--resnet-cpu-kernel builtin: all3/all136 pass, zero class disagreements and max
+score error8.41e-6. Public aggregate api/litert-linux-evaluation.json SHA-256
+e9eb1beae81bb85ef0a24dd3349e646fd02ab0598017cbbcf84e8a3a1a324db1.
+Reference image localhost/graphiscan-reference:validation used3GiB for TensorFlow;
+this is separate from the512MiB serving test. Adopted builtin ResNet in the actual
+adapter after parity. Schema3 kind litert-fp32-builtin-resnet-v1 pins the choice.
+The separate draft manifest was refreshed/backed up; original pins/.env untouched.
+
+Final serving image localhost/graphiscan-lite:builtin-validation,
+3653dfb0d25ee095e9ccf09d18cb33c3a1d2d611576f6302c36fbcaa7a4c7453,
+passed detailed16MP noise/512MiB with422.59MiB peak process RSS, no OOM/network/
+TensorFlow, without experiment overrides. Report host-512m-serving-builtin.json.
+48 model/backend/write tests,12 Linux bundle tests and24 isolated PostgreSQL
+publication/rollback checks pass. No experiment session is still running.
+
+Private bundle upload succeeded: Supabase bucket graphiscan-model-artifacts,
+six content-addressed chunks/four files,121266151 bytes. No student data/API/
+schema/model-registry changes. model_bundle.py and prepare/fetch/upload CLI tools
+keep byte/path limits, SHA validation and separate student/model buckets. Public
+model/litert-bundle.json is descriptor metadata only; no weights/secrets in Git.
+Provider lookup wraps404 inHTTP400; uploader handles that specific body code.
+
+Publication/rollback SQL is prepared and tested, NOT executed on hosted DB.
+Release worktree .local-tools/litert-release branch feat/litert-hosting starts
+from latest main97f1cce; original predict/v1_models/v1_uploads/class mapping bytes
+match. Bounded files/docs are copied and fresh private fetch passed there.
+Release completed60 tests (one Windows-only skip covered in Linux) plus24 SQL
+checks; staged-index review verified five source pins/evidence and no private
+files. Next: commit/push release, then perform
+the reviewed registry/default switch and Render settings/deployment with rollback.
+Use existing free Render service and existing S3 keys; new model-bucket variable
+is nonsecret. Browser controls currently return no providers; user is opening
+Render in an in-app tab and referencing @Browser. Public inference remains
+disabled. Preserve local modal fix.
+
+## Active model hosting work — 2026-10-23
+
+User approved moving from UI to online model screening and then the controlled
+teacher/expert/parent workflow. Profiled existing3-model pinned runtime with the
+new tools/profile_v1_models.py: Windows peak799.12MiB resident with all3 cached,
+private1597.96MiB; warm0.405/0.750/0.808s. Synthetic sample only; no DB/data writes.
+Report is ignored .local-tools/model-memory-profile.json. Python3.11.9/base/venv
+work outside sandbox; older unavailable notes describe sandbox access, not a
+missing installation. Docker is not installed at the checked standard path.
+
+Completed experiment: tools/experiment_v1_lite_models.py --runtime-dir
+.local-tools/litert-runtime --compare. All3 models/all136 images passed with zero
+class disagreements, max score error9.15e-6 and unchanged confusion matrices.
+ai-edge-litert2.3.0 is isolated in ignored workspace folder. Export fixes:
+training=False and tracking raw weight variables, excluding cached Keras training
+functions. Outputs/report stay ignored .local-tools/lite-model-experiment.
+
+New optional v1_lite_models.py schema3 uses distinct converted hashes/version IDs,
+original preprocessing pins, exact IO shapes and one locked cached model.
+v1_backend now dispatches schema3 and delegates older schemas unchanged. Added
+requirements-lite.txt/Dockerfile.lite (one worker/one thread), stage/profile tools,
+source-byte and private-artifact ignore rules.47 regression tests passed.
+tools/prepare_v1_lite_catalogue.py staged model/deployment.litert.local.json plus
+the3 private .tflite files; no .env/original manifest/registry change.
+
+Actual single-cache adapter synthetic profile peaked253.79MiB resident; standalone
+all3 cache321.19MiB. tools/profile_v1_lite_host.py with real API composition,
+fictional configuration, blocked external calls and generated16MP images peaked
+472.22MiB resident/567.66MiB private on Windows. No TensorFlow imported; no external
+calls. Reports ignored .local-tools/lite-{model,adapter,host}-memory-profile.json.
+No experiment/probe session remains running. Linux512MB/package/throughput
+validation remains required. WSL2.7.12/kernel6.18.33.2 exist but no distribution;
+Docker absent. Next: obtain Linux test environment, validate limit, prepare private
+provisioning and reviewed new-version registry/default switch with rollback, then
+deploy and execute the controlled teacher/expert/parent/Follow-up workflow.
+
+Current provider facts: Render Free512MB, ordinary HF Docker/Gradio creation paid,
+Modal card required with credits/spend limits. Card preference was asked but not
+answered; continue local no-charge investigation, no paid resource/secret upload.
+Public API still admin-only; no SQL rerun. Full hosted workflow and release gates
+remain open; estimate60–65%. Modal balance fix remains local/uncommitted alongside
+these new tools/docs; do not overwrite or conflate it with a hosted release.
+
+## Modal balance correction — 2026-10-23
+
+User supplied a cropped logout modal screenshot and rejected its balance.
+Adjusted only SignOutAction action layout plus optional shared Button styling:
+equal-width/equal-height columns with12 gap; stack below320 logical units or
+above1.4 font scale. TypeScript and six fictional light/dark phone captures
+passed, including equal geometry and Cancel/Escape/one-confirm behavior. No real
+logout. Native opener was unavailable to automation, so native recapture remains
+open. Earlier source is committed as a0131af; this correction is local/uncommitted
+for user visual review. Overall planning estimate remains60–65%.
+
 ## Logout/loading follow-up — 2026-10-23
 
 User confirmed native pages work and requested logout confirmation plus feed
