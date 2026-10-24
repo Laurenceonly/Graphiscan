@@ -1,5 +1,10 @@
 # GraphiScan admin web
 
+Publication2026-10-24: the palette source is committed/pushed and PR#11 is
+confirmed merged. Vercel preview for d07cabe was READY and user reports viewing
+the admin. Production build passed1834 modules. Full authenticated admin/role
+checks and exact later production deployment state remain separate evidence.
+
 Local palette update2026-10-24: user requested matching Expo colors, including
 login, without layout changes. Shared palette now uses blue #095df1, hover
 #074bc2, paper #f7faff, ink #14263c and muted #5c6c81 with matching border and

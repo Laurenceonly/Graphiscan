@@ -1,5 +1,11 @@
 # GraphiScan change log
 
+## 2026-10-24 - Confirm source publication and next-work status
+
+- All reviewed public work was committed as293ae0f, reconciled with published main in d07cabe and pushed. PR#11 is confirmed merged at15:10:29UTC; its Vercel preview was READY for d07cabe. User reports viewing the admin preview. This establishes source publication and user preview, not a full authenticated browser/role or physical-device pass. Anonymous preview probing redirects to Vercel's own sign-in; no protection was changed or bypassed. Exact subsequent production deployment state was not independently checked.
+- Current full-project estimate remains approximately65%, an engineering judgment. First MobileNetV2 Initial Screening has supplied browser evidence; private image retrieval, expert assignment/review, parent release/denial and second Follow-up remain the immediate sequence. Then close admin/onboarding/permission/audit checks and native/APK/physical-device gates. Three-class evaluation, authoritative historical-data/image reconciliation, approved real-use privacy and manuscript/deck/diagram/nonfunctional evidence remain open.
+- Updated current requirements, plan, knowledge, checklist, resume and admin README. This status review added no runtime test, hosted record write, migration or model change. Private configuration, weights, student images/data and generated review/build output remain excluded from Git.
+
 ## 2026-10-24 - Save completed work for hosted preview review
 
 - Checkpoint293ae0f commits the reviewed public work. Reconciled maincf58120 into this branch; only six documentation conflicts required resolution, retaining the latest detailed local evidence and runbooks. Runtime/model source merged without conflicts. The existing021 formatting-only edit is retained; the blank-space-only017 artifact was normalized away. Preparing the branch push and hosted preview; no production-main merge, migration or real record write is requested.

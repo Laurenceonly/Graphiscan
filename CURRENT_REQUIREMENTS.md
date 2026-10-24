@@ -10,6 +10,14 @@ No additional numbered migration is currently prepared. Do not rerun020/021.
 
 ## Overall progress review — 2026-10-24
 
+Latest source status: all reviewed public work is committed/pushed and PR#11 is
+confirmed merged at15:10:29UTC. Its Vercel preview was READY; user reports viewing
+the admin. Admin login/workspace colors now match Expo. Saved mobile refinements
+are published in source; publication is no longer an open implementation step.
+Full authenticated role/device behavior and exact production rollout remain
+separate. Overall estimate stays approximately65%. Next complete the existing
+Initial Screening's image/expert/parent handoff, then a second Follow-up upload.
+
 Latest supplied browser evidence: first completed MobileNetV2 Initial Screening,
 Normal49.19%/High Potential50.81%, expert Pending. The label matches the existing
 0.75 High Potential rule. PR#10's multipart fix is merged;35 isolated regressions
@@ -42,9 +50,9 @@ they do not establish a completed hosted or Android workflow.
 
 | Workstream | Established so far | Remaining completion work |
 | --- | --- | --- |
-| Admin web | Published refined Vue admin; actual fictional-account create/edit/disable/reactivate and membership changes observed | Hosted reset/unused-delete, permissions, assignment/eligibility and audit walkthrough |
+| Admin web | Refined Vue admin; PR#11 merged with Expo colors and user-viewed READY preview; actual fictional-account create/edit/disable/reactivate and membership changes observed | Hosted reset/unused-delete, permissions, assignment/eligibility and audit walkthrough; final production/role verification |
 | Supabase/API/accounts | Migrations through021 applied; last hosted restricted preflight passed38 checks; scoped API, issuance and onboarding source | Real issued-user/role/Storage verification and approved real-use privacy publication; no new numbered migration currently prepared |
-| Expo | Hosted login/gates, role workspaces, student create/edit/filter, logout confirmation, full-height list skeletons and minimal search source; fictional browser checks pass; native login/keyboard and loading captures; user-confirmed hosted sign-in and model choices | Remaining parity and real role/Storage/write verification, native modal/Back/search checks, reload failure investigation, physical-device/APK and publication of local follow-up UI |
+| Expo | PR#11 merged with hosted login/gates, role workspaces, student create/edit/filter, logout, full-height skeletons and search source; fictional checks pass; native login/keyboard/loading captures; user-confirmed sign-in and first MobileNet browser result | Remaining parity and real role/Storage/write verification, native modal/Back/search checks, reload failure investigation and physical-device/APK |
 | Models/screening | Three binary models evaluated on136 images; LiteRT Linux parity/memory checks, private provisioning/fetch and Render startup; merged PR#10 upload fix; supplied browser evidence of first MobileNetV2 Initial Screening | Complete image/expert/parent/Follow-up workflow; other hosted model choices, planned three-class dataset/evaluation and final performance/validation evidence |
 | Historical data | Earlier backup/restore evidence and migration design available | Recover authoritative source, map identities, import/reconcile records and private images, rehearse rollback; MySQL repair remains paused |
 | Integration/release | Isolated role/SQL/client checks and Android JavaScript export available | Full teacher upload → expert review → parent release → Follow-up history, concurrency/recovery/access checks, measured targets and physical Android APK verification |

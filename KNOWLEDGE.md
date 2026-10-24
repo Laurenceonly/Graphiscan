@@ -1,3 +1,11 @@
+Publication update2026-10-24: all reviewed public work is committed/pushed;
+PR#11 confirmed merged at15:10:29UTC (source checkpoint293ae0f/reconciledd07cabe).
+Vercel preview was READY and user reports viewing admin colors. Production
+deployment revision, full role workflow and native release are not thereby
+verified. Estimate stays approximately65%; next private image/expert/parent/
+Follow-up using the existing completed Initial Screening. Prior local-only and
+pending-publication paragraphs below are historical.
+
 Admin palette2026-10-24: user requested only admin website/login colors matched
 to Expo. Local style.css/HostedAccess.vue/HostedAdminWorkspace.vue use #095df1
 blue, #074bc2 hover, #f7faff background, #14263c ink and #5c6c81 muted text with
