@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import type { HostedClient } from '../../shared/hosted-client.mjs'
-import { Body, Button, Loading, Notice, Screen, styles, useColors } from './ui'
+import { Body, Button, Notice, Screen, styles, useColors } from './ui'
+import { AppBrand } from './WorkspaceUI'
+import LoadingSkeleton from './LoadingSkeleton'
+import SignOutAction from './SignOutAction'
 
 type Agreement = { title: string; content: string; version: string }
 type Props = { client: HostedClient; action: string; refresh: () => Promise<void>; logout: () => Promise<void>; passwordChanged: () => void }
@@ -57,15 +60,12 @@ export default function AccountSetup({ client, action, refresh, logout, password
     } finally { setCurrent(''); setPassword(''); setConfirm(''); setBusy(false) }
   }
   return <Screen>
-    <View style={s.brand} accessible accessibilityLabel="GraphiScan">
-      <Image source={require('../assets/graphiscan-logo.png')} style={s.logo} resizeMode="contain" accessible={false} />
-      <Text style={[s.wordmark, { color: colors.text }]}>Graphi<Text style={{ color: colors.primary }}>Scan</Text></Text>
-    </View>
+    <View style={{paddingVertical:8}}><AppBrand/></View>
     <View style={s.intro}>
       <Text accessibilityRole="header" style={[s.title, { color: colors.text }]}>{passwordStep ? 'Set your password' : privacy ? 'Data Privacy Agreement' : 'Account setup'}</Text>
       <Body muted>{passwordStep ? 'Replace your temporary password before continuing.' : privacy ? 'Review the agreement before accessing GraphiScan.' : 'The privacy agreement is not available for your account. Contact your administrator.'}</Body>
     </View>
-    {passwordStep && <View style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    {passwordStep && <View style={[s.card, { backgroundColor: colors.surface }]}>
       <PasswordField label="Current password" value={current} onChange={setCurrent} disabled={busy} current />
       <PasswordField label="New password" value={password} onChange={setPassword} disabled={busy} />
       <PasswordField label="Confirm new password" value={confirm} onChange={setConfirm} disabled={busy} />
@@ -73,8 +73,8 @@ export default function AccountSetup({ client, action, refresh, logout, password
       {mismatch && <Notice error message="The new passwords do not match." />}
     </View>}
     {privacy && <>
-      {loading && <Loading />}
-      {agreement && <View style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      {loading && <LoadingSkeleton kind="agreement"/>}
+      {agreement && <View style={[s.card, { backgroundColor: colors.surface }]}>
         {agreement.title !== 'Data Privacy Agreement' && <Text accessibilityRole="header" style={[s.agreementTitle, { color: colors.text }]}>{agreement.title}</Text>}
         <Body muted>Version {agreement.version}</Body><Body>{agreement.content}</Body>
         <View style={[s.consent, { borderTopColor: colors.border }]}>
@@ -87,15 +87,15 @@ export default function AccountSetup({ client, action, refresh, logout, password
     <Notice error message={error} />
     {(passwordStep || privacy) && <Button label={busy ? 'Saving…' : privacy ? 'Agree and continue' : 'Save password'} disabled={busy || (passwordStep ? !current || !validPassword || !confirm || mismatch : !agreement || !accepted || loading)} onPress={submit} />}
     {!passwordStep && !privacy && <Button label="Check account access" secondary disabled={busy} onPress={async () => { setBusy(true); setError(''); try { await refresh() } catch (failure: any) { setError(failure.message) } finally { setBusy(false) } }} />}
-    <Button label="Sign out" secondary disabled={busy} onPress={() => logout().catch(failure => setError(failure.message))} />
+    <SignOutAction disabled={busy} onSignOut={logout} onError={setError} />
   </Screen>
 }
 const s = StyleSheet.create({
   brand: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8 }, logo: { width: 36, height: 36 }, wordmark: { fontSize: 22, fontWeight: '700', letterSpacing: -.6 },
   intro: { gap: 8 }, title: { fontSize: 26, lineHeight: 34, fontWeight: '600', letterSpacing: -.5 },
-  card: { padding: 20, borderWidth: 1, borderRadius: 12, gap: 20 }, passwordField: { gap: 8 },
+  card: { padding: 20, borderRadius: 16, gap: 20 }, passwordField: { gap: 8 },
   passwordFrame: { flexDirection:'row',alignItems:'center',minHeight:52,borderWidth:1,borderRadius:10 }, passwordInput: { flex:1,minWidth:0,minHeight:50,paddingHorizontal:14,paddingVertical:12,fontSize:16 },
-  visibility: { minHeight: 50, minWidth:44, alignItems:'center', justifyContent: 'center' },
+  visibility: { minHeight: 50, minWidth:48, alignItems:'center', justifyContent: 'center' },
   agreementTitle: { fontSize: 18, lineHeight: 26, fontWeight: '600' },
   consent: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 20, borderTopWidth: 1 }, consentText: { flex: 1, minWidth: 0, fontSize: 14, lineHeight: 21 },
 })

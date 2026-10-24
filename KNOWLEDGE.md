@@ -1,10 +1,60 @@
-Upload parser fix2026-10-24: generated PNG/JPEG requests reproduce the hosted
-REQUEST_TOO_LARGE413. The upload route's16KiB decoder limit was below Werkzeug's
-64KiB chunk;128KiB parser headroom with a separate16KiB text-field bound fixes
-the isolated reproduction.10MiB input/normalized output and16MP limits remain.
-35 upload/hosted/model tests pass; deployment and actual inference remain pending.
+Admin palette2026-10-24: user requested only admin website/login colors matched
+to Expo. Local style.css/HostedAccess.vue/HostedAdminWorkspace.vue use #095df1
+blue, #074bc2 hover, #f7faff background, #14263c ink and #5c6c81 muted text with
+matching borders/tints. Layout/API/Auth/model behavior and Expo source unchanged.
+Admin build passes; browser review/publication remain pending. The first actual
+browser screening checkpoint below remains saved while this UI work proceeds.
+
+Latest screening evidence2026-10-24: supplied browser screenshot shows the first
+completed fictional MobileNetV2 Initial Screening, Normal49.19%/High Potential
+50.81%, expert Pending. This matches the existing0.75 threshold. It is user-supplied
+browser evidence, not independently observed HTTP/latency/accuracy validation.
+Next: private image, admin assignment, expert review, parent release/denial and
+second Follow-up. Earlier pending-inference checkpoints are superseded for this
+first browser result only; full role/native/release gates remain open.
+
+Upload parser fix2026-10-24: generated photo-sized PNG/JPEG requests reproduce
+the reported REQUEST_TOO_LARGE413 before inference. api_v1.py used a16KiB
+multipart decoder limit below Werkzeug's64KiB read chunk. Local fix uses128KiB
+parser headroom and separately enforces the original16KiB text-field bound;
+10MiB file/normalized-image and16MP limits remain.35 isolated upload/hosted/model
+tests pass, including10MiB acceptance/over-limit rejection. Not deployed yet;
+publish the scoped backend fix before retrying the hosted workflow.
+PR#10 is confirmed merged as cf58120 at14:12:27UTC; clean-worktree35 tests pass.
+Render deployment/retry remain unverified. PR#8 stays open for the separate local
+browser-preview launcher/proxy, already included in the current local UI branch.
+
+Saved resume checkpoint2026-10-24: user is stopping for later. See RESUME.md first.
+Overall estimate approximately65%. PR#9 model release is on main and Render logs
+confirm verified private model fetch/successful one-thread startup; user saw the
+model choices. Actual hosted inference and full role workflow remain unverified.
+Latest all-role list loading/search/logout UI and documentation are local; a scoped
+local checkpoint is being saved. Emulator cold boot restored GraphiScan sign-in;
+runtime reload issue remains open. No old migration/provider setup needs rerunning.
+Older dated checkpoint paragraphs below are historical and may state superseded
+pending steps; use the latest resume/status rather than repeating completed work.
 
 Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
+and source release are complete locally. PR#9 merged as4d2e3b1; fresh private
+fetch and60 release tests/24 SQL checks pass. User reported publication SQL
+success; authenticated hosted models remain unverified. Render activation is
+being guided manually because browser controls expose no provider. See
+graphiscan/api/MODEL_ACTIVATION.md for the exact current sequence/rollback.
+Latest: corrected user-supplied GRAPHISCAN_MODEL_V1_MANIFEST key to the instructed
+GRAPHISCAN_V1_MODEL_MANIFEST. User reports success after REQUIRE_MODELtrue;
+02:28:16UTC logs confirm verified three-model bundle, one-thread sync startup,
+health200 and Live. Environment values not independently read. Fresh public probe:
+health200 in1.03s, me401/models401. Next authenticated fictional teacher screening,
+expert review, parent visibility and Follow-up. Actual inference remains unverified.
+Earlier: user confirmed the bucket/Python variables saved. The09:31:40GMT+8 deployment
+failed: supplied logs show admin-only dependencies and old start command, then
+required-model validation failure. Earlier Live status did not verify the model
+build step. Public health200/me401/models401 still pass. Recovery/settings edit
+pending: REQUIRE_MODELfalse plus clear MODEL_MANIFEST; verify the actual LiteRT
+build log before enabling both again. Root render.yaml remains admin-only;
+Blueprint management is unverified. Hosted inference remains unverified.
+
+Earlier Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
 is installed; Dockerfile.lite built locally. Enforced512MiB/no-swap/no-network/
 one-CPU full-API fictional probes passed with generated16MP white and detailed
 noise images, no TensorFlow/external calls/OOM kill. Default kernel peak RSS was
@@ -40,6 +90,75 @@ and deployment are unchanged; public inference stays disabled. WSL2 engine/kerne
 exist but no Linux distribution is installed. Next: Linux limit/package checks,
 private model provisioning and reviewed new-version catalogue cutover, then role
 workflow. Card preference remains unspecified; continue the no-charge route.
+
+Logout/loading2026-10-23: user reports native pages work. Shared SignOutAction
+now confirms manual logout in profiles, account setup and uncertain student forms;
+security-enforced logout remains immediate. Feed skeletons now cover missing
+hosted/legacy choices, fields, headings and images as well as existing lists/
+detail/agreement. useRecords hides other-query data and preserves same-query
+refresh content. TypeScript,18 mobile/19 shared tests,14 fictional browser checks
+and1296-module Android export passed. Native modal automation stopped because
+signed-in Profile was unavailable; no native modal/Back pass or actual logout.
+Earlier source checkpoint e87bf07 is local on feat/expo-design-refinement; newer
+slice remains local and production is unchanged. Full estimate60–65%.
+
+Expo/native continuation2026-10-23: final11 fictional directory browser checks,
+18 mobile/19 shared tests and TypeScript passed. Dark picker recapture is closed;
+directory design notes are extended. Existing Android Studio SDK now has an
+Android16/API36 Google APIs x86_64 GraphiScan_Pixel_6 emulator and Expo Go58.0.5.
+Native login rendered in light/dark and at dark font_scale1.3. Native keyboard
+coverage exposed hidden login actions; Android KeyboardAvoidingView height is
+now enabled in SignInPanel/shared Screen and recaptured with actions above IME.
+Final TypeScript/Hermes export passed1295 modules/19 assets/3.4MB, not an APK.
+Expo Go configuration reload produced an expo-modules-core EventEmitter startup
+failure; fresh-process recovery worked, underlying cause remains unverified.
+User reported successful private emulator sign-in after waiting; role and wider
+workflow evidence remain open. Public health200 in1.31s/emulator DNS and ping
+passed. The original delay was not captured; cold start is unconfirmed.
+npm run preview:android uses IPv4-first
+localhost on8081, fixing a reproduced ::1-only Metro/adb reverse mismatch;
+IPv4 status/native manifest200 and1394-module native bundle observed. Native
+role/onboarding/Storage, camera, APK and physical-device checks remain separate.
+No real writes, new SQL or hosted inference change. Progress estimate60–65%.
+
+Progress assessment2026-10-23: requirements/plan/defense minutes/checkpoints and
+Git status reviewed. Full-project estimate approximately60–65%, not a measured
+completion score. CURRENT_REQUIREMENTS.md records established work and remaining
+model/data/hosted/native/release/paper evidence. Earlier percentage and pending
+SQL notes are historical; through021 is applied with the last38-check hosted
+preflight passing. No new tests, authenticated production checks or mutations
+ran for this review. Latest Expo source remains local/uncommitted.
+
+Current continuation2026-10-23: hosted Expo student create/edit and server
+search/school/grade filters are implemented locally through existing v1 routes.
+Scoped school/guardian options, teacher ownership, exact creation retry and
+revision/read reconciliation are preserved.18 mobile/19 shared tests,607 contract/
+507 isolated SQL checks, TypeScript, Android export and Vue user build passed.
+Eleven fictional browser views/workflows passed; native-picker dark-preview theme
+fix was applied afterward and still needs recapture. Native/real hosted mutation
+evidence remains open; no new SQL or live writes. Python is currently unavailable.
+User then requested Scrollcraft for website work. Installed the upstream full
+skill at C:/Users/MY_PC/.codex/skills/scroll-craft, commit75d81f7,24 file hashes
+verified. It is available next turn; no Scrollcraft website has been built yet.
+
+Current Expo design2026-10-22: local/uncommitted feat/expo-design-refinement adds
+role Home/recent records, consistent native rows/type/spacing, student name/grade
+context, selected-tab pills, account/profile/detail refinements and source design
+documentation. Initial loads use Reanimated skeletons with static reduced-motion
+fallback; refresh keeps loaded content. Native export and TypeScript passed;
+29 fictional browser previews had no document overflow/page errors, and reduced
+motion removed the pulse. After comparing all48 visible Dribbble cards, the latest
+login uses a centered supplied logo and white form with the actual logo's royal
+blue (#095df1); it awaits user visual feedback. Fresh Impeccable verdict is recapture because
+Android device/emulator captures are missing; no native approval/APK is claimed.
+Defense minutes were reread; native school grouping/filtering, student creation,
+hosted role/model/privacy/data/release gates remain open. No real writes/new SQL.
+User asked to save the checkpoint and commit tomorrow. Current slice is finished
+locally; no staging, commit, push, merge or deployment occurred. RESUME.md is the
+next-session handoff. Four final login recaptures and final typecheck/native export
+passed after the logo corner fix. Impeccable still requires native Android captures.
+
+Local preview fix2026-10-22: use npm.cmd run preview from graphiscan/mobile-app and http://localhost:5174. Opt-in Metro proxy fixes browser-origin blockage; actual credential-free browser API probe passed. Native HTTPS defaults and production CORS are unchanged. Real sign-in still needs user verification.
 
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password

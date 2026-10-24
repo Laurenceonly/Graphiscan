@@ -167,9 +167,9 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 </script>
 
 <style scoped>
-.hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --page-bg:#fff; --border:#e7eaef; --border-soft:#edf0f3; --control-border:#cfd6df; --text:#111827; --muted:#687281; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--white); font:400 14px/1.55 var(--font-ui); color:var(--text); }
-.hosted-workspace :deep(.main-panel) { background:var(--white); }
-.hosted-workspace :deep(.content) { background:var(--white); }
+.hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--white); font:400 14px/1.55 var(--font-ui); color:var(--text); }
+.hosted-workspace :deep(.main-panel) { background:var(--page-bg); }
+.hosted-workspace :deep(.content) { background:var(--page-bg); }
 .hosted-workspace :deep(.sidebar) { padding:22px 16px; gap:22px; background:var(--white); border-right:1px solid var(--border); box-shadow:none; }
 .hosted-workspace :deep(.brand) { min-height:44px; padding:0 6px 20px; margin-bottom:2px; border:0; }
 .workspace-brand { display:flex; align-items:center; gap:9px; white-space:nowrap; font-size:19px; font-weight:650; letter-spacing:-.035em; }
@@ -266,7 +266,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .workspace-record-panel :deep(.assignment-form button[type=submit]) { background:var(--blue-700); color:var(--white); border-color:var(--blue-700); font-weight:600; }
 .workspace-record-panel :deep(.directory-toolbar > button:hover:not(:disabled)),
 .workspace-record-panel :deep(.directory-actions button[type=submit]:hover:not(:disabled)),
-.workspace-record-panel :deep(.assignment-form button[type=submit]:hover:not(:disabled)) { background:#104d79; color:var(--white); }
+.workspace-record-panel :deep(.assignment-form button[type=submit]:hover:not(:disabled)) { background:var(--blue-hover); color:var(--white); }
 .workspace-record-panel :deep(dialog.hosted-directory-modal) { position:fixed; inset:0; width:min(600px,calc(100vw - 32px)); max-height:calc(100dvh - 48px); overflow:auto; margin:auto; padding:28px; border:1px solid var(--border); border-radius:14px; color:var(--text); background:var(--white); box-shadow:var(--shadow-md); }
 .workspace-record-panel :deep(dialog.hosted-directory-modal::backdrop) { background:rgb(17 24 39 / .48); }
 .workspace-record-panel :deep(dialog.hosted-directory-modal) { overscroll-behavior:contain; }

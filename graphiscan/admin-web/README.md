@@ -1,5 +1,11 @@
 # GraphiScan admin web
 
+Local palette update2026-10-24: user requested matching Expo colors, including
+login, without layout changes. Shared palette now uses blue #095df1, hover
+#074bc2, paper #f7faff, ink #14263c and muted #5c6c81 with matching border and
+selection tints. Login and hosted workspace inherit those roles. Production
+build passed; browser review/publication remain separate. Expo code is unchanged.
+
 Prepared assignment setup2026-10-22: Edit > Manage assignment access uses the new
 scoped GET/PATCH account eligibility API. It needs020 installed before publication;
 actual metadata still shows019 as latest. Source/build and fictional1440/390/320
