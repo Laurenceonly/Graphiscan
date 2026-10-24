@@ -6,6 +6,9 @@ use Expo blue/paper/ink/muted/border colors; layout and behavior remain. Admin
 build passed1834 modules; browser automation did not produce a verified admin
 capture. User now requests committing/publishing completed work for hosted preview
 review; this supersedes the earlier local-only instruction for this source slice.
+Checkpoint293ae0f saves the public work; maincf58120 is being merged into the
+feature branch. Six documentation conflicts were resolved with the latest local
+evidence; runtime/model source merged cleanly. Push/hosted preview are next.
 Expo source is unchanged. Resume image/expert/parent/Follow-up testing after this
 bounded color review; retain the successful Initial Screening below.
 

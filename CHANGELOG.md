@@ -2,6 +2,8 @@
 
 ## 2026-10-24 - Save completed work for hosted preview review
 
+- Checkpoint293ae0f commits the reviewed public work. Reconciled maincf58120 into this branch; only six documentation conflicts required resolution, retaining the latest detailed local evidence and runbooks. Runtime/model source merged without conflicts. The existing021 formatting-only edit is retained; the blank-space-only017 artifact was normalized away. Preparing the branch push and hosted preview; no production-main merge, migration or real record write is requested.
+
 - User requested committing all completed work so the admin colors can be checked in the hosted preview. Preparing the existing feat/expo-design-refinement branch, including its previously saved mobile refinements, latest admin color changes and screening evidence; reconcile already merged model-host/upload fixes from main before publication. Only public source/documentation are included; ignored configuration, model weights, images/data, build output and review fixtures remain excluded.
 - Admin build passed1834 modules. The attempted automated admin browser review did not reach a verified sign-in-page capture and was interrupted; no new browser workflow pass is claimed. The actual preview is for the user's visual check. Existing source checks and the supplied successful Initial Screening evidence remain as previously recorded; expert/parent/Follow-up and native release gates remain open. No migration or real record write is part of this checkpoint.
 
