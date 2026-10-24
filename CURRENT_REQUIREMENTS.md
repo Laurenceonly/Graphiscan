@@ -1,3 +1,11 @@
+Model-host continuation2026-10-24: all3 FP32 copies passed Linux comparison on136
+images with zero class changes. The final adapter passed a512MiB capped16MP
+noise probe at422.59MiB peak process RSS.48 runtime/access/write tests,12 Linux
+bundle tests and24 isolated publication/rollback checks pass. The private model
+bundle is provisioned in Supabase; no hosted registry/default/API switch has run.
+Release/fetch roundtrip and the controlled real role workflow remain open.
+Current priority: verified model hosting, then teacher/expert/parent/Follow-up workflow.
+
 Current handoff2026-10-22: migrations020/021 are applied and the last hosted
 read-only preflight passed38 checks. PR#5 assignment API/admin and PR#6 shared
 page/card styling are merged. Public bundle index-BMML1qyx.js contains the shared

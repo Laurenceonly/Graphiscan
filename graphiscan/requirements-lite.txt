@@ -1,0 +1,4 @@
+# Optional FP32 model host. Original TensorFlow requirements remain independent.
+-r requirements-admin.txt
+ai-edge-litert==2.3.0
+numpy==2.4.4

@@ -1,3 +1,23 @@
+Model-host continuation2026-10-24: Linux numerical parity passed all3 models/all136
+images with zero class changes. Final single-cache/builtin-ResNet server passed
+the actual512MiB/no-swap/no-network16MP noise probe at422.59MiB peak process RSS.
+48 model/backend/write tests,12 Linux private-bundle tests and24 isolated catalogue
+cutover/rollback checks pass. Six private artifact chunks/four files are uploaded
+to the existing Supabase project. Hosted SQL, API configuration/deployment and the
+full role workflow remain pending; no student data or original model pins changed.
+Separate release worktree starts from main; UI changes remain local. Overall60-65%.
+
+Model-host work2026-10-23: user authorized online screening next. Synthetic
+Windows profiling of the pinned runtime reached799.12MiB resident with all3
+models cached; warm inference0.405–0.808s. This is not Linux/hosted evidence.
+FP32 LiteRT copies passed all136 images/all3 architectures with zero class changes
+and max score error9.15e-6. Optional schema3 adapter/staging/lighter container are
+implemented locally;47 model/backend/hosted/write tests passed. Windows resident
+peak253.79MiB for the single-cache adapter and472.22MiB for fictional full API with
+generated16MP images. Linux512MB fit, private provisioning, registry cutover and
+deployment remain unverified. Original model pins/manifest/registry are unchanged.
+Card preference unspecified; no paid service or secret upload. Overall60–65%.
+
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
 and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,

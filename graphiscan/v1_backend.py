@@ -253,7 +253,7 @@ def backend_from_environment(environ=None):
         from v1_screening_writes import ScreeningWriteService
         backend.screening_write_service = ScreeningWriteService(password_service.repository if password_service else None)
         from v1_uploads import ScreeningUploadService
-        from v1_models import runtime_from_manifest
+        from v1_lite_models import runtime_from_manifest
         from v1_storage import storage_from_environment
         runtime=None
         if env.get('GRAPHISCAN_V1_MODEL_MANIFEST'):
