@@ -1,3 +1,8 @@
+Upload blocker2026-10-24: publish/deploy the scoped multipart parser fix before
+retrying hosted screening. Generated JPG/PNG and file-boundary tests reproduce
+the old413;35 isolated upload/hosted/model tests pass after correction. The real
+teacher/expert/parent/Follow-up workflow remains unverified. No migration needed.
+
 Model-host continuation2026-10-24: Linux numerical parity passed all3 models/all136
 images with zero class changes. Final single-cache/builtin-ResNet server passed
 the actual512MiB/no-swap/no-network16MP noise probe at422.59MiB peak process RSS.

@@ -1,3 +1,9 @@
+Upload parser fix2026-10-24: generated PNG/JPEG requests reproduce the hosted
+REQUEST_TOO_LARGE413. The upload route's16KiB decoder limit was below Werkzeug's
+64KiB chunk;128KiB parser headroom with a separate16KiB text-field bound fixes
+the isolated reproduction.10MiB input/normalized output and16MP limits remain.
+35 upload/hosted/model tests pass; deployment and actual inference remain pending.
+
 Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
 is installed; Dockerfile.lite built locally. Enforced512MiB/no-swap/no-network/
 one-CPU full-API fictional probes passed with generated16MP white and detailed
