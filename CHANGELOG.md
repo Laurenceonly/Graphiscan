@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-24 - Save tomorrow's continuation checkpoint
+
+- User chose to continue tomorrow. RESUME.md now starts with the next-session handoff: retain the successful MobileNetV2 Initial Screening, verify private image, expert assignment/review, parent release/denial and second Follow-up in the ordinary browser before APK work. Published source/PR#11 and last status checkpoint d2d69e4 are recorded; no setup or migration rerun is needed.
+- Overall estimate stays approximately65%. Saved the proposed planning allocation for the remaining35% (2/4/3/3/3/6/8/6 across image, expert, parent, Follow-up, admin, Android, models/data/privacy and paper/final evidence). These weights are estimates rather than verified milestone completion. Checkpoint documentation only; no new test, record write, migration, model or application behavior change.
+
 ## 2026-10-24 - Confirm source publication and next-work status
 
 - All reviewed public work was committed as293ae0f, reconciled with published main in d07cabe and pushed. PR#11 is confirmed merged at15:10:29UTC; its Vercel preview was READY for d07cabe. User reports viewing the admin preview. This establishes source publication and user preview, not a full authenticated browser/role or physical-device pass. Anonymous preview probing redirects to Vercel's own sign-in; no protection was changed or bypassed. Exact subsequent production deployment state was not independently checked.
