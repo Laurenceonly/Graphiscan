@@ -1,3 +1,54 @@
+## Linux continuation — 2026-10-24
+
+Separate free WSL2 Debian13 GraphiScanValidation is installed, stored in ignored
+.local-tools/wsl-validation. Podman5.4.2 built Dockerfile.lite successfully:
+localhost/graphiscan-lite:validation, image
+d6cae7c670312f4ffa03ded70ba6f117dea259065cbce5d2f7e8101fed53f81d.
+No Docker Desktop/global .wslconfig or production credentials were needed.
+
+Two actual Linux512MiB cgroup tests passed with one CPU/no swap/no network:
+.local-tools/linux-validation/host-512m.json (16MP white,475.4MiB peak RSS) and
+host-512m-noise.json (16MP deterministic four-tone noise/6701064-byte PNG,
+491.57MiB peak RSS). No external calls, TensorFlow import or OOM kill. Kernel
+container peaks reached512MiB including charged file cache; headroom is narrow.
+These do not establish actual Gunicorn/networked/authenticated upload capacity.
+
+Completed full Linux comparison with --verify-existing /copies --compare
+--resnet-cpu-kernel builtin: all3/all136 pass, zero class disagreements and max
+score error8.41e-6. Public aggregate api/litert-linux-evaluation.json SHA-256
+e9eb1beae81bb85ef0a24dd3349e646fd02ab0598017cbbcf84e8a3a1a324db1.
+Reference image localhost/graphiscan-reference:validation used3GiB for TensorFlow;
+this is separate from the512MiB serving test. Adopted builtin ResNet in the actual
+adapter after parity. Schema3 kind litert-fp32-builtin-resnet-v1 pins the choice.
+The separate draft manifest was refreshed/backed up; original pins/.env untouched.
+
+Final serving image localhost/graphiscan-lite:builtin-validation,
+3653dfb0d25ee095e9ccf09d18cb33c3a1d2d611576f6302c36fbcaa7a4c7453,
+passed detailed16MP noise/512MiB with422.59MiB peak process RSS, no OOM/network/
+TensorFlow, without experiment overrides. Report host-512m-serving-builtin.json.
+48 model/backend/write tests,12 Linux bundle tests and24 isolated PostgreSQL
+publication/rollback checks pass. No experiment session is still running.
+
+Private bundle upload succeeded: Supabase bucket graphiscan-model-artifacts,
+six content-addressed chunks/four files,121266151 bytes. No student data/API/
+schema/model-registry changes. model_bundle.py and prepare/fetch/upload CLI tools
+keep byte/path limits, SHA validation and separate student/model buckets. Public
+model/litert-bundle.json is descriptor metadata only; no weights/secrets in Git.
+Provider lookup wraps404 inHTTP400; uploader handles that specific body code.
+
+Publication/rollback SQL is prepared and tested, NOT executed on hosted DB.
+Release worktree .local-tools/litert-release branch feat/litert-hosting starts
+from latest main97f1cce; original predict/v1_models/v1_uploads/class mapping bytes
+match. Bounded files/docs are copied and fresh private fetch passed there.
+Release completed60 tests (one Windows-only skip covered in Linux) plus24 SQL
+checks; staged-index review verified five source pins/evidence and no private
+files. Next: commit/push release, then perform
+the reviewed registry/default switch and Render settings/deployment with rollback.
+Use existing free Render service and existing S3 keys; new model-bucket variable
+is nonsecret. Browser controls currently return no providers; user is opening
+Render in an in-app tab and referencing @Browser. Public inference remains
+disabled. Preserve local modal fix.
+
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
 and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,
