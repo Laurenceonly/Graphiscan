@@ -1,5 +1,11 @@
 # GraphiScan change log
 
+## 2026-10-24 - Correct multipart buffering that rejects ordinary photos
+
+- User reported The request is too large during hosted screening. Generated512x512 PNG/JPEG and exact/over10MiB file tests reproduced413 before image validation: api_v1.py configured a16KiB multipart buffer below Werkzeug's64KiB read chunk.
+- The screening route now allows128KiB parser headroom and separately retains the16KiB text-field bound. Image input/normalized output remain capped at10MiB and16MP; role, ownership, model and reservation/recovery behavior are unchanged. Added three regression methods to tests/test_v1_screening_writes.py and updated the screening runbook/knowledge/handoff/plan.
+- Verification:35 isolated upload/hosted-composition/model tests pass with generated images and mocked database/Storage/runtime. Before the fix, two new regression methods produced four expected413 failures. Temporary-file ResourceWarnings were emitted. No provider calls, hosted writes, SQL or private image/model/configuration changes occurred. Publication/deployment and actual hosted inference remain pending.
+
 ## 2026-10-24 - Validate the lighter server under a Linux memory cap
 
 - Installed a separate free Debian13 WSL2 distribution, GraphiScanValidation, with its files under ignored .local-tools/wsl-validation; installed Podman5.4.2 and CA certificates inside it. Existing WSL engine/kernel were reused. Built Dockerfile.lite locally as localhost/graphiscan-lite:validation, image d6cae7c670312f4ffa03ded70ba6f117dea259065cbce5d2f7e8101fed53f81d, using the official Python3.11 Bookworm image. No provider, paid resource, production secrets, SQL or live deployment changed.

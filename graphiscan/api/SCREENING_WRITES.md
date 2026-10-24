@@ -10,6 +10,15 @@ Already applied and metadata-verified: ../db/postgres/013_014_screening_writes.s
 
 After user-reported success, run tools/check_v1_screening_writes.py --connect through the existing restricted reader. It checks catalogue permissions and nonexistent-identity read denials, never invokes write/cleanup functions. Restart the local API only after verification. This is not a populated authorized write test.
 
+## Multipart parser correction — 2026-10-24
+
+The upload route allows128KiB multipart parser buffering and separately rejects
+text-field values above16KiB. The prior16KiB decoder limit rejected ordinary
+photos when Werkzeug supplied a64KiB chunk. Image limits remain10MiB input and
+normalized output,16MP and one frame. Generated PNG/JPEG and exact/over10MiB
+regressions reproduce the old413;35 isolated upload/hosted/model tests pass after
+the fix. Hosted deployment and the actual role workflow remain unverified.
+
 ## Implemented routes and behavior
 
 - GET /models: bounded metadata, signed pagination, effective selectable/default flags. Models absent from the configured runtime or lacking private Storage are not offered as selectable. No artifact paths, weights or guessed evidence are returned.
