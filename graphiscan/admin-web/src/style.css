@@ -9,24 +9,25 @@
 :root {
   --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --white: #ffffff;
-  --page-bg: #f6f8fb;
+  --page-bg: #f7faff;
 
-  --text: #111827;
-  --text-soft: #344054;
-  --muted: #667085;
+  --text: #14263c;
+  --text-soft: #5c6c81;
+  --muted: #5c6c81;
   --muted-light: #98a2b3;
 
-  --border: #e6edf5;
-  --border-soft: #eef3f8;
-  --control-border: #b8c5d4;
+  --border: #dce5ef;
+  --border-soft: #eaf1ff;
+  --control-border: #dce5ef;
   --control-radius: 8px;
   --panel-radius: 14px;
 
-  --blue-50: #eef8ff;
-  --blue-100: #dff2ff;
-  --blue-300: #7cc8f8;
-  --blue-500: #286fa2;
-  --blue-700: #145c8f;
+  --blue-50: #e7efff;
+  --blue-100: #eaf1ff;
+  --blue-300: #9fc4ff;
+  --blue-500: #095df1;
+  --blue-700: #095df1;
+  --blue-hover: #074bc2;
 
   --success: #16a34a;
   --success-text: #15803d;
@@ -624,7 +625,7 @@ textarea {
 }
 
 .modern-login-form button:hover {
-  background: #104d79;
+  background: var(--blue-hover);
 }
 
 .modern-login-form button:disabled {
@@ -2380,7 +2381,7 @@ td .action-text {
 
 .primary-action-btn:hover,
 .primary-modal-btn:hover {
-  background: #104d79;
+  background: var(--blue-hover);
 }
 
 .primary-modal-btn:disabled {

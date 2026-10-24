@@ -12,12 +12,13 @@ After user-reported success, run tools/check_v1_screening_writes.py --connect th
 
 ## Multipart parser correction — 2026-10-24
 
-The upload route allows128KiB multipart parser buffering and separately rejects
-text-field values above16KiB. The prior16KiB decoder limit rejected ordinary
-photos when Werkzeug supplied a64KiB chunk. Image limits remain10MiB input and
-normalized output,16MP and one frame. Generated PNG/JPEG and exact/over10MiB
-regressions reproduce the old413;35 isolated upload/hosted/model tests pass after
-the fix. Hosted deployment and the actual role workflow remain unverified.
+The upload route now allows128KiB of multipart parser buffering while separately
+rejecting text-field values above16KiB. The prior16KiB parser setting rejected
+ordinary JPG/PNG files when Werkzeug supplied a64KiB chunk, returning413 before
+image validation. Image limits remain10MiB input/normalized output and16MP.
+Generated-photo and exact/over10MiB regressions reproduce the old error;35
+isolated upload/hosted/model tests pass after the correction. Hosted deployment
+and the actual upload/review/release workflow remain to be verified.
 
 ## Implemented routes and behavior
 

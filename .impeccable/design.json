@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T11:15:12.810Z",
+  "title": "Design System: GraphiScan Android",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "bg",
+        "tonalRamp": [
+          "oklch(15% 0.0074 260.73)",
+          "oklch(26% 0.0074 260.73)",
+          "oklch(37% 0.0074 260.73)",
+          "oklch(49% 0.0074 260.73)",
+          "oklch(61% 0.0074 260.73)",
+          "oklch(73% 0.0074 260.73)",
+          "oklch(85% 0.0074 260.73)",
+          "oklch(95% 0.0074 260.73)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(37% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(73% 0.0000 89.88)",
+          "oklch(85% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "text",
+        "tonalRamp": [
+          "oklch(15% 0.0479 254.28)",
+          "oklch(26% 0.0479 254.28)",
+          "oklch(37% 0.0479 254.28)",
+          "oklch(49% 0.0479 254.28)",
+          "oklch(61% 0.0479 254.28)",
+          "oklch(73% 0.0479 254.28)",
+          "oklch(85% 0.0479 254.28)",
+          "oklch(95% 0.0479 254.28)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(15% 0.0385 255.32)",
+          "oklch(26% 0.0385 255.32)",
+          "oklch(37% 0.0385 255.32)",
+          "oklch(49% 0.0385 255.32)",
+          "oklch(61% 0.0385 255.32)",
+          "oklch(73% 0.0385 255.32)",
+          "oklch(85% 0.0385 255.32)",
+          "oklch(95% 0.0385 255.32)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "border",
+        "tonalRamp": [
+          "oklch(15% 0.0167 250.85)",
+          "oklch(26% 0.0167 250.85)",
+          "oklch(37% 0.0167 250.85)",
+          "oklch(49% 0.0167 250.85)",
+          "oklch(61% 0.0167 250.85)",
+          "oklch(73% 0.0167 250.85)",
+          "oklch(85% 0.0167 250.85)",
+          "oklch(95% 0.0167 250.85)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.2334 261.66)",
+          "oklch(26% 0.2334 261.66)",
+          "oklch(37% 0.2334 261.66)",
+          "oklch(49% 0.2334 261.66)",
+          "oklch(61% 0.2334 261.66)",
+          "oklch(73% 0.2334 261.66)",
+          "oklch(85% 0.2334 261.66)",
+          "oklch(95% 0.2334 261.66)"
+        ]
+      },
+      "on-primary": {
+        "role": "neutral",
+        "displayName": "on primary",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(37% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(73% 0.0000 89.88)",
+          "oklch(85% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "soft": {
+        "role": "primary",
+        "displayName": "soft",
+        "tonalRamp": [
+          "oklch(15% 0.0232 264.46)",
+          "oklch(26% 0.0232 264.46)",
+          "oklch(37% 0.0232 264.46)",
+          "oklch(49% 0.0232 264.46)",
+          "oklch(61% 0.0232 264.46)",
+          "oklch(73% 0.0232 264.46)",
+          "oklch(85% 0.0232 264.46)",
+          "oklch(95% 0.0232 264.46)"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "error",
+        "tonalRamp": [
+          "oklch(15% 0.1651 19.83)",
+          "oklch(26% 0.1651 19.83)",
+          "oklch(37% 0.1651 19.83)",
+          "oklch(49% 0.1651 19.83)",
+          "oklch(61% 0.1651 19.83)",
+          "oklch(73% 0.1651 19.83)",
+          "oklch(85% 0.1651 19.83)",
+          "oklch(95% 0.1651 19.83)"
+        ]
+      },
+      "normal": {
+        "role": "neutral",
+        "displayName": "normal",
+        "tonalRamp": [
+          "oklch(15% 0.1105 152.56)",
+          "oklch(26% 0.1105 152.56)",
+          "oklch(37% 0.1105 152.56)",
+          "oklch(49% 0.1105 152.56)",
+          "oklch(61% 0.1105 152.56)",
+          "oklch(73% 0.1105 152.56)",
+          "oklch(85% 0.1105 152.56)",
+          "oklch(95% 0.1105 152.56)"
+        ]
+      },
+      "normal-surface": {
+        "role": "neutral",
+        "displayName": "normal surface",
+        "tonalRamp": [
+          "oklch(15% 0.0173 159.12)",
+          "oklch(26% 0.0173 159.12)",
+          "oklch(37% 0.0173 159.12)",
+          "oklch(49% 0.0173 159.12)",
+          "oklch(61% 0.0173 159.12)",
+          "oklch(73% 0.0173 159.12)",
+          "oklch(85% 0.0173 159.12)",
+          "oklch(95% 0.0173 159.12)"
+        ]
+      },
+      "high": {
+        "role": "neutral",
+        "displayName": "high",
+        "tonalRamp": [
+          "oklch(15% 0.1080 69.31)",
+          "oklch(26% 0.1080 69.31)",
+          "oklch(37% 0.1080 69.31)",
+          "oklch(49% 0.1080 69.31)",
+          "oklch(61% 0.1080 69.31)",
+          "oklch(73% 0.1080 69.31)",
+          "oklch(85% 0.1080 69.31)",
+          "oklch(95% 0.1080 69.31)"
+        ]
+      },
+      "high-surface": {
+        "role": "neutral",
+        "displayName": "high surface",
+        "tonalRamp": [
+          "oklch(15% 0.0356 83.78)",
+          "oklch(26% 0.0356 83.78)",
+          "oklch(37% 0.0356 83.78)",
+          "oklch(49% 0.0356 83.78)",
+          "oklch(61% 0.0356 83.78)",
+          "oklch(73% 0.0356 83.78)",
+          "oklch(85% 0.0356 83.78)",
+          "oklch(95% 0.0356 83.78)"
+        ]
+      },
+      "bg-dark": {
+        "role": "neutral",
+        "displayName": "bg dark",
+        "tonalRamp": [
+          "oklch(15% 0.0371 258.84)",
+          "oklch(26% 0.0371 258.84)",
+          "oklch(37% 0.0371 258.84)",
+          "oklch(49% 0.0371 258.84)",
+          "oklch(61% 0.0371 258.84)",
+          "oklch(73% 0.0371 258.84)",
+          "oklch(85% 0.0371 258.84)",
+          "oklch(95% 0.0371 258.84)"
+        ]
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0443 256.92)",
+          "oklch(26% 0.0443 256.92)",
+          "oklch(37% 0.0443 256.92)",
+          "oklch(49% 0.0443 256.92)",
+          "oklch(61% 0.0443 256.92)",
+          "oklch(73% 0.0443 256.92)",
+          "oklch(85% 0.0443 256.92)",
+          "oklch(95% 0.0443 256.92)"
+        ]
+      },
+      "text-dark": {
+        "role": "neutral",
+        "displayName": "text dark",
+        "tonalRamp": [
+          "oklch(15% 0.0079 253.85)",
+          "oklch(26% 0.0079 253.85)",
+          "oklch(37% 0.0079 253.85)",
+          "oklch(49% 0.0079 253.85)",
+          "oklch(61% 0.0079 253.85)",
+          "oklch(73% 0.0079 253.85)",
+          "oklch(85% 0.0079 253.85)",
+          "oklch(95% 0.0079 253.85)"
+        ]
+      },
+      "muted-dark": {
+        "role": "neutral",
+        "displayName": "muted dark",
+        "tonalRamp": [
+          "oklch(15% 0.0320 252.72)",
+          "oklch(26% 0.0320 252.72)",
+          "oklch(37% 0.0320 252.72)",
+          "oklch(49% 0.0320 252.72)",
+          "oklch(61% 0.0320 252.72)",
+          "oklch(73% 0.0320 252.72)",
+          "oklch(85% 0.0320 252.72)",
+          "oklch(95% 0.0320 252.72)"
+        ]
+      },
+      "border-dark": {
+        "role": "neutral",
+        "displayName": "border dark",
+        "tonalRamp": [
+          "oklch(15% 0.0502 255.24)",
+          "oklch(26% 0.0502 255.24)",
+          "oklch(37% 0.0502 255.24)",
+          "oklch(49% 0.0502 255.24)",
+          "oklch(61% 0.0502 255.24)",
+          "oklch(73% 0.0502 255.24)",
+          "oklch(85% 0.0502 255.24)",
+          "oklch(95% 0.0502 255.24)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "primary dark",
+        "tonalRamp": [
+          "oklch(15% 0.0929 259.58)",
+          "oklch(26% 0.0929 259.58)",
+          "oklch(37% 0.0929 259.58)",
+          "oklch(49% 0.0929 259.58)",
+          "oklch(61% 0.0929 259.58)",
+          "oklch(73% 0.0929 259.58)",
+          "oklch(85% 0.0929 259.58)",
+          "oklch(95% 0.0929 259.58)"
+        ]
+      },
+      "on-primary-dark": {
+        "role": "neutral",
+        "displayName": "on primary dark",
+        "tonalRamp": [
+          "oklch(15% 0.0716 258.71)",
+          "oklch(26% 0.0716 258.71)",
+          "oklch(37% 0.0716 258.71)",
+          "oklch(49% 0.0716 258.71)",
+          "oklch(61% 0.0716 258.71)",
+          "oklch(73% 0.0716 258.71)",
+          "oklch(85% 0.0716 258.71)",
+          "oklch(95% 0.0716 258.71)"
+        ]
+      },
+      "soft-dark": {
+        "role": "primary",
+        "displayName": "soft dark",
+        "tonalRamp": [
+          "oklch(15% 0.0588 255.77)",
+          "oklch(26% 0.0588 255.77)",
+          "oklch(37% 0.0588 255.77)",
+          "oklch(49% 0.0588 255.77)",
+          "oklch(61% 0.0588 255.77)",
+          "oklch(73% 0.0588 255.77)",
+          "oklch(85% 0.0588 255.77)",
+          "oklch(95% 0.0588 255.77)"
+        ]
+      },
+      "error-dark": {
+        "role": "neutral",
+        "displayName": "error dark",
+        "tonalRamp": [
+          "oklch(15% 0.0882 22.53)",
+          "oklch(26% 0.0882 22.53)",
+          "oklch(37% 0.0882 22.53)",
+          "oklch(49% 0.0882 22.53)",
+          "oklch(61% 0.0882 22.53)",
+          "oklch(73% 0.0882 22.53)",
+          "oklch(85% 0.0882 22.53)",
+          "oklch(95% 0.0882 22.53)"
+        ]
+      },
+      "normal-dark": {
+        "role": "neutral",
+        "displayName": "normal dark",
+        "tonalRamp": [
+          "oklch(15% 0.0877 152.89)",
+          "oklch(26% 0.0877 152.89)",
+          "oklch(37% 0.0877 152.89)",
+          "oklch(49% 0.0877 152.89)",
+          "oklch(61% 0.0877 152.89)",
+          "oklch(73% 0.0877 152.89)",
+          "oklch(85% 0.0877 152.89)",
+          "oklch(95% 0.0877 152.89)"
+        ]
+      },
+      "normal-surface-dark": {
+        "role": "neutral",
+        "displayName": "normal surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0502 170.74)",
+          "oklch(26% 0.0502 170.74)",
+          "oklch(37% 0.0502 170.74)",
+          "oklch(49% 0.0502 170.74)",
+          "oklch(61% 0.0502 170.74)",
+          "oklch(73% 0.0502 170.74)",
+          "oklch(85% 0.0502 170.74)",
+          "oklch(95% 0.0502 170.74)"
+        ]
+      },
+      "high-dark": {
+        "role": "neutral",
+        "displayName": "high dark",
+        "tonalRamp": [
+          "oklch(15% 0.1032 79.98)",
+          "oklch(26% 0.1032 79.98)",
+          "oklch(37% 0.1032 79.98)",
+          "oklch(49% 0.1032 79.98)",
+          "oklch(61% 0.1032 79.98)",
+          "oklch(73% 0.1032 79.98)",
+          "oklch(85% 0.1032 79.98)",
+          "oklch(95% 0.1032 79.98)"
+        ]
+      },
+      "high-surface-dark": {
+        "role": "neutral",
+        "displayName": "high surface dark",
+        "tonalRamp": [
+          "oklch(15% 0.0466 76.94)",
+          "oklch(26% 0.0466 76.94)",
+          "oklch(37% 0.0466 76.94)",
+          "oklch(49% 0.0466 76.94)",
+          "oklch(61% 0.0466 76.94)",
+          "oklch(73% 0.0466 76.94)",
+          "oklch(85% 0.0466 76.94)",
+          "oklch(95% 0.0466 76.94)"
+        ]
+      },
+      "brand": {
+        "role": "primary",
+        "displayName": "brand",
+        "tonalRamp": [
+          "oklch(15% 0.2334 261.66)",
+          "oklch(26% 0.2334 261.66)",
+          "oklch(37% 0.2334 261.66)",
+          "oklch(49% 0.2334 261.66)",
+          "oklch(61% 0.2334 261.66)",
+          "oklch(73% 0.2334 261.66)",
+          "oklch(85% 0.2334 261.66)",
+          "oklch(95% 0.2334 261.66)"
+        ]
+      },
+      "brand-pressed": {
+        "role": "primary",
+        "displayName": "brand pressed",
+        "tonalRamp": [
+          "oklch(15% 0.1961 261.48)",
+          "oklch(26% 0.1961 261.48)",
+          "oklch(37% 0.1961 261.48)",
+          "oklch(49% 0.1961 261.48)",
+          "oklch(61% 0.1961 261.48)",
+          "oklch(73% 0.1961 261.48)",
+          "oklch(85% 0.1961 261.48)",
+          "oklch(95% 0.1961 261.48)"
+        ]
+      },
+      "on-brand": {
+        "role": "neutral",
+        "displayName": "on brand",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(37% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(73% 0.0000 89.88)",
+          "oklch(85% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "brand-muted": {
+        "role": "primary",
+        "displayName": "brand muted",
+        "tonalRamp": [
+          "oklch(15% 0.0203 264.47)",
+          "oklch(26% 0.0203 264.47)",
+          "oklch(37% 0.0203 264.47)",
+          "oklch(49% 0.0203 264.47)",
+          "oklch(61% 0.0203 264.47)",
+          "oklch(73% 0.0203 264.47)",
+          "oklch(85% 0.0203 264.47)",
+          "oklch(95% 0.0203 264.47)"
+        ]
+      },
+      "skeleton": {
+        "role": "neutral",
+        "displayName": "skeleton",
+        "tonalRamp": [
+          "oklch(15% 0.0302 260.71)",
+          "oklch(26% 0.0302 260.71)",
+          "oklch(37% 0.0302 260.71)",
+          "oklch(49% 0.0302 260.71)",
+          "oklch(61% 0.0302 260.71)",
+          "oklch(73% 0.0302 260.71)",
+          "oklch(85% 0.0302 260.71)",
+          "oklch(95% 0.0302 260.71)"
+        ]
+      },
+      "skeleton-dark": {
+        "role": "neutral",
+        "displayName": "skeleton dark",
+        "tonalRamp": [
+          "oklch(15% 0.0569 254.66)",
+          "oklch(26% 0.0569 254.66)",
+          "oklch(37% 0.0569 254.66)",
+          "oklch(49% 0.0569 254.66)",
+          "oklch(61% 0.0569 254.66)",
+          "oklch(73% 0.0569 254.66)",
+          "oklch(85% 0.0569 254.66)",
+          "oklch(95% 0.0569 254.66)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Workspace title",
+        "purpose": "Native system type, Roboto on Android; source leaves fontFamily unset. Names and setup headings."
+      },
+      "title-auth": {
+        "displayName": "Login title",
+        "purpose": "Centered 22/30 sign-in heading in the latest logo-led proposal after delegated reference selection; user visual feedback remains pending."
+      },
+      "heading": {
+        "displayName": "Section heading",
+        "purpose": "Shared headings. Workspace section heading uses local line-height 25."
+      },
+      "action-title": {
+        "displayName": "Primary task",
+        "purpose": "Role-specific Home action title."
+      },
+      "row-title": {
+        "displayName": "Record title",
+        "purpose": "Names and list action titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Record values and explanatory copy; source leaves weight at native default."
+      },
+      "hint": {
+        "displayName": "Metadata",
+        "purpose": "Secondary record information and field hints."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Fields and shared button text."
+      },
+      "status": {
+        "displayName": "Status",
+        "purpose": "Written status chips; not interactive filters."
+      },
+      "input": {
+        "displayName": "Input",
+        "purpose": "Native text entry; platform line-height and family remain default."
+      },
+      "home-title": {
+        "displayName": "Home identity",
+        "purpose": "Compact 22/30 name row with role chip."
+      },
+      "auth-submit": {
+        "displayName": "Login submit",
+        "purpose": "Current source login action type, 15/22 at weight 600. Proposed layout awaits user visual feedback."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "loading-pulse",
+        "value": "opacity: 0% 0.5, 50% 1, 100% 0.5; 1400ms ease-in-out infinite",
+        "purpose": "LoadingSkeleton.tsx Reanimated CSS keyframes. Opacity only; active only after reduced-motion preference resolves false, with app active and screen focused. Native performance remains unverified."
+      },
+      {
+        "name": "loading-static",
+        "value": "opacity: 0.75",
+        "purpose": "Initial, reduced-motion, inactive-app and unfocused-screen skeleton state. Preference and AppState listeners clean up on unmount."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "browser-development-canvas-only",
+        "value": "600px"
+      }
+    ],
+    "sourceEvidence": {
+      "directory": "HostedStudents.tsx, HostedStudentEditor.tsx and HostedDirectoryControls.tsx extend the existing workspace. Native pickers use explicit theme surface/text roles, a one-unit border, radius 10, minimum height 52 and an 8-unit label gap. Forms and recovery states reuse existing Field, Button, Notice and RecordValue patterns.",
+      "verification": "2026-10-23: 11 fictional Chromium directory workflows/views passed at 390/320, including dark picker recapture; no document overflow or application page errors. Intercepted fictional writes only. Native Android review and hosted actions remain unverified.",
+      "native": "2026-10-23: API36 GraphiScan_Pixel_6 with Expo Go58.0.5 rendered login in light/dark and at dark font_scale1.3. Android KeyboardAvoidingView height behavior fixes reproduced covered login actions; actual IME recapture confirms password/sign-in above the keyboard. Font-scale configuration reload produced an expo-modules-core EventEmitter startup failure; fresh process recovered, underlying cause remains unverified. Other native role/form screens and physical device/APK remain open.",
+      "logoutLoading": "2026-10-23: SignOutAction confirms manual logout across profiles/onboarding/student recovery, with Cancel/Escape/Android Back dismissal and forced-expiry bypass. Feed skeletons extend to choice/field/image/heading and hosted/legacy initial data loads. Scope-bound records retain refresh content. 14 fictional browser cases passed including dark320, reduced motion, Cancel/Escape, pending draft retention and exactly-once confirmation. Native modal/Back remains unverified; Android export1296 modules passed.",
+      "modalBalance": "2026-10-23: Equal flexible action columns with12 gap, matching adaptive minimum heights and text-edge alignment. Stack below320 logical units or above1.4 font scale. Six light/dark fictional browser captures at390/320/280 measured equal button sizes with no overflow/errors; Cancel/Escape and one-confirm behavior passed. Native visual/font-scale recapture remains unverified."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared blue action; minimum height 52. Browser focus outline is a panel affordance.",
+      "html": "<button class=\"ds-primary\">Save review</button>",
+      "css": ".ds-primary{font-family:Roboto,Arial,sans-serif;background:#095df1;color:#fff;min-height:52px;max-width:100%;padding:12px 18px;border:0;border-radius:10px;font-size:14px;line-height:21px;font-weight:500;cursor:pointer}.ds-primary:hover,.ds-secondary:hover{filter:none}.ds-primary:focus-visible,.ds-secondary:focus-visible{outline:2px solid #095df1;outline-offset:3px}.ds-primary:active,.ds-secondary:active{opacity:.8}.ds-primary:disabled,.ds-secondary:disabled{opacity:.55}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Surface action with primary text and a quiet border.",
+      "html": "<button class=\"ds-secondary\">View student history</button>",
+      "css": ".ds-secondary{font-family:Roboto,Arial,sans-serif;background:#fff;color:#095df1;min-height:52px;max-width:100%;padding:12px 18px;border:1px solid #dce5ef;border-radius:10px;font-size:14px;line-height:21px;font-weight:500;cursor:pointer}.ds-primary:hover,.ds-secondary:hover{filter:none}.ds-primary:focus-visible,.ds-secondary:focus-visible{outline:2px solid #095df1;outline-offset:3px}.ds-primary:active,.ds-secondary:active{opacity:.8}.ds-primary:disabled,.ds-secondary:disabled{opacity:.55}"
+    },
+    {
+      "name": "Labelled Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Shared visible label and native input translation; browser focus uses its default outline. Explicit blue frame focus is local to login/password fields.",
+      "html": "<label class=\"ds-field\">Review remarks<input class=\"ds-field-input\" placeholder=\"Enter remarks\"></label>",
+      "css": ".ds-field{font-family:Roboto,Arial,sans-serif;display:flex;flex-direction:column;gap:8px;color:#14263c;font-size:14px;line-height:21px;font-weight:500}.ds-field-input{box-sizing:border-box;font-family:Roboto,Arial,sans-serif;background:#fff;color:#14263c;border:1px solid #dce5ef;border-radius:10px;min-height:52px;padding:12px 14px;font-size:16px;max-width:100%;width:auto}.ds-field-input::placeholder{color:#5c6c81}.ds-field-input:hover{border-color:#dce5ef}.ds-field-input:focus-visible{outline:2px auto #095df1;outline-offset:2px}.ds-field-input:disabled{cursor:default}"
+    },
+    {
+      "name": "Record Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat surface for attributed record values; hosted detail panels omit the base border.",
+      "html": "<section class=\"ds-panel\"><h3 class=\"ds-panel-title\">Model output</h3><div class=\"ds-panel-value\"><span class=\"ds-panel-label\">Model version</span><span>Not recorded</span></div></section>",
+      "css": ".ds-panel{font-family:Roboto,Arial,sans-serif;background:#fff;color:#14263c;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}.ds-panel-title{font-size:18px;line-height:26px;font-weight:600;margin:0}.ds-panel-value{display:flex;flex-direction:column;gap:5px;font-size:15px;line-height:23px}.ds-panel-label{color:#5c6c81;font-size:13px;line-height:20px}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "status-normal",
+      "description": "Written model/review state, not an interactive filter or diagnostic claim.",
+      "html": "<div class=\"ds-statuses\"><span class=\"ds-status-normal\">Model: Normal</span><span class=\"ds-status-pending\">Review: Pending</span></div>",
+      "css": ".ds-statuses{display:flex;flex-wrap:wrap;gap:8px}.ds-status-normal,.ds-status-pending{font-family:Roboto,Arial,sans-serif;display:inline-block;border-radius:6px;padding:4px 8px;font-size:12px;line-height:18px;font-weight:500}.ds-status-normal{color:#176b3a;background:#e7f4ec}.ds-status-pending{color:#5c6c81;background:#e7efff}"
+    },
+    {
+      "name": "Bottom Tabs",
+      "kind": "nav",
+      "refersTo": "tab-active",
+      "description": "Native bottom-tab color and geometry translation: 56x32 selected icon pill with label below. SVG destination shapes are panel translations; actual native navigation supplies Material icons and safe areas.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Teacher workspace\"><button class=\"ds-tab ds-tab-active\" aria-current=\"page\"><span class=\"ds-tab-icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z\"></path></svg></span><span>Home</span></button><button class=\"ds-tab\"><span class=\"ds-tab-icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05C16.19 13.89 17 15.02 17 16.5V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z\"></path></svg></span><span>Students</span></button><button class=\"ds-tab\"><span class=\"ds-tab-icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 13v4h-2v-4H8l4-4 4 4h-3zm0-6V3.5L18.5 9H13z\"></path></svg></span><span>Screen</span></button><button class=\"ds-tab\"><span class=\"ds-tab-icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm4 16H8v-2h8v2zm0-4H8v-2h8v2zm0-4H8V9h8v2z\"></path></svg></span><span>Results</span></button><button class=\"ds-tab\"><span class=\"ds-tab-icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\"></path></svg></span><span>Profile</span></button></nav>",
+      "css": ".ds-tabs{box-sizing:border-box;font-family:Roboto,Arial,sans-serif;display:flex;background:#fff;border-top:1px solid #dce5ef;min-height:74px;padding:8px 0 10px}.ds-tab{font-family:Roboto,Arial,sans-serif;display:flex;flex-direction:column;align-items:center;gap:0;flex:1;min-width:0;background:transparent;color:#5c6c81;border:0;border-radius:12px;margin:0 3px;font-size:12px;line-height:16px;padding:0;cursor:pointer}.ds-tab-icon{display:flex;align-items:center;justify-content:center;width:56px;height:32px;border-radius:16px;background:transparent}.ds-tab-icon svg{fill:currentColor}.ds-tab-active{color:#095df1}.ds-tab-active .ds-tab-icon{background:#e7efff}.ds-tab:hover{color:#095df1}.ds-tab:focus-visible{outline:2px solid #095df1;outline-offset:-2px}.ds-tab:active .ds-tab-icon{background:#e7efff}"
+    },
+    {
+      "name": "Screening Row",
+      "kind": "custom",
+      "description": "Direct record entry with a 36px initials avatar, student name, grade/type context and separately attributed states. Fictional specimen; unavailable names fall back to Student plus ID.",
+      "html": "<button class=\"ds-record\"><span class=\"ds-record-top\"><span class=\"ds-record-avatar\">FS</span><span class=\"ds-record-copy\"><span class=\"ds-record-name\">Fictional student</span><span class=\"ds-record-detail\">Grade 2 · Initial screening</span></span></span><span class=\"ds-record-states\"><span class=\"ds-record-chip\">Model: Normal</span><span class=\"ds-record-pending\">Review: Pending</span></span><span class=\"ds-record-date\">Preview record</span></button>",
+      "css": ".ds-record{box-sizing:border-box;font-family:Roboto,Arial,sans-serif;display:flex;flex-direction:column;gap:8px;width:100%;padding:16px;border:0;border-bottom:1px solid #dce5ef;text-align:left;background:#fff;color:#14263c;cursor:pointer}.ds-record-name{font-size:16px;line-height:23px;font-weight:600}.ds-record-detail{font-size:13px;line-height:20px;color:#5c6c81}.ds-record-states{display:flex;flex-wrap:wrap;gap:8px}.ds-record-chip,.ds-record-pending{border-radius:6px;padding:4px 8px;font-size:12px;line-height:18px;font-weight:500}.ds-record-chip{color:#176b3a;background:#e7f4ec}.ds-record-pending{color:#5c6c81;background:#e7efff}.ds-record-date{font-size:12px;line-height:18px;color:#5c6c81}.ds-record:hover{background:#fff}.ds-record:active{background:#e7efff}.ds-record:focus-visible{outline:2px solid #095df1;outline-offset:-2px}.ds-record-top{display:flex;align-items:center;gap:12px;width:100%}.ds-record-avatar{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:36px;height:36px;border-radius:18px;background:#e7efff;color:#095df1;font-size:12.96px;font-weight:600}.ds-record-copy{display:flex;flex-direction:column;flex:1;min-width:0;gap:4px}"
+    },
+    {
+      "name": "Home Primary Task",
+      "kind": "custom",
+      "refersTo": "home-action",
+      "description": "Compact role task surface using the shared fixed brand roles in light and dark schemes.",
+      "html": "<button class=\"ds-home-action\"><span class=\"ds-home-title\">New screening</span><span class=\"ds-home-detail\">Choose a student and add handwriting.</span></button>",
+      "css": ".ds-home-action{box-sizing:border-box;font-family:Roboto,Arial,sans-serif;display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:112px;width:100%;padding:18px;border:0;border-radius:16px;background:#095df1;color:#fff;text-align:left;cursor:pointer}.ds-home-title{font-size:20px;line-height:27px;font-weight:600;letter-spacing:-.3px}.ds-home-detail{font-size:14px;line-height:21px;color:#eaf1ff}.ds-home-action:hover{background:#095df1}.ds-home-action:active{background:#074bc2}.ds-home-action:focus-visible{outline:2px solid #095df1;outline-offset:3px}"
+    },
+    {
+      "name": "Initial Screening Loading",
+      "kind": "custom",
+      "refersTo": "skeleton-bar",
+      "description": "Browser translation of two screening placeholder rows with the same opacity keyframes and a reduced-motion media-query fallback. Native initial preference resolution, screen focus and AppState behavior remain in LoadingSkeleton.tsx and are not simulated by this CSS specimen. All decorative bars and avatar placeholders use the dedicated skeleton color.",
+      "html": "<div class=\"ds-loading\" role=\"progressbar\" aria-label=\"Loading screening records\" aria-busy=\"true\" aria-live=\"polite\"><span class=\"ds-loading-label\">Loading screening records...</span><div class=\"ds-loading-group\" aria-hidden=\"true\"><div class=\"ds-loading-row\"><div class=\"ds-loading-student\"><span class=\"ds-loading-avatar\"></span><span class=\"ds-loading-copy\"><span class=\"ds-loading-bar ds-loading-title\"></span><span class=\"ds-loading-bar ds-loading-subtitle\"></span></span></div><div class=\"ds-loading-badges\"><span class=\"ds-loading-bar ds-loading-badge-one\"></span><span class=\"ds-loading-bar ds-loading-badge-two\"></span></div><span class=\"ds-loading-bar ds-loading-date\"></span></div><div class=\"ds-loading-row\"><div class=\"ds-loading-student\"><span class=\"ds-loading-avatar\"></span><span class=\"ds-loading-copy\"><span class=\"ds-loading-bar ds-loading-title\"></span><span class=\"ds-loading-bar ds-loading-subtitle\"></span></span></div><div class=\"ds-loading-badges\"><span class=\"ds-loading-bar ds-loading-badge-one\"></span><span class=\"ds-loading-bar ds-loading-badge-two\"></span></div><span class=\"ds-loading-bar ds-loading-date\"></span></div></div></div>",
+      "css": ".ds-loading{font-family:Roboto,Arial,sans-serif;display:flex;flex-direction:column;gap:12px}.ds-loading-label{font-size:13px;line-height:20px;color:#5c6c81}.ds-loading-group{border-radius:16px;overflow:hidden;opacity:.75}.ds-loading-row{padding:16px;display:flex;flex-direction:column;gap:12px;background:#fff;border-bottom:1px solid #dce5ef}.ds-loading-row:last-child{border-bottom:0}.ds-loading-bar{display:block;height:14px;border-radius:4px;background:#d8e4f8}.ds-loading-title{width:76%;height:16px}.ds-loading-subtitle{width:66%;height:12px}.ds-loading-badges{display:flex;flex-wrap:wrap;gap:8px}.ds-loading-badge-one{width:86px;height:26px}.ds-loading-badge-two{width:96px;height:26px}.ds-loading-date{width:32%;height:12px}@keyframes ds-loading-pulse{0%,100%{opacity:.5}50%{opacity:1}}@media (prefers-reduced-motion:no-preference){.ds-loading-group{animation:ds-loading-pulse 1400ms ease-in-out infinite}}@media (prefers-reduced-motion:reduce){.ds-loading-group{animation:none;opacity:.75}}.ds-loading-student{display:flex;align-items:center;gap:14px;min-height:48px}.ds-loading-avatar{width:36px;height:36px;flex-shrink:0;border-radius:18px;background:#d8e4f8}.ds-loading-copy{display:flex;flex-direction:column;flex:1;gap:10px}"
+    },
+    {
+      "name": "Login Brand Button",
+      "kind": "button",
+      "refersTo": "button-brand",
+      "description": "Latest proposed login source: fixed logo-derived brand blue, minimum height 56, radius 12, pressed brand color and disabled opacity 0.7. User visual approval remains pending; browser focus outline is a panel affordance. The associated supplied logo is 80 by 80 with a local 20-unit corner radius; this button-only specimen omits the raster rather than substituting artwork.",
+      "html": "<button class=\"ds-login-button\">Sign in</button>",
+      "css": ".ds-login-button{font-family:Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:56px;border:0;border-radius:12px;padding:0 18px;background:#095df1;color:#fff;font-size:15px;line-height:22px;font-weight:600;cursor:pointer}.ds-login-button:hover{background:#095df1}.ds-login-button:active{background:#074bc2}.ds-login-button:disabled{opacity:.7}.ds-login-button:focus-visible{outline:2px solid #095df1;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The student-record workspace",
+    "overview": "GraphiScan uses white surfaces, recognizable blue identity and cool paper backgrounds to keep student records and the next role-appropriate task easy to scan. The user chose a clean, professional interface with consistent typography, spacing and alignment. Retain the existing GraphiScan name and supplied logo. The latest proposed login is centered and logo-led after the user delegated reference selection; its implementation awaits user visual feedback and is not approved.\n\nThis system applies to the Expo Android application in `graphiscan/mobile-app`, especially its default hosted flow. The Vue admin remains a separate retained web design. Native stack navigation, bottom tabs and native controls provide familiar structure; flat groups and readable record rows provide the recurring visual vocabulary. System type remains native. At the user's request, initial content loading uses a restrained feed-style skeleton pulse implemented with Reanimated and Worklets.",
+    "keyCharacteristics": [
+      "White and blue with quiet cool paper workspaces.",
+      "System typography, clear names and aligned record details.",
+      "Flat grouped rows, restrained status chips and native navigation.",
+      "Functional icons that identify actions, destinations or states."
+    ],
+    "rules": [
+      {
+        "name": "The Blue Task Rule",
+        "body": "Use blue to identify the primary action, navigation selection and interactive text; retain the semantic state pairs for recorded statuses.",
+        "section": "colors"
+      },
+      {
+        "name": "The System Type Rule",
+        "body": "Reuse native system type and the observed hierarchy across roles; do not introduce a decorative font or a second typographic identity.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Records Rule",
+        "body": "Separate record groups with surfaces, spacing and quiet dividers; preserve the flat treatment of the implemented hosted workspace.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve the GraphiScan name, supplied logo and clean white and blue identity.",
+      "Do reuse native system typography, shared spacing and aligned flexible text columns across roles.",
+      "Do label model output and expert review separately and retain truthful loading, empty, error and disabled states.",
+      "Do use native stack navigation, bottom tabs and functional icons for familiar Android tasks.",
+      "Do distinguish source and fictional browser preview evidence from Android runtime approval."
+    ],
+    "donts": [
+      "Don't add ornamental icons, decorative illustration, generic AI motifs or unsupported controls.",
+      "Don't add a decorative font or expand the scoped loading pulse into unrelated ornamental motion.",
+      "Don't apply this mobile system to the retained Vue admin design without a separately authorized change.",
+      "Don't turn screening scores or visual state colors into a diagnosis, model availability promise or release claim."
+    ]
+  }
+}
