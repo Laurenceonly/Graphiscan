@@ -1,3 +1,51 @@
+Saved-session checkpoint2026-10-24: approximately65% of the full project. User
+requested saving state to resume later; RESUME.md is the active handoff. Hosting
+startup/private model fetch and visible choices are established, while actual
+prediction and teacher/expert/parent/Follow-up flow remain unverified/deferred.
+Latest mobile UI and documentation are being checkpointed locally, without push
+or new deployment. Remaining gates include native/physical-device/APK, admin role
+actions, historical-data/images, three-class evidence, privacy and paper/slides.
+
+Results loading2026-10-24: local Results skeletons now adapt to measured list
+height and fill the visible content area. TypeScript, five fictional browser
+size/role/theme/motion cases and native loading-only light/dark-font1.3 captures
+pass. Actual handwriting submission was deferred by the user; inference and full
+role workflow remain unverified. This UI refinement is local/unpublished.
+Continuation: Students/Children across hosted roles and legacy Students/progress
+also fill loading viewports. Directory/upload/legacy search fields have minimal
+icons and hints. TypeScript, four fictional browser role/loading/search cases and
+native student-loading light/dark-font1.3 captures pass; native search capture is
+unverified. These follow-up UI changes remain local/unpublished.
+
+Model-host continuation2026-10-24: Linux numerical parity passed all3 models/all136
+images, source PR#9 is merged and private fetch verified. User reported catalogue
+publication SQL success. Supplied02:28:16UTC Render logs now confirm verified
+models3 bundle, one-thread sync startup and Live after the manifest-key correction
+and REQUIRE_MODELtrue instruction. Public health200/me401/models401 pass;
+authenticated catalogue, actual inference and role workflow remain unverified.
+api/MODEL_ACTIVATION.md is the active
+settings/rollback handoff. Overall60-65%.
+
+Earlier model-host continuation2026-10-24: Linux numerical parity passed all3 models/all136
+images with zero class changes. Final single-cache/builtin-ResNet server passed
+the actual512MiB/no-swap/no-network16MP noise probe at422.59MiB peak process RSS.
+48 model/backend/write tests,12 Linux private-bundle tests and24 isolated catalogue
+cutover/rollback checks pass. Six private artifact chunks/four files are uploaded
+to the existing Supabase project. Hosted SQL, API configuration/deployment and the
+full role workflow remain pending; no student data or original model pins changed.
+Separate release worktree starts from main; UI changes remain local. Overall60-65%.
+
+Model-host work2026-10-23: user authorized online screening next. Synthetic
+Windows profiling of the pinned runtime reached799.12MiB resident with all3
+models cached; warm inference0.405–0.808s. This is not Linux/hosted evidence.
+FP32 LiteRT copies passed all136 images/all3 architectures with zero class changes
+and max score error9.15e-6. Optional schema3 adapter/staging/lighter container are
+implemented locally;47 model/backend/hosted/write tests passed. Windows resident
+peak253.79MiB for the single-cache adapter and472.22MiB for fictional full API with
+generated16MP images. Linux512MB fit, private provisioning, registry cutover and
+deployment remain unverified. Original model pins/manifest/registry are unchanged.
+Card preference unspecified; no paid service or secret upload. Overall60–65%.
+
 Logout/loading2026-10-23: shared confirmation modal and feed skeleton coverage
 implemented across native app source, including hosted/legacy data views and
 query-scoped loading.14 fictional UI checks,18 mobile/19 shared tests, TypeScript

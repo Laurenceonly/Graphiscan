@@ -1,4 +1,4 @@
-Current handoff2026-10-22: migrations020/021 are applied and the last hosted
+Historical handoff2026-10-22 (superseded by the2026-10-24 review below): migrations020/021 are applied and the last hosted
 read-only preflight passed38 checks. PR#5 assignment API/admin and PR#6 shared
 page/card styling are merged. Public bundle index-BMML1qyx.js contains the shared
 cards, headers and centered Logout; public login returned200. Authenticated
@@ -8,14 +8,24 @@ publication is pending, and historical MySQL data/image transfer is incomplete.
 No additional numbered migration is currently prepared. Do not rerun020/021.
 # GraphiScan current requirements and next steps
 
-## Overall progress review — 2026-10-23
+## Overall progress review — 2026-10-24
+
+Model-host continuation2026-10-24: all3 FP32 copies passed Linux comparison on136
+images with zero class changes. The final adapter passed a512MiB capped16MP
+noise probe at422.59MiB peak process RSS.48 runtime/access/write tests,12 Linux
+bundle tests and24 isolated publication/rollback checks pass. The private model
+bundle is provisioned in Supabase; fresh private fetch is verified and PR#9 is
+merged. User reported catalogue publication success. Supplied Render logs confirm
+verified models3, one-thread startup, health200 and Live after activation settings
+were corrected; the user saw model options. Actual prediction and the full role
+workflow remain unverified. Latest resume instructions are in RESUME.md.
 
 Follow-up: user confirmed emulator pages work. Logout confirmation and expanded
 feed-style loading states are implemented locally; TypeScript,18 mobile/19 shared
 tests,14 fictional UI checks and Android export passed. Native modal/Back review
 remains open; no hosted logout/write or full role-workflow completion is implied.
 
-Full-project progress is approximately **60–65%**, an engineering estimate from
+Full-project progress is approximately **65%**, an engineering estimate from
 the requirements and recorded evidence, not a measured task-completion score.
 It includes remaining model, historical-data, native-device, release and paper
 work. Manuscript/deck completion is unverified; earlier 32–56% checkpoints describe
@@ -26,21 +36,32 @@ they do not establish a completed hosted or Android workflow.
 | --- | --- | --- |
 | Admin web | Published refined Vue admin; actual fictional-account create/edit/disable/reactivate and membership changes observed | Hosted reset/unused-delete, permissions, assignment/eligibility and audit walkthrough |
 | Supabase/API/accounts | Migrations through021 applied; last hosted restricted preflight passed38 checks; scoped API, issuance and onboarding source | Real issued-user/role/Storage verification and approved real-use privacy publication; no new numbered migration currently prepared |
-| Expo | Hosted login/gates, role Home/tabs, records, skeletons and teacher student create/edit/filter source; final11 fictional browser directory checks/design extension complete; native login light/dark/large-text and keyboard checks; user-confirmed native hosted sign-in | Remaining parity, native role/UI/hosted verification, configuration-reload failure investigation, physical-device and APK release; source publication pending |
-| Models/screening | Three binary architectures evaluated locally on136 images and integrated in the versioned runtime/catalogue | Free model-capable host, actual hosted screening and the planned evaluated three-class task; public Render inference is disabled |
+| Expo | Hosted login/gates, role workspaces, student create/edit/filter, logout confirmation, full-height list skeletons and minimal search source; fictional browser checks pass; native login/keyboard and loading captures; user-confirmed hosted sign-in and model choices | Remaining parity and real role/Storage/write verification, native modal/Back/search checks, reload failure investigation, physical-device/APK and publication of local follow-up UI |
+| Models/screening | Three binary models evaluated on136 images; LiteRT Linux parity/memory checks; private provisioning/fetch, merged PR#9 and successful model-host startup on Render; model choices user-confirmed | First actual hosted prediction and full role workflow; planned three-class dataset/evaluation and final performance/validation evidence |
 | Historical data | Earlier backup/restore evidence and migration design available | Recover authoritative source, map identities, import/reconcile records and private images, rehearse rollback; MySQL repair remains paused |
 | Integration/release | Isolated role/SQL/client checks and Android JavaScript export available | Full teacher upload → expert review → parent release → Follow-up history, concurrency/recovery/access checks, measured targets and physical Android APK verification |
 | Manuscript/presentation | Requirements, runbooks, model evidence and defense-action mapping available | Verify editable paper/deck revisions, objectives, literature, WBS/methodology, use cases, DFD/CFD, final screenshots and measured nonfunctional claims |
 
-Current order: finish the native login smoke checks and save the Expo checkpoint, then complete controlled
-hosted admin/onboarding/role checks and model hosting, followed by the full core
-workflow and Android release. Historical-data and paper work remain required and
+Current order (user-approved2026-10-23): enable model hosting, then verify the
+controlled teacher→expert→parent/Follow-up workflow. Existing-runtime synthetic
+Windows profiling reached799.12MiB resident with all3 original models cached.
+FP32 LiteRT copies passed all136 images/all3 models with zero class changes.
+Linux parity and the capped512MiB serving probe passed (422.59MiB peak process
+RSS); the isolated release passed60 tests and24 disposable SQL checks. Private
+provisioning/fetch and source PR#9 are complete. User reported catalogue publication
+success. Supplied02:28:16UTC Render logs confirm models3 bundle verification,
+one-thread sync startup, health200 and Live after the manifest-key correction.
+Public health200/me401/models401 pass; actual inference and authenticated catalogue
+remain unverified. Next is the controlled role workflow. Hosted admin/onboarding/role, native modal/release,
+historical-data and paper checks remain required and
 can progress independently when their source/approval inputs are available.
 Scrollcraft is installed; no Scrollcraft website build is claimed or required
 to count the existing application work as complete.
 
-This review read documentation and Git status only. It did not rerun runtime
-checks, inspect authenticated production state, apply SQL, commit or deploy.
+This reconciliation uses the session's recorded tests, supplied deployment logs,
+public probes, user-confirmed model choices and Git status. It does not establish
+an actual hosted prediction or completed role workflow. Latest UI is being saved
+as a local checkpoint; no additional source publication or deployment is requested.
 
 Reviewed 2026-10-22 against all35 project Markdown files present before this
 audit, the latest session evidence and the OpenAPI operation declarations.
@@ -80,10 +101,10 @@ updating stale optional-migration mocks. Other release gaps below remain open.
 | Area | Current evidence | Still open |
 | --- | --- | --- |
 | Admin | Vue/Vite refinement and Edit actions published; fictional hosted create/edit/disable/reactivate/membership changes observed | Hosted reset/unused-delete, permissions, school/student assignments, errors and audit walkthrough |
-| API | Lightweight Flask/Gunicorn API Live on Render Free/Singapore; now tracks merged main | Full authenticated role/Storage/write verification; hosted inference explicitly disabled |
+| API | Flask/Gunicorn API Live on Render Free/Singapore/main; verified model bundle and successful one-thread startup after activation settings | Full authenticated role/Storage/write and actual inference verification |
 | Supabase | Schema through021 applied; last required preflight passed38 checks | Historical MySQL record/image import, identity mapping, reconciliation and rollback |
 | Accounts | Issuance, guarded edits, reset/delete/onboarding source; assignment-access API/admin published in PR#5 | Hosted eligibility use, new issued-user onboarding, approved real-use agreement and scoped permission verification |
-| Models | Three binary architectures locally reevaluated on136 test images; catalogue publication checker previously passed12 checks | Free inference host, hosted execution, three-class dataset/evaluation and final deployment |
+| Models | Three binary architectures evaluated on136 images; LiteRT Linux parity/capped serving checks, private fetch and successful Render startup; user reports catalogue publication and visible choices | Actual hosted prediction, three-class dataset/evaluation and final validation/performance evidence |
 | Expo | Hosted HTTPS default/onboarding, role Home/tabs, scoped search/school/grade filters and teacher Add/Edit source; TypeScript/Android export and fictional workflow checks passed | Real hosted/device checks of new directory flow, remaining Vue parity and model-enabled upload; no APK generated/released |
 | Documentation | Requirements, contracts, runbooks and proposed privacy text available | Editable manuscript/deck, approved wording, diagram revisions and final measured nonfunctional evidence |
 

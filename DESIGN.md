@@ -279,6 +279,13 @@ Primary buttons are clear blue actions with centered readable labels. Secondary 
 
 ### Inputs / Fields
 
+Search refinement2026-10-24: shared Field has an opt-in search presentation with
+a20-unit decorative Material search icon, a12-unit icon/text gap, student-name
+placeholder and primary-colored focused frame. Accessible labels and existing
+submit/filter behavior remain. Hosted directory and upload search, plus legacy
+Students/Results, use it. Browser role/typing/Enter/clear checks pass; the separate
+native search-field capture remains unverified.
+
 Visible labels sit above bordered native text fields. Shared Field and setup password frames use the surface background; login frames use the lightly tinted bg role and left padding 16. Generic Field uses an 8-unit label gap and the input style in frontmatter; it does not currently implement the explicit focus-border color change used by login and setup password frames. Login and setup turn the frame border primary on focus. Password visibility has a dedicated native press target and a visibility icon. Do not infer a shared custom focus-ring system from those local frames.
 
 ### Chips
@@ -311,6 +318,20 @@ Action and student rows have 16-unit padding and a flexible two-line text column
 
 ### Loading skeletons
 
+Students refinement2026-10-24: Students/Children now use measured viewport fill
+for every hosted role, with the existing80-unit student-placeholder density.
+Legacy Students and progress/history also opt in. Native hosted-student preview
+captures passed in light and dark/font_scale1.3; four fictional browser cases
+verified all-role coverage, motion preferences and request outcomes.
+
+Results refinement2026-10-24: screening list skeletons repeat through the measured
+FlatList viewport, using window height until layout is known. Hosted Results,
+Reviews, Reports and history share this behavior; legacy Results also supplies
+its list height. Inline loaders keep their existing size. Five fictional browser
+captures verified viewport coverage, role variants, motion preferences and request
+outcomes; native loading-only captures verified light and dark/font_scale1.3 on
+GraphiScan_Pixel_6. These captures do not establish the actual screening workflow.
+
 Coverage extension2026-10-23: choice rows echo student/model selectors, field
 placeholders reserve the52-unit native control, image placeholders reserve300
 units, and heading bars cover dependent student-name reads. Initial hosted and
@@ -338,6 +359,14 @@ without authored motion. Cancel, Escape and Android Back dismiss it; only the
 confirmation calls logout. Recovery forms explain their draft loss. Forced
 session expiry/recovery bypasses confirmation. Browser Cancel/Escape, draft
 retention and exactly-once confirmation passed; native modal/Back remain open.
+
+Balance correction2026-10-23: actions fill two equal columns aligned with the
+text edges, separated by12 units and stretched to matching heights. Equal
+borderless columns prevent the secondary button's border from changing its
+share of the row. Actions stack below320 logical units or above1.4 font scale;
+their minimum height follows the label line-height and padding. Six fictional
+light/dark captures at390/320/280 confirmed equal sizing and fit. Native
+font-scale/visual recapture remains separate.
 
 ## Do's and Don'ts
 

@@ -83,7 +83,7 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     catch(e){setError((e as Error).message)}finally{setHasPending(!!pending.current);setBusy(false)}
   }
   return <Screen><Body muted>Select a student and an available model, then add a handwriting image.</Body><Heading>Student</Heading>
-    {students.loading&&!students.data&&<LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error}/><Field label="Find a student on this page" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
+    {students.loading&&!students.data&&<LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error}/><Field search label="Find a student on this page" placeholder="Search this page by name" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
     <View style={{gap:8}}>{(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><ChoiceRow key={row.student_id} label={row.full_name} detail={'Grade '+row.grade_level} selected={student?.student_id===row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}</View>
     {!students.loading&&!students.error&&!(students.data?.data??[]).some((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase()))&&<Body muted>{search.trim()?'No students match this search on the current page.':'No students are available for your account.'}</Body>}
     {students.data?.page?.next_cursor&&<Button label="Next students" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(students.data.page.next_cursor)}/>}
