@@ -1,5 +1,45 @@
 # GraphiScan change log
 
+## 2026-10-24 - Save completed work for hosted preview review
+
+- User requested committing all completed work so the admin colors can be checked in the hosted preview. Preparing the existing feat/expo-design-refinement branch, including its previously saved mobile refinements, latest admin color changes and screening evidence; reconcile already merged model-host/upload fixes from main before publication. Only public source/documentation are included; ignored configuration, model weights, images/data, build output and review fixtures remain excluded.
+- Admin build passed1834 modules. The attempted automated admin browser review did not reach a verified sign-in-page capture and was interrupted; no new browser workflow pass is claimed. The actual preview is for the user's visual check. Existing source checks and the supplied successful Initial Screening evidence remain as previously recorded; expert/parent/Follow-up and native release gates remain open. No migration or real record write is part of this checkpoint.
+
+## 2026-10-24 - Match admin colors to the Expo palette
+
+- User clarified the target is the Vue admin website, including login, and explicitly limited the change to colors. Updated style.css palette tokens to Expo blue #095df1, hover #074bc2, background #f7faff, ink #14263c, muted #5c6c81 and matching border/selection tints. HostedAccess.vue uses those colors for login fields/buttons and preserves the supplied logo's original blue. HostedAdminWorkspace.vue inherits the shared palette instead of overriding it with older neutrals; its content uses the Expo paper background.
+- Changes are confined to color values and the logo color matrix across those three presentation files. Layout, typography, navigation, authentication, API calls and semantic status colors are unchanged. Expo source matches its prior checkpoint; no expert-form changes remain. The successful MobileNetV2 Initial Screening evidence is retained, with image/expert/parent/Follow-up verification paused for this UI request.
+- Verification: admin production build passed1834 modules and source diff review confirms the bounded scope. Browser review is in progress. Source remains local/unpublished; no real records, database, model or deployment changed.
+
+## 2026-10-24 - Record first completed screening from supplied browser evidence
+
+- User supplied a browser result screenshot after PR#10 merged. It shows the existing fictional workflow student, Grade2, Initial Screening, MobileNetV2 version binary-3abdc7ec4e2b-litert-fp32-v1, Normal score49.19%, High Potential score50.81% and Pending expert review. This establishes user-supplied browser evidence of the first completed model screening/result read; it is not an independently observed HTTP transaction, latency measurement or accuracy validation.
+- The label agrees with the existing0.75 High Potential threshold. No threshold, model, class mapping or result wording was changed. The screenshot has image-view/save buttons but does not establish authorized image retrieval, expert assignment/review, parent release/denial or a second Follow-up. Next verify those stages using the existing fictional fixtures, then complete native/device checks before APK/release completion.
+- Updated RESUME.md, KNOWLEDGE.md, CURRENT_REQUIREMENTS.md, PROJECT_PLAN.md, WORK_CHECKLIST.md and MODEL_ACTIVATION.md to advance the current checkpoint without treating older pending-inference notes as current. No agent-run test, provider action, hosted write or deployment occurred during this screenshot review; full-project estimate remains approximately65%.
+
+## 2026-10-24 - Reconcile older preview PR and merged upload fix
+
+- Checked GitHub after the user's pull-request screenshot. PR#8 remains OPEN and contains only the earlier localhost Expo launcher/proxy and documentation; the current local UI branch already includes its d69ed3e commit. Its age indicates creation time, not a failed deployment. It remains separate from the backend multipart correction.
+- PR#10 is confirmed MERGED at14:12:27UTC as cf58120cf12156f0e4b64ffe4dfb6452b5cc4fa1. GitHub/Vercel success does not verify Render deployment. Actual Render rollout, hosted upload and role workflow remain unverified; retry only after the API service deploys the merged revision. No merge/close/deployment or hosted write was performed by the agent during this status review.
+
+## 2026-10-24 - Correct multipart buffering that rejects ordinary photos
+
+- Scoped release commit a66ea1a is pushed on fix/screening-multipart-buffer from current main4d2e3b1. Pull request https://github.com/Laurenceonly/Graphiscan/pull/10 is open; the same35 tests passed in the clean worktree and diff whitespace checks passed. Main merge, Render deployment and hosted upload retry remain pending. Existing mobile/model/SQL working-tree changes are preserved separately.
+
+- User reported The request is too large during browser screening. Reproduced REQUEST_TOO_LARGE/413 with generated512x512 PNG/JPEG images and the10MiB file-boundary cases. api_v1.py set max_form_memory_size to16KiB, below Werkzeug's64KiB streaming chunk; the decoder rejected ordinary file content before normalization/reservation.
+- Changed only this route's parser allowance to128KiB, with a separate16KiB UTF-8 text-field bound. The10MiB image/normalized output cap,16MP limit, role/ownership checks, model behavior and request reservation/recovery are unchanged. Added three regression methods covering photo-sized PNG/JPEG, oversized text and exact/over10MiB files in tests/test_v1_screening_writes.py.
+- Verification:35 isolated upload/hosted-composition/model tests pass against generated images and mocked database/Storage/runtime. The two new image regression methods failed with four expected413 assertions before the fix. Test run also emitted temporary-file ResourceWarnings; no real provider calls or hosted writes occurred. Scoped source publication/deployment and actual hosted prediction remain pending. KNOWLEDGE.md, RESUME.md, PROJECT_PLAN.md and api/SCREENING_WRITES.md record the boundary and pending rollout.
+
+## 2026-10-24 - Open ordinary browser for manual handwriting selection
+
+- User reported Choose image and Use camera did nothing in the preview. Playwright inspection found repeated intercepted file-chooser events, establishing that the app's picker calls reached the browser but the controlled session intercepted the dialogs. A run-code attempt to disable interception was itself blocked by pending modal state; no app fix was applied.
+- Opened localhost:5174 using the default Windows browser, without attaching automation, so the user can sign in and select a PC image normally. RESUME.md records this manual-testing requirement. The launch command succeeded; actual new-tab sign-in, image selection/camera behavior and hosted inference remain unverified. No application source, model configuration, migration or hosted records were changed by the agent.
+
+## 2026-10-24 - Resume with browser workflow tests before APK creation
+
+- User chose browser-tab testing because the handwriting image is on the PC and confirmed APK creation should follow testing. RESUME.md and PROJECT_PLAN.md now record browser upload, expert review, parent access and Follow-up first, followed by APK/native-device verification.
+- Source inspection confirms HostedScreeningActions.tsx supports browser image selection and multipart file upload. Restarted the existing preview outside the restricted sandbox after stalled startup; Metro served the web bundle and the headed browser loaded the sign-in page at localhost:5174. Actual sign-in outcome, prediction and the role workflow remain unverified. No application code, migration or hosted record was changed by the agent for this planning update.
+
 ## 2026-10-24 - Save the session handoff and reconcile progress
 
 - User requested saving state for later and a completed/remaining-work review. Reconciled RESUME.md, CURRENT_REQUIREMENTS.md, PROJECT_PLAN.md, KNOWLEDGE.md and WORK_CHECKLIST.md against the latest source/Git status, recorded checks, supplied Render logs and user confirmations. Estimate is approximately65% for the full project, an engineering judgment; successful hosting startup and visible model choices are distinguished from the unperformed actual prediction/full role workflow. Corrected stale current statements that model hosting was still disabled/unprovisioned and marked the older checkpoints historical.

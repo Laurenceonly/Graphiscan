@@ -1,3 +1,29 @@
+Admin palette2026-10-24: user requested only admin website/login colors matched
+to Expo. Local style.css/HostedAccess.vue/HostedAdminWorkspace.vue use #095df1
+blue, #074bc2 hover, #f7faff background, #14263c ink and #5c6c81 muted text with
+matching borders/tints. Layout/API/Auth/model behavior and Expo source unchanged.
+Admin build passes; browser review/publication remain pending. The first actual
+browser screening checkpoint below remains saved while this UI work proceeds.
+
+Latest screening evidence2026-10-24: supplied browser screenshot shows the first
+completed fictional MobileNetV2 Initial Screening, Normal49.19%/High Potential
+50.81%, expert Pending. This matches the existing0.75 threshold. It is user-supplied
+browser evidence, not independently observed HTTP/latency/accuracy validation.
+Next: private image, admin assignment, expert review, parent release/denial and
+second Follow-up. Earlier pending-inference checkpoints are superseded for this
+first browser result only; full role/native/release gates remain open.
+
+Upload parser fix2026-10-24: generated photo-sized PNG/JPEG requests reproduce
+the reported REQUEST_TOO_LARGE413 before inference. api_v1.py used a16KiB
+multipart decoder limit below Werkzeug's64KiB read chunk. Local fix uses128KiB
+parser headroom and separately enforces the original16KiB text-field bound;
+10MiB file/normalized-image and16MP limits remain.35 isolated upload/hosted/model
+tests pass, including10MiB acceptance/over-limit rejection. Not deployed yet;
+publish the scoped backend fix before retrying the hosted workflow.
+PR#10 is confirmed merged as cf58120 at14:12:27UTC; clean-worktree35 tests pass.
+Render deployment/retry remain unverified. PR#8 stays open for the separate local
+browser-preview launcher/proxy, already included in the current local UI branch.
+
 Saved resume checkpoint2026-10-24: user is stopping for later. See RESUME.md first.
 Overall estimate approximately65%. PR#9 model release is on main and Render logs
 confirm verified private model fetch/successful one-thread startup; user saw the

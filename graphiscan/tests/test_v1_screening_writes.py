@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 from io import BytesIO
 import json
+from random import Random
 import unittest
 from unittest.mock import Mock,patch
 from tempfile import TemporaryDirectory
@@ -117,6 +118,34 @@ class ScreeningWritesTests(unittest.TestCase):
         response=self.client.post('/api/v1/screenings',headers=self.headers,
             data=b'x',content_type='multipart/form-data; boundary=fictional',environ_overrides={'CONTENT_LENGTH':str(MAX_BYTES+65537)})
         self.assertEqual(response.status_code,413);self.repository.execute.assert_not_called()
+    def test_photo_sized_png_and_jpeg_stream_through_multipart_parser(self):
+        image=Image.frombytes('RGB',(512,512),Random(0).randbytes(512*512*3))
+        for format,name in [('PNG','fictional.png'),('JPEG','fictional.jpg')]:
+            with self.subTest(format=format):
+                data=BytesIO();image.save(data,format=format)
+                self.assertGreater(len(data.getvalue()),65536)
+                self.events.clear()
+                response=self.upload({'student_id':'1','model_id':'2',
+                    'handwriting_image':(BytesIO(data.getvalue()),name)})
+                self.assertEqual(response.status_code,201,response.get_json())
+                self.assertEqual(self.events,['reserve','storage','infer','complete'])
+                normalized=self.storage.put.call_args.args[2]
+                with Image.open(BytesIO(normalized)) as stored:
+                    self.assertEqual(stored.size,(512,512));self.assertEqual(stored.format,'PNG')
+    def test_large_text_field_still_fails_before_database_or_storage(self):
+        response=self.upload({'student_id':'1'*16385,
+            'handwriting_image':(BytesIO(png()),'fictional.png')})
+        self.assertEqual(response.status_code,413);self.repository.execute.assert_not_called()
+        self.storage.put.assert_not_called();self.runtime.infer.assert_not_called()
+    def test_image_byte_limit_is_independent_of_multipart_buffer(self):
+        sample=png()
+        for size,status in [(MAX_BYTES,201),(MAX_BYTES+1,422)]:
+            with self.subTest(size=size):
+                self.events.clear()
+                response=self.upload({'student_id':'1',
+                    'handwriting_image':(BytesIO(sample+b'\0'*(size-len(sample))),'fictional.png')})
+                self.assertEqual(response.status_code,status,response.get_json())
+                self.assertEqual(self.events,['reserve','storage','infer','complete'] if status==201 else [])
     def test_role_and_onboarding_checks_precede_uploads(self):
         self.assertEqual(self.upload(headers={}).status_code,401)
         self.state=AccessState(USER,'Fictional','parent','active',False,'test','test')

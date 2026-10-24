@@ -1,3 +1,21 @@
+Current UI priority2026-10-24: admin website and login colors match Expo, colors
+only. Three presentation files changed; admin build passes. User requests source
+commit/publication for hosted preview review; automated browser approval is not
+claimed. Expo code is unchanged from its saved checkpoint. Retain the successful
+Initial Screening and resume image/expert/parent/Follow-up checks afterward.
+
+Latest screening checkpoint2026-10-24: user supplied browser evidence of the
+first MobileNetV2 Initial Screening, Normal49.19%/High Potential50.81%, expert
+Pending. PR#10 is merged as cf58120;35 isolated upload/hosted/model tests pass.
+Exact Render revision is unverified. Next: private image, expert assignment/review,
+parent release/denial and Follow-up; full role/native release remains open.
+
+Resume decision2026-10-24: test the hosted core workflow in a browser tab first,
+using Choose image from the PC. Complete upload/review/parent/Follow-up checks
+before creating the APK, then verify Android-specific and physical-device flows.
+This sequence is agreed; the first result has supplied browser evidence and
+the remaining role workflow is unverified.
+
 Saved-session checkpoint2026-10-24: approximately65% of the full project. User
 requested saving state to resume later; RESUME.md is the active handoff. Hosting
 startup/private model fetch and visible choices are established, while actual
