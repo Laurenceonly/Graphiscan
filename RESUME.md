@@ -1,3 +1,12 @@
+## Hosted upload blocker — 2026-10-24
+
+User reported REQUEST_TOO_LARGE during screening. A16KiB multipart parser limit
+rejected ordinary JPG/PNG photos before inference. The scoped fix uses128KiB
+parser headroom and separately keeps16KiB text fields; image/model/access limits
+are unchanged.35 isolated upload/hosted/model tests pass. Publish/deploy this fix
+before retrying the fictional teacher/expert/parent/Follow-up workflow. Actual
+hosted inference is still unverified. No migration or artifact reprovisioning.
+
 ## Linux continuation — 2026-10-24
 
 Separate free WSL2 Debian13 GraphiScanValidation is installed, stored in ignored
