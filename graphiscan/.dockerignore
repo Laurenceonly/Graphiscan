@@ -2,9 +2,11 @@
 **
 !requirements-hosted.txt
 !requirements-admin.txt
+!requirements-lite.txt
 !hosted_api.py
 !gunicorn.conf.py
 !api_v1.py
+!model_bundle.py
 !predict.py
 !v1_*.py
 !db/
@@ -13,5 +15,7 @@
 !model/
 !model/class_names.json
 !model/deployment.local.json
+!model/deployment.litert.local.json
 !model/versions/
 !model/versions/*.keras
+!model/versions/*.tflite

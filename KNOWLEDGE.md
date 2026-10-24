@@ -1,3 +1,40 @@
+Linux continuation2026-10-24: isolated free WSL2 Debian13/Podman test environment
+is installed; Dockerfile.lite built locally. Enforced512MiB/no-swap/no-network/
+one-CPU full-API fictional probes passed with generated16MP white and detailed
+noise images, no TensorFlow/external calls/OOM kill. Default kernel peak RSS was
+491.57MiB for noise. Full Linux numerical parity then passed all136 images/all3
+models with zero class changes and max score error8.41e-6. Adopted builtin ResNet
+CPU kernels with a distinct schema3 runtime-kind/source pin; final serving image
+peaked422.59MiB on the same capped noise probe.48 runtime/access/write tests,
+12 Linux bundle tests and24 isolated catalogue cutover/rollback checks passed.
+Private Supabase artifact bucket now holds six verified chunks/four model files
+(121266151 bytes). Build fetch uses existing server-only S3 keys, strict paths,
+streamed size/SHA checks and a bucket separate from student images. Public bundle
+descriptor/evaluation contain hashes/aggregate metrics only. No hosted catalogue
+SQL, API configuration or deployment changed; original Keras pins/manifest and
+local .env remain intact. Release worktree feat/litert-hosting starts at main97f1cce.
+Overall60-65%; private fetch roundtrip, release/cutover and real role workflow remain open.
+
+Model-host continuation2026-10-23: user authorized online screening work. Existing
+Python3.11.9 runs outside the sandbox; no reinstall. Synthetic pinned-runtime
+profile completed: all3 cached peak799.12MiB resident/1597.96MiB private on Windows,
+warm0.405–0.808s. This exceeds Render Free512MB locally and is not a Linux/hosted
+measurement. FP32 LiteRT copies now passed all136 images/all3 architectures with
+zero class disagreements and max score error9.15e-6. New optional schema3
+v1_lite_models.py preserves the binary mapping/.75 rule and original source pins,
+with distinct converted identities and one serialized cached network. v1_backend
+dispatches schema3 while retaining the existing schema1/2 factory. Separate
+requirements-lite.txt/Dockerfile.lite and guarded staging/profiling tools exist;
+47 model/access/composition/upload regression tests passed. Real adapter synthetic
+peak253.79MiB resident; fictional full API/sequential generated16MP probe peaked
+472.22MiB resident/567.66MiB private without TensorFlow or external calls. These
+are Windows measurements, not Linux512MB fit or authenticated workflow evidence.
+Original model/source pins, manifest/environment, registry, SQL, server secrets
+and deployment are unchanged; public inference stays disabled. WSL2 engine/kernel
+exist but no Linux distribution is installed. Next: Linux limit/package checks,
+private model provisioning and reviewed new-version catalogue cutover, then role
+workflow. Card preference remains unspecified; continue the no-charge route.
+
 Expo source checkpoint2026-10-22: native app now defaults to the deployed HTTPS
 v1 API; legacy requires explicit opt-in. AccountSetup provides branded password
 and published-agreement gates. Role-aware Home/tabs, shared spacing/typography,
