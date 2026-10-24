@@ -1,5 +1,15 @@
 # Resume checkpoint — 2026-10-24
 
+Latest publication2026-10-24: public work committed293ae0f, main reconciled in
+d07cabe and pushed. PR#11 is confirmed merged at15:10:29UTC; its Vercel preview
+was READY and user reports viewing the admin. Source is published; exact later
+production deployment state and full authenticated workflow remain separate.
+Approximately65% overall. Next use the existing completed Initial Screening to
+check private image, expert assignment/review, parent release/denial, then upload
+a second Follow-up. Browser testing precedes APK creation as agreed. Remaining
+admin/native/data/three-class/privacy/paper gates are in CURRENT_REQUIREMENTS.md.
+Older preparing-to-push/local-only paragraphs below are historical.
+
 Current UI request2026-10-24: admin website colors, including login, should match
 Expo. User explicitly requested colors only. Three admin presentation files now
 use Expo blue/paper/ink/muted/border colors; layout and behavior remain. Admin

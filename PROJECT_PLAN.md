@@ -1,3 +1,12 @@
+Latest progress2026-10-24: approximately65% full-project estimate. PR#11 is merged,
+all reviewed public source is committed/pushed and the user viewed the READY
+admin preview. First MobileNetV2 Initial Screening has supplied browser evidence.
+Next private image, expert assignment/review, parent release/denial and Follow-up;
+then admin/onboarding/permissions/audit, Android/APK/physical device and release
+checks. Three-class model work, historical data/images, real-use privacy and
+paper/deck/diagrams remain open. No migration rerun or new theme work is required.
+Older preparing/publication-pending paragraphs below are historical.
+
 Current UI priority2026-10-24: admin website and login colors match Expo, colors
 only. Three presentation files changed; admin build passes. User requests source
 commit/publication for hosted preview review; automated browser approval is not

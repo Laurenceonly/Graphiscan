@@ -2,6 +2,13 @@
 
 ## Current reconciliation - 2026-10-24
 
+Publication/progress: all reviewed public source is committed/pushed and PR#11
+is confirmed merged; Vercel preview READY and admin preview user-viewed. Source
+publication is complete for the current slice. Approximately65% overall; next
+private image/expert/parent/Follow-up, then admin/native/release checks. Historical
+data/images, three-class evidence, approved real-use privacy and paper/deck remain
+open. Prior local-only/publication-pending paragraphs below are historical.
+
 Latest screening evidence: user supplied the first completed MobileNetV2 Initial
 Screening browser result, Normal49.19%/High Potential50.81%, expert Pending.
 PR#10's upload fix is merged;35 isolated regressions pass. Next verify private
