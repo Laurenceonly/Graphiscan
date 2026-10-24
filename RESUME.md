@@ -1,5 +1,24 @@
 # Resume checkpoint — 2026-10-24
 
+## Paused by user — resume next session
+
+User chose to continue tomorrow. Completed public work is committed/pushed on
+feat/expo-design-refinement; PR#11 is merged. Last source/status checkpoint is
+d2d69e4. Admin colors were previewed by the user. Keep the existing completed
+MobileNetV2 Initial Screening; do not repeat setup, migrations or upload merely
+to resume. Next test View/Save handwriting image, admin assignment to the issued
+test expert, expert Validated/Flagged review, linked-parent release/denial, then
+a second upload recorded as Follow-up. Use the ordinary browser for manual image
+selection; automation intercepts file dialogs. Browser workflow tests precede APK.
+
+Overall estimate remains approximately65%, not a measured completion score.
+Proposed remaining35% planning weights: private image2, expert4, parent3,
+Follow-up/retry/concurrency3, admin/accounts3, Android/APK/device6,
+models/historical-data/privacy8, manuscript/diagrams/slides/final evidence6.
+These are planning estimates, not passed milestones. Native release, three-class
+evaluation, historical cutover and approved real-use privacy remain open.
+No additional feature work or real writes are requested while paused.
+
 Latest publication2026-10-24: public work committed293ae0f, main reconciled in
 d07cabe and pushed. PR#11 is confirmed merged at15:10:29UTC; its Vercel preview
 was READY and user reports viewing the admin. Source is published; exact later
