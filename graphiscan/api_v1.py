@@ -494,10 +494,16 @@ def install_api_v1(app, backend: AccessBackend | None = None):
         from flask import current_app
         from werkzeug.datastructures import MultiDict
         request.max_content_length=MAX_BYTES+65536
-        request.max_form_memory_size=16384
+        # Werkzeug feeds multipart data in 64 KiB chunks and also applies this
+        # limit to its decoder buffer. Leave room for a chunk plus its boundary;
+        # a 16 KiB parser limit rejects ordinary photos before file validation.
+        request.max_form_memory_size=128*1024
         if request.args or request.mimetype!='multipart/form-data':
             raise ApiError(400,'INVALID_REQUEST','Supply a multipart handwriting upload without query parameters.')
-        result_id=upload_service().upload(g.v1_identity,request.form,request.files,
+        form,files=request.form,request.files
+        if any(len(value.encode('utf-8'))>16384 for _,value in form.items(multi=True)):
+            raise ApiError(413,'REQUEST_TOO_LARGE','The request is too large.')
+        result_id=upload_service().upload(g.v1_identity,form,files,
             request.headers.get('Idempotency-Key'),g.v1_request_id)
         reader=getattr(current_app.extensions['graphiscan_v1_backend'],'screening_read_service',None)
         if reader is None:raise BackendUnavailable()
