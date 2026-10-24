@@ -3,11 +3,11 @@
   <svg class="brand-filter-defs" aria-hidden="true" focusable="false" width="0" height="0">
     <defs>
       <filter id="graphiscan-brand-blue" color-interpolation-filters="sRGB">
-        <!-- Map the blue artwork to the primary palette; preserve its white background. -->
+        <!-- Preserve the supplied logo's blue, matching the Expo brand. -->
         <feColorMatrix type="matrix" values="
-          .921569 0 0 0 .078431
-          .639216 0 0 0 .360784
-          .439216 0 0 0 .560784
+          1 0 0 0 0
+          0 1 0 0 0
+          0 0 1 0 0
           0 0 0 1 0" />
       </filter>
     </defs>
@@ -138,8 +138,8 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(.directory button[aria-pressed=true]:hover:not(:disabled)),
 .hosted-admin :deep(.directory-actions button[type=submit]:hover:not(:disabled)),
 .hosted-admin :deep(.assignment-form button[type=submit]:hover:not(:disabled)) {
-  background: #104d79;
-  border-color: #104d79;
+  background: var(--blue-hover);
+  border-color: var(--blue-hover);
   color: var(--white);
 }
 .hosted-admin :deep(.access-content .access-text-button) {
@@ -269,10 +269,10 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(::selection) { background: var(--blue-100); color: var(--text); }
 /* The original Vue login supplies the shared branded half of both sign-ins. */
 .hosted-admin:has(.access-login-layout) {
-  /* Three base colors, with neutral/blue tints for supporting surfaces. */
-  --muted: color-mix(in srgb, var(--text) 65%, var(--white));
-  --control-border: color-mix(in srgb, var(--text) 45%, var(--white));
-  --blue-50: color-mix(in srgb, var(--blue-700) 7%, var(--white));
+  /* The same ink, field border and selection tint used by Expo. */
+  --muted: #5c6c81;
+  --control-border: #dce5ef;
+  --blue-50: #e7efff;
   min-height: 100dvh; display: grid; align-items: center; padding: 0; background: var(--white);
 }
 .hosted-admin :deep(.access-login-layout) {
@@ -310,7 +310,7 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(.custom-signin .admin-signin-input) {
   display: flex; align-items: center; gap: 12px;
   min-height: 54px; padding: 0 14px; border: 1px solid var(--control-border);
-  border-radius: var(--control-radius); background: var(--white); color: var(--muted);
+  border-radius: var(--control-radius); background: var(--page-bg); color: var(--muted);
 }
 .hosted-admin :deep(.custom-signin .admin-signin-input > svg) { flex-shrink: 0; }
 .hosted-admin :deep(.custom-signin .admin-signin-input input) {
@@ -333,7 +333,7 @@ watch(() => route.path, () => syncAccessRoute())
   background: var(--blue-700); color: var(--white); font-size: 15px; font-weight: 600;
   appearance: none; box-shadow: none;
 }
-.hosted-admin :deep(.custom-signin button.admin-signin-submit:hover:not(:disabled)) { background: color-mix(in srgb, var(--blue-700) 88%, var(--text)); border-color: transparent; color: var(--white); }
+.hosted-admin :deep(.custom-signin button.admin-signin-submit:hover:not(:disabled)) { background: var(--blue-hover); border-color: transparent; color: var(--white); }
 .hosted-admin :deep(.custom-signin .admin-signin-error) { color: #991b1b; background: #fef2f2; border-radius: 8px; padding: 12px 14px; margin: 0; font-size: 14px; }
 .hosted-admin :deep(.custom-signin .admin-signin-message) { color: var(--blue-700); margin: 0; font-size: 14px; }
 .hosted-admin :deep(.custom-signin .access-session-note) { width: min(100%, 440px); margin: 28px auto 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.6; }

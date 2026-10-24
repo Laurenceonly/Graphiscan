@@ -1,5 +1,35 @@
 # Resume checkpoint — 2026-10-24
 
+Current UI request2026-10-24: admin website colors, including login, should match
+Expo. User explicitly requested colors only. Three admin presentation files now
+use Expo blue/paper/ink/muted/border colors; layout and behavior remain. Admin
+build passed1834 modules; browser automation did not produce a verified admin
+capture. User now requests committing/publishing completed work for hosted preview
+review; this supersedes the earlier local-only instruction for this source slice.
+Expo source is unchanged. Resume image/expert/parent/Follow-up testing after this
+bounded color review; retain the successful Initial Screening below.
+
+Latest browser evidence2026-10-24: user supplied the completed fictional student's
+Initial Screening result: MobileNetV2 binary-3abdc7ec4e2b-litert-fp32-v1, Normal
+49.19%, High Potential50.81%, expert review Pending. The label matches the current
+0.75 High Potential rule. This is user-supplied browser evidence, not independent
+API/latency/accuracy verification. Next verify image retrieval, admin expert
+assignment, expert review, parent release/denial and a second Follow-up upload.
+PR#10 is merged as cf58120cf12156f0e4b64ffe4dfb6452b5cc4fa1 at14:12:27UTC.
+Source commita66ea1a/worktree .local-tools/upload-limit-fix has35 passing tests;
+Exact Render deployment logs/revision remain unverified; the supplied result
+demonstrates a completed browser screening after the fix. PR#8 is still open for the
+separate localhost browser-preview fix, already present in the local UI branch.
+
+Resume decision2026-10-24: user chose browser-tab testing first so Choose image
+can access a JPG/PNG on the PC. Verify hosted upload, expert review, parent access
+and Follow-up before creating the APK; then verify Android-specific/device flows.
+This is the agreed next sequence, not evidence that those workflows have passed.
+Manual image selection must use the ordinary browser tab at localhost:5174.
+The Playwright-controlled screening browser intercepted repeated file-chooser
+events instead of showing the Windows dialog. Opened the URL in the default
+browser; subsequent supplied screenshot shows the completed Initial Screening.
+
 User requested saving this session to resume later. Overall full-project estimate:
 approximately65%, an engineering judgment rather than a measured task score.
 
@@ -9,12 +39,10 @@ approximately65%, an engineering judgment rather than a measured task score.
    UI changes and unrelated SQL017/021 formatting edits. Current working branch
    is feat/expo-design-refinement. A local UI/documentation checkpoint is being
    committed in this session; no new push, merge or UI deployment is requested.
-2. Resume the first actual model-upload test when the user has a JPG/PNG sample.
-   Use the existing issued fictional teacher/test-student fixture and MobileNetV2.
-   An emulator can receive an image from the PC and use Choose image. Successful
-   submission/result retrieval is still unverified; visible model choices are
-   user-confirmed, not proof of inference. Do not use real student data for previews.
-3. After that passes, verify assigned expert review, released parent visibility,
+2. The first MobileNetV2 Initial Screening has user-supplied browser result
+   evidence. Keep this record; next test its View handwriting image action and
+   assign the existing fictional expert through admin. No real student data.
+3. Verify assigned expert review, released parent visibility,
    private image access, and a second upload recorded as Follow-up. Record actual
    evidence, access denials and recovery/concurrency results before increasing
    completion status. The current task is binary Normal/High Potential; the

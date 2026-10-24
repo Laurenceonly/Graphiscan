@@ -1,0 +1,23 @@
+FROM docker.io/library/python:3.11-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HOME=/tmp
+
+WORKDIR /app
+COPY requirements-lite.txt requirements-admin.txt ./
+RUN pip install --no-cache-dir -r requirements-lite.txt
+
+# Provision the separately versioned private copies before building.
+# No original model, dataset, uploaded image or configuration enters this image.
+COPY hosted_api.py gunicorn.conf.py api_v1.py predict.py model_bundle.py v1_*.py ./
+COPY db/postgres/access_snapshot.sql ./db/postgres/access_snapshot.sql
+COPY model/class_names.json ./model/class_names.json
+COPY model/deployment.litert.local.json ./model/deployment.litert.local.json
+COPY model/versions/*.tflite ./model/versions/
+
+ENV GRAPHISCAN_V1_MODEL_MANIFEST=/app/model/deployment.litert.local.json
+USER 10001:10001
+EXPOSE 8080
+# Serialize complete uploads, including image decoding, on the small host.
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "--threads", "1", "hosted_api:create_app()"]

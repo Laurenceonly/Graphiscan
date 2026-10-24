@@ -1,5 +1,60 @@
 # Existing binary model evidence
 
+## Linux verification and serving kernel, 2026-10-24
+
+The exact previously converted files were checked on Linux against all three
+original TensorFlow models, without reconversion or quantization. MobileNetV2
+and EfficientNetB0 used the CPU delegate; ResNet50 used the builtin CPU kernel
+to reduce serving memory. All136 images per model passed: zero class changes,
+identical matrices to both original references and prior Windows evidence.
+
+| Model | Maximum absolute score difference | Class disagreements |
+| --- | ---: | ---: |
+| MobileNetV2 | 0.000008404 | 0/136 |
+| EfficientNetB0 | 0.000006855 | 0/136 |
+| ResNet50, builtin CPU | 0.000003636 | 0/136 |
+
+The committed aggregate `litert-linux-evaluation.json` has SHA-256
+`e9eb1beae81bb85ef0a24dd3349e646fd02ab0598017cbbcf84e8a3a1a324db1`.
+Converted model hashes remain exactly those recorded below. Schema3's explicit
+runtime kind and adapter hash bind the kernel selection; original Keras/source
+pins and binary0.75 rule are unchanged. This remains the existing image split,
+not independent/clinical/three-class evidence or verified writer separation.
+Local serving-memory checks and real hosted workflow checks are separate gates.
+
+## FP32 deployment-copy comparison, 2026-10-23
+
+`tools/experiment_v1_lite_models.py --compare` completed on Windows using the
+existing Python3.11.9/TensorFlow2.21.0/Keras3.14.1 and isolated LiteRT2.3.0 CPU.
+Explicit inference (`training=False`) and raw weight-variable tracking excluded
+training-only augmentation/cached functions from the export. No weights were
+retrained or quantized. The same136-image split, EXIF-normalized PNG input,
+PIL RGB224/raw float32 preprocessing and0.75 threshold were used for both paths.
+Dataset SHA-256 remains
+`29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549`.
+
+| Copy | Size MiB | Max absolute score difference | Class disagreements | Confusion matrix |
+| --- | ---: | ---: | ---: | --- |
+| MobileNetV2 | 9.10 | 0.000008613 | 0/136 | `[[65,5],[15,51]]` |
+| EfficientNetB0 | 15.93 | 0.000007182 | 0/136 | `[[66,4],[33,33]]` |
+| ResNet50 | 90.62 | 0.000009149 | 0/136 | `[[69,1],[36,30]]` |
+
+All copied matrices equal their original references. The aggregate report is
+ignored `.local-tools/lite-model-experiment/comparison.local.json`, SHA-256
+`d3111d32d59c97e90e278c6f7ef434bb581bb2fe3f7b0cf029d93f049444c71c`.
+Converted SHA-256 identities:
+
+- MobileNetV2: `3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9`
+- EfficientNetB0: `bdc6e8dd70061e5be9a0697da77992a19c87e34b7e9c3beeeabdc9d3d0532734`
+- ResNet50: `e141366a992cacbe1db8b733e16acbaca8d0e5b03196d47040efd7ff0242c906`
+
+These copies require new artifact/version identities; the original catalogue
+and historical records remain unchanged. This comparison establishes observed
+numerical/class parity on the existing split only. It adds no independent test
+set, writer separation, clinical evidence, improved accuracy or three-class
+support. Linux/hosted numeric, memory-limit and authenticated workflow checks
+remain separate. No images or per-image predictions were exported or uploaded.
+
 ## Inspected on 2026-10-20
 
 The supplied `training_results/model_comparison_results.csv` records these existing binary experiments (fractions converted to percentages):

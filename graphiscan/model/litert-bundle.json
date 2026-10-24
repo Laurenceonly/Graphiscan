@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "model/deployment.litert.local.json",
+      "sha256": "3299024fa0e0de586f6768fdca4fb64713b5c85e80d88357de72cd66917aad67",
+      "size": 2043,
+      "parts": [
+        {
+          "sha256": "3299024fa0e0de586f6768fdca4fb64713b5c85e80d88357de72cd66917aad67",
+          "size": 2043
+        }
+      ]
+    },
+    {
+      "path": "model/versions/efficientnetb0-bdc6e8dd70061e5be9a0697da77992a19c87e34b7e9c3beeeabdc9d3d0532734.tflite",
+      "sha256": "bdc6e8dd70061e5be9a0697da77992a19c87e34b7e9c3beeeabdc9d3d0532734",
+      "size": 16698656,
+      "parts": [
+        {
+          "sha256": "bdc6e8dd70061e5be9a0697da77992a19c87e34b7e9c3beeeabdc9d3d0532734",
+          "size": 16698656
+        }
+      ]
+    },
+    {
+      "path": "model/versions/mobilenetv2-3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9.tflite",
+      "sha256": "3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9",
+      "size": 9540652,
+      "parts": [
+        {
+          "sha256": "3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9",
+          "size": 9540652
+        }
+      ]
+    },
+    {
+      "path": "model/versions/resnet50-e141366a992cacbe1db8b733e16acbaca8d0e5b03196d47040efd7ff0242c906.tflite",
+      "sha256": "e141366a992cacbe1db8b733e16acbaca8d0e5b03196d47040efd7ff0242c906",
+      "size": 95024800,
+      "parts": [
+        {
+          "sha256": "b82652e6fd049a95407629d099263b602c3f61a8ca62dcdd4e1aa6bb08550782",
+          "size": 33554432
+        },
+        {
+          "sha256": "51127d4d6bb4614dc271ccffc5fa2a38985c95212c5df3f8407b39040b0df45a",
+          "size": 33554432
+        },
+        {
+          "sha256": "5d26c1bf0b57518e38cd8dc8d8fab420798d665f57474e588a90962fbc362ce9",
+          "size": 27915936
+        }
+      ]
+    }
+  ]
+}

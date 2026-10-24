@@ -10,6 +10,14 @@ No additional numbered migration is currently prepared. Do not rerun020/021.
 
 ## Overall progress review — 2026-10-24
 
+Latest supplied browser evidence: first completed MobileNetV2 Initial Screening,
+Normal49.19%/High Potential50.81%, expert Pending. The label matches the existing
+0.75 High Potential rule. PR#10's multipart fix is merged;35 isolated regressions
+pass. This is a user-supplied result screenshot, not independent API/latency or
+accuracy validation. Next: private image retrieval, assigned expert review, parent
+release/denial and second Follow-up. Earlier first-prediction-pending statements
+below are superseded only by this bounded browser evidence. Estimate stays65%.
+
 Model-host continuation2026-10-24: all3 FP32 copies passed Linux comparison on136
 images with zero class changes. The final adapter passed a512MiB capped16MP
 noise probe at422.59MiB peak process RSS.48 runtime/access/write tests,12 Linux
@@ -37,7 +45,7 @@ they do not establish a completed hosted or Android workflow.
 | Admin web | Published refined Vue admin; actual fictional-account create/edit/disable/reactivate and membership changes observed | Hosted reset/unused-delete, permissions, assignment/eligibility and audit walkthrough |
 | Supabase/API/accounts | Migrations through021 applied; last hosted restricted preflight passed38 checks; scoped API, issuance and onboarding source | Real issued-user/role/Storage verification and approved real-use privacy publication; no new numbered migration currently prepared |
 | Expo | Hosted login/gates, role workspaces, student create/edit/filter, logout confirmation, full-height list skeletons and minimal search source; fictional browser checks pass; native login/keyboard and loading captures; user-confirmed hosted sign-in and model choices | Remaining parity and real role/Storage/write verification, native modal/Back/search checks, reload failure investigation, physical-device/APK and publication of local follow-up UI |
-| Models/screening | Three binary models evaluated on136 images; LiteRT Linux parity/memory checks; private provisioning/fetch, merged PR#9 and successful model-host startup on Render; model choices user-confirmed | First actual hosted prediction and full role workflow; planned three-class dataset/evaluation and final performance/validation evidence |
+| Models/screening | Three binary models evaluated on136 images; LiteRT Linux parity/memory checks, private provisioning/fetch and Render startup; merged PR#10 upload fix; supplied browser evidence of first MobileNetV2 Initial Screening | Complete image/expert/parent/Follow-up workflow; other hosted model choices, planned three-class dataset/evaluation and final performance/validation evidence |
 | Historical data | Earlier backup/restore evidence and migration design available | Recover authoritative source, map identities, import/reconcile records and private images, rehearse rollback; MySQL repair remains paused |
 | Integration/release | Isolated role/SQL/client checks and Android JavaScript export available | Full teacher upload → expert review → parent release → Follow-up history, concurrency/recovery/access checks, measured targets and physical Android APK verification |
 | Manuscript/presentation | Requirements, runbooks, model evidence and defense-action mapping available | Verify editable paper/deck revisions, objectives, literature, WBS/methodology, use cases, DFD/CFD, final screenshots and measured nonfunctional claims |

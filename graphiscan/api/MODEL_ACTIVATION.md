@@ -1,5 +1,13 @@
 # Model-host activation checkpoint, 2026-10-24
 
+Latest browser checkpoint: after PR#10's multipart-buffer fix merged as cf58120,
+user supplied a completed MobileNetV2 Initial Screening result screenshot:
+Normal49.19%, High Potential50.81%, expert Pending. This agrees with the existing
+0.75 rule. It is supplied browser evidence of a first completed screening, not
+independent HTTP/latency/accuracy verification or a Render revision/log check.
+Next verify private image, expert assignment/review, parent release/denial and a
+second Follow-up. Earlier first-inference-pending notes below are historical.
+
 Source PR#9 is merged as `4d2e3b13bec932e722a12b128541a4c1f8fe4465`.
 Private artifacts and a fresh release-worktree fetch are verified. The isolated
 release completed60 tests (one Windows skip covered by all12 Linux transport

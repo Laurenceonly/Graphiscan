@@ -2,6 +2,13 @@
 
 ## Current reconciliation - 2026-10-24
 
+Latest screening evidence: user supplied the first completed MobileNetV2 Initial
+Screening browser result, Normal49.19%/High Potential50.81%, expert Pending.
+PR#10's upload fix is merged;35 isolated regressions pass. Next verify private
+image, assigned expert review, parent release/denial and Follow-up. This is supplied
+browser evidence, not independent API/latency/accuracy or complete role/native
+verification. The older prediction-pending notes below are historical.
+
 Saved-session status: approximately65% overall. PR#9 is merged, private model
 fetch verifies all3, and supplied Render logs show successful one-thread model-host
 startup and Live. User saw model choices; actual prediction is still unverified.

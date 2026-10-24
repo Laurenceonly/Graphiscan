@@ -1,0 +1,111 @@
+{
+  "status": "parity-passed",
+  "quantization": "none-float32",
+  "platform": "Linux",
+  "conversion_performed": false,
+  "resnet_cpu_kernel": "builtin",
+  "sample_count": 136,
+  "split": "existing-binary-test",
+  "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549",
+  "decision_threshold": 0.75,
+  "score_tolerance": 0.0001,
+  "models": [
+    {
+      "model_key": "mobilenetv2",
+      "source_artifact_sha256": "ecad77ab7de3a40618a14a00851c5c5565721b7f21f97bd0702ba57270ad9820",
+      "converted_artifact_sha256": "3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9",
+      "converted_mib": 9.1,
+      "max_absolute_score_error": 8.404254913330078e-06,
+      "classification_disagreements": 0,
+      "reference_confusion_matrix": [
+        [
+          65,
+          5
+        ],
+        [
+          15,
+          51
+        ]
+      ],
+      "converted_confusion_matrix": [
+        [
+          65,
+          5
+        ],
+        [
+          15,
+          51
+        ]
+      ],
+      "parity_passed": true,
+      "elapsed_seconds": 8.55
+    },
+    {
+      "model_key": "efficientnetb0",
+      "source_artifact_sha256": "0c7951d1114ce2838ca78374cc7e8f8821b008d6c3d1afea2909882986fd9fcd",
+      "converted_artifact_sha256": "bdc6e8dd70061e5be9a0697da77992a19c87e34b7e9c3beeeabdc9d3d0532734",
+      "converted_mib": 15.93,
+      "max_absolute_score_error": 6.854534149169922e-06,
+      "classification_disagreements": 0,
+      "reference_confusion_matrix": [
+        [
+          66,
+          4
+        ],
+        [
+          33,
+          33
+        ]
+      ],
+      "converted_confusion_matrix": [
+        [
+          66,
+          4
+        ],
+        [
+          33,
+          33
+        ]
+      ],
+      "parity_passed": true,
+      "elapsed_seconds": 13.74
+    },
+    {
+      "model_key": "resnet50",
+      "source_artifact_sha256": "9c6e2cd5b031a0ec07378d73089286ba1140707b5861652b7152c48d2bf20fbd",
+      "converted_artifact_sha256": "e141366a992cacbe1db8b733e16acbaca8d0e5b03196d47040efd7ff0242c906",
+      "converted_mib": 90.62,
+      "max_absolute_score_error": 3.635883331298828e-06,
+      "classification_disagreements": 0,
+      "reference_confusion_matrix": [
+        [
+          69,
+          1
+        ],
+        [
+          36,
+          30
+        ]
+      ],
+      "converted_confusion_matrix": [
+        [
+          69,
+          1
+        ],
+        [
+          36,
+          30
+        ]
+      ],
+      "parity_passed": true,
+      "elapsed_seconds": 67.55
+    }
+  ],
+  "database_accessed": false,
+  "registry_published": false,
+  "live_artifacts_changed": false,
+  "limitations": [
+    "Deployment-copy experiment, not independent or clinical validation.",
+    "Numerical comparison only; no serving memory-limit or authenticated hosted workflow verification."
+  ]
+}
