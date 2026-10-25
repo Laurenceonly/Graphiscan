@@ -1,11 +1,12 @@
 import React,{useEffect,useRef,useState} from 'react'
-import {Image,Platform,Switch,View} from 'react-native'
+import {Image,Modal,Platform,Pressable,ScrollView,Switch,View,useWindowDimensions} from 'react-native'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Crypto from 'expo-crypto'
 import type {HostedClient} from '../../shared/hosted-client.mjs'
 import {createReviewSubmission} from '../../shared/screening-submission.mjs'
-import {Body,Button,Field,Heading,Notice,Screen,styles} from './ui'
+import {Body,Button,Field,Heading,Notice,Screen,styles,useColors} from './ui'
 import LoadingSkeleton from './LoadingSkeleton'
 import {useRecords} from './use-records'
 import {exportImage} from './export-image'
@@ -42,12 +43,16 @@ export function HostedImage({request,id}:{request:Request;id:string}){
   return <View style={{gap:12}}><Button label={busy?'Loading image...':'View handwriting image'} secondary disabled={busy} onPress={()=>image(false)}/>{busy&&!uri&&<LoadingSkeleton kind="image"/>}{uri?<Image source={{uri}} accessibilityLabel="Authorized handwriting sample" resizeMode="contain" style={{width:'100%',height:300}}/>:null}<Button label="Save handwriting image" secondary disabled={busy} onPress={()=>image(true)}/><Notice error message={error}/></View>
 }
 export function HostedUpload({request,onComplete}:{request:Request;onComplete:(id:string)=>void}){
+  const colors=useColors(),{width,fontScale}=useWindowDimensions()
+  const [removeOpen,setRemoveOpen]=useState(false)
+  const stackedDialogActions=width<320||fontScale>1.4
   const [studentCursor,setStudentCursor]=useState<string|null>(null),[modelCursor,setModelCursor]=useState<string|null>(null)
   const students=useRecords(()=>request('/students?limit=100'+(studentCursor?'&cursor='+encodeURIComponent(studentCursor):''),{envelope:true}),[request,studentCursor])
   const models=useRecords(()=>request('/models?limit=100'+(modelCursor?'&cursor='+encodeURIComponent(modelCursor):''),{envelope:true}),[request,modelCursor])
   const [student,setStudent]=useState<any>(null),[model,setModel]=useState<any>(null),[asset,setAsset]=useState<ImagePicker.ImagePickerAsset|null>(null)
   const [search,setSearch]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(''),[message,setMessage]=useState(''),[hasPending,setHasPending]=useState(false),[failed,setFailed]=useState(false)
   const pending=useRef<{key:string;form:FormData}|null>(null)
+  useEffect(()=>{if(busy||hasPending||!asset)setRemoveOpen(false)},[busy,hasPending,asset])
   useEffect(()=>{if(!model){const next=models.data?.data.find((row:any)=>row.is_default&&row.is_selectable);if(next)setModel(next)}},[models.data,model])
   async function pick(camera:boolean){
     if(busy||hasPending||pending.current)return
@@ -65,7 +70,7 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
   }
   function removeImage(){
     if(busy||hasPending||pending.current)return
-    setAsset(null);setError('');setMessage('')
+    setRemoveOpen(false);setAsset(null);setError('');setMessage('')
   }
   async function send(){
     if(busy||!student||!model||!asset)return;setBusy(true);setError('');setMessage('')
@@ -99,8 +104,31 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
     <Heading>Handwriting image</Heading>
-    {asset&&<Image source={{uri:asset.uri}} accessibilityLabel="Selected handwriting image" resizeMode="contain" style={{width:'100%',height:280}}/>}
-    <View style={styles.wrap}><Button label={asset?'Replace image':'Choose image'} icon="photo-library" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" icon="photo-camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/>{asset&&<Button label="Remove image" icon="close" secondary disabled={busy||hasPending} onPress={removeImage}/>}</View>
+    {asset&&<View style={{position:'relative',borderRadius:12,overflow:'hidden',backgroundColor:colors.surface}}>
+      <Image source={{uri:asset.uri}} accessibilityLabel="Selected handwriting image" resizeMode="contain" style={{width:'100%',height:280}}/>
+      <Pressable accessibilityRole="button" accessibilityLabel="Remove image" accessibilityHint="Opens a confirmation dialog" accessibilityState={{disabled:busy||hasPending}} disabled={busy||hasPending}
+        onPress={()=>{if(!busy&&!hasPending&&!pending.current)setRemoveOpen(true)}}
+        style={({pressed})=>({position:'absolute',top:8,right:8,width:48,height:48,borderRadius:24,alignItems:'center',justifyContent:'center',backgroundColor:colors.surface,borderWidth:1,borderColor:colors.border,opacity:(busy||hasPending)?0.55:pressed?0.8:1})}>
+        <MaterialIcons name="close" size={24} color={colors.text} accessible={false}/>
+      </Pressable>
+    </View>}
+    <View style={{flexDirection:'row',alignItems:'stretch',gap:12}}>
+      <View style={{flex:1,minWidth:0}}><Button label={asset?'Replace image':'Choose image'} secondary style={{flexGrow:1,paddingHorizontal:8}} disabled={busy||hasPending} onPress={()=>pick(false)}/></View>
+      <View style={{flex:1,minWidth:0}}><Button label="Use camera" secondary style={{flexGrow:1,paddingHorizontal:8}} disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
+    </View>
+    <Modal visible={removeOpen} transparent animationType="none" onRequestClose={()=>setRemoveOpen(false)}>
+      <View style={{flex:1,justifyContent:'center',padding:24,backgroundColor:'rgba(0,0,0,0.48)'}}>
+        <View role="dialog" accessibilityViewIsModal accessibilityLabel="Remove this image?" style={{width:'100%',maxWidth:420,maxHeight:'90%',alignSelf:'center',borderRadius:16,backgroundColor:colors.surface}}>
+          <ScrollView contentContainerStyle={{padding:24,gap:16}} keyboardShouldPersistTaps="handled">
+            <Heading>Remove this image?</Heading><Body>You can choose another image or take a new photo.</Body>
+            <View style={{flexDirection:stackedDialogActions?'column':'row',alignItems:'stretch',gap:12}}>
+              <View style={{flex:stackedDialogActions?undefined:1,minWidth:0}}><Button label="Cancel" secondary style={{flexGrow:1,paddingHorizontal:8}} onPress={()=>setRemoveOpen(false)}/></View>
+              <View style={{flex:stackedDialogActions?undefined:1,minWidth:0}}><Button label="Remove image" style={{flexGrow:1,paddingHorizontal:8}} disabled={busy||hasPending} onPress={removeImage}/></View>
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
     <Body muted>Use an image up to 10 MB and 16 megapixels. Screening supports expert review and does not establish a diagnosis.</Body>
     <Notice error message={error}/><Notice message={message}/>
     <Button label={busy?'Submitting...':hasPending?'Retry the same submission':'Submit for screening'} disabled={busy||!student||!model||!asset||failed} onPress={send}/>

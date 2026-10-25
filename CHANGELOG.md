@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-25 - Place Expo image actions beside each other and confirm removal
+
+- HostedScreeningActions.tsx now keeps Choose/Replace image and Use camera in two equal columns without wrapping onto separate rows. Replaced the separate Remove image action with a 48px X control inset at the preview's upper-right corner. The X opens a themed Remove this image? modal with Cancel and Remove image; only confirmation clears the draft. Modal content scrolls, actions accommodate large font scales, and native Back/web Escape dismiss through onRequestClose. Busy/pending upload locks remain authoritative and close any open removal prompt.
+- Verification: Expo TypeScript passed; web/Android export passed (969/1297 modules, 3.4MB Android Hermes bundle). Fictional 390/light and 320/dark browser checks verified equal action row geometry, X position/touch size, replacement/cancellation, removal confirmation, Cancel/Escape preserving the image, disabled empty submission, pending/busy locks, preserved retry key and removal after rejection. Four preview/modal captures were visually inspected; zero page errors or real hosted writes. Android physical-device camera/gallery, Back and large-font modal behavior remain unverified.
+
 ## 2026-10-25 - Add Expo image replacement and removal
 
 - HostedScreeningActions.tsx now shows the selected handwriting preview followed by Replace image, Use camera and Remove image controls. With no image, Choose image and Use camera remain. Remove clears the local selection and messages; submission is disabled without an image. Canceling replacement retains the previous selection. All image controls and handlers respect the existing busy/pending upload lock so an uncertain submission retains its original sample and retry key. Removing a draft image does not delete a saved screening or stored image.
