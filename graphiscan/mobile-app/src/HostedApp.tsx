@@ -10,7 +10,7 @@ import { createHostedClient, type HostedClient } from '../../shared/hosted-clien
 import { Body, Button, Heading, Notice, Screen, Status, styles, useColors } from './ui'
 import { useRecords } from './use-records'
 import { dateLabel, screeningType } from './core/presentation'
-import { hostedPercent } from './core/hosted-presentation'
+import { hostedPercent, modelLabel } from './core/hosted-presentation'
 import {HostedImage,HostedReview,HostedUpload} from './HostedScreeningActions'
 import SignInPanel from './SignInPanel'
 import AccountSetup from './AccountSetup'
@@ -79,7 +79,7 @@ function Detail({route,report=false}:{route:{params:{id:string}};report?:boolean
     <View style={{gap:8}}>{student.loading&&!student.data?<LoadingSkeleton kind="heading" label="Loading student details"/>:<Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.data?.full_name||'Student '+row.student_id}</Text>}<Body muted>{student.data?.grade_level?'Grade '+student.data.grade_level+' / ':''}{screeningType(report?row.report_type:row.report?.report_type)}</Body><Body muted>{dateLabel(row.date_generated)}</Body></View>
     <View style={[styles.panel,{borderWidth:0,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap'}]}><Heading>Model output</Heading><Status value={row.classification}/></View>
     <RecordValue label="Reported-class model score" value={hostedPercent(row.predicted_class_score)}/><RecordValue label="High Potential model score" value={hostedPercent(row.class_scores?.high_potential)}/>
-    <Body muted>Model scores are not a clinical probability or diagnosis.</Body><View style={{borderTopWidth:1,borderTopColor:colors.border,paddingTop:16,gap:4}}><Body>{row.model.model_key??'Model not recorded'}</Body><Body muted>Version {row.model.model_version??'not recorded'}</Body></View>
+    <Body muted>Model scores are not a clinical probability or diagnosis.</Body><View style={{borderTopWidth:1,borderTopColor:colors.border,paddingTop:16,gap:4}}><Body>{modelLabel(row.model.model_key)}</Body><Body muted>Version {row.model.model_version??'not recorded'}</Body></View>
     {row.provenance==='legacy_unverified'&&<Body muted>Historical model provenance has not been verified.</Body>}
     </View><View style={[styles.panel,{borderWidth:0,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap'}]}><Heading>Expert review</Heading><Status value={row.review.status}/></View><RecordValue label="Remarks" value={row.review.remarks||'Not recorded'}/><RecordValue label="Expert recommendation" value={row.review.expert_recommendation||'Not recorded'}/><RecordValue label="Follow-up needed" value={row.review.follow_up_needed===true?'Yes':row.review.follow_up_needed===false?'No':'Not recorded'}/>
     {row.review.validation_date&&<Body muted>Reviewed {dateLabel(row.review.validation_date)}</Body>}

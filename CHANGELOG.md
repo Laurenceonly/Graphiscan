@@ -1,5 +1,11 @@
 # GraphiScan change log
 
+## 2026-10-25 - Clarify Expo model names and simplify the picker
+
+- Expo's hosted model picker now displays MobileNetV2, ResNet50 and EfficientNetB0 using the server-supported architecture capitalization. Removed the raw technical version strings from model choices; only the default option has the Default model subtitle. HostedScreeningActions.tsx and HostedApp.tsx share modelLabel in core/hosted-presentation.ts; result/report details use the same readable name while retaining the complete recorded model version.
+- The apparent random letters belong to the version identifier, including the model artifact hash and runtime/build information used to reproduce and audit screenings. Server model IDs, registry values, saved versions, default/selectability rules, submission payloads and predictor behavior are unchanged. Unknown model names retain their original text; missing names remain Model not recorded.
+- Verification: Expo TypeScript passed; web/Android export passed (969/1297 modules, 3.4MB Android Hermes bundle). Fictional browser previews at 390/light and 320/dark passed three-model selection, canonical labels, default subtitle, no version text in the picker and preserved full version in saved result details, with zero page errors or real writes. Both picker captures were visually inspected. Review harness assertions were adapted to the existing rendered selection state and retained hidden screens; no unrelated accessibility behavior changed. No APK/device or hosted inference verification is claimed.
+
 ## 2026-10-25 - Use one bold Admin Workspace header
 
 - Replaced the hosted topbar's Workspace > current-page breadcrumb with static bold Admin Workspace text in HostedAdminWorkspace.vue. Removed the separator icon, unused current-page computation and mobile breadcrumb overrides. All seven hosted sections share the same 16px/700 title at desktop and phone widths; page headings remain in the content.
