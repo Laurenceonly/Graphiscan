@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-25 - Use one bold Admin Workspace header
+
+- Replaced the hosted topbar's Workspace > current-page breadcrumb with static bold Admin Workspace text in HostedAdminWorkspace.vue. Removed the separator icon, unused current-page computation and mobile breadcrumb overrides. All seven hosted sections share the same 16px/700 title at desktop and phone widths; page headings remain in the content.
+- Verification: admin production build passed (1834 modules); fictional intercepted Chromium navigation checked all seven sections at 1440/390/320 widths (21 views), identical title/weight, no breadcrumb and title fit, with zero page errors or real writes. Desktop Users and narrow Settings captures were visually inspected. Publishing this bounded presentation change through the existing main-branch workflow; no new functional role/native screening verification is claimed.
+
 ## 2026-10-25 - Fix admin background cutoffs, favicon transparency and search cues
 
 - Reproduced the reported slate-to-white cutoff: short hosted sections ended their main panel above the viewport, exposing the white workspace shell. HostedAdminWorkspace.vue now paints the shell slate and uses a full-viewport flex main panel/content region. The topbar retains its height and normal document scrolling remains available for long pages.
