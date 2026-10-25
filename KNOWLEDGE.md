@@ -1,3 +1,10 @@
+Expo model labels 2026-10-25: the hosted picker uses MobileNetV2, ResNet50 and
+EfficientNetB0 with only a Default model subtitle, instead of raw keys/versions.
+Result/report details use the same readable names and retain the exact saved
+version. Model registry IDs, selection rules, submission and inference remain
+unchanged. Typecheck, web/Android export and fictional light/dark picker/result
+browser checks pass; no new device or hosted inference verification is claimed.
+
 Admin header 2026-10-25: the hosted topbar displays bold Admin Workspace on
 every section at desktop and phone widths, replacing Workspace > current page.
 All seven sections were checked with fictional browser fixtures at three widths;

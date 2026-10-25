@@ -10,6 +10,7 @@ import LoadingSkeleton from './LoadingSkeleton'
 import {useRecords} from './use-records'
 import {exportImage} from './export-image'
 import {ChoiceRow} from './WorkspaceUI'
+import {modelLabel} from './core/hosted-presentation'
 
 type Request=HostedClient['request']
 export function HostedReview({request,id,review,onSaved}:{request:Request;id:string;review:any;onSaved:()=>void}){
@@ -89,7 +90,7 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     {students.data?.page?.next_cursor&&<Button label="Next students" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(students.data.page.next_cursor)}/>}
     {studentCursor&&<Button label="First students page" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(null)}/>}
     <Heading>Screening model</Heading>{models.loading&&!models.data&&<LoadingSkeleton kind="choice" label="Loading models"/>}<Notice error message={models.error}/>
-    <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={row.model_key} detail={'Version '+row.model_version+(row.is_default?' · Default':'')} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
+    <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={row.is_default?'Default model':undefined} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
     <Heading>Handwriting image</Heading><View style={styles.wrap}><Button label="Choose image" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
