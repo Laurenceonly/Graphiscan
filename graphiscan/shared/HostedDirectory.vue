@@ -14,7 +14,7 @@
     <p v-if="message" role="status" class="directory-message">{{ message }}</p>
     <template v-if="tab === 'students'">
       <form class="directory-filters" @submit.prevent="loadStudents(false)">
-        <label>Search students<input v-model="search" maxlength="120" type="search" :disabled="busy || frozen || schoolUncertain" /></label>
+        <label>Search students<span v-if="adminPresentation" class="admin-search-control"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4 4" /></svg><input v-model="search" maxlength="120" type="search" placeholder="Search student name" :disabled="busy || frozen || schoolUncertain" /></span><input v-else v-model="search" maxlength="120" type="search" :disabled="busy || frozen || schoolUncertain" /></label>
         <label>School<select v-model="filterSchool" :disabled="busy || frozen || schoolUncertain"><option value="">All available schools</option><option v-for="school in schools" :key="school.school_id" :value="school.school_id">{{ school.name }}</option></select></label>
         <label>Grade<select v-model="filterGrade" :disabled="busy || frozen || schoolUncertain"><option value="">All grades</option><option v-for="grade in 3" :key="grade" :value="String(grade)">Grade {{ grade }}</option></select></label>
         <button type="submit" :disabled="busy || frozen || schoolUncertain">Apply filters</button>

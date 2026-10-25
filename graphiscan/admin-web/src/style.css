@@ -1359,6 +1359,32 @@ textarea {
   margin-bottom: 20px;
 }
 
+/* Hosted searches retain visible labels and the native clear control. */
+.admin-shell .admin-search-control {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-shell .admin-search-control > svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.admin-shell .main-panel .admin-search-control > input[type="search"] {
+  padding-inline-start: 44px;
+}
+
+.admin-shell .admin-search-control > input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
 .search-field,
 .search-input {
   flex-shrink: 0;

@@ -1,3 +1,11 @@
+Admin visual fixes 2026-10-25: hosted workspace shell/main/content now fill the
+viewport with the same slate background, including short Users/Progress/Audit/
+Settings pages. The admin favicon uses a separate transparent cutout PNG; the
+original branding assets remain intact. Users/Audit/Students/assignment-account
+searches show icons and placeholders with unchanged filtering semantics.
+Fictional browser verification covered seven sections at four widths, search
+submission/clearing and the narrow assignment dialog; admin build passed.
+
 Publication request 2026-10-25: user authorized merging/pushing the reviewed
 branding to main for hosted review. Latest main 1efb823 was reconciled while
 preserving the b8ff9ce application tree. Resolved admin build and Expo typecheck

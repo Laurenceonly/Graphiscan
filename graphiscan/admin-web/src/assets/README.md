@@ -4,7 +4,14 @@
 selected2026-10-25 for both admin and Expo. Its original glossy blues, whitespace
 and background are preserved without filters. The admin source/public copies and
 Expo asset match SHA-2562383e341a2066705edb0f3ec49f066df72f6d224ad202261995eb094133642f0.
-It appears beside the login/sidebar wordmarks; the public copy is the browser icon.
+It appears beside the login/sidebar wordmarks; the public copy preserves the source.
+
+`public/graphiscan-favicon-cutout.png` is the transparent browser-icon derivative,
+created2026-10-25 with the built-in image generation edit tool from the supplied
+logo. Prompt: remove only the white background and inner open space, preserve the
+glossy blue mark and proportions, and center with modest transparent padding.
+The favicon has its own URL to avoid retaining the old opaque icon in browser
+caches. The original login/sidebar and Expo branding assets remain unchanged.
 
 `admin-workspace-preview.png` is a1440x1000 local Chromium capture of the current
 hosted Vue dashboard with intercepted fictional API responses: three screenings,

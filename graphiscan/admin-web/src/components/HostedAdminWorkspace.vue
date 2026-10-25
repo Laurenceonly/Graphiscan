@@ -167,9 +167,11 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 </script>
 
 <style scoped>
-.hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--white); font:400 14px/1.55 var(--font-ui); color:var(--text); }
-.hosted-workspace :deep(.main-panel) { background:var(--page-bg); }
-.hosted-workspace :deep(.content) { background:var(--page-bg); }
+.hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--page-bg); font:400 14px/1.55 var(--font-ui); color:var(--text); }
+/* Short sections share the same full-height canvas as populated pages. */
+.hosted-workspace :deep(.main-panel) { display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; background:var(--page-bg); }
+.hosted-workspace :deep(.topbar) { flex-shrink:0; }
+.hosted-workspace :deep(.content) { flex:1; background:var(--page-bg); }
 .hosted-workspace :deep(.sidebar) { padding:22px 16px; gap:22px; background:var(--sidebar-bg); border-right:1px solid var(--border); box-shadow:none; }
 .hosted-workspace :deep(.brand) { min-height:44px; padding:0 6px 20px; margin-bottom:2px; border:0; }
 .workspace-brand { display:flex; align-items:center; gap:9px; white-space:nowrap; font-size:19px; font-weight:650; letter-spacing:-.035em; }
