@@ -1,3 +1,8 @@
+Admin header 2026-10-25: the hosted topbar displays bold Admin Workspace on
+every section at desktop and phone widths, replacing Workspace > current page.
+All seven sections were checked with fictional browser fixtures at three widths;
+the production build passes. Individual page headings remain below the topbar.
+
 Admin visual fixes 2026-10-25: hosted workspace shell/main/content now fill the
 viewport with the same slate background, including short Users/Progress/Audit/
 Settings pages. The admin favicon uses a separate transparent cutout PNG; the

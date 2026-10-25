@@ -4,7 +4,7 @@
       <div class="workspace-brand"><img :src="brandLogo" alt="" width="36" height="36" /><span>Graphi<span>Scan</span></span></div>
     </template>
     <template #topbar>
-      <div class="workspace-breadcrumb"><span>Workspace</span><ChevronRight :size="14" aria-hidden="true" /><strong>{{ currentPage }}</strong></div>
+      <strong class="workspace-title">Admin Workspace</strong>
     </template>
     <template #navigation="{ closeMenu }">
       <div v-for="group in navigation" :key="group.label" class="sidebar-section">
@@ -97,7 +97,7 @@
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, ref } from 'vue'
-import { AlertTriangle, ArrowUpRight, ChevronRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
+import { AlertTriangle, ArrowUpRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
 import brandLogo from '../assets/graphiscan-logo.png'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import HostedDirectory from '../../../shared/HostedDirectory.vue'
@@ -111,7 +111,6 @@ const section=ref('dashboard'), directoryRef=ref(null), screeningsRef=ref(null),
 const directory=ref({ students:0, schools:0, studentsLoaded:false, schoolsLoaded:false, busy:true, error:'' })
 const screening=ref({ rows:[], loaded:false, busy:true, error:'', allowed:false })
 const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
-const currentPage=computed(()=>section.value==='schools'?'Schools':navigation.flatMap(group=>group.items).find(item=>item.key===section.value)?.label || 'Dashboard')
 const refreshing=computed(()=>props.busy || directory.value.busy || screening.value.busy)
 const cards=computed(()=>[
   {label:'Screenings loaded',value:screening.value.loaded?screening.value.rows.length:'—',icon:FileText,target:'results'},
@@ -192,8 +191,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(.sidebar-close-btn) { color:var(--text); background:var(--page-bg); }
 .hosted-workspace :deep(.topbar) { display:flex; min-height:72px; height:72px; padding:0 32px; justify-content:flex-start; background:var(--white); border-bottom:1px solid var(--border); }
 .hosted-workspace :deep(.content) { padding:28px var(--workspace-page-inset) 36px; max-width:1480px; }
-.workspace-breadcrumb { display:flex; align-items:center; gap:12px; min-width:0; font-size:12px; color:var(--muted); }
-.workspace-breadcrumb strong { color:var(--text); font-weight:500; }
+.workspace-title { min-width:0; color:var(--text); font-size:16px; font-weight:700; line-height:1.5; }
 .modern-admin-dashboard { gap:var(--workspace-section-gap); }
 .dashboard-toolbar { align-items:center; gap:20px; min-height:44px; padding:0; }
 .dashboard-toolbar p { margin:8px 0 0; font-size:14px; }
@@ -334,7 +332,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 @media(max-width:1100px){.hosted-workspace :deep(.sidebar){width:min(280px,calc(100vw - 48px));height:100dvh}.hosted-workspace :deep(.main-panel){width:100%;margin-left:0}}
 @media(max-width:850px){.workspace-dashboard-grid{grid-template-columns:1fr;gap:22px}.workspace-dashboard-secondary{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.recent-screening-head,.recent-screening-item{grid-template-columns:1fr 1.3fr .8fr .8fr}}
 @media(max-width:760px){.clean-panel{padding:24px}.dashboard-empty-panel{min-height:300px}.clean-panel-head{flex-direction:row;align-items:center;text-align:left;gap:10px}.clean-panel-head .mini-view-link{width:auto;flex:none}.recent-screening-head{display:none}.recent-screening-item{grid-template-columns:1fr auto;gap:8px 12px;padding:16px 14px}.recent-screening-item .recent-classification{grid-column:1}.recent-screening-item .workspace-badge{grid-column:2;grid-row:1}.recent-screening-item time{grid-column:2;grid-row:2}.workspace-record-panel :deep(.directory-filters){grid-template-columns:1fr}.workspace-record-panel :deep(:is(.screening-detail,.assignment-form)){padding:16px}}
-@media(max-width:700px){.hosted-workspace :deep(.content){padding:24px 16px 32px}.hosted-workspace :deep(.topbar){height:64px;min-height:64px;padding:0 16px;gap:12px}.workspace-breadcrumb>span,.workspace-breadcrumb>svg,.workspace-account-name,.workspace-account-menu>svg{display:none}.workspace-account-menu{min-width:44px;min-height:44px;padding:0;justify-content:center}.workspace-breadcrumb{font-size:13px}.workspace-dashboard-secondary{grid-template-columns:1fr}.dashboard-toolbar{gap:16px;flex-direction:row}.dashboard-highlight-card{min-height:124px;padding:16px;display:grid;grid-template-columns:1fr auto;gap:8px 6px}.dashboard-highlight-card .workspace-metric{padding-right:0}.dashboard-highlight-card .workspace-metric>span{min-height:40px}.dashboard-highlight-card .highlight-icon{position:static;width:20px;height:20px}.dashboard-highlight-card strong{margin-top:12px}.workspace-activity-chart figcaption{font-size:9px}.modern-admin-dashboard{gap:18px}.hosted-workspace :deep(.user-summary-card){padding:16px}.hosted-workspace :deep(.small-action-btn){min-height:44px}}
+@media(max-width:700px){.hosted-workspace :deep(.content){padding:24px 16px 32px}.hosted-workspace :deep(.topbar){height:64px;min-height:64px;padding:0 16px;gap:12px}.workspace-account-name,.workspace-account-menu>svg{display:none}.workspace-account-menu{min-width:44px;min-height:44px;padding:0;justify-content:center}.workspace-dashboard-secondary{grid-template-columns:1fr}.dashboard-toolbar{gap:16px;flex-direction:row}.dashboard-highlight-card{min-height:124px;padding:16px;display:grid;grid-template-columns:1fr auto;gap:8px 6px}.dashboard-highlight-card .workspace-metric{padding-right:0}.dashboard-highlight-card .workspace-metric>span{min-height:40px}.dashboard-highlight-card .highlight-icon{position:static;width:20px;height:20px}.dashboard-highlight-card strong{margin-top:12px}.workspace-activity-chart figcaption{font-size:9px}.modern-admin-dashboard{gap:18px}.hosted-workspace :deep(.user-summary-card){padding:16px}.hosted-workspace :deep(.small-action-btn){min-height:44px}}
 @media(max-width:700px){.workspace-record-panel :deep(table){min-width:0}.workspace-record-panel :deep(.hosted-results-table table){min-width:0}.workspace-record-panel :deep(td){padding:10px 0}.workspace-record-panel :deep(dialog.hosted-directory-modal){padding:20px}}
 @media(max-width:980px){.workspace-record-panel :deep(.user-summary-grid){grid-template-columns:repeat(2,minmax(0,1fr))}}
 
