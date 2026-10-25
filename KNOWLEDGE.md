@@ -1,6 +1,8 @@
-Expo image actions 2026-10-25: the hosted screening draft preview has Replace
-image and Remove image controls alongside Use camera. Removal clears only the
-local draft and disables submission; canceled replacement keeps the old sample.
+Expo image actions 2026-10-25: the hosted screening draft has equal side-by-side
+Choose/Replace image and Use camera buttons. A 48px X in the preview's upper-right
+corner opens a removal confirmation modal; Cancel/Escape retain the image.
+Confirmed removal clears only the local draft and disables submission;
+canceled replacement keeps the old sample.
 Busy/uncertain submissions retain the existing image lock and retry identity.
 Typecheck, web/Android export and fictional picker/retry browser checks pass;
 native camera/gallery/device verification remains separate.
