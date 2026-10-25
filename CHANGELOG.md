@@ -1,5 +1,12 @@
 # GraphiScan change log
 
+## 2026-10-25 - Fix admin background cutoffs, favicon transparency and search cues
+
+- Reproduced the reported slate-to-white cutoff: short hosted sections ended their main panel above the viewport, exposing the white workspace shell. HostedAdminWorkspace.vue now paints the shell slate and uses a full-viewport flex main panel/content region. The topbar retains its height and normal document scrolling remains available for long pages.
+- Added public/graphiscan-favicon-cutout.png, a transparent derivative of the supplied glossy mark made with the built-in image editor; index.html uses the new filename to avoid the previous opaque icon cache. Original login/sidebar/Expo logo assets remain intact. Provenance and prompt are in admin-web/src/assets/README.md.
+- Added decorative search icons and descriptive placeholders for hosted Users, Audit Logs, Students and assignment-account lookup. Updated HostedAdminRecords.vue, AccountAssignmentAccess.vue, the admin-only branch of shared/HostedDirectory.vue and shared admin CSS. Existing visible labels, native search controls, filtering, server queries and permissions are retained.
+- Verification: admin production build passed (1834 modules). Fictional intercepted Chromium checks covered all seven hosted sections at 320/390/1440/1920 widths (28 views), slate viewport coverage and no document overflow; twelve search cases checked icons, placeholders, Enter submission and clearing q. Assignment lookup checks passed at 320/1440, including Enter submission. Fourteen page captures and two dialog captures were made; desktop Users, mobile Students/Progress and narrow assignment captures were visually inspected. Favicon decoded in-browser with alpha zero at the corner and center. No page errors or real hosted writes. A CSS padding overlap found by the review was corrected before the passing run. Deployment verification follows publication; no new role/native/model workflow completion is claimed.
+
 ## 2026-10-25 - Publish reviewed branding to main
 
 - User explicitly requested publication to main for hosted visual review. Reconciled origin/main (1efb823, earlier squash-merged PR #11) into the feature branch, retaining the reviewed b8ff9ce tree for overlapping files. Before this publication note, the resolved tree exactly matched b8ff9ce; no additional application behavior changed.

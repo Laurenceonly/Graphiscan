@@ -4,7 +4,7 @@
       <header><div><h2 id="assignment-access-title">Assignment access</h2><p>Choose who may select {{ target.full_name }} for assignments in a school.</p></div><button type="button" class="editor-close" aria-label="Close assignment access" :disabled="busy || (uncertain && !checked)" @click="close"><X :size="18" aria-hidden="true" /></button></header>
       <div class="assignment-field"><label for="assignment-access-school">School</label><select id="assignment-access-school" v-model="school" required :disabled="busy || uncertain" @change="loadPair"><option value="">Choose a school</option><option v-for="item in schools" :key="item.school_id" :value="String(item.school_id)">{{ item.name }}</option></select></div>
       <p v-if="schoolNote">{{ schoolNote }}</p>
-      <div class="assignment-account-search"><label>Find assigning account<input v-model="search" type="search" maxlength="120" :disabled="busy || uncertain" @keydown.enter.prevent="searchActors(false)" /></label><button type="button" class="soft-action-btn" :disabled="busy || uncertain" @click="searchActors(false)">Search</button></div>
+      <div class="assignment-account-search"><label>Find assigning account<span class="admin-search-control"><Search :size="18" :stroke-width="1.8" aria-hidden="true" /><input v-model="search" type="search" placeholder="Name or email" maxlength="120" :disabled="busy || uncertain" @keydown.enter.prevent="searchActors(false)" /></span></label><button type="button" class="soft-action-btn" :disabled="busy || uncertain" @click="searchActors(false)">Search</button></div>
       <div class="assignment-field"><label for="assignment-access-actor">Assigning account</label><select id="assignment-access-actor" v-model="actor" required :disabled="busy || uncertain" @change="loadPair"><option v-for="item in actorOptions" :key="item.user_id" :value="item.user_id">{{ item.full_name }}{{ item.user_id === profile.user_id ? ' (you)' : '' }}</option></select></div>
       <button v-if="cursor" type="button" class="soft-action-btn assignment-more" :disabled="busy || uncertain" @click="searchActors(true)">Load more accounts</button>
       <p v-if="searchNotice" role="status">{{ searchNotice }}</p><p v-if="loading" role="status">Checking assignment access…</p>
@@ -22,7 +22,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { X } from 'lucide-vue-next'
+import { Search, X } from 'lucide-vue-next'
 const props=defineProps({client:{type:Object,required:true},target:{type:Object,required:true},profile:{type:Object,required:true},schools:{type:Array,default:()=>[]},schoolNote:{type:String,default:''}})
 const emit=defineEmits(['close','completed','navigation-block','access-change'])
 const dialog=ref(null),school=ref(''),actor=ref(props.profile.user_id),search=ref(''),cursor=ref(null),searchNotice=ref('')

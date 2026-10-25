@@ -4,7 +4,7 @@
     <AdminSummaryCards v-if="allowed && accounts" :items="cards.map(card => ({label:card.label,value:loaded ? card.count : '—'}))" label="Loaded account counts" />
     <section class="clean-panel hosted-record-panel">
       <form v-if="allowed" class="hosted-record-filters" :class="{ 'audit-filters': !accounts }" @submit.prevent="load(false)">
-        <label>{{ accounts ? 'Search users' : 'Search activity' }}<input v-model="search" type="search" maxlength="120" :disabled="busy" /></label>
+        <label>{{ accounts ? 'Search users' : 'Search activity' }}<span class="admin-search-control"><Search :size="18" :stroke-width="1.8" aria-hidden="true" /><input v-model="search" type="search" :placeholder="accounts ? 'Search name or email' : 'Search activity'" maxlength="120" :disabled="busy" /></span></label>
         <label>Role<select v-model="role" :disabled="busy"><option value="">All roles</option><option v-for="item in roles" :key="item" :value="item">{{ roleName(item) }}</option></select></label>
         <label v-if="accounts">Status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label>
         <button type="submit" class="soft-action-btn" :disabled="busy">Apply filters</button>
@@ -63,7 +63,7 @@ import AccountActionDialog from './AccountActionDialog.vue'
 import AccountAssignmentAccess from './AccountAssignmentAccess.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { X } from 'lucide-vue-next'
+import { Search, X } from 'lucide-vue-next'
 const props=defineProps({kind:{type:String,required:true},client:{type:Object,required:true},profile:{type:Object,required:true}})
 const emit=defineEmits(['access-change','navigation-block'])
 const accounts=computed(()=>props.kind==='accounts')
