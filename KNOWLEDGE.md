@@ -1,3 +1,9 @@
+Publication request 2026-10-25: user authorized merging/pushing the reviewed
+branding to main for hosted review. Latest main 1efb823 was reconciled while
+preserving the b8ff9ce application tree. Resolved admin build and Expo typecheck
+pass. Remote acceptance and hosted deployment require separate verification;
+the local/unpublished statements below describe the earlier checkpoint.
+
 Brand/theme2026-10-25: user selected steel blue/slate across admin and Expo and
 supplied Glossy Interlocking Blue G-S Logo.png for both. Logo assets are unchanged
 copies; all recoloring filters are removed. Scan lettering retains steel blue,
