@@ -1,3 +1,10 @@
+Expo image actions 2026-10-25: the hosted screening draft preview has Replace
+image and Remove image controls alongside Use camera. Removal clears only the
+local draft and disables submission; canceled replacement keeps the old sample.
+Busy/uncertain submissions retain the existing image lock and retry identity.
+Typecheck, web/Android export and fictional picker/retry browser checks pass;
+native camera/gallery/device verification remains separate.
+
 Expo model labels 2026-10-25: the hosted picker uses MobileNetV2, ResNet50 and
 EfficientNetB0 with only a Default model subtitle, instead of raw keys/versions.
 Result/report details use the same readable names and retain the exact saved

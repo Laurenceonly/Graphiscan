@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-25 - Add Expo image replacement and removal
+
+- HostedScreeningActions.tsx now shows the selected handwriting preview followed by Replace image, Use camera and Remove image controls. With no image, Choose image and Use camera remain. Remove clears the local selection and messages; submission is disabled without an image. Canceling replacement retains the previous selection. All image controls and handlers respect the existing busy/pending upload lock so an uncertain submission retains its original sample and retry key. Removing a draft image does not delete a saved screening or stored image.
+- Verification: Expo TypeScript and web/Android exports passed (969/1297 modules, 3.4MB Android Hermes bundle). Fictional Chromium checks at 390/light and 320/dark used a synthetic red PNG through the real Expo web picker code with intercepted file selection; choose/replace/cancel/remove and disabled empty submission passed. Intercepted 503/retry/422 responses verified busy/uncertain image locks, preserved retry key and removal after a definitive rejection. Both captures were inspected; zero page errors or real hosted writes. The first automation run encountered native file-chooser interception; the completed run used an isolated synthetic picker fixture. Native camera/gallery and physical-device behavior remain unverified.
+
 ## 2026-10-25 - Clarify Expo model names and simplify the picker
 
 - Expo's hosted model picker now displays MobileNetV2, ResNet50 and EfficientNetB0 using the server-supported architecture capitalization. Removed the raw technical version strings from model choices; only the default option has the Default model subtitle. HostedScreeningActions.tsx and HostedApp.tsx share modelLabel in core/hosted-presentation.ts; result/report details use the same readable name while retaining the complete recorded model version.

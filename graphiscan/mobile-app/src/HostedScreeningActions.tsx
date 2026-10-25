@@ -50,7 +50,8 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
   const pending=useRef<{key:string;form:FormData}|null>(null)
   useEffect(()=>{if(!model){const next=models.data?.data.find((row:any)=>row.is_default&&row.is_selectable);if(next)setModel(next)}},[models.data,model])
   async function pick(camera:boolean){
-    setError('')
+    if(busy||hasPending||pending.current)return
+    setError('');setMessage('')
     try{
       const permission=camera?await ImagePicker.requestCameraPermissionsAsync():await ImagePicker.requestMediaLibraryPermissionsAsync()
       if(!permission.granted)throw new Error('Allow image access in device settings.')
@@ -61,6 +62,10 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
       if(image.mimeType&&!['image/jpeg','image/png'].includes(image.mimeType))throw new Error('Choose a JPG or PNG image.')
       setAsset(image)
     }catch(e){setError((e as Error).message)}
+  }
+  function removeImage(){
+    if(busy||hasPending||pending.current)return
+    setAsset(null);setError('');setMessage('')
   }
   async function send(){
     if(busy||!student||!model||!asset)return;setBusy(true);setError('');setMessage('')
@@ -93,8 +98,9 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={row.is_default?'Default model':undefined} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
-    <Heading>Handwriting image</Heading><View style={styles.wrap}><Button label="Choose image" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
+    <Heading>Handwriting image</Heading>
     {asset&&<Image source={{uri:asset.uri}} accessibilityLabel="Selected handwriting image" resizeMode="contain" style={{width:'100%',height:280}}/>}
+    <View style={styles.wrap}><Button label={asset?'Replace image':'Choose image'} icon="photo-library" secondary disabled={busy||hasPending} onPress={()=>pick(false)}/><Button label="Use camera" icon="photo-camera" secondary disabled={busy||hasPending} onPress={()=>pick(true)}/>{asset&&<Button label="Remove image" icon="close" secondary disabled={busy||hasPending} onPress={removeImage}/>}</View>
     <Body muted>Use an image up to 10 MB and 16 megapixels. Screening supports expert review and does not establish a diagnosis.</Body>
     <Notice error message={error}/><Notice message={message}/>
     <Button label={busy?'Submitting...':hasPending?'Retry the same submission':'Submit for screening'} disabled={busy||!student||!model||!asset||failed} onPress={send}/>
