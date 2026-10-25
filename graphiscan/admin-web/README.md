@@ -1,5 +1,15 @@
 # GraphiScan admin web
 
+Theme review2026-10-25: local slate/muted blue palette uses #45638a actions,
+#f5f7fa workspace and #f8fafc navigation. User selected the stronger #355c8c
+steel blue login laptop backdrop with white text and steel blue Scan lettering.
+The user's newer Glossy Interlocking Blue G-S Logo.png appears in login/sidebar,
+browser icon and refreshed fictional laptop preview, with its natural colors and
+no recoloring filters. Expo now shares the theme and supplied logo.
+Build and seven fictional responsive preview checks pass; panel text contrast
+is6.86:1. Final user visual review and deployment remain separate.
+The earlier Expo-matched palette below is historical.
+
 Publication2026-10-24: the palette source is committed/pushed and PR#11 is
 confirmed merged. Vercel preview for d07cabe was READY and user reports viewing
 the admin. Production build passed1834 modules. Full authenticated admin/role

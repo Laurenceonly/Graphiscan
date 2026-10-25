@@ -170,17 +170,17 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--white); font:400 14px/1.55 var(--font-ui); color:var(--text); }
 .hosted-workspace :deep(.main-panel) { background:var(--page-bg); }
 .hosted-workspace :deep(.content) { background:var(--page-bg); }
-.hosted-workspace :deep(.sidebar) { padding:22px 16px; gap:22px; background:var(--white); border-right:1px solid var(--border); box-shadow:none; }
+.hosted-workspace :deep(.sidebar) { padding:22px 16px; gap:22px; background:var(--sidebar-bg); border-right:1px solid var(--border); box-shadow:none; }
 .hosted-workspace :deep(.brand) { min-height:44px; padding:0 6px 20px; margin-bottom:2px; border:0; }
 .workspace-brand { display:flex; align-items:center; gap:9px; white-space:nowrap; font-size:19px; font-weight:650; letter-spacing:-.035em; }
-.workspace-brand img { width:36px; height:36px; object-fit:contain; filter:url(#graphiscan-brand-blue); }
-.workspace-brand > span > span { color:var(--blue-700); }
+.workspace-brand img { width:36px; height:36px; object-fit:contain; }
+.workspace-brand > span > span { color:var(--brand-blue); }
 .hosted-workspace :deep(.sidebar-label) { padding:0 12px; color:var(--muted); text-transform:none; letter-spacing:0; font-size:11px; font-weight:500; }
 .hosted-workspace :deep(.nav-menu) { gap:4px; }
 .nav-link { position:relative; width:100%; min-height:44px; padding:10px 12px; border:0; border-radius:8px; color:var(--text-soft); background:transparent; text-align:left; cursor:pointer; font:500 14px/1.5 var(--font-ui); }
 .hosted-workspace :deep(.nav-icon) { color:inherit; width:20px; height:20px; }
 .nav-link:focus-visible { outline-color:var(--blue-700); }
-.nav-link:hover { background:var(--page-bg); color:var(--blue-700); }
+.nav-link:hover { background:var(--border-soft); color:var(--text); }
 .nav-link.router-link-active { background:var(--blue-50); color:var(--blue-700); font-weight:600; }
 .nav-link.router-link-active::before { content:''; position:absolute; left:0; top:11px; bottom:11px; width:3px; background:var(--blue-700); border-radius:3px; }
 .hosted-workspace :deep(.nav-link.router-link-active .nav-icon) { color:var(--blue-700); }

@@ -46,6 +46,16 @@ the Flask service backed by Supabase Auth/PostgreSQL/private Storage.
 
 ## Brand Commitments
 
+User direction2026-10-25: extend the admin's steel blue #355c8c branding and slate
+surfaces to Expo, including the logo and Scan wordmark. Use muted blue #45638a
+for shared light controls and lighter accents in dark mode for readability.
+This supersedes the earlier supplied-logo royal-blue color choice, while retaining
+the supplied logo shape, native layout and functional behavior.
+
+Logo selection2026-10-25: user supplied Glossy Interlocking Blue G-S Logo.png and
+requested it across admin and Expo. Preserve its glossy blue artwork without
+recoloring filters. Keep the steel blue/slate interface and matching Scan lettering.
+
 Retain GraphiScan's name, supplied logo and recognizable blue identity. The user
 requested a professional, appealing native interface, consistent alignment and
 spacing, concise wording, no redundant controls and no generic AI decoration.

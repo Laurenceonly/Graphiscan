@@ -1,16 +1,17 @@
 import React from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { dateLabel, screeningType } from './core/presentation'
 import { Status, useColors } from './ui'
+import BrandLogo from './BrandLogo'
 
 type IconName = React.ComponentProps<typeof MaterialIcons>['name']
 
 export function AppBrand() {
   const c = useColors()
   return <View style={s.brand} accessible accessibilityLabel="GraphiScan">
-    <Image source={require('../assets/graphiscan-logo.png')} resizeMode="contain" style={s.logo} accessible={false}/>
-    <Text style={[s.wordmark,{color:c.text}]}>GraphiScan</Text>
+    <BrandLogo size={30}/>
+    <Text style={[s.wordmark,{color:c.text}]}>Graphi<Text style={{color:c.brandAccent}}>Scan</Text></Text>
   </View>
 }
 
@@ -79,7 +80,7 @@ export const workspaceStyles = StyleSheet.create({
   headerButton: { minHeight:48,minWidth:48,alignItems:'center',justifyContent:'center',marginRight:8 },
 })
 const s = StyleSheet.create({
-  brand:{flexDirection:'row',alignItems:'center',gap:8},logo:{width:30,height:30},wordmark:{fontSize:19,fontWeight:'700',letterSpacing:-.4},
+  brand:{flexDirection:'row',alignItems:'center',gap:8},wordmark:{fontSize:19,fontWeight:'700',letterSpacing:-.4},
   avatar:{alignItems:'center',justifyContent:'center'},
   sectionTitle:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,minHeight:48},sectionHeading:{flex:1,fontSize:18,lineHeight:25,fontWeight:'600'},
   textAction:{minHeight:48,justifyContent:'center',paddingLeft:12},

@@ -1,3 +1,13 @@
+Brand/theme2026-10-25: user selected steel blue/slate across admin and Expo and
+supplied Glossy Interlocking Blue G-S Logo.png for both. Logo assets are unchanged
+copies; all recoloring filters are removed. Scan lettering retains steel blue,
+with lighter native dark accents; admin laptop backdrop is steel blue/white text.
+The decorative laptop dashboard uses refreshed fictional records/new logo.
+Admin favicon and Expo app/adaptive/web icon config use the supplied logo.
+Admin build, Expo typecheck/web+Android export, seven admin and25 Expo fictional
+preview captures/checks pass. Local/unpublished; no APK/device/icon installation
+verification. Runtime access/model behavior and existing screening handoff remain.
+
 Publication update2026-10-24: all reviewed public work is committed/pushed;
 PR#11 confirmed merged at15:10:29UTC (source checkpoint293ae0f/reconciledd07cabe).
 Vercel preview was READY and user reports viewing admin colors. Production

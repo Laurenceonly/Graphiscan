@@ -1,17 +1,5 @@
 <template>
   <div class="hosted-admin">
-  <svg class="brand-filter-defs" aria-hidden="true" focusable="false" width="0" height="0">
-    <defs>
-      <filter id="graphiscan-brand-blue" color-interpolation-filters="sRGB">
-        <!-- Preserve the supplied logo's blue, matching the Expo brand. -->
-        <feColorMatrix type="matrix" values="
-          1 0 0 0 0
-          0 1 0 0 0
-          0 0 1 0 0
-          0 0 0 1 0" />
-      </filter>
-    </defs>
-  </svg>
   <HostedAccess :allowed-roles="['admin','researcher']" :api-origin="origin"
     workspace-label="" sign-in-title="Admin sign-in"
     sign-in-description="Sign in with your issued administrator or researcher account."
@@ -77,9 +65,8 @@ watch(() => route.path, () => syncAccessRoute())
   font-weight: 700;
   letter-spacing: -.025em;
 }
-.brand-filter-defs { position: absolute; pointer-events: none; }
-.admin-brand-logo { display: block; width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; filter: url(#graphiscan-brand-blue); }
-.admin-brand-accent { color: var(--blue-700); }
+.admin-brand-logo { display: block; width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
+.admin-brand-accent { color: var(--brand-blue); }
 .hosted-admin :deep(.access-header > span) { color: var(--muted); }
 .hosted-admin :deep(.access-content) {
   width: min(100%, 520px);
@@ -269,10 +256,6 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(::selection) { background: var(--blue-100); color: var(--text); }
 /* The original Vue login supplies the shared branded half of both sign-ins. */
 .hosted-admin:has(.access-login-layout) {
-  /* The same ink, field border and selection tint used by Expo. */
-  --muted: #5c6c81;
-  --control-border: #dce5ef;
-  --blue-50: #e7efff;
   min-height: 100dvh; display: grid; align-items: center; padding: 0; background: var(--white);
 }
 .hosted-admin :deep(.access-login-layout) {

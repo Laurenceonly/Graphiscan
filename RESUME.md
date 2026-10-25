@@ -2,7 +2,21 @@
 
 ## Paused by user — resume next session
 
-User chose to continue tomorrow. Completed public work is committed/pushed on
+Resumed2026-10-25: user selected slate/muted blue, then chose a stronger steel
+blue #355c8c laptop backdrop with white text. User extended the theme to Expo and
+selected supplied Glossy Interlocking Blue G-S Logo.png across both apps. Natural
+glossy logo colors are preserved without filters; wordmarks keep steel blue, with
+lighter native dark accents. Admin favicon/Expo icon config and fictional laptop
+preview are updated. Builds/typecheck/Android export and responsive fictional
+admin/login/three-role preview checks pass. All source remains local/unpublished;
+no hosted writes, APK/device or installed-icon verification occurred.
+User requested the reviewed public changes be saved in a local Git commit, plus
+a completed-work summary. No push/deployment was requested. Manual emulator
+startup is Android Studio > Device Manager > GraphiScan_Pixel_6, then run
+npm.cmd run preview:android from graphiscan/mobile-app; keep Metro running.
+The workflow checkpoint below remains the next functional task after color review.
+
+Previous checkpoint: user chose to continue tomorrow. Completed public work is committed/pushed on
 feat/expo-design-refinement; PR#11 is merged. Last source/status checkpoint is
 d2d69e4. Admin colors were previewed by the user. Keep the existing completed
 MobileNetV2 Initial Screening; do not repeat setup, migrations or upload merely

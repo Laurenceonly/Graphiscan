@@ -24,7 +24,8 @@ import workspacePreview from '../assets/admin-workspace-preview.png'
   justify-content: flex-start;
   gap:32px;
   overflow:hidden;
-  background: var(--blue-700);
+  background: var(--feature-bg);
+  color: var(--white);
   font-family: var(--font-ui);
   border-radius: 0;
 }
@@ -51,7 +52,6 @@ import workspacePreview from '../assets/admin-workspace-preview.png'
   line-height: 1.6;
   text-wrap:balance;
   color: var(--white);
-  opacity: .88;
 }
 .login-product-preview {
   position:relative;

@@ -8,6 +8,13 @@ publication is pending, and historical MySQL data/image transfer is incomplete.
 No additional numbered migration is currently prepared. Do not rerun020/021.
 # GraphiScan current requirements and next steps
 
+Local visual continuation2026-10-25: admin and Expo share the selected steel blue/
+slate theme and newly supplied glossy G-S logo. Admin build, Expo typecheck/native
+bundle export and fictional light/dark responsive role previews pass. Source is
+local/unpublished; app-icon configuration needs a native rebuild to reach an
+installed launcher. This changes presentation only; approximately65% estimate and
+the existing image/expert/parent/Follow-up verification sequence remain.
+
 ## Overall progress review — 2026-10-24
 
 Latest source status: all reviewed public work is committed/pushed and PR#11 is
