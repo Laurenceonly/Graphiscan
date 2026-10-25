@@ -7,6 +7,13 @@ related_targets: ["graphiscan/mobile-app/src/ui.tsx","graphiscan/mobile-app/src/
 
 # GraphiScan native workspace
 
+Palette update2026-10-25: user selected steel blue #355c8c branding/logo, muted
+blue #45638a controls and neutral slate surfaces matching the revised admin.
+Use #aac0dd for dark interactive text and Scan lettering. This supersedes the
+earlier royal-blue pin below; retain native layout and server behavior.
+Latest logo choice: user supplied Glossy Interlocking Blue G-S Logo.png for both
+apps. Render its original glossy blues directly, without recoloring filters.
+
 Scope: Expo login, onboarding, role Home, students, results/history, details and profile.
 Mode: Operate. Android phone first. Browser is a development preview only.
 User instruction: build directly in Expo, no mockup-first round. Retain name,
@@ -28,7 +35,7 @@ FIRST VIEWPORT: Branded native app bar, a name/role row, one compact primary act
 supporting navigation rows, and recent work with separately labelled model and
 expert-review state. Fixed native navigation anchors the bottom. Login uses one
 vertically balanced white layout led by the supplied logo/wordmark, a concise
-sign-in heading and tinted fields with a royal-blue action. Shared spacing continues
+sign-in heading and tinted fields with a steel blue action. Shared spacing continues
 into details. User reconfirmed clean, professional white/blue, requested stronger
 hierarchy, then rejected the large blue-header/curved-form draft. Final proposed
 login follows the full search comparison; it awaits user visual feedback.
@@ -49,8 +56,8 @@ Existing logo is the only shipping raster; no new imagery is needed.
 Login reference selected after visually comparing all48 cards visible at the user's
 https://dribbble.com/search/mobile-ui-login:
 https://dribbble.com/shots/8759887-Mobile-app-Login-Signup-UI-concept
-Use its logo-led white layout and spacing as inspiration. Interface blue now matches
-the supplied logo's dominant sampled color, #095df1. No reference artwork or
+Use its logo-led white layout and spacing as inspiration. Interface branding uses
+the user-selected steel blue #355c8c. No reference artwork or
 unsupported authentication controls are shipped. Earlier blue-header drafts are
 rejected and are not a reusable design pattern.
 

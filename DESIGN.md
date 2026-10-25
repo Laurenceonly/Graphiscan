@@ -2,33 +2,33 @@
 name: GraphiScan Android
 description: Clean white and blue native student-record workspace for teachers, experts and parents.
 colors:
-  brand: "#095df1"
-  brand-pressed: "#074bc2"
+  brand: "#355c8c"
+  brand-pressed: "#29496f"
   on-brand: "#ffffff"
-  brand-muted: "#eaf1ff"
-  bg: "#f7faff"
+  brand-muted: "#e4ecf5"
+  bg: "#f5f7fa"
   surface: "#ffffff"
-  text: "#14263c"
-  muted: "#5c6c81"
-  border: "#dce5ef"
-  primary: "#095df1"
+  text: "#263445"
+  muted: "#5e6c7c"
+  border: "#c5cfdb"
+  primary: "#45638a"
   on-primary: "#ffffff"
-  soft: "#e7efff"
-  skeleton: "#d8e4f8"
+  soft: "#edf2f8"
+  skeleton: "#dde5ef"
   error: "#a72535"
   normal: "#176b3a"
   normal-surface: "#e7f4ec"
   high: "#895500"
   high-surface: "#fff2d9"
-  bg-dark: "#101b2c"
-  surface-dark: "#19283d"
-  text-dark: "#f3f7fc"
-  muted-dark: "#b5c5d8"
-  border-dark: "#3c506a"
-  primary-dark: "#9fc4ff"
-  on-primary-dark: "#0d2447"
-  soft-dark: "#213754"
-  skeleton-dark: "#334a67"
+  bg-dark: "#141d29"
+  surface-dark: "#1e2937"
+  text-dark: "#f3f5f8"
+  muted-dark: "#b8c3d0"
+  border-dark: "#425064"
+  primary-dark: "#aac0dd"
+  on-primary-dark: "#182a41"
+  soft-dark: "#2b3b50"
+  skeleton-dark: "#3a4a60"
   error-dark: "#ffb4b0"
   normal-dark: "#9bd8ac"
   normal-surface-dark: "#173f33"
@@ -178,6 +178,16 @@ components:
 
 # Design System: GraphiScan Android
 
+Palette direction2026-10-25: user extended the admin's steel blue/slate theme to
+Expo. Brand actions and light-mode Scan lettering use #355c8c, shared controls
+use muted blue #45638a, and records sit on neutral slate surfaces. Dark mode uses
+lighter #aac0dd interactive text/wordmark accents for contrast. User subsequently
+selected Glossy Interlocking Blue G-S Logo.png for both apps. BrandLogo.tsx renders
+that supplied image directly, preserving its glossy blues and original white
+background across platforms; recoloring filters were removed. Expo app/adaptive
+icon and browser favicon configuration reference the same asset. Older royal-blue
+and previous-logo descriptions below are historical.
+
 ## Overview
 
 **Creative North Star: "The student-record workspace"**
@@ -201,8 +211,8 @@ Blue carries the primary task and selection; ink carries names, and quiet neutra
 
 ### Primary
 
-- **GraphiScan brand blue (`brand`)** anchors the login button and Home task surface in both OS schemes. Its darker pressed partner (`brand-pressed`), white foreground (`on-brand`) and pale detail foreground (`brand-muted`) are shared brand roles from `useColors()`. The final brand hue was derived from the supplied logo's sampled dominant blue.
-- **Interactive blue (`primary`)** identifies shared buttons, links, action icons and active navigation. It matches brand blue in light mode and becomes lighter in dark mode. **Soft blue (`soft`)** supports selection, avatars and pending states.
+- **Steel blue (`brand`)** anchors the login button and Home task surface in both OS schemes. Its darker pressed partner (`brand-pressed`), white foreground (`on-brand`) and pale detail foreground (`brand-muted`) are shared brand roles from `useColors()`. The user selected this hue to match the revised admin branding.
+- **Muted blue (`primary`)** identifies shared buttons, links, action icons and active navigation; it becomes lighter in dark mode. **Soft blue (`soft`)** supports selection, avatars and pending states. The Scan wordmark uses steel blue in light mode and the lighter accent in dark mode.
 - **Blue in dark mode (`primary-dark`)** is a lighter blue with a dark foreground (`on-primary-dark`) on filled shared buttons. OS dark mode changes the palette while retaining blue identity.
 
 ### Neutral

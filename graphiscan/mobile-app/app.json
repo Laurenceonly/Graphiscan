@@ -4,23 +4,21 @@
     "slug": "graphiscan",
     "scheme": "graphiscan",
     "version": "1.0.0",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/graphiscan-logo.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/graphiscan-logo.png"
       },
       "predictiveBackGestureEnabled": true
     },
     "plugins": [["expo-image-picker", { "photosPermission": "Select a handwriting sample for screening.", "cameraPermission": "Photograph a handwriting sample for screening.", "microphonePermission": false }]],
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/graphiscan-logo.png"
     }
   }
 }

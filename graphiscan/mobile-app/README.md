@@ -1,5 +1,12 @@
 # GraphiScan Expo application
 
+Branding2026-10-25: steel blue #355c8c actions/wordmark accents, muted blue controls
+and neutral slate surfaces match the revised admin. Dark mode uses lighter blue
+interactive/wordmark accents. Shared BrandLogo renders the user's Glossy
+Interlocking Blue G-S Logo.png directly in login, Home and onboarding. app.json
+uses the same asset for the app/adaptive icon and web favicon; installed launcher
+icons need a new native build. This source change is local, not an APK release.
+
 The native Android conversion lives here. `../user-app` is the Vue reference for
 teacher, expert and parent behavior; `../admin-web` remains the web admin.
 

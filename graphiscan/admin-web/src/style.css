@@ -1,7 +1,7 @@
 /* =========================================================
    01. FONT + DESIGN TOKENS
    GRAPHISCAN Admin Web Panel
-   Clean white + blue minimalist theme
+   Slate surfaces with muted blue actions
 ========================================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
@@ -9,25 +9,28 @@
 :root {
   --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --white: #ffffff;
-  --page-bg: #f7faff;
+  --page-bg: #f5f7fa;
+  --sidebar-bg: #f8fafc;
+  --feature-bg: #355c8c;
+  --brand-blue: #355c8c;
 
-  --text: #14263c;
-  --text-soft: #5c6c81;
-  --muted: #5c6c81;
-  --muted-light: #98a2b3;
+  --text: #263445;
+  --text-soft: #526173;
+  --muted: #5e6c7c;
+  --muted-light: #5e6c7c;
 
-  --border: #dce5ef;
-  --border-soft: #eaf1ff;
-  --control-border: #dce5ef;
+  --border: #dbe2ea;
+  --border-soft: #edf1f5;
+  --control-border: #c5cfdb;
   --control-radius: 8px;
   --panel-radius: 14px;
 
-  --blue-50: #e7efff;
-  --blue-100: #eaf1ff;
-  --blue-300: #9fc4ff;
-  --blue-500: #095df1;
-  --blue-700: #095df1;
-  --blue-hover: #074bc2;
+  --blue-50: #edf2f8;
+  --blue-100: #e4ecf5;
+  --blue-300: #a9bdd8;
+  --blue-500: #526f98;
+  --blue-700: #45638a;
+  --blue-hover: #385273;
 
   --success: #16a34a;
   --success-text: #15803d;
@@ -143,8 +146,8 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  background: var(--blue-700);
-  border-right: 1px solid rgba(8, 47, 73, 0.24);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
   overflow: auto;
 }
 
@@ -170,19 +173,19 @@ textarea {
 
 .brand h1 {
   margin: 0;
-  color: var(--white);
+  color: var(--text);
   font-size: 1.12rem;
   font-weight: 600;
   letter-spacing: -0.4px;
 }
 
 .brand h1 span {
-  color: var(--blue-100);
+  color: var(--blue-700);
 }
 
 .brand p {
   margin: 3px 0 0;
-  color: var(--blue-100);
+  color: var(--muted);
   font-size: 0.74rem;
   font-weight: 400;
 }
@@ -195,7 +198,7 @@ textarea {
 .sidebar-label {
   margin: 0;
   padding: 0 4px;
-  color: var(--blue-100);
+  color: var(--muted);
   font-size: 0.68rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -214,7 +217,7 @@ textarea {
   gap: 11px;
   padding: 9px 10px;
   border-radius: 8px;
-  color: var(--blue-50);
+  color: var(--text-soft);
   font-size: 14px;
   font-weight: 500;
   transition:
@@ -230,7 +233,7 @@ textarea {
   place-items: center;
   flex-shrink: 0;
   border-radius: 6px;
-  color: var(--white);
+  color: inherit;
 }
 
 .nav-icon svg,
@@ -240,18 +243,18 @@ textarea {
 }
 
 .nav-link:hover {
-  color: var(--white);
-  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  background: var(--border-soft);
 }
 
 .nav-link.router-link-active {
-  color: var(--white);
-  background: rgba(255, 255, 255, 0.22);
+  color: var(--blue-700);
+  background: var(--blue-50);
   font-weight: 500;
 }
 
 .nav-link.router-link-active .nav-icon {
-  color: var(--white);
+  color: var(--blue-700);
 }
 
 .sidebar-card {
@@ -5411,7 +5414,7 @@ td .action-text {
 .sidebar-close-btn:focus-visible,
 .sidebar-backdrop:focus-visible,
 .table-wrapper:focus-visible {
-  outline: 3px solid var(--blue-300);
+  outline: 3px solid var(--blue-700);
   outline-offset: 3px;
 }
 
@@ -5471,8 +5474,8 @@ body.hosted-directory-dialog-open { overflow: hidden; }
 
   .sidebar-close-btn {
     margin-left: auto;
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+    background: var(--border-soft);
   }
 
   .mobile-nav-toggle {
@@ -5690,7 +5693,7 @@ body.admin-dialog-open { overflow: hidden; }
   outline: 3px solid var(--blue-700);
   outline-offset: 3px;
 }
-.sidebar :where(button, a):focus-visible { outline-color: var(--blue-300); }
+.sidebar :where(button, a):focus-visible { outline-color: var(--blue-700); }
 .modal-close-btn { width: 44px; height: 44px; min-width: 44px; flex-shrink: 0; }
 .admin-password-input button { min-height: 44px; }
 .modern-login-form .login-password-toggle { height: 44px; min-height: 44px; }

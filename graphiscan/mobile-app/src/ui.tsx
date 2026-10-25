@@ -4,9 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
   const dark = useColorScheme() === 'dark'
-  const brand={brand:'#095df1',brandPressed:'#074bc2',onBrand:'#ffffff',brandMuted:'#eaf1ff'}
-  return dark ? { ...brand,bg: '#101b2c', surface: '#19283d', text: '#f3f7fc', muted: '#b5c5d8', border: '#3c506a', primary: '#9fc4ff', onPrimary: '#0d2447', soft:'#213754', skeleton:'#334a67',error: '#ffb4b0', normal: '#9bd8ac', normalSurface:'#173f33', high: '#f7cc83', highSurface:'#49381e' }
-    : { ...brand,bg: '#f7faff', surface: '#ffffff', text: '#14263c', muted: '#5c6c81', border: '#dce5ef', primary: '#095df1', onPrimary: '#ffffff', soft:'#e7efff', skeleton:'#d8e4f8',error: '#a72535', normal: '#176b3a', normalSurface:'#e7f4ec', high: '#895500', highSurface:'#fff2d9' }
+  const brand={brand:'#355c8c',brandPressed:'#29496f',onBrand:'#ffffff',brandMuted:'#e4ecf5'}
+  return dark ? { ...brand,brandAccent:'#aac0dd',bg: '#141d29', surface: '#1e2937', text: '#f3f5f8', muted: '#b8c3d0', border: '#425064', primary: '#aac0dd', onPrimary: '#182a41', soft:'#2b3b50', skeleton:'#3a4a60',error: '#ffb4b0', normal: '#9bd8ac', normalSurface:'#173f33', high: '#f7cc83', highSurface:'#49381e' }
+    : { ...brand,brandAccent:brand.brand,bg: '#f5f7fa', surface: '#ffffff', text: '#263445', muted: '#5e6c7c', border: '#c5cfdb', primary: '#45638a', onPrimary: '#ffffff', soft:'#edf2f8', skeleton:'#dde5ef',error: '#a72535', normal: '#176b3a', normalSurface:'#e7f4ec', high: '#895500', highSurface:'#fff2d9' }
 }
 export const styles = StyleSheet.create({
   page: { flex: 1 }, content: { padding: 20, gap: 20, width: '100%', maxWidth: 600, alignSelf: 'center', paddingBottom: 32 },

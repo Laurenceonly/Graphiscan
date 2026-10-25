@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useColors } from './ui'
+import BrandLogo from './BrandLogo'
 
 type Props = {
   email: string; password: string; busy: boolean; error: string; notice?: string
@@ -23,8 +24,8 @@ export default function SignInPanel({ email, password, busy, error, notice, onEm
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}>
         <View style={s.brandRegion}>
           <View style={s.brand} accessible accessibilityLabel="GraphiScan">
-            <Image source={require('../assets/graphiscan-logo.png')} style={s.logo} resizeMode="contain" accessible={false} />
-            <Text style={[s.wordmark,{color:c.text}]}>Graphi<Text style={{color:c.primary}}>Scan</Text></Text>
+            <BrandLogo size={80} />
+            <Text style={[s.wordmark,{color:c.text}]}>Graphi<Text style={{color:c.brandAccent}}>Scan</Text></Text>
           </View>
         </View>
         <View style={s.main}>
@@ -77,7 +78,6 @@ const s = StyleSheet.create({
   content: { flexGrow: 1, justifyContent:'center',paddingHorizontal:28,paddingVertical:32,gap:36,width: '100%', maxWidth: 460, alignSelf: 'center' },
   brandRegion: { alignItems:'center' },
   brand: { alignItems: 'center', gap: 4 },
-  logo: { width: 80, height: 80, borderRadius:20 },
   wordmark: { fontSize: 28,lineHeight:36,fontWeight: '700', letterSpacing: -.6 },
   main: { gap:24 },
   title: { fontSize: 22, lineHeight: 30, fontWeight: '600', letterSpacing: -.3,textAlign:'center' },
