@@ -1,5 +1,10 @@
 # GraphiScan change log
 
+## 2026-10-25 - Publish reviewed branding to main
+
+- User explicitly requested publication to main for hosted visual review. Reconciled origin/main (1efb823, earlier squash-merged PR #11) into the feature branch, retaining the reviewed b8ff9ce tree for overlapping files. Before this publication note, the resolved tree exactly matched b8ff9ce; no additional application behavior changed.
+- Verification after resolution: admin production build passed (1834 modules); Expo TypeScript passed. An initial build started before conflict resolution failed on temporary merge markers; the resolved build passed. Publication is being submitted in this checkpoint; remote acceptance and hosted rollout must be checked separately. No new authenticated role, native/device, model or database verification is claimed.
+
 ## 2026-10-25 - Save shared branding checkpoint and completed-work handoff
 
 - User requested a completed-work summary and local Git commit. Checkpoint scope is the reviewed admin/Expo steel blue/slate palette, supplied glossy logo, app/browser icon configuration, refreshed fictional laptop preview and current design/evidence/resume documentation. Existing hosted API/Auth/Storage/model release and first browser Initial Screening evidence remain as recorded; full role/native/release work is not newly marked complete.
