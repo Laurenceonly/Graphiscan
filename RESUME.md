@@ -1,3 +1,257 @@
+# Latest landing sizing checkpoint - 2026-10-27
+
+Latest hover preference: use Data use's400ms border darkening on every content
+box, including Platform, role buttons and dysgraphia cards. Their fill overlays
+are removed; white surfaces, selected states and stationary geometry remain.
+Installation spacing browser-verified at320/390/1440/1908 and capture inspected.
+
+Latest polish: white Download button/Coming soon label; stationary border feedback
+on supporting-page boxes and disabled Download button hover. FAQ no longer forces
+a viewport of empty space above the footer; bottom padding40–72px. Short install
+card sentences now left-align without hyphenation to fix screenshot word spacing;
+longer supporting-page paragraphs stay justified. Build and focused hover/FAQ
+browser checks pass. No deployment.
+
+Latest steering: restored Submit/Review/Follow up controls to their previous size
+and layout. About/Data use now use static responsive content boxes beneath the
+intro; Download has a clearer release panel. Removed supporting-page arrows and
+duplicate home links; fixed header width. User requested justified body paragraphs
+on all three supporting pages, now applied with hyphenation. Final build passes;
+18 route/viewport browser checks passed before final justification-only CSS.
+
+Latest mobile/supporting-page pass: Who it is for reserves the longest role text
+and a consistent mobile mockup stage; all role switches retain layout. FAQ rows
+use equal spacing and expansion no longer recenters the section. Mobile menu is
+transparent with plain Get the app and smooth interruptible opening/closing.
+Footer shows full GraphiScan ©2026 at every tested width and retains all links.
+About/Data use have shared responsive reading layouts; Download has refined
+spacing and installation cards. Core text is larger/darker, workflow cards equal
+with stationary darker hover, sources stay inline. Strict build and focused
+browser checks pass; screenshots inspected. Preview http://127.0.0.1:5180/.
+Physical-device checks, user visual approval and deployment remain pending.
+
+Latest animation repair: fixed delayed-module refresh flash and preserved reload
+scroll position. Initial hero entrance runs in CSS; GSAP replays it on later
+visits. Explicit y0 fixed a stuck48.54px headline offset; original settled hero
+framing restored. Who it is for uses one reading-column fade; Platform devices
+fade together without movement/tilt. Section headings fade without translating.
+Build and isolated refresh/replay/geometry/reduced-motion tests pass; final1920px
+hero capture inspected. No deployment; await user visual review.
+
+Latest interaction preference: no hover lift or press scaling on CTA or boxes.
+Keep fading fills/highlights and repeating scroll fades. Removed mockup Demo
+records captions and hero lower-corner captions. These latest small edits were
+checked in source; previous build/browser evidence predates them.
+
+Latest: hero entrances and heading fades now replay on every scroll revisit in
+both directions. Box fades already repeat. User rejected nav glow: removed it;
+simple native hover/current-section text underline remains. Final build and two
+repeated scroll-cycle/hero/reduced-motion checks pass. Local review continues.
+
+Latest motion steering: user wanted slower fades, not only quick feedback. Box
+groups now use reversible750ms scroll fades; hover/neutral overlays450ms and
+role/workflow details500ms. Top navigation softly glows and reflects selected
+hash with aria-current. Reduced-motion/static content preserved. Build/browser
+fade-state/menu checks pass; navigation glow capture inspected. Footer still one row.
+
+Latest: added subtle CSS hover/press feedback to boxes/buttons and FAQ icon motion,
+with fine-pointer gating and reduced-motion support. Shared home/download footer
+is now one row (logo plus nav), one top divider; no secondary information row.
+Photo credit moved to About and provenance updated. Final build, interaction/
+reduced-motion and three-width footer checks pass; desktop/phone captures inspected.
+
+Latest: role phone slightly reduced (desktop cap320, mobile260) to balance admin
+laptop. Role selection no longer underlines text; blue border/text/weight indicate
+selection. Laptop sizing and selector behavior unchanged. Source-only small edit.
+
+Latest role composition supersedes the three-column/vertical-index notes below.
+User rejected that arrangement. Who it is for now uses one cohesive left column
+(heading, outlined horizontal role buttons, details) and large device right.
+Tablet/phone selector is2x2; descriptions/devices have no surrounding box. Native
+underlined selection and Left/Right keys retained. Build/six-width all-role checks
+pass; exact desktop viewport fit checked at1920x992/1366x768/1280x720. Teacher/admin
+desktop and teacher phone captures inspected. User visual review pending.
+
+Latest screenshot corrections: main desktop sections fit one viewport and links
+align at top (including direct hashes after page/fonts/motion init). Platform
+heading moved up and devices fit available height. Who it is for uses the entire
+right column for a taller phone; admin selection gets a wider laptop. Heading
+roles and Guardians capitalized. User rejected role-detail box: role copy and
+devices are both borderless/transparent. Only workflow/dysgraphia boxes remain.
+Build passes; four-section/four-desktop-size alignment and all-role fit pass,
+with no page errors/overflow. Final teacher/laptop captures inspected.
+
+Latest readability correction: role labels now 18px desktop/16px phone, darker
+and more spacious; descriptions17/16 and feature lists16/15. Mockup remains
+borderless/transparent and detail box retained. Build and four-width all-role
+browser checks pass; desktop/phone teacher captures inspected.
+
+Latest correction: user rejected boxes/backgrounds around mockups. Role preview
+is transparent and borderless again; keep only the role-detail panel boxed.
+
+Latest role refinement: added a white bordered detail panel and separate neutral
+device backdrop after user said Who it is for was too plain. Large phone and
+role-tab behavior retained. Build and four-width all-role browser checks pass;
+desktop teacher/phone admin captures inspected. Earlier blue box colors were
+rejected: dysgraphia/workflow boxes are now white with neutral borders.
+
+Latest: user requested boxes in some sections. Dysgraphia topic rows now have
+pale rounded boxes; workflow selectors are boxed with blue selected state and
+stack on phones. Existing copy/justification/underlines remain. Build and four-width
+browser selection/overflow checks pass; desktop/phone captures inspected.
+
+Footer direction accepted for implementation: compact minimal split, joined
+wordmark left/nav right, small information below and one top divider. Mobile
+stacks with tighter spacing. Applied to home/download; build and three-width
+browser checks pass. Latest preview remains local.
+
+Latest footer steering: homepage Android promotional band removed. Shared
+home/download footer refined, then all footer divider lines removed and GraphiScan
+joined as one unbroken wordmark. Home/download 1440/390/320 browser checks pass;
+final phone capture inspected. Local preview remains active; user approval pending.
+
+Latest small correction: removed About GraphiScan/Data use links beside the
+Questions heading and their unused CSS. Answer/footer links remain.
+
+Latest Questions refinement: larger two-line heading and underlined About/Data
+use links beside spacious question/answer rows; stacked mobile layout. Existing
+five answers/native expand behavior preserved. Build and four-width click/keyboard
+checks pass; desktop/phone captures inspected. Await review at /#questions.
+
+Latest role steering supersedes the horizontal desktop selector below: vertical
+role index alongside selected-role copy and a larger phone on the right. Desktop
+phone width310; mobile up to280. Tablet stacks selector/copy; phone uses two-column
+tabs. Matching keyboard orientation restored. Build/four-width all-role checks
+pass; desktop/phone teacher captures inspected. Await user review at /#people.
+
+Who it is for refined: horizontal role selector with text underlines above larger
+role copy and balanced phone/laptop preview. Phone layout stacks with a two-column
+selector. All four roles, panel labels, keyboard selection and overflow checked
+at four widths; build passes. User review pending at /#people.
+
+Layout refinement: Understanding now uses an editorial split with heading,
+explanation and sources on the left and three topic rows on the right; tablet
+and phone layouts stack cleanly. Existing wording/underlines/section sizing kept.
+Build and 1440/390/320 browser checks pass; captures inspected. Await user review.
+
+Latest: removed letter demonstration and separate screening-information block.
+Understanding now has NIH/MedlinePlus-linked dysgraphia signs, assessment and
+support content. Source links use actual text underlines. Scene loader removed;
+unused scene source retained. Build/three-width browser checks pass; desktop/phone
+captures inspected. Await user visual review at /#understanding.
+
+User resumed landing review. Original hero size/cover photo/scroll effect retained
+after rejecting uncropped sizing experiments. Platform, Understanding, People and
+Questions now use full-width wrappers and at least the hero's viewport height;
+content can grow on smaller screens. Download/footer unchanged. Build and four-width
+browser geometry checks pass; desktop platform and phone FAQ captures inspected.
+Local preview http://127.0.0.1:5180/; visual approval pending. Earlier pause below
+is historical; active work is landing polish.
+
+# Latest landing rebuild checkpoint - 2026-10-26
+
+PAUSED at the user's request: continue the landing page later. User says there
+is still much to change; current design is not approved or final. Resume from
+the existing source rather than redesigning automatically. Current state: white
+sections, subtle section dividers, earlier branded footer, photographic opening
+and corrected phone/laptop mockups. Latest checks are recorded below. Local
+preview was http://127.0.0.1:5180/; restart the landing dev server if needed.
+
+Superseding steering: user meant earlier versions and explicitly asked for the
+old footer, then requested section separation. Restored earlier white control/
+FAQ styling and home/download footer brand, nav and bottom information row.
+Added subtle blue-tinted section/footer boundaries. Keep photo hero and corrected
+devices. Latest build and1440/390/320 home/download browser checks pass with no
+overflow/page errors. Visual approval pending. This supersedes the logo-free
+compact-footer decision below; no enlarged Back to top footer was restored.
+
+Latest steering: restore the earlier white presentation from before the blue
+section/footer experiment. Restored navy headings, muted supporting text, blue
+controls and compact footers; removed the later all-blue typography and enlarged
+footer/Back to top. Preserve the photographic opening and device mockups. Latest
+build/typecheck and home/download browser checks at1440/390 pass with no overflow,
+footer logos or page errors. Phone footer capture visually inspected. Reduced-
+motion scroll correction retained. Visual approval remains with the user.
+
+Latest preference/cleanup: remove unnecessary words and divider lines, and do
+not repeat the logo at the bottom. Footer brand blocks and the large download
+wordmark are removed; header branding and opening stay. Removed redundant
+section eyebrows/copy and shortened download/install wording. White sections,
+device mockups and native Discover underline remain. Latest build/typecheck and
+1440/390 home/download browser checks pass; footer contains no repeated logo.
+
+Reference-led source is implemented in graphiscan/landing-web. Preview remains
+http://127.0.0.1:5180/ and /download/. Keep the photographic opening: the user
+objected when white was applied there. White applies below it. Diagonal arrows
+are removed; Discover GraphiScan has a close native underline. Admin/mobile UI
+uses laptop/phone mockups. Phone frames now have a consistent graphite body and
+separate screen. Main sections have shared padding and more compact layouts.
+The dedicated download page was rebuilt after user feedback, with one release
+area, a phone mockup and four installation steps. Actual APK remains unavailable.
+
+Current motion: GSAP photograph/type/product choreography and a lazy Three.js
+pen tracing an original letter with replay/guides. Self-hosted Manrope and a
+freely licensed Khoiru Abdan/Unsplash writing photo have recorded provenance.
+Existing apps/API/model/database are unchanged. Full user visual approval and
+physical-device checks are not claimed.
+
+Latest build/typecheck pass. Five-width homepage/role/workflow/menu/keyboard and
+trace/reduced-motion/WebGL-failure checks pass with no page errors. Later download
+checks pass at1440/390/320 including absent/configured URL fixtures. Captures were
+read; no real APK download, hosted write, paid generation, commit or deployment.
+See .10k/design-package.md and newest CHANGELOG for evidence/limitations.
+Previous app workflow remains deferred; the older checkpoint is preserved below.
+
+# Latest reference checkpoint - 2026-10-26
+
+The user's liked sites are now supplied: Linear, Apple, Samsung Philippines and
+Igloo, alongside Lando Norris. Sampled desktop/phone study is saved in
+.10k/reference-study.md. Current landing code was left unchanged while studying;
+it remains unapproved. Next use those observations to compose a coherent opening
+and product scene before another broad redesign. Refer to the evidence and
+interpretation separately; do not assume a dark theme or copy their assets.
+
+# Current landing-page handoff - 2026-10-26
+
+User will send websites they like. Hold further redesign changes while gathering
+references and learning the shared visual/motion principles. landonorris.com is
+the first reference for craft, cohesion and interaction quality, not a design to
+copy. User rejected the early layouts as generic, messy and unprofessional;
+explicitly wants full-screen responsive composition with Three.js and GSAP.
+
+Initial source exists in graphiscan/landing-web, separate from the existing apps.
+Dev preview is http://127.0.0.1:5180/ (Vite session 22575 at this checkpoint).
+Newest treatment is a full-screen navy opening with a real 3D folding paper scene;
+it is not user-approved. It builds/typechecks, but full browser verification of
+that latest composition is pending. Earlier versions passed sampled browser
+checks; do not treat those as approval or proof of the current composition.
+
+User-supplied 10k-websites.zip was read/extracted without modifying the original,
+under .local-tools/10k-skill/10k-websites. .10k/ contains design/continuity notes;
+those original notes predate the latest full-screen direction. Use its design
+review guidance within the user's explicit Three.js/GSAP and local-preview scope.
+No generation spend, commit, deployment, database or existing-app change occurred.
+APK button/page can exist now; actual signed artifact and QR/public domain later.
+The app/workflow checkpoint below remains deferred, not newly completed.
+
+# Current handoff - 2026-10-26
+
+User deferred the previous app/workflow work and switched focus to the landing
+page. Wait for the Markdown brief the user is preparing before implementation.
+This entry supersedes older next-session priority instructions below.
+
+Latest saved app work: Expo image selection/replacement and camera actions sit
+side by side; the preview X asks for confirmation before clearing the local draft.
+Model labels and the shared steel blue/slate branding are recorded in CHANGELOG.
+Existing typecheck/export and fictional browser evidence are recorded there;
+physical-device camera/gallery and APK verification remain open.
+
+To return to functional testing, retain the existing completed MobileNetV2 Initial
+Screening. Continue private image access, expert assignment/review, parent release
+and denial, then Follow-up/retry checks. Browser workflow testing precedes APK.
+Do not rerun setup/migrations or repeat the initial upload just to resume.
+No new runtime, deployment or completion claim is made by this handoff.
+
 # Resume checkpoint — 2026-10-24
 
 ## Paused by user — resume next session

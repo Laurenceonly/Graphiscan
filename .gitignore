@@ -30,6 +30,9 @@ graphiscan/config.py
 *.aab
 *.log
 /.local-tools/
+/.10k/tools/
+/.10k/package.json
+/.10k/package-lock.json
 /.local-backups/
 /.playwright-cli/
 /output/playwright/
