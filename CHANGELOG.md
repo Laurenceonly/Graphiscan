@@ -1,3 +1,7 @@
+## 2026-10-27 - Shorten browser tab titles
+
+- Homepage tab is GraphiScan; supporting tabs are About | GraphiScan, Data use | GraphiScan and Download | GraphiScan. Updated all four landing HTML title elements for consistent, concise browser tabs. Source titles checked; final production build checked before push.
+
 ## 2026-10-27 - Consolidate the landing website for version control
 
 - Reviewed all uncommitted work for the user's requested commit/push: four-page Vite landing website, public licensed/font/fictional-preview assets, design briefs/reference notes, detailed project checkpoints, local-tool ignore rules and the Expo sandbox/SDK setup note. No API, inference, database or application access-control code changes are included.
