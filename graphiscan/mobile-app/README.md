@@ -67,6 +67,9 @@ This launcher opens Expo Go through port8081 and uses IPv4-first localhost
 resolution so Android's `adb reverse` can reach Metro on Windows. It discovers
 the default Windows SDK when `ANDROID_HOME` is unset. The existing hosted HTTPS
 API default is retained; this launcher does not enable the browser-only proxy.
+When running through Codex's restricted workspace sandbox, launch this command
+with approved access outside the sandbox. The sandbox can deny access to the
+installed SDK and report it as missing; check access before reinstalling Android.
 Verified Metro's IPv4 status returned HTTP200 after reproducing an IPv6-only
 listener that prevented Expo Go from downloading the development project.
 

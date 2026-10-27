@@ -1,3 +1,97 @@
+Landing shared hover2026-10-27: all content boxes now use Data use's stationary
+400ms border darkening. Homepage card fill overlays removed; mockup frames and
+scroll fades unchanged. Short install-card spacing verified at four widths.
+
+Landing surface polish2026-10-27: release controls are white, including the disabled
+button, which has visual hover feedback without enabling downloads. Supporting-page
+boxes use stationary border feedback. FAQ grows with content without a viewport
+minimum; footer follows40–72px below. Short install-card paragraphs use natural
+left alignment/no hyphenation; longer supporting copy stays justified. Build and
+focused browser hover/FAQ checks pass. No backend changes.
+
+Latest landing refinement2026-10-27: supporting pages use static bordered content
+groups and plain Back to home links without arrows. Body paragraphs are justified.
+Download explains its unreleased state; existing config still controls release.
+Platform button centering/enlargement was reverted at the user's request. Final
+build passes and18 supporting-page viewport/route checks passed before the final
+justification-only CSS. No backend behavior change.
+
+Landing mobile/readability2026-10-27: full GraphiScan ©2026 copyright and footer
+links remain visible at tested320–1440 widths, without footer logos. About/Data
+use share a responsive reading layout; Download uses bordered installation steps.
+Role/workflow sizing copies reserve longest text; mobile role device stages keep
+equal height, and FAQ stays top-aligned on expansion. Homepage mobile menu uses
+a transparent link list and interruptible fades, inert background and keyboard
+cleanup. Strict build and focused browser checks pass; physical devices untested.
+Public copy remains educational with separate model labels and expert review;
+no backend or setup behavior changed.
+
+Landing motion startup repair2026-10-27: main.ts initializes the motion module
+after page/font layout, preserves browser-restored scroll on reload and aligns
+fresh hashes without depending on lazy-module timing. CSS supplies the initial
+hero entrance; GSAP replays later visits with explicit zero headline offsets.
+Platform mockups and role reading content use grouped opacity fades, with no
+device scroll travel or individual role-heading/button movement. Reduced motion
+clears styles; HMR disposes prior media effects. Strict build and isolated browser
+refresh/replay/geometry/reduced-motion checks pass locally. Original hero framing
+verified in a1920px capture; no backend change, device approval or deployment.
+
+Landing presentation 2026-10-27: role phone reduced slightly (desktop cap320,
+mobile260), and selected roles use border/text/weight without an underline. Box
+hover/press effects use CSS with pointer/reduced-motion guards. Home/download
+footer is one row with logo/nav and a single top divider; photo credit is on
+About. Build, interaction/reduced-motion and three-width footer checks pass locally.
+
+Landing role composition 2026-10-27: Who it is for groups heading, outlined role
+selector and details in one column with the device in the other. Selector is
+horizontal (2x2 on tablet/phone); Left/Right keys match its ARIA orientation.
+Rejected vertical index/center text layout is historical. Text and devices have
+no surrounding box. Build, six-width role checks and shorter desktop screen fit
+pass locally; user visual approval remains pending.
+
+Landing navigation/layout 2026-10-27: desktop main content sections fit a viewport
+at tested 1920x992/1440x900/1366x768/1280x720 sizes. Homepage anchors use no top
+offset; direct hashes align after page/fonts/motion initialization in main.ts.
+Mobile keeps natural content height. Role mockups use a full-height right column,
+with a wider layout for admin laptop; role text/devices have no surrounding box.
+Runtime browser/build checks passed locally; no publication or backend change.
+
+Landing content 2026-10-27: Understanding dysgraphia now contains sourced
+educational text on signs, assessment and support. User removed the letter trace,
+its controls/caption and the separate screening-information block. motion.ts no
+longer imports stroke-scene.ts; Three.js is not shipped in the current build.
+Four main content sections are full-width and at least hero-height, growing for
+content. Download/footer unchanged. TS/build and three-width browser checks pass;
+local preview only, no model/API behavior change or publication.
+
+Landing rebuild 2026-10-26: graphiscan/landing-web now has a full-height licensed
+photographic opening, white content surfaces, generic laptop/phone enclosures,
+responsive role/workflow tabs and a dedicated white Android release page. Manrope
+is self-hosted under SIL OFL; hero photography is Khoiru Abdan under the Unsplash
+License, with provenance in public/images/README.md. No reference-site art copied.
+GSAP/ScrollTrigger coordinates home motion; lazy src/stroke-scene.ts renders an
+original educational letter/pen with replay/guides, reduced-motion still and SVG
+context-loss fallback. Old folding-paper module was removed. Public config still
+keeps missing APK unavailable. Existing services/permissions/model are unchanged.
+Latest strict TS/build pass, with a lazy Three.js bundle-size advisory. Five-width
+fictional homepage checks, trace/reduced-motion/failure and release fixtures pass;
+download was separately checked at1440/390/320. This is local browser evidence,
+not native/device, actual APK, live inference, public deployment or visual approval.
+
+Landing website 2026-10-26: graphiscan/landing-web is a separate Vite/TypeScript
+multi-page public frontend with /, /download/, /about/ and /privacy/. Public config
+provides optional credential-free HTTPS admin/APK/site links and release details.
+Missing APK intentionally renders Coming soon. There are no protected API calls,
+learner uploads, analytics or real learner data; interface previews use documented
+fictional fixtures. Source adds Three.js paper geometry and GSAP/ScrollTrigger,
+with reduced-motion/static WebGL-failure states. Existing apps/model/API/database
+are unchanged. Dev command npm.cmd run dev uses loopback port5180; build runs tsc
+and Vite, output dist. Latest build passed; its lazy Three chunk produces a bundle
+size advisory. No deployment or signed APK/device verification occurred.
+User rejected early designs and is supplying references before more redesign.
+Latest full-screen composition is not approved and awaits fresh browser checks;
+earlier responsive passes belong to earlier layouts. See RESUME.md and .10k/plan.md.
+
 Expo image actions 2026-10-25: the hosted screening draft has equal side-by-side
 Choose/Replace image and Use camera buttons. A 48px X in the preview's upper-right
 corner opens a removal confirmation modal; Cancel/Escape retain the image.

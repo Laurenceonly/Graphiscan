@@ -1,0 +1,21 @@
+{
+  "name": "graphiscan-landing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5180",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5180"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "three": "^0.186.1"
+  }
+}

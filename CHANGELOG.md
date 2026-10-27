@@ -1,3 +1,241 @@
+## 2026-10-27 - Consolidate the landing website for version control
+
+- Reviewed all uncommitted work for the user's requested commit/push: four-page Vite landing website, public licensed/font/fictional-preview assets, design briefs/reference notes, detailed project checkpoints, local-tool ignore rules and the Expo sandbox/SDK setup note. No API, inference, database or application access-control code changes are included.
+- Final website includes the photographic hero, responsive Platform/role layouts, sourced dysgraphia background, FAQs, transparent mobile navigation, replayable/reduced-motion animation, stable role/workflow sizing, compact copyright/link footer, refined supporting pages, white release controls and shared stationary box hover. APK release remains unconfigured/Coming soon.
+- Fresh strict TypeScript/production build and tracked diff whitespace check pass. Prior dated entries record the actual browser checks and remaining physical-device limitations. Reviewed safe public configuration and asset provenance; generated builds, local tooling, screenshots and private data are excluded. Publication is separate from this source commit.
+
+## 2026-10-27 - Share the Data use hover treatment across boxes
+
+- Applied the user's preferred400ms border-darkening hover to Platform steps, role buttons and dysgraphia cards. Removed their fill overlays, keeping white surfaces, selected states, existing scroll fades and stationary geometry. Supporting-page boxes already use this treatment; mockup frames remain unchanged. Press/focus/reduced-motion states match.
+- Download installation spacing was additionally browser-verified at320/390/1440/1908px; natural alignment and no hyphenation/overflow confirmed, and1908px capture inspected. Changed landing src/style.css. Final TypeScript/production build passes. Browser verified all three homepage box types use the same hover border, white background, no overlay/transform or geometry shift, with transitions disabled for reduced motion.
+
+## 2026-10-27 - White release controls, box feedback and compact FAQ ending
+
+- Download button and Coming soon label now have white backgrounds. Download button has a350ms darkening border/text hover even while disabled; unreleased state remains disabled. No lift, scale or colored fill. Added400ms border feedback to supporting-page content boxes, release panel and installation cards, plus focus-within/press and reduced-motion treatment. Existing homepage box feedback remains.
+- Removed the FAQ's forced viewport minimum height and limited bottom padding to40–72px, bringing the footer directly after its content. Questions continue growing naturally when answers open.
+- User screenshot showed widely stretched words and unwanted word splitting in short installation cards after requested global justification. Those card paragraphs now use left alignment and no hyphenation; longer supporting-page paragraphs retain justification.
+- Changed landing src/style.css. Strict TypeScript/production build passes. Browser checks at320/390/1440 verified white release surfaces, stationary card hover, no overflow, and FAQ-to-footer gap at most73px with first answer closed/open. Dedicated desktop check verified disabled-button hover border change, white background, unchanged geometry and reduced-motion transitions disabled. Installation spacing browser check is recorded in the following update. Local preview only; physical devices untested.
+
+## 2026-10-27 - Refine supporting pages again; restore workflow buttons
+
+- About and Data use now place their introduction above a two-column desktop grid of neutral bordered sections, stacked on mobile. About roles have distinct labels/descriptions. Removed arrow glyphs and duplicate home links; all three supporting pages use a plain Back to home header link. Corrected flex-page header widths so branding aligns with page gutters.
+- Download has a contained release-availability block, clearer Coming soon explanation, consistent device spacing and installation cards. Supporting pages remain static with no entrance animation. Body paragraphs on About, Data use and Download are justified with automatic hyphenation at the user's request; headings/buttons/links retain normal alignment.
+- User rejected the new centered/larger Submit, Review and Follow up controls. Reverted that entire CSS addition to the previous layout and dimensions, retaining prior equal-height and hover behavior.
+- Changed landing about/index.html, privacy/index.html, download/index.html and src/style.css. Final TypeScript/production build passes. Supporting-page browser checks covered18 route/viewport combinations including320px phones, tablet, short landscape and1440px desktop; no page errors, horizontal overflow, arrow text, active animations or header settling shifts. Reloads, footer destinations and unreleased-download state checked. Browser checks preceded the final paragraph-justification rule; that rule was source/build verified. Mobile/desktop captures inspected. Physical devices remain untested; no deployment.
+
+## 2026-10-27 - Refine mobile interactions, readability and supporting pages
+
+- Simplified landing and supporting-page sentences, enlarged core body copy to16–18px and darkened secondary text. Added safe-area handling, natural layouts on short screens and responsive text sizing. Kept the settled photographic hero framing and screening/review scope. Sources stay in one row after Learn more.
+- Platform workflow boxes have equal dimensions, stronger stationary hover feedback and one grouped scroll fade. Hidden sizing copies reserve the longest workflow description and role description. Mobile role controls and mockup stages now keep their geometry when roles change. FAQ uses consistent first-row spacing and a top-aligned layout so opening answers does not recenter the section.
+- Mobile navigation is a transparent list with the same homepage links, a transparent hamburger and a plain Get the app link. Opening/closing uses interruptible300ms fades with reduced-motion handling, inert background, keyboard/Escape and resize cleanup.
+- Footer retains About, Data use and Download links in one row without a logo. Full GraphiScan ©2026 stays visible on mobile; longer rights wording is visually abbreviated at narrow sizes. Smallest phones use13px footer text to preserve the complete brand/year and all links; main reading copy remains larger.
+- About and Data use now share a two-column desktop reading layout, stacked mobile layout, consistent branding and the shared footer. Download has balanced spacing, a larger mobile device preview and neutral bordered installation steps. APK remains Coming soon unless a configured release exists.
+- Affected landing index.html, about/index.html, privacy/index.html, download/index.html, src/main.ts, src/motion.ts and src/style.css; updated project checkpoints and landing README. No backend/model/access-control changes or deployment.
+- Verification: strict TypeScript and production build pass. Earlier responsive/readability checks covered44 page/viewport combinations and125% text. Focused Chromium checks verified all role switches and all five FAQ rows at320/390/768/1440 widths, mobile close-fade progress and inert cleanup. Final supporting-page checks covered all four routes at320/360/390/768/1440 with complete footer branding, visible links, no horizontal overflow or page errors. Mobile About/Download and desktop About captures inspected. Physical-device testing and user visual approval remain open.
+
+## 2026-10-27 - Stabilize refresh and repair hero/section animation
+
+- Reproduced a startup flash with a700ms delayed motion module: already-visible hero opacity dropped from1 to.15 after loading. Motion now initializes explicitly after fonts/page layout, settles initially visible content, preserves browser scroll restoration on reload and aligns fresh deep links independently of the lazy module. Added font preload and hot-reload media cleanup.
+- Restored the hero's first entrance through CSS so it starts before the lazy module arrives; GSAP handles subsequent scroll revisits. A comparison capture found the animation was retaining an unintended48.54px headline offset; explicit zero y/yPercent destination restores the original settled position. Original hero height, photo crop and typography remain; lower-corner captions stay removed.
+- Simplified Who it is for to one opacity fade for the reading column, removing independent heading movement/button staggering. Platform mockups now fade as one fixed-geometry stage, replacing scroll-driven travel/tilt that could jump during initialization. Section headings use opacity only. Reduced motion explicitly clears animation styles so content stays fully visible. Existing role/workflow click fades and stationary hover effects remain.
+- Changed landing index.html, src/main.ts, src/motion.ts and src/style.css; updated README/system/resume/plan. Final strict TypeScript/production build passed. Isolated Chromium regression confirmed first hero entrance, no delayed-load opacity flash, restored scroll2820→2820 on reload, stable Platform/People geometry across two repeated visits, hero return fade, fully visible reduced-motion content, zero page errors and no390px overflow. Final1920px hero capture inspected and its headline transform verified at zero. Checks are local; user device/visual approval and publication remain pending.
+
+## 2026-10-27 - Keep all boxes stationary during interaction
+
+- Removed hover lifts and press scaling from workflow controls, role selectors and dysgraphia boxes. Fading overlays, border highlights and repeating scroll fades remain. Changed landing src/style.css; source-only verification.
+
+## 2026-10-27 - Keep Get the app stationary
+
+- Removed CTA hover lift and press scaling at the user's request. Kept only the fading fill effect. Changed landing src/style.css; source-only verification.
+
+## 2026-10-27 - Add Get the app hover feedback
+
+- Added a350ms fading fill and subtle2px desktop hover lift to the header Get the app CTA, with press feedback, keyboard focus styling and reduced-motion overrides. No glow effect added. Changed landing src/style.css; source rules checked. No new browser check for this small reuse of the existing feedback pattern.
+
+## 2026-10-27 - Remove mockup captions
+
+- Removed Demo records captions from platform, role and download mockups at the user's request. Existing fictional-record alt descriptions and About-page explanation remain. Changed landing index.html and download/index.html; source search confirms no caption text remains in those pages. No new runtime check for this small markup-only edit.
+
+## 2026-10-27 - Remove hero corner captions
+
+- Removed the lower-left and lower-right hero captions at the user's request. Changed landing index.html; verified source removal. No new runtime check for this small markup-only edit.
+
+## 2026-10-27 - Replay scroll motion and simplify navigation
+
+- User requested animation on every upward/downward revisit. Replaced one-time heading reveals and initial-only hero title/photo entrances with reversible scroll-triggered timelines. Existing box fades repeat as before. Reduced-motion content stays fully visible.
+- User rejected navigation glow. Removed its background/shadow pseudo-element; navigation now uses a native text underline on hover/current section, retaining aria-current hash tracking. Changed landing src/motion.ts and src/style.css; updated README.
+- Verification: final TypeScript/production build passed. Browser checked two repeated heading/box scroll cycles (reset→intermediate opacity→fully visible), hero replay on return and fully visible reduced-motion content. Navigation simplification checked in source; no new browser pass for this small CSS removal. Local preview; subjective visual/motion approval pending.
+
+## 2026-10-27 - Soften fades and add navigation glow
+
+- User requested slower fade effects and interactive top navigation. Box groups now fade in/out reversibly as they enter/leave the viewport (750ms with80ms stagger); role/workflow detail changes use a500ms opacity fade. Hover lifts and subtle neutral overlays use450ms transitions; real press feedback remains160ms. FAQ indicator uses300ms. Existing role selection has no underline.
+- Added a soft fading glow to top navigation hover/focus and a quieter selected-section glow with aria-current synchronized to hash navigation. Kept fine-pointer hover guards, immediate keyboard feedback, reduced-motion/static content and the single-row footer. Changed landing src/motion.ts, src/main.ts, src/style.css and README.
+- Verification: TypeScript/production build passed. Browser samples confirmed nav glow0→intermediate→1→0, reversible box fade.2→intermediate→1, intermediate role-change opacity, preserved selection, reduced-motion content fully visible/no transition, phone menu navigation/close and no page errors/overflow. Desktop navigation-glow capture inspected. Local preview; subjective motion approval pending.
+
+## 2026-10-27 - Add interactive feedback and a single-row footer
+
+- Added subtle desktop hover lift to workflow/role buttons and dysgraphia boxes, quick press feedback on real controls, and a transitioning FAQ plus/minus indicator. Uses160ms CSS transform transitions with the existing easing token, fine-pointer hover gating and reduced-motion overrides. Role selection still has no underline; neutral box colors remain.
+- Simplified shared home/download footer to one row containing the joined logo and navigation, retaining one top separator. Removed the secondary information row and moved the homepage photo attribution to About; updated asset provenance. Footer stays one row at1440/390/320; optional extra navigation can scroll within its own row if constrained. Changed landing index.html, download/index.html, about/index.html, src/style.css and public/images/README.md.
+- Verification: final TypeScript/production build passed. Browser checks confirmed role hover (-2px), press(scale.97), article hover, preserved selection/no role underline and no transform/transition under reduced motion. Home/download footer checks passed one-row alignment, default navigation fit, no overflow and zero page errors at1440/390/320. Photographer credit confirmed on About; desktop/narrow-phone footer captures inspected. Local preview; user visual approval pending. Touch hover gating checked in source, not on physical hardware.
+
+## 2026-10-27 - Balance role phone size and remove selected underline
+
+- User requested a slightly smaller role phone relative to the administrator laptop. Reduced the desktop phone cap from360 to320px with adjusted viewport scaling and phone-screen preview width from280 to260px. Administrator laptop sizing is retained. Removed the active role's text underline; blue border/text and font weight indicate selection alongside existing ARIA state. Changed landing src/style.css. Source declarations checked; no new runtime check for these small presentation changes.
+
+## 2026-10-27 - Recompose role selection after screenshot feedback
+
+- User rejected the detached role-label/center-text arrangement. Rebuilt Who it is for as two columns: heading, a grouped outlined role selector and aligned selected-role details on the left; large phone or laptop on the right. The text and mockups remain free of surrounding boxes. Selector labels are 17–21px on desktop and 18px on phones, with visible 64px controls, neutral borders and a native text underline for selection. Tablet/phone selector uses two columns.
+- Moved the heading into the role-content group, removed the separate desktop navigation column and matched role-tab keyboard/ARIA orientation to the horizontal selector. Existing content, capitalized heading, larger devices and desktop screen fit remain. Changed landing index.html, src/style.css and src/main.ts. Visually reviewed education/FAQ alignment while investigating the user's broader spacing concern; those sections were not restyled in this pass.
+- Verification: TypeScript/production build passed. All four roles passed selection, labels, Left/Right keyboard navigation and no overflow/page errors at 1920/1440/1280/768/390/320 widths. Every role retained exact section-height fit at 1920x992, 1366x768 and 1280x720. Desktop teacher/admin and phone teacher captures inspected. Local preview; visual approval pending.
+
+## 2026-10-27 - Fit desktop sections and balance device previews
+
+- User supplied screenshots requesting hero-sized navigation destinations and balanced space. Removed homepage anchor offset, fit the four main desktop sections to the viewport through responsive content sizing, and sized the Platform stage/devices to prevent its laptop extending below the screen. Added compact dysgraphia spacing for shorter desktops. Longer mobile content still flows naturally; content is not hidden to enforce height.
+- Direct section links now align after the page, fonts and motion module initialize, resolving an observed initial-load scroll shift. Header anchor clicks were checked separately. Who it is for now lets the taller phone span the entire right-hand column; administrator selection gives the laptop more horizontal space and removes its old width cap. Heading is For Teachers, Experts and Families; Guardians is capitalized in its selector. User rejected the role-detail box, so role text and mockups are both borderless/transparent again. Workflow/dysgraphia boxes remain white.
+- Changed landing index.html, src/main.ts and src/style.css. Final TypeScript/production build passed. All four sections exactly fit and align at 1920x992, 1440x900, 1366x768 and 1280x720; all role variants fit these screens, with no horizontal overflow or page errors. Separate Platform edge checks passed at all four desktop sizes; 390px phone overflow check and earlier 1440/768/390/320 all-role keyboard checks passed. Final 1920px teacher/laptop captures inspected. Local preview; user visual approval pending, no publication.
+
+## 2026-10-27 - Improve role-section readability
+
+- Enlarged desktop role labels from 15 to 18px with darker text and larger hit areas; phone labels increase from 13 to 16px. Increased role descriptions to 17px desktop/16px phone and feature lists to 16px desktop/15px phone, adjusting line height and bullet alignment. Retained detail box, transparent mockup background and actual text underline selection. Changed landing src/style.css.
+- Verification: TypeScript/production build passed. Reopened the local browser and checked all four roles at 1440/768/390/320: selection/panel labels, keyboard orientation and no horizontal overflow/page errors passed. Desktop/phone teacher captures inspected. Local preview; user visual approval pending.
+
+## 2026-10-27 - Remove mockup backdrop
+
+- User rejected a box/background around the device mockups. Removed the role-preview background, border and rounded container; retained device sizes, layout spacing and the separate role-detail box. Changed landing src/style.css. Source declaration checked; no new runtime check for this presentation-only removal.
+
+## 2026-10-27 - Add structure to Who it is for
+
+- User clarified that the role section felt plain and requested boxes. Added a white bordered panel around role details and a separate pale neutral device backdrop with rounded corners. Retained role selection/text underlines, larger phone sizing and laptop treatment; phone layouts stack with adjusted panel padding. Changed landing src/style.css.
+- Verification: TypeScript/production build passed. All four roles at 1440/768/390/320 passed selection, panel labels, responsive keyboard orientation and overflow checks with zero page errors. Desktop teacher and phone admin captures visually inspected. Local preview; user review pending.
+
+## 2026-10-27 - Neutralize box colors
+
+- User disliked the tinted boxes. Changed dysgraphia/workflow boxes to white with neutral gray borders, a light neutral hover and a retained blue selected-workflow outline. Changed landing src/style.css; checked source values, no new runtime check for the color-only change.
+
+## 2026-10-27 - Add boxed groups to selected landing sections
+
+- User requested boxes in some sections instead of relying on lines. Added pale blue rounded topic boxes in Understanding dysgraphia and boxed Submit/Review/Follow up controls with a stronger selected border/background. Workflow boxes stack on phones to retain readable text. Existing content, justified dysgraphia text, native link underlines, larger role phone and single footer separator remain. Changed landing src/style.css.
+- Verification: TypeScript/production build passed. Chromium 1440/768/390/320 checks verified all six styled boxes, all workflow selections and no horizontal overflow/page errors. Desktop dysgraphia and phone workflow captures inspected. Local preview; visual approval pending.
+
+## 2026-10-27 - Apply the selected minimal split footer
+
+- User accepted the researched minimal split direction. Tightened shared home/download footer padding and row gaps, kept the joined wordmark on the left and navigation on the right, and retained small information below with exactly one top divider. Mobile stacks the same content with compact spacing. Changed landing src/style.css.
+- Verification: TypeScript/production build passed. Home/download browser checks at 1440/390/320 confirmed the full-width footer, retained navigation, absent homepage Android band and no overflow/page errors. Desktop capture visually inspected. Local preview; no deployment.
+
+## 2026-10-27 - Keep one footer boundary and research styles
+
+- User requested exactly one separator between content and footer. Restored a subtle one-pixel top border on the shared home/download footer; internal footer dividers remain removed and the joined wordmark is preserved. Changed landing src/style.css; source declaration verified, no new runtime check for this border-only change.
+- Searched footer style galleries and examples (Footer Design, regards.design, Webflow and Site Builder Report). Research only beyond the requested separator; no further footer redesign applied. Minimal split, centered compact and oversized-wordmark approaches are candidates, with minimal split recommended for the current white/blue page.
+
+## 2026-10-27 - Remove bottom Android promotion and simplify footer
+
+- Removed the homepage GraphiScan for Android promotional section at the user's request. Refined the shared home/download footer with full-width responsive layout and readable navigation/information text. User then requested fewer lines and a joined GraphiScan wordmark: removed outer/internal footer dividers and grouped Graphi/Scan into one unbroken text element beside the logo. Header/download route and existing footer links remain.
+- Changed landing index.html, download/index.html and src/style.css. Build/typecheck passed for the initial footer change; final divider/wordmark correction passed home/download Chromium checks at 1440/390/320 with no overflow/page errors. Final phone capture inspected. No deployment; visual approval pending.
+
+## 2026-10-27 - Justify dysgraphia paragraphs
+
+- User requested justified sentences. Applied justified alignment to introduction and detail paragraphs in the Understanding dysgraphia section, keeping final lines left aligned and allowing automatic hyphenation. Headings and source links retain their existing alignment. Changed landing src/style.css; source declaration verified, no runtime check for this small typography adjustment.
+
+## 2026-10-27 - Place educational source links inline
+
+- Changed landing src/style.css so NIH and MedlinePlus links follow Learn more horizontally, with centered alignment and wrapping when available width requires it. Preserved text underlines. Verified CSS declaration; no runtime check for this small layout adjustment.
+
+## 2026-10-27 - Remove Questions introduction links
+
+- Removed the About GraphiScan and Data use links beside the Questions heading and their unused .faq-links CSS. The data-use link within the relevant answer and footer navigation remain. Verified source removal; no runtime check for this small markup-only removal. Changed landing index.html and src/style.css.
+
+## 2026-10-27 - Refine Questions layout
+
+- Updated the FAQ with a larger Questions & answers heading and underlined About/Data use links on the left, wider readable question/answer rows on the right, and CSS-drawn plus/minus indicators. Mobile stacks the introduction above the questions. Existing five answers, native details/summary controls, full-width/minimum-screen sizing and other sections remain unchanged. Changed landing index.html and src/style.css.
+- Verification: TypeScript/production build passed. Chromium 1440/768/390/320 checks exercised all five answers by click and keyboard expansion, with no horizontal overflow or page errors. Desktop/phone open-answer captures inspected. Local preview; user approval pending.
+
+## 2026-10-27 - Alternate role composition with larger phone
+
+- User requested another style and a bigger mockup. Replaced the top role selector with a vertical index beside the selected-role reading column and a larger device on the right. Phone width increased from 240 to 310px on desktop and from 230 to up to 280px on phones; max-width prevents narrow-screen overflow. Tablet selector stacks above copy; phones retain a two-column selector. Native text underlines, actual role previews and existing wording remain.
+- Changed landing index.html, src/style.css and src/main.ts; desktop role tabs again use vertical ARIA orientation and Up/Down keys, with horizontal Left/Right behavior on phones. Build/typecheck passed. All four roles passed 1440/768/390/320 browser checks for panel labels, orientation, selection, admin frame, underline and no overflow/page errors. Desktop/phone teacher captures inspected. Local preview; design approval pending.
+
+## 2026-10-27 - Refine Who it is for
+
+- Moved role tabs above the shared content/preview composition, enlarged selected-role headings and supporting text, improved feature-list spacing and preserved the actual phone/laptop previews. Active roles use native text underlines. Phones use a two-column selector and stacked content, with compact administrator preview spacing. Existing role copy and full-width/minimum-screen sizing remain.
+- Updated landing index.html, src/style.css, src/main.ts and src/motion.ts. Role tabs now report horizontal orientation at all widths with matching Left/Right keyboard handling; workflow tabs retain their prior orientation rules. Existing role-switch image animation now targets #role-image correctly.
+- Verification: production build/typecheck passed. Chromium checked all four roles at 1440/768/390/320, selection/panel labels, horizontal keyboard selection, admin enclosure state and no horizontal overflow/page errors. Desktop teacher and phone administrator captures inspected; final mobile-spacing rerun performed. Local preview; visual approval pending.
+
+## 2026-10-27 - Refine dysgraphia section layout
+
+- Replaced the equal-column information layout with a two-part editorial composition: larger heading, introductory explanation and source links on the left; three aligned topic rows on the right. Responsive layouts stack topic headings above their text on tablets and use one reading column on phones. Preserved existing educational wording, full-width/minimum-screen section sizing and actual text underlines. Changed landing index.html and src/style.css.
+- Verification: TypeScript/production build passed (16 modules). Chromium checks at 1440/390/320 passed article presence, removed-scene absence, native link underlines, no horizontal overflow and zero page errors. Desktop/phone section captures visually inspected. Source remains local and awaits visual approval.
+
+## 2026-10-27 - Replace letter demonstration with dysgraphia information
+
+- Removed the letter-formation scene, replay/guides controls, illustration caption and screening-information block at the user's request. Understanding now explains dysgraphia, persistent signs, assessment and learner support with NIH/MedlinePlus source links. Source links use native text underlines instead of bottom borders. Full-width/minimum-screen-height section layout is retained.
+- Removed the dormant scene loader from src/motion.ts; src/stroke-scene.ts remains unused source and is no longer shipped in the production bundle. Updated landing index.html, src/style.css and README plus system/resume/plan notes. Existing FAQ diagnosis limitation remains; no model/API/result behavior changed.
+- Verification: TypeScript/production build passed (16 modules, no previous Three.js size advisory). Chromium 1440/390/320 checks confirmed removed controls/blocks, three information articles, actual text underlines, no overflow and zero page errors. Desktop/phone section captures inspected. Local preview; approval/publication pending.
+
+## 2026-10-27 - Match main landing sections to the hero footprint
+
+- User requested all sections below the hero except Android download and footer match its width and size. Landing src/style.css now gives Platform, Understanding dysgraphia, Who it is for and Questions full-width content wrappers and the hero's minimum viewport height, centering content vertically. Sections grow with content rather than clipping it. Hero, download and footer retain their existing styles.
+- Verification: TypeScript/production build passed (existing lazy Three.js size advisory). Chromium checks at 1920/1440/390/320 widths confirmed full-width wrappers, at least hero-height sections, no horizontal overflow and zero page errors. Desktop platform and phone FAQ captures visually inspected. Local preview only; design approval remains pending.
+
+## 2026-10-27 - Restore original landing photo after size review
+
+- Tried uncropped and full-width natural-proportion opening photo treatments. User rejected the larger result and requested the original. Restored the original viewport-height cover photo, introductory zoom and scroll parallax in landing src/style.css and src/motion.ts. No photo-sizing experiment remains in application source; no deployment performed.
+- Verification: the experimental build passed and desktop/phone browser checks confirmed uncropped rendering before rejection. Revert was checked against the source read at the start of this session; no new browser verification of the restored version is claimed.
+
+## 2026-10-26 - Pause landing work for later review
+
+- User requested continuing later and said substantial design changes remain. Saved the current checkpoint in RESUME.md: white sections, subtle dividers, earlier branded footer, photographic opening and corrected devices. Current design remains unapproved. No additional application changes, tests, commit or deployment in this pause step.
+
+## 2026-10-26 - Earlier white details, branded footer and section separation
+
+- User clarified they meant earlier versions and requested the old footer. Restored the white presentation's workflow/role/FAQ styling and branded home/download footer with navigation and a lower information row. Preserved the photo hero, corrected devices, short copy and clean download layout. User then requested separation between sections: added subtle blue-tinted one-pixel boundaries between white homepage sections and above the footer. Changed landing src/style.css, index.html and download/index.html.
+- Verification: TypeScript/production build passed with the existing lazy Three.js size advisory. Chromium home/download checks at1440/390/320 passed with the restored footer, no horizontal overflow and no page errors. Phone footer capture visually inspected. Preview remains local; design approval pending. Updated resume/plan; no backend, APK or deployment changes.
+
+## 2026-10-26 - Restore the earlier white presentation
+
+- User preferred the white version before the blue-section experiment. Removed the final palette/footer CSS overrides, restoring navy headings, muted supporting text and blue controls on white. Restored compact home/download footers and the original about/data-use closing links. Photographic hero, devices, copy cleanup and reduced-motion scroll correction remain. Changed landing src/style.css and all four HTML pages.
+- Verification: TypeScript and production build passed; existing lazy Three.js size advisory remains. Home/download Chromium checks at1440/390 passed without horizontal overflow, footer logos or page errors. Phone footer screenshot visually inspected. Local preview remains http://127.0.0.1:5180/; user visual approval is pending. No backend, APK or deployment change.
+
+## 2026-10-26 - Strengthen the footer and retain white content surfaces
+
+- Standardized the footer across home, download, about and data-use pages with larger navigation and a native Back to top target. Kept repeated logos, decorative rules and extra promotional copy removed. Preserved the photographic opening, device mockups and native Discover underline.
+- Final user preference is white backgrounds for every content section and footer, with GraphiScan-blue typography/controls. Removed the intermediate pale-blue/navy variants and blue background bands. Photos, application screenshots and device materials are unchanged. Reduced-motion scrolling now explicitly overrides any library inline smooth-scroll setting.
+- Verification: latest TypeScript/production build passed (19 modules; unchanged lazy Three.js size advisory). Browser checks at1440/390/320 covered role selections, readable6.86:1 white/blue text, consistent footer on four pages, native Back to top, reduced-motion scroll behavior and no page errors. After the final color-only revert,1440/390 checks confirmed all six home content/footer surfaces are white, no horizontal overflow and no footer logo; final phone footer capture was visually inspected. No backend, model, APK, publication or existing-app changes.
+
+## 2026-10-26 - Remove repeated branding and simplify landing-page presentation
+
+- User requested fewer unnecessary words/lines and no redundant bottom logo. Removed homepage/download footer logo blocks, the large closing wordmark, repeated section eyebrows/taglines and redundant download-state text. Shortened installation and trace copy while retaining release status, demo labels and screening limitations. Footer keeps useful navigation and a small photo credit. Header branding and the photographic opening are preserved.
+- Removed decorative workflow/role/FAQ/release/footer dividers; selections remain visible through color/weight and existing ARIA states. Kept the user's close native Discover underline. Removed the now-unused configured-release description update from src/main.ts. Affected index.html, download/index.html, about/index.html, privacy/index.html, src/style.css and src/main.ts.
+- Verification: strict TypeScript and production build passed (19 modules; existing lazy Three.js size advisory remains). Chromium homepage/download checks at1440 and390 widths passed absence of footer logos/closing wordmark and horizontal overflow, with zero page errors. Phone footer/download captures were visually inspected. No backend, model, existing app, deployment or actual APK change.
+
+## 2026-10-26 - Rebuild landing site from references and apply live review corrections
+
+- Final production-check follow-up: the supplied static checker disallowed TTF despite the built file being present. Switched local Manrope delivery to a25KB WOFF2 subset, retained its SIL OFL and marked genuine above-fold imagery as high priority. Rebuild/typecheck pass. Checker rerun found no missing-file/font/console/touch-target issues across four pages/internal links; it retains two intentional shared-image findings (official branding and actual teacher UI), so no blanket checker pass is claimed. Read its phone opening/download captures. Source remains local; no deployment or actual APK download.
+
+- Rebuilt graphiscan/landing-web with a licensed Khoiru Abdan/Unsplash handwriting photograph, self-hosted Manrope/SIL OFL, GSAP opening/product choreography and a lazy Three.js educational pen/ink trace with replay and guides. Removed the old folded-paper module. App previews remain actual interfaces populated with documented fictional records; existing apps/API/model/database were unchanged.
+- Applied the user’s steering: keep the photographic opening after mistakenly changing it; white content sections, simpler section headings, no diagonal arrows, a close native Discover underline, shared responsive section padding and compact product/workflow arrangement. Added laptop/phone enclosures and corrected the inconsistent phone top/side colors to one graphite enclosure with a separate display. Admin role uses the laptop treatment.
+- Rebuilt the dedicated download route after user feedback: white app/release layout, matching phone, one Coming soon/download area and four installation steps. Public configuration can later supply a signed APK and metadata. No actual release artifact or download is claimed.
+- Verification: latest strict TypeScript and production build pass (19 modules). The near-section Three.js chunk retains a size advisory (about551KB minified/138KB gzip). Fictional Chromium checks at1440x900,1920x1080,768x1024,390x844 and320x667 passed full-height hero, white surfaces, no overflow/arrows, underline, frame consistency, all role/workflow choices, responsive keyboard tabs, menu/Escape and FAQ. Actual trace progress0.095→0.286, guides/replay, reduced-motion still and intentional WebGL context-loss SVG fallback passed. Three subroutes and absent/configured APK fixtures passed, with zero page errors or actual downloads.
+- The subsequent download layout independently passed1440/390/320 checks and configured/unavailable release fixtures with zero page errors. Desktop/phone hero, product, role/admin, trace and download captures were visually inspected; a caption overlap was corrected. Current code remains local and awaits user visual review; no physical-device, APK install, live hosted workflow, paid generation, commit or deployment occurred. Updated README, asset/font provenance, design package and resume/system/plan notes.
+
+## 2026-10-26 - Study the user's landing-page references
+
+- User supplied Linear, Apple, Samsung Philippines and Igloo in addition to Lando Norris. Created .10k/reference-study.md with observed layout, typography, product framing, motion/scene principles and specific corrections to the earlier attempts. Updated the design plan, resume handoff and project priority.
+- Verification: opened each exact URL in Chromium at desktop and phone widths, captured initial/later/early-scroll states and visually inspected the relevant captures. Igloo initially stayed at its loader; a longer load produced its desktop scene and a resized loaded phone view. This is sampled browser evidence, not a complete interaction audit or physical-device verification. A creator case-study URL timed out and was not treated as verified source content.
+- No landing application changes, asset borrowing, build, commit, deployment or paid generation occurred in this reference-study turn. The current GraphiScan design remains unapproved; the design direction in the study is an interpretation for the next composition, not an accepted implementation.
+
+## 2026-10-26 - Build initial public site and hold redesign for references
+
+- Added separate graphiscan/landing-web Vite/TypeScript source with educational/product content, actual fictional Expo/admin previews, keyboard role/workflow tabs, FAQ and download/about/data-use routes. APK is intentionally unavailable until a public signed release URL is configured. Includes public setup template and standalone Vercel instructions; existing apps, API, model and database were unchanged.
+- User requested real Three.js/GSAP motion and supplied Downloads/10k-websites.zip. Read/extracted the skill into ignored local tooling, added .10k design notes, implemented an actual subdivided folding-paper scene and GSAP/ScrollTrigger. User rejected several visual treatments; latest is a full-screen responsive navy opening, not approved. User will send additional liked sites; hold further redesign while analyzing them. landonorris.com is a craft reference, not a request to copy it.
+- Verification: latest TypeScript/production build passed; lazy Three.js chunk retains a size advisory. Earlier layouts passed five-width fictional browser role/workflow/FAQ, keyboard, reduced-motion, three subroutes and unavailable-APK checks with no page errors. These do not verify the latest full-screen composition, which still needs a fresh pass. Supplied skill checker was run on an earlier production build: it flagged intentional repeated logo/interface images, eager header logos and short touch targets; targets were enlarged afterward. No blanket checker pass or physical-device approval is claimed.
+- Reference research: inspected Lando's live opening and creator-authored OFF+BRAND/Adrian Gubrica Codrops accounts of its custom WebGL production and mobile synchronization. No reference assets were incorporated into GraphiScan. Saved current priority in RESUME.md, PROJECT_PLAN.md and KNOWLEDGE.md. No commit, push, publication or paid generation performed. Existing functional workflow handoff remains deferred.
+
+## 2026-10-26 - Save app handoff and switch priority to landing page
+
+- User requested saving the previous work for later and will supply a Markdown brief for the landing page. Added the current priority and resume sequence to RESUME.md and PROJECT_PLAN.md; landing-page implementation awaits that brief.
+- Preserved the existing Initial Screening checkpoint and outstanding private image, expert, parent, Follow-up and native/device verification. Latest app changes and their existing checks remain documented in the 2026-10-25 entries.
+- Verification: read the latest CHANGELOG, KNOWLEDGE, RESUME and PROJECT_PLAN notes and checked Git status (clean before this documentation update). No application changes, runtime tests, commit, push or deployment performed.
+
 # GraphiScan change log
 
 ## 2026-10-25 - Place Expo image actions beside each other and confirm removal

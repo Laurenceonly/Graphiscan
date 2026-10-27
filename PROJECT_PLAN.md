@@ -1,3 +1,60 @@
+Latest landing refinement2026-10-27: static supporting-page content groups, plain
+home links and justified paragraphs implemented; restored prior Platform button
+layout per user. Final build and18 pre-justification supporting-page browser checks
+pass. User visual review and physical-device checks remain open.
+
+Landing mobile/supporting-page refinement2026-10-27: readable copy, stable mobile
+role switching/FAQ expansion, equal workflow cards, transparent smooth menu and
+complete mobile copyright/link footer implemented. About/Data use reading layouts
+and Download spacing/install cards refined. Build and focused four-route browser
+checks pass at320/360/390/768/1440 widths. Physical-device/visual approval and
+publication remain pending; existing core-app work remains deferred.
+
+Landing motion repair2026-10-27: refresh flash and headline-offset regression
+corrected; initial hero CSS entrance plus replayable GSAP fades retained. Platform
+devices/role content use stable grouped fades. Build and isolated startup/reload/
+replay/geometry/reduced-motion checks pass; user visual review remains pending.
+
+Landing screenshot refinements 2026-10-27: desktop section alignment/viewport fit,
+balanced Platform spacing, taller role phone and wider admin laptop implemented.
+Role heading capitalized; rejected role-detail box removed. Build and four-size
+browser section/all-role fit checks pass. Local visual review remains active.
+
+Landing content 2026-10-27: replaced letter scene/screening note with sourced
+dysgraphia information and native link underlines. Scene loader removed from
+production. Build and three-width browser checks pass; user review pending.
+
+Landing sizing 2026-10-27: resumed review; original hero retained. Four main
+content sections now use full-width wrappers and minimum hero viewport height,
+growing for content on phones. Download/footer unchanged. Build and four-width
+browser checks pass. Local preview awaits user visual approval.
+
+Landing checkpoint 2026-10-26: reference-led source rebuilt and locally verified.
+Latest steering is implemented: preserve photographic hero, white later surfaces,
+no diagonal arrows, close Discover underline, consistent section rhythm and device
+mockups with a uniform graphite phone bezel. Download page simplified and checked.
+Five-width homepage and three-width download checks, trace/fallback/reduced motion,
+release fixtures, TypeScript and build pass. User visual review, physical phone,
+signed APK/domain/QR/publication remain open. Existing core app work stays deferred.
+
+Landing reference study 2026-10-26: supplied Linear/Apple/Samsung PH/Igloo plus
+Lando are analyzed in .10k/reference-study.md. No application changes in this
+study. Current landing design is still unapproved; next resolve the opening and
+representative product composition with the user's full-screen/Three.js/GSAP
+and responsive requirements. Earlier pending-reference notes are historical.
+
+Current landing priority 2026-10-26: initial standalone landing-web source exists,
+but visual direction is unapproved. User will supply liked websites; gather and
+analyze those before further redesign. Requirements: professional, full-screen,
+responsive, meaningful Three.js/GSAP, concise copy. landonorris.com establishes a
+craft reference, not copying authorization. Latest full-screen build/typecheck
+passes; fresh layout/motion checks remain pending. Existing app work stays deferred.
+
+Current priority 2026-10-26: previous app/workflow work is deferred at the user's
+request. Landing page is next, pending the user's Markdown brief. RESUME.md saves
+the app checkpoint and outstanding workflow/device checks. No landing-page
+implementation has started and no existing verification gate is newly complete.
+
 Latest progress2026-10-24: approximately65% full-project estimate. PR#11 is merged,
 all reviewed public source is committed/pushed and the user viewed the READY
 admin preview. First MobileNetV2 Initial Screening has supplied browser evidence.
