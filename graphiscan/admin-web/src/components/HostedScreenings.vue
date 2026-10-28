@@ -1,33 +1,37 @@
 <template>
   <section class="hosted-screenings" aria-labelledby="screenings-title" :aria-busy="busy">
-    <header class="admin-page-header"><h2 id="screenings-title">Screening results</h2></header>
+    <header class="admin-page-header"><h2 id="screenings-title">Screening results</h2><RefreshButton v-if="canManage" :busy="busy" @click="loadList(false)" /></header>
     <p v-if="!canManage">Screening records require permission to manage assignments for the relevant school.</p>
     <template v-else>
-      <AdminSummaryCards :items="[{label:'Screenings loaded',value:loaded ? rows.length : '—'},...['Pending','Validated','Flagged'].map(value => ({label:value+' loaded',value:loaded ? rows.filter(row => row.review?.status === value).length : '—'}))]" label="Loaded screening counts" />
+      <AdminSummaryCards :items="[{label:'Results shown',loading:busy && !loaded,value:loaded ? rows.length : '—'},...['Pending','Validated','Flagged'].map(value => ({label:value,loading:busy && !loaded,value:loaded ? rows.filter(row => row.review?.status === value).length : '—'}))]" label="Loaded screening counts" />
+      <div class="screening-records-panel">
       <form class="screening-filters" @submit.prevent="loadList(false)">
-        <label>Validation status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option>Pending</option><option>Validated</option><option>Flagged</option></select></label>
+        <label>Review status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option>Pending</option><option>Validated</option><option>Flagged</option></select></label>
         <label>Grade<select v-model="grade" :disabled="busy"><option value="">All grades</option><option v-for="value in 3" :key="value" :value="String(value)">Grade {{ value }}</option></select></label>
-        <RefreshButton type="submit" :busy="busy" />
+        <button type="submit" :disabled="busy">Apply filters</button>
       </form>
       <p v-if="error" role="alert" class="screening-error">{{ error }}</p>
       <p v-if="message" role="status">{{ message }}</p>
-      <p v-if="busy" role="status">Loading or saving screening records…</p>
+      <AdminLoadingSkeleton v-if="busy && !loaded" label="Loading screening results…" />
+      <p v-else-if="busy" role="status">Updating screening records…</p>
       <p v-if="!loaded && !busy">Screening results have not loaded. Use Refresh to try again.</p>
       <p v-if="loaded && !rows.length && !busy">No screening results are available for your account and these filters.</p>
       <div v-if="rows.length" class="table-wrapper compact-table-scroll hosted-results-table" role="region" aria-label="Screening records" tabindex="0">
-        <table><thead><tr><th>Student</th><th>Screening type</th><th>Classification</th><th>Predicted-class score</th><th>Validation</th><th>Date</th><th>Action</th></tr></thead><tbody>
+        <table><thead><tr><th>Student</th><th>Screening type</th><th>Classification</th><th>Predicted-class score</th><th>Review status</th><th>Date</th><th>Action</th></tr></thead><tbody>
           <tr v-for="row in rows" :key="row.result_id">
             <td data-label="Student"><div class="user-cell"><span class="user-avatar">S</span><strong>Student {{ row.student_id }}</strong></div></td>
             <td data-label="Screening type">{{ reportType(row.report?.report_type) }}</td>
             <td data-label="Classification"><span class="result-badge" :class="classificationTone(row.classification)">{{ row.classification }}</span></td>
             <td data-label="Predicted-class score">{{ score(row.predicted_class_score) }}</td>
-            <td data-label="Validation"><span class="result-badge" :class="statusTone(row.review?.status)">{{ row.review?.status || 'Not recorded' }}</span></td>
+            <td data-label="Review status"><span class="result-badge" :class="statusTone(row.review?.status)">{{ row.review?.status || 'Not recorded' }}</span></td>
             <td data-label="Date">{{ date(row.date_generated) }}</td>
             <td data-label="Action"><button type="button" class="small-action-btn" :aria-label="'View result ' + row.result_id" :disabled="busy" @click="openDetail(row.result_id)">View</button></td>
           </tr>
         </tbody></table>
       </div>
       <button v-if="cursor" type="button" :disabled="busy" @click="loadList(true)">Load more results</button>
+      </div>
+      <AdminLoadingSkeleton v-if="loadingDetail && !detail" label="Loading result details…" :rows="3" />
       <section v-if="detail" ref="detailRegion" class="screening-detail" tabindex="-1" aria-labelledby="screening-detail-title">
         <div class="screening-actions"><h3 id="screening-detail-title">Result {{ detail.result_id }}</h3><button type="button" :disabled="busy" @click="openDetail(detail.result_id)">Reload details</button><button type="button" :disabled="busy" @click="closeDetail">Close details</button></div>
         <dl>
@@ -56,7 +60,7 @@
             <option v-if="selectedExpert && !experts.some(person => person.user_id === selectedExpert)" :value="selectedExpert" disabled>Current expert — eligibility not confirmed</option>
             <option v-for="person in experts" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option>
           </select>
-          <p v-if="optionsLoaded && !experts.length">No eligible experts loaded.{{ optionCursor ? ' Load more choices to continue.' : ' Ask your administrator to check school eligibility.' }}</p>
+          <p v-if="optionsLoaded && !experts.length">No eligible experts are shown.{{ optionCursor ? ' Load more choices to continue.' : ' Ask your administrator to check school eligibility.' }}</p>
           <button v-if="optionCursor" type="button" :disabled="busy || mustReload" @click="loadMoreOptions">Load more eligible people</button>
           <p v-if="mustReload" role="status">Reload details and check the current assignment before saving again.</p>
           <button type="submit" :disabled="busy || mustReload || !optionsLoaded || !assignmentChanged || !validSelection">Save expert assignment</button>
@@ -67,6 +71,7 @@
 </template>
 
 <script setup>
+import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
@@ -75,6 +80,7 @@ const props = defineProps({ client: { type: Object, required: true }, profile: {
 const emit = defineEmits(['access-change', 'snapshot'])
 const canManage = computed(() => ['admin', 'researcher'].includes(props.profile.role) && props.profile.permissions?.includes('assignments.manage'))
 const busy=ref(false), error=ref(''), message=ref(''), loaded=ref(false), rows=ref([]), cursor=ref(null)
+const loadingDetail=ref(false)
 const status=ref(''), grade=ref(''), detail=ref(null), student=ref(null), detailRegion=ref(null)
 const experts=ref([]), optionCursor=ref(null), optionsLoaded=ref(false), selectedExpert=ref(''), mustReload=ref(false), imageUrl=ref('')
 let alive=true, filters={}
@@ -114,6 +120,8 @@ async function queryOptions(more=false) {
 }
 function loadMoreOptions() { return run(()=>queryOptions(true)) }
 function openDetail(id) { return run(async()=>{
+  loadingDetail.value=true
+  try {
   closeDetail()
   const result=await props.client.request('/screenings/'+id)
   if(!alive)return
@@ -122,6 +130,7 @@ function openDetail(id) { return run(async()=>{
   const current=await props.client.request('/students/'+result.student_id)
   if(!alive)return
   student.value=current;await queryOptions()
+  } finally { loadingDetail.value=false }
 }) }
 function loadImage() { return run(async()=>{
   clearImage()

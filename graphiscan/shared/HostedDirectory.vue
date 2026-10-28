@@ -1,32 +1,33 @@
 <template>
   <section class="directory" aria-labelledby="directory-title" :aria-busy="busy">
-    <header v-if="adminPresentation" class="admin-page-header"><h2 id="directory-title">{{ tab === 'students' ? 'Students' : 'Schools' }}</h2></header>
+    <header v-if="adminPresentation" class="admin-page-header"><h2 id="directory-title">{{ tab === 'students' ? 'Students' : 'Schools' }}</h2><div class="directory-page-actions"><RefreshButton :busy="busy" :disabled="frozen || schoolUncertain" @click="refreshRecords" /><button v-if="tab === 'students' ? canWriteStudents : canWriteSchools" type="button" class="directory-add-button" :disabled="busy || frozen || schoolUncertain" @click="tab === 'students' ? newStudent() : newSchool()">{{ tab === 'students' ? 'Add student' : 'Add school' }}</button></div></header>
     <h2 v-else id="directory-title">Schools and students</h2>
-    <AdminSummaryCards v-if="adminPresentation && tab === 'students'" :items="[{label:'Students loaded',value:studentsLoaded ? students.length : '—'},...[1,2,3].map(grade => ({label:'Grade '+grade+' loaded',value:studentsLoaded ? students.filter(student => Number(student.grade_level) === grade).length : '—'}))]" label="Loaded student counts" />
-    <nav class="directory-nav" aria-label="Workspace records">
+    <nav v-if="!adminPresentation" class="directory-nav" aria-label="Workspace records">
       <button type="button" :aria-pressed="tab === 'students'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'students'; closeForm()">Students</button>
       <button type="button" :aria-pressed="tab === 'schools'" :disabled="busy || frozen || schoolUncertain" @click="tab = 'schools'; closeForm()">Schools</button>
-      <RefreshButton v-if="adminPresentation" :busy="busy" :disabled="frozen || schoolUncertain" @click="refreshRecords" />
-      <button v-else type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
+      <button type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Refresh lists</button>
     </nav>
     <p v-if="error && !(adminPresentation && formKind)" role="alert" class="directory-error">{{ error }}</p>
     <button v-if="error" type="button" :disabled="busy || frozen || schoolUncertain" @click="refreshRecords">Retry loading records</button>
     <p v-if="message" role="status" class="directory-message">{{ message }}</p>
+    <div :class="{ 'directory-records-panel': adminPresentation }">
     <template v-if="tab === 'students'">
       <form class="directory-filters" @submit.prevent="loadStudents(false)">
-        <label>Search students<span v-if="adminPresentation" class="admin-search-control"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4 4" /></svg><input v-model="search" maxlength="120" type="search" placeholder="Search student name" :disabled="busy || frozen || schoolUncertain" /></span><input v-else v-model="search" maxlength="120" type="search" :disabled="busy || frozen || schoolUncertain" /></label>
-        <label>School<select v-model="filterSchool" :disabled="busy || frozen || schoolUncertain"><option value="">All available schools</option><option v-for="school in schools" :key="school.school_id" :value="school.school_id">{{ school.name }}</option></select></label>
+        <label>Search students<span v-if="adminPresentation" class="admin-search-control"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4 4" /></svg><input v-model="search" maxlength="120" type="search" placeholder="Student name" :disabled="busy || frozen || schoolUncertain" /></span><input v-else v-model="search" maxlength="120" type="search" :disabled="busy || frozen || schoolUncertain" /></label>
+        <label>School<select v-model="filterSchool" :disabled="busy || frozen || schoolUncertain"><option value="">All schools</option><option v-for="school in schools" :key="school.school_id" :value="school.school_id">{{ school.name }}</option></select></label>
         <label>Grade<select v-model="filterGrade" :disabled="busy || frozen || schoolUncertain"><option value="">All grades</option><option v-for="grade in 3" :key="grade" :value="String(grade)">Grade {{ grade }}</option></select></label>
         <button type="submit" :disabled="busy || frozen || schoolUncertain">Apply filters</button>
       </form>
-      <div class="directory-toolbar"><p>{{ studentsLoaded ? students.length + ' students loaded' : 'Student records not loaded' }}</p><button v-if="canWriteStudents" type="button" :disabled="busy || frozen || schoolUncertain" @click="newStudent">Add student</button></div>
-      <p v-if="studentsLoaded && !students.length && !busy">No students are available for this account and these filters.</p>
+      <div v-if="!adminPresentation" class="directory-toolbar"><p>{{ studentsLoaded ? students.length + ' students loaded' : 'Student records not loaded' }}</p><button v-if="canWriteStudents" type="button" :disabled="busy || frozen || schoolUncertain" @click="newStudent">Add student</button></div>
+      <p v-if="adminPresentation && studentsLoaded" class="directory-count">{{ students.length }} {{ students.length === 1 ? 'student shown' : 'students shown' }}</p>
+      <AdminLoadingSkeleton v-if="adminPresentation && busy && !studentsLoaded" label="Loading students…" />
+      <p v-if="studentsLoaded && !students.length && !busy">No students match these filters or are available to your account.</p>
       <div v-if="adminPresentation && students.length" class="table-wrapper compact-table-scroll hosted-students-table" role="region" aria-label="Student records" tabindex="0">
-        <table><thead><tr><th>Student</th><th>School</th><th>Grade</th><th>Teacher</th><th>Parent / Guardian</th><th>Action</th></tr></thead><tbody>
+        <table><thead><tr><th>Student</th><th>School</th><th>Grade</th><th>Teacher</th><th>Parent or guardian</th><th>Action</th></tr></thead><tbody>
           <tr v-for="student in students" :key="student.student_id">
             <td data-label="Student"><div class="user-cell"><span class="user-avatar">{{ student.full_name?.charAt(0) || 'S' }}</span><div><strong>{{ student.full_name }}</strong><small class="table-subtext">Student {{ student.student_id }}</small></div></div></td>
             <td data-label="School">{{ schoolName(student.school_id) }}</td><td data-label="Grade">Grade {{ student.grade_level }}</td>
-            <td data-label="Teacher">{{ student.teacher_name || (student.teacher_id ? 'Assigned' : 'Not assigned') }}</td><td data-label="Parent / Guardian">{{ student.parent_name || (student.parent_id ? 'Linked parent' : 'Not linked') }}</td>
+            <td data-label="Teacher">{{ student.teacher_name || (student.teacher_id ? 'Assigned' : 'Not assigned') }}</td><td data-label="Parent or guardian">{{ student.parent_name || (student.parent_id ? 'Linked parent' : 'Not linked') }}</td>
             <td data-label="Action"><button type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="viewStudent(student.student_id)">{{ canWriteStudents ? 'View or edit' : 'View details' }}</button></td>
           </tr>
         </tbody></table>
@@ -35,12 +36,15 @@
       <button v-if="studentCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadStudents(true)">Load more students</button>
     </template>
     <template v-else>
-      <div class="directory-toolbar"><p>{{ schoolsLoaded ? schools.length + ' schools loaded' : 'School records not loaded' }}</p><button v-if="canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="newSchool">Add school</button></div>
+      <div v-if="!adminPresentation || schoolsLoaded" class="directory-toolbar"><p>{{ schoolsLoaded ? schools.length + (schools.length === 1 ? ' school shown' : ' schools shown') : 'School records not loaded' }}</p><button v-if="!adminPresentation && canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="newSchool">Add school</button></div>
+      <AdminLoadingSkeleton v-if="adminPresentation && busy && !schoolsLoaded" label="Loading schools…" />
       <p v-if="schoolsLoaded && !schools.length && !busy">No schools are available for this account.</p>
-      <div v-if="adminPresentation && schools.length" class="table-wrapper compact-table-scroll hosted-schools-table" role="region" aria-label="School records" tabindex="0"><table><thead><tr><th>School</th><th>School ID</th><th v-if="canWriteSchools">Action</th></tr></thead><tbody><tr v-for="school in schools" :key="school.school_id"><td data-label="School"><strong>{{ school.name }}</strong></td><td data-label="School ID">{{ school.school_id }}</td><td v-if="canWriteSchools" data-label="Action"><button type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></td></tr></tbody></table></div>
+      <div v-if="adminPresentation && schools.length" class="table-wrapper compact-table-scroll hosted-schools-table" role="region" aria-label="School records" tabindex="0"><table><thead><tr><th>School</th><th>School ID</th><th>Actions</th></tr></thead><tbody><tr v-for="school in schools" :key="school.school_id"><td data-label="School"><strong>{{ school.name }}</strong></td><td data-label="School ID">{{ school.school_id }}</td><td data-label="Actions"><div class="school-row-actions"><button type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="selectedSchool = school">View people</button><button v-if="canWriteSchools" type="button" class="small-action-btn" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></div></td></tr></tbody></table></div>
       <ul v-else-if="!adminPresentation" class="directory-list"><li v-for="school in schools" :key="school.school_id"><strong>{{ school.name }}</strong><button v-if="canWriteSchools" type="button" :disabled="busy || frozen || schoolUncertain" @click="editSchool(school)">Edit school</button></li></ul>
     </template>
-    <button v-if="schoolCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadSchools(true)">Load more schools</button>
+    <button v-if="tab === 'schools' && schoolCursor" type="button" :disabled="busy || frozen || schoolUncertain" @click="loadSchools(true)">Load more schools</button>
+    </div>
+    <slot v-if="adminPresentation && tab === 'schools' && selectedSchool" name="school-people" :school="selectedSchool" :refresh-key="schoolPeopleRefresh" :close="() => selectedSchool = null" />
     <component :is="adminPresentation ? 'dialog' : 'section'" v-if="formKind" ref="formRegion" tabindex="-1" class="directory-editor" :class="{ 'hosted-directory-modal': adminPresentation }" aria-labelledby="editor-title" @cancel="cancelEditor">
       <component :is="adminPresentation ? 'h2' : 'h3'" id="editor-title">{{ formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? 'Student details' : 'Add student') }}</component>
       <button v-if="adminPresentation" type="button" class="directory-modal-close" aria-label="Close dialog" :disabled="busy || frozen || schoolUncertain" @click="closeForm"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
@@ -56,10 +60,10 @@
             <div class="directory-fields"><label>Age<input v-model.number="draft.age" type="number" min="1" max="32767" step="1" :required="!editing || draft.age !== null" /></label><label>Grade<select v-model.number="draft.grade_level" required><option v-for="grade in 3" :key="grade" :value="grade">Grade {{ grade }}</option></select></label></div>
             <label>School<select v-model="draft.school_id" required :disabled="isTeacher && Boolean(editing)" @change="schoolChanged"><option disabled value="">Choose a school</option><option v-for="school in schools" :key="school.school_id" :value="school.school_id">{{ school.name }}</option></select></label>
             <p v-if="!schools.length" class="directory-hint">A school must be available to your account before you can add a student.</p>
-            <label v-if="!isTeacher">Teacher<select v-model="draft.teacher_id" :required="!editing"><option value="">{{ editing ? 'Keep historical unassigned teacher' : 'Choose an eligible teacher' }}</option><option v-if="draft.teacher_id && !options.some(p => p.user_id === draft.teacher_id)" :value="draft.teacher_id">Current teacher — eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'teacher')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
+            <label v-if="!isTeacher">Teacher<select v-model="draft.teacher_id" :required="!editing"><option value="">{{ editing ? 'No teacher assigned (existing record)' : 'Choose an eligible teacher' }}</option><option v-if="draft.teacher_id && !options.some(p => p.user_id === draft.teacher_id)" :value="draft.teacher_id">Current teacher — eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'teacher')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
             <p v-else class="directory-hint">You will be the assigned teacher.</p>
-            <label>Parent<select v-model="draft.parent_id"><option value="">No linked parent</option><option v-if="draft.parent_id && !options.some(p => p.user_id === draft.parent_id)" :value="draft.parent_id">Current parent — eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'parent')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
-            <p class="directory-hint">Only people made eligible for this school and your account appear. Contact an administrator if someone is missing.</p>
+            <label>Parent or guardian<select v-model="draft.parent_id"><option value="">No linked parent</option><option v-if="draft.parent_id && !options.some(p => p.user_id === draft.parent_id)" :value="draft.parent_id">Current parent — eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'parent')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
+            <p class="directory-hint">Only teachers and parents eligible for this school appear. Contact an administrator if someone is missing.</p>
           </template>
         </fieldset>
         <button v-if="optionCursor && !frozen" type="button" :disabled="busy" @click="loadOptions(true)">Load more eligible people</button>
@@ -68,7 +72,7 @@
         <p v-if="schoolUncertain" role="status">Saving this school could not be confirmed. Refresh the school list and check for it before trying again.</p>
         <div class="directory-actions">
           <button v-if="adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
-          <button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : 'Save' }}</button>
+          <button v-if="!conflict && !schoolUncertain" type="submit" :disabled="busy || (formKind === 'student' && !draft.school_id)">{{ busy ? 'Saving…' : frozen ? 'Retry same submission' : editing ? 'Save changes' : formKind === 'school' ? 'Add school' : 'Add student' }}</button>
           <button v-if="conflict || schoolUncertain" type="button" :disabled="busy" @click="reloadRecord">{{ schoolUncertain ? 'Refresh school list' : 'Reload record' }}</button>
           <button v-if="!adminPresentation && !frozen && !schoolUncertain" type="button" :disabled="busy" @click="closeForm">Cancel</button>
         </div>
@@ -80,13 +84,13 @@
 </template>
 
 <script setup>
+import AdminLoadingSkeleton from './AdminLoadingSkeleton.vue'
 import RefreshButton from './RefreshButton.vue'
-import AdminSummaryCards from './AdminSummaryCards.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { createStudentSubmission } from './directory-submission.mjs'
 const props=defineProps({ client:{type:Object,required:true},profile:{type:Object,required:true},adminPresentation:Boolean,signOut:{type:Function,default:null} })
 const emit=defineEmits(['access-change','navigation-block','snapshot'])
-const tab=ref('students'),busy=ref(false),error=ref(''),message=ref(''),students=ref([]),schools=ref([]),options=ref([])
+const tab=ref('students'),busy=ref(false),error=ref(''),message=ref(''),students=ref([]),schools=ref([]),options=ref([]),selectedSchool=ref(null),schoolPeopleRefresh=ref(0)
 const studentCursor=ref(null),schoolCursor=ref(null),optionCursor=ref(null),search=ref(''),filterSchool=ref(''),filterGrade=ref('')
 const studentsLoaded=ref(false),schoolsLoaded=ref(false)
 watch(() => ({ students: students.value.length, schools: schools.value.length, records: students.value, studentsLoaded: studentsLoaded.value, schoolsLoaded: schoolsLoaded.value, hasMore: Boolean(studentCursor.value || schoolCursor.value), busy: busy.value, error: error.value }), value => emit('snapshot', value), { immediate: true })
@@ -105,7 +109,7 @@ async function querySchools(more=false){const query=new URLSearchParams({limit:'
 function loadSchools(more=false){return run(()=>querySchools(more))}
 async function queryStudents(more=false){if(!more)appliedFilters={q:search.value.trim(),school_id:filterSchool.value,grade_level:filterGrade.value};const query=new URLSearchParams({limit:'25'});for(const [key,value]of Object.entries(appliedFilters))if(value)query.set(key,value);if(more&&studentCursor.value)query.set('cursor',studentCursor.value);const result=await props.client.request('/students?'+query,{envelope:true});if(!alive)return;students.value=more?[...students.value,...result.data]:result.data;studentCursor.value=result.page.next_cursor;studentsLoaded.value=true}
 function loadStudents(more=false){return run(()=>queryStudents(more))}
-function refreshRecords(){return run(async()=>{const results=await Promise.allSettled([querySchools(),queryStudents()]);const failed=results.find(result=>result.status==='rejected');if(failed)throw failed.reason})}
+function refreshRecords(){return run(async()=>{if(selectedSchool.value)schoolPeopleRefresh.value++;const results=await Promise.allSettled([querySchools(),queryStudents()]);const failed=results.find(result=>result.status==='rejected');if(failed)throw failed.reason})}
 async function queryOptions(more=false){if(!draft.school_id)return;const query=new URLSearchParams({limit:'25'});if(more&&optionCursor.value)query.set('cursor',optionCursor.value);const result=await props.client.request('/schools/'+draft.school_id+'/assignment-options?'+query,{envelope:true});if(!alive)return;options.value=more?[...options.value,...result.data]:result.data;optionCursor.value=result.page.next_cursor}
 function loadOptions(more=false){return run(()=>queryOptions(more))}
 function closeForm(){if(frozen.value)return;formKind.value='';editing.value=null;conflict.value=false;schoolUncertain.value=false;options.value=[];optionCursor.value=null;emit('navigation-block',false)}
@@ -138,9 +142,12 @@ function save(){return run(async()=>{
 function beforeUnload(event){if(submission.pending||schoolUncertain.value){event.preventDefault();event.returnValue=''}}
 onMounted(()=>{window.addEventListener('beforeunload',beforeUnload);refreshRecords()})
 onBeforeUnmount(()=>{alive=false;if(props.adminPresentation)document.body.classList.remove('hosted-directory-dialog-open');emit('navigation-block',false);window.removeEventListener('beforeunload',beforeUnload)})
-defineExpose({ refresh: refreshRecords, showTab(value) { tab.value=value;closeForm() } })
+defineExpose({ refresh: refreshRecords, showTab(value) { tab.value=value;selectedSchool.value=null;closeForm() } })
 </script>
 
 <style scoped>
+.directory-page-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.school-row-actions{display:flex;gap:8px;flex-wrap:wrap}
+
 .directory{margin-top:32px;border-top:1px solid #d4dfd8;padding-top:24px;color:#17382d}.directory h2{font-size:24px;margin:0 0 20px}.directory h3{font-size:20px;margin:0 0 20px}.directory-nav,.directory-actions,.directory-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.directory-nav{margin-bottom:24px}.directory button{min-height:44px;padding:10px 16px;border:1px solid #9bab9f;border-radius:8px;color:#17382d;background:#fff;font:inherit;cursor:pointer}.directory button:hover{background:#edf4ee}.directory button[aria-pressed=true],.directory-actions button[type=submit]{background:#176347;color:#fff;border-color:#176347}.directory button:disabled{opacity:.65;cursor:default}.directory :is(button,input,select,[tabindex]):focus-visible{outline:3px solid #287b59;outline-offset:3px}.directory label{display:flex;flex-direction:column;gap:8px;font-weight:600;min-width:0}.directory input,.directory select{font:inherit;color:#17382d;background:#fff;border:1px solid #9bab9f;border-radius:8px;padding:10px 12px;min-height:48px;width:100%;box-sizing:border-box;caret-color:#176347}.directory-filters{display:grid;grid-template-columns:minmax(150px,2fr) minmax(140px,2fr) minmax(100px,1fr) auto;gap:16px;align-items:end}.directory-toolbar{justify-content:space-between;margin:24px 0 12px}.directory-toolbar p{margin:0}.directory-list{list-style:none;padding:0;margin:0 0 20px}.directory-list li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid #d4dfd8;overflow-wrap:anywhere}.directory-list strong{font-weight:600}.directory-list span{display:block;color:#466056;font-size:14px;margin-top:4px}.directory-list button{flex-shrink:0}.directory-editor{margin-top:32px;padding-top:24px;border-top:1px solid #9bab9f;scroll-margin-top:24px}.directory-editor fieldset{padding:0;border:0;margin:0;display:flex;flex-direction:column;gap:20px;min-width:0}.directory-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}.directory-actions{margin-top:24px}.directory-error{color:#922c24;background:#fff0ed;padding:14px;border-radius:8px}.directory-message{color:#176347}.directory-hint{font-size:14px;color:#466056;line-height:1.6}.directory-footnote{margin-top:32px}.directory dd{margin:4px 0 16px}.directory dt{font-weight:600}@media(max-width:760px){.directory-filters{grid-template-columns:1fr 1fr}}@media(max-width:460px){.directory-filters,.directory-fields{grid-template-columns:1fr}.directory-list li{align-items:flex-start;flex-direction:column}.directory-list button{width:100%}}
 </style>

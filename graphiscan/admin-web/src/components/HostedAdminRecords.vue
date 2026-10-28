@@ -1,18 +1,19 @@
 <template>
   <section class="hosted-admin-records" :aria-labelledby="kind + '-title'">
     <header class="page-header hosted-page-header admin-page-header"><h1 :id="kind + '-title'" tabindex="-1">{{ accounts ? 'Users' : 'Audit Logs' }}</h1><div class="account-page-actions"><RefreshButton :busy="busy" :disabled="!allowed || saving || reconcileNeeded || loadingEditor" @click="load(false)" /><button v-if="accounts && allowed" type="button" class="primary-action-btn" :disabled="busy || saving || reconcileNeeded || loadingEditor" @click="openCreator">Add user</button></div></header>
-    <AdminSummaryCards v-if="allowed && accounts" :items="cards.map(card => ({label:card.label,value:loaded ? card.count : '—'}))" label="Loaded account counts" />
+    <AdminSummaryCards v-if="allowed && accounts" :items="cards.map(card => ({label:card.label,loading:busy && !loaded,value:loaded ? card.count : '—'}))" label="Loaded account counts" />
     <section class="clean-panel hosted-record-panel">
       <form v-if="allowed" class="hosted-record-filters" :class="{ 'audit-filters': !accounts }" @submit.prevent="load(false)">
-        <label>{{ accounts ? 'Search users' : 'Search activity' }}<span class="admin-search-control"><Search :size="18" :stroke-width="1.8" aria-hidden="true" /><input v-model="search" type="search" :placeholder="accounts ? 'Search name or email' : 'Search activity'" maxlength="120" :disabled="busy" /></span></label>
+        <label>{{ accounts ? 'Search users' : 'Search audit logs' }}<span class="admin-search-control"><Search :size="18" :stroke-width="1.8" aria-hidden="true" /><input v-model="search" type="search" :placeholder="accounts ? 'Name or email' : 'Search activity'" maxlength="120" :disabled="busy" /></span></label>
         <label>Role<select v-model="role" :disabled="busy"><option value="">All roles</option><option v-for="item in roles" :key="item" :value="item">{{ roleName(item) }}</option></select></label>
         <label v-if="accounts">Status<select v-model="status" :disabled="busy"><option value="">All statuses</option><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label>
         <button type="submit" class="soft-action-btn" :disabled="busy">Apply filters</button>
       </form>
       <p v-if="!allowed" class="hosted-record-message">{{ accounts ? 'Account records require account management access.' : 'Audit records require audit access.' }}</p>
       <p v-else-if="error" class="error-message" role="alert">{{ error }} <button type="button" class="soft-action-btn" @click="load(false)">Try again</button></p>
-      <p v-if="busy" role="status" class="hosted-record-message">Loading {{ accounts ? 'accounts' : 'activity' }}…</p>
-      <p v-if="allowed && loaded && !rows.length && !busy" class="hosted-record-message">{{ accounts ? 'No accounts match these filters.' : 'No activity matches these filters.' }}</p>
+      <AdminLoadingSkeleton v-if="busy && !loaded" :label="accounts ? 'Loading users…' : 'Loading audit logs…'" />
+      <p v-else-if="busy" role="status" class="hosted-record-message">Loading {{ accounts ? 'users' : 'audit logs' }}…</p>
+      <p v-if="allowed && loaded && !rows.length && !busy" class="hosted-record-message">{{ accounts ? 'No users match these filters.' : 'No activity matches these filters.' }}</p>
       <div v-if="rows.length" class="table-wrapper compact-table-scroll hosted-record-table" role="region" :aria-label="accounts ? 'User accounts' : 'Audit activity'" tabindex="0">
         <table v-if="accounts"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead><tbody><tr v-for="row in rows" :key="row.user_id"><td data-label="Name"><strong>{{ row.full_name }}</strong><small v-if="row.user_id === profile.user_id" class="table-subtext">Current account</small></td><td data-label="Email">{{ row.email || 'Not available' }}</td><td data-label="Role">{{ roleName(row.role) }}</td><td data-label="Status"><span class="status-badge" :class="row.account_status">{{ capitalize(row.account_status) }}</span></td><td data-label="Registered">{{ date(row.created_at) }}</td><td data-label="Actions"><div class="account-row-actions"><button class="soft-action-btn account-edit" type="button" :disabled="busy || loadingEditor || !canManage(row)" @click="openEditor(row)">Edit</button></div></td></tr></tbody></table>
         <table v-else><thead><tr><th>Person</th><th>Role</th><th>Action</th><th>Date / Time</th></tr></thead><tbody><tr v-for="row in rows" :key="row.log_id"><td data-label="Person"><strong>{{ row.full_name || 'Former or unknown account' }}</strong></td><td data-label="Role">{{ row.role ? roleName(row.role) : 'Unknown' }}</td><td data-label="Action">{{ row.action }}</td><td data-label="Date / Time">{{ date(row.created_at) }}</td></tr></tbody></table>
@@ -22,7 +23,7 @@
     </section>
     <dialog v-if="accounts" ref="editor" class="account-editor" :class="{'account-creator':creating}" aria-labelledby="account-editor-title" @cancel="onCancel">
       <form v-if="selected" class="account-editor-form" :inert="loadingEditor" :aria-busy="saving || loadingEditor" @submit.prevent="saveAccount">
-        <header><div><h2 id="account-editor-title">{{ creating ? 'Add user' : 'Edit account' }}</h2><p>{{ creating ? 'The user must change their temporary password and accept the Data Privacy Agreement before accessing features.' : 'Role, status and access changes sign this user out.' }}</p></div><button type="button" class="editor-close" aria-label="Close account editor" :disabled="saving || reconcileNeeded" @click="closeEditor"><X :size="18" :stroke-width="1.8" aria-hidden="true" /></button></header>
+        <header><div><h2 id="account-editor-title">{{ creating ? 'Add user' : 'Edit user' }}</h2><p>{{ creating ? 'The user must change their temporary password and accept the Data Privacy Agreement before using GraphiScan.' : 'Role, status and access changes sign this user out.' }}</p></div><button type="button" class="editor-close" aria-label="Close account editor" :disabled="saving || reconcileNeeded" @click="closeEditor"><X :size="18" :stroke-width="1.8" aria-hidden="true" /></button></header>
         <label>Full name<input v-model="draft.full_name" type="text" maxlength="200" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
         <label v-if="creating">Email address<input v-model="draft.email" type="email" maxlength="254" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
         <div class="account-role-fields" :class="{'account-role-fields-pair':!creating}"><label>Role<select v-model="draft.role" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-if="!creating && !editableRoles.includes(draft.role)" :value="draft.role" disabled hidden>{{ roleName(draft.role) }}</option><option v-for="item in editableRoles" :key="item" :value="item">{{ roleName(item) }}</option></select></label><label v-if="!creating">Status<select v-model="draft.account_status" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label></div>
@@ -34,7 +35,7 @@
           </div>
         </template>
         <template v-if="!creating">
-          <fieldset class="account-school-options" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><legend>School assignments</legend><label v-for="school in editorSchools" :key="school.school_id"><input v-model="draft.school_ids" type="checkbox" :value="String(school.school_id)" />{{ school.name }}</label><p v-if="!editorSchools.length">No available schools.</p><p v-if="schoolsError">{{ schoolsError }}</p></fieldset>
+          <fieldset class="account-school-options" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><legend>School assignments</legend><label v-for="school in editorSchools" :key="school.school_id"><input v-model="draft.school_ids" type="checkbox" :value="String(school.school_id)" />{{ school.name }}</label><p v-if="!editorSchools.length">No schools are available to your account.</p><p v-if="schoolsError">{{ schoolsError }}</p></fieldset>
           <fieldset v-if="canEditPermissions" class="account-permission-options" :disabled="saving || reconcileNeeded"><legend>Permissions</legend><div v-for="(grant,index) in draft.permission_grants" :key="index" class="account-permission-row"><label>Permission<select v-model="grant.permission_key" @change="normalizeScope(grant)"><option v-for="item in permissionChoices" :key="item.key" :value="item.key">{{ item.label }}</option></select></label><label>Scope<select v-model="grant.school_id" :disabled="['accounts.manage','permissions.manage','audit.read'].includes(grant.permission_key)"><option :value="null">All schools</option><option v-for="school in editorSchools" :key="school.school_id" :value="String(school.school_id)">{{ school.name }}</option></select></label><button type="button" class="soft-action-btn" :aria-label="'Remove permission ' + (index+1)" @click="draft.permission_grants.splice(index,1)">Remove</button></div><button type="button" class="soft-action-btn" @click="draft.permission_grants.push({permission_key:'schools.manage',school_id:null})">Add permission</button></fieldset>
           <p v-else>Permission changes require permission-management access. Your own access cannot be changed here.</p>
         </template>
@@ -57,6 +58,7 @@
   </section>
 </template>
 <script setup>
+import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
@@ -84,7 +86,7 @@ const canEditPermissions=computed(()=>props.profile.permissions?.includes('permi
 const accountActionsDisabled=computed(()=>saving.value||reconcileNeeded.value||loadingEditor.value||hasChanges.value)
 const permissionChoices=[{key:'accounts.manage',label:'Manage accounts'},{key:'permissions.manage',label:'Manage permissions'},{key:'schools.manage',label:'Manage schools'},{key:'assignments.manage',label:'Assign experts'},{key:'audit.read',label:'Read audit logs'}]
 const editorSchools=computed(()=>[...schools.value,...[...new Set([...draft.school_ids,...draft.permission_grants.map(grant=>grant.school_id).filter(Boolean)])].filter(id=>!schools.value.some(school=>String(school.school_id)===id)).map(id=>({school_id:id,name:'Assigned school '+id}))])
-const cards=computed(()=>accounts.value?[{label:'Accounts loaded',count:rows.value.length},{label:'Active loaded',count:rows.value.filter(row=>row.account_status==='active').length},{label:'Pending loaded',count:rows.value.filter(row=>row.account_status==='pending').length},{label:'Disabled loaded',count:rows.value.filter(row=>row.account_status==='disabled').length}]:[{label:'Activities loaded',count:rows.value.length}])
+const cards=computed(()=>accounts.value?[{label:'Users shown',count:rows.value.length},{label:'Active',count:rows.value.filter(row=>row.account_status==='active').length},{label:'Pending',count:rows.value.filter(row=>row.account_status==='pending').length},{label:'Disabled',count:rows.value.filter(row=>row.account_status==='disabled').length}]:[{label:'Activities shown',count:rows.value.length}])
 let alive=true,version=0,applied={}
 function reset(){version++;rows.value=[];cursor.value=null;loaded.value=false;error.value='';notice.value='';busy.value=false}
 function capitalize(value){return value?value.charAt(0).toUpperCase()+value.slice(1):'Unknown'}
@@ -94,7 +96,7 @@ function normalizeScope(grant){if(['accounts.manage','permissions.manage','audit
 function date(value){const parsed=new Date(value);return value&&!Number.isNaN(parsed.getTime())?parsed.toLocaleString():'Not recorded'}
 async function load(more=false){
   if(busy.value||!allowed.value)return
-  if(!more){applied={q:search.value.trim(),role:role.value,account_status:accounts.value?status.value:''};reset()}
+  if(!more){const next={q:search.value.trim(),role:role.value,account_status:accounts.value?status.value:''};if(JSON.stringify(next)!==JSON.stringify(applied))reset();applied=next}
   const current=++version;busy.value=true;error.value=''
   const query=new URLSearchParams({limit:'25'})
   for(const [key,value] of Object.entries(applied))if(value)query.set(key,value)

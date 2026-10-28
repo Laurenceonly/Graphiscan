@@ -1,7 +1,7 @@
 <template>
   <section class="hosted-security" aria-labelledby="security-title">
     <h2 id="security-title">Change password</h2>
-    <p>Saving will sign you out.</p>
+    <p>Changing your password will sign you out.</p>
     <form @submit.prevent="submit">
       <div v-for="field in fields" :key="field.key" class="security-field">
         <label :for="'settings-' + field.key">{{ field.label }}</label>
@@ -12,7 +12,7 @@
       </div>
       <p v-if="mismatch" id="settings-password-mismatch" class="security-warning" role="status">New passwords do not match.</p>
       <div id="settings-password-help" class="security-rules"><p>Use a different password with:</p><ul><li v-for="rule in rules" :key="rule.label" :class="{ met: rule.met }">{{ rule.label }}</li></ul></div>
-      <div class="security-actions"><button type="button" class="soft-action-btn" :disabled="busy" @click="clear">Clear</button><button type="submit" class="primary-action-btn" :disabled="busy || mismatch">{{ busy ? 'Saving…' : 'Save password' }}</button></div>
+      <div class="security-actions"><button type="button" class="soft-action-btn" :disabled="busy" @click="clear">Clear</button><button type="submit" class="primary-action-btn" :disabled="busy || mismatch">{{ busy ? 'Saving…' : 'Change password' }}</button></div>
     </form>
   </section>
 </template>
