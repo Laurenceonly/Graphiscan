@@ -11,7 +11,16 @@ function restorePage() {
   if (curtain) { curtain.style.animation = 'none'; curtain.style.opacity = '0'; }
 }
 window.addEventListener('pageshow', event => { if (event.persisted) restorePage(); });
-window.addEventListener('pagehide', restorePage);
+window.addEventListener('pagehide', () => {
+  // Keep the old document covered through its final paint. Restore only when
+  // this document is actually shown again from the back/forward cache.
+  clearTimeout(recovery);
+  if (navigating && curtain) {
+    curtain.style.opacity = '1';
+    departure?.cancel();
+    departure = undefined;
+  }
+});
 document.addEventListener('click', event => {
   const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
   if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
@@ -31,6 +40,12 @@ document.addEventListener('click', event => {
   });
   // Recover if navigation fails or is canceled, including a return from admin.
   recovery = window.setTimeout(restorePage, 2500);
-  void departure.finished.then(() => location.assign(url.href)).catch(restorePage);
+  void departure.finished.then(() => {
+    // Persist the final opacity before releasing the animation's fill effect.
+    curtain.style.opacity = '1';
+    departure?.cancel();
+    departure = undefined;
+    location.assign(url.href);
+  }).catch(restorePage);
 });
 reducedMotion.addEventListener('change', restorePage);
