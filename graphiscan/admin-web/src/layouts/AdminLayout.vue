@@ -1,5 +1,6 @@
 <template>
   <div class="admin-shell">
+    <Transition name="sidebar-scrim">
     <button
       v-if="isMenuOpen"
       class="sidebar-backdrop"
@@ -7,6 +8,7 @@
       aria-label="Close navigation"
       @click="closeMenu"
     ></button>
+    </Transition>
 
     <aside id="admin-navigation" ref="sidebarRef" class="sidebar" :class="{ 'is-open': isMenuOpen }" aria-label="Admin navigation">
       <div class="brand">
