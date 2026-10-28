@@ -737,3 +737,10 @@ button{user-select:none}
 @media(prefers-reduced-motion:reduce){
  .info-sections section,.download-release,.download-install li,.download-release .button,.platform .workflow-step,.people .role-tabs button,.dysgraphia-details article{transition:none}
 }
+
+/* Painted before scripts run, avoiding a visible frame before the entrance. */
+.page-curtain{position:fixed;inset:0;z-index:2147483647;background:#fff;pointer-events:none;opacity:0;animation:page-reveal 360ms var(--ease) both}
+@keyframes page-reveal{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.page-curtain{animation:none;opacity:0}}
+/* Keyboard focus keeps a section fully legible at viewport edges. */
+.homepage main>section:focus-within,.homepage main>section:focus-within>.wrap{opacity:1!important}
