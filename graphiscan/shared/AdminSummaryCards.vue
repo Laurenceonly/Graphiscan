@@ -1,7 +1,7 @@
 <template>
   <section class="admin-summary-grid" :aria-label="label">
     <component :is="interactive ? 'button' : 'article'" v-for="item in items" :key="item.label" class="admin-summary-card" :type="interactive ? 'button' : undefined" @click="interactive && emit('select', item)">
-      <div class="admin-summary-value"><span>{{ item.label }}</span><strong>{{ item.value }}</strong></div>
+      <div class="admin-summary-value"><span>{{ item.label }}</span><strong :class="{ 'summary-loading': item.loading }" :aria-label="item.loading ? 'Loading count' : undefined"><span v-if="item.loading" aria-hidden="true">&nbsp;</span><template v-else>{{ item.value }}</template></strong></div>
       <component v-if="item.icon" :is="item.icon" class="admin-summary-icon" :size="18" :stroke-width="1.8" aria-hidden="true" />
     </component>
   </section>
@@ -11,6 +11,10 @@ defineProps({ items: { type: Array, required: true }, label: { type: String, req
 const emit = defineEmits(['select'])
 </script>
 <style scoped>
+.summary-loading{width:56px;border-radius:5px;background:var(--border);animation:summary-pulse 1.4s ease-in-out infinite}
+@keyframes summary-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.summary-loading{animation:none;opacity:.75}}
+
 .admin-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--workspace-control-gap,16px); min-width:0; margin:0; }
 .admin-summary-grid .admin-summary-card { position:relative; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; width:100%; min-width:0; min-height:var(--workspace-metric-height,112px); margin:0; padding:var(--workspace-metric-padding,20px); border:1px solid var(--border); border-radius:12px; background:var(--white); color:var(--text); text-align:left; font:inherit; box-shadow:none; }
 .admin-summary-grid button.admin-summary-card { cursor:pointer; }

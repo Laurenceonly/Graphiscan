@@ -3,7 +3,7 @@
     <template #brand>
       <div class="workspace-brand"><img :src="brandLogo" alt="" width="36" height="36" /><span>Graphi<span>Scan</span></span></div>
     </template>
-    <template #topbar><span class="mobile-header-brand">GraphiScan</span></template>
+    <template #topbar><strong class="workspace-header-title">Admin Workspace</strong></template>
     <template #navigation="{ closeMenu }">
       <div v-for="group in navigation" :key="group.label" class="sidebar-section">
         <p class="sidebar-label">{{ group.label }}</p>
@@ -26,7 +26,8 @@
       </section>
       <p v-if="screening.error || directory.error" class="workspace-alert" role="alert">Some dashboard information could not be loaded. Refresh to try again.</p>
       <AdminSummaryCards :items="cards" label="Loaded record counts" interactive @select="navigate($event.target)" />
-      <section v-if="!screening.rows.length" class="clean-panel dashboard-empty-panel" aria-labelledby="dashboard-empty-title" aria-live="polite">
+      <AdminLoadingSkeleton v-if="screening.busy && !screening.loaded" dashboard label="Loading dashboard…" :rows="3" />
+      <section v-else-if="!screening.rows.length" class="clean-panel dashboard-empty-panel" aria-labelledby="dashboard-empty-title" aria-live="polite">
         <div class="dashboard-empty-copy">
           <span class="dashboard-empty-icon"><FileText :size="21" aria-hidden="true" /></span>
           <h2 id="dashboard-empty-title">{{ screening.busy ? 'Loading screenings' : screening.error ? 'Screenings unavailable' : !screening.allowed ? 'No screening access' : 'No screening results yet' }}</h2>
@@ -38,7 +39,7 @@
           <section v-if="activity.distinctDays > 0" class="clean-panel workspace-activity" aria-labelledby="activity-title">
             <div class="clean-panel-head split-head"><div><h2 id="activity-title">Screening activity</h2><p>{{ activity.period }}</p></div></div>
             <figure class="workspace-activity-chart"><svg viewBox="0 0 600 170" role="img" :aria-label="activity.description" preserveAspectRatio="none"><defs><linearGradient id="screening-activity-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".16" /><stop offset="100%" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs><g class="workspace-chart-grid"><line v-for="y in [20,70,120]" :key="y" x1="0" :y1="y" x2="600" :y2="y" /></g><text x="0" y="13">{{ activity.maximum }}</text><text x="0" y="154">0</text><path :d="activity.area" fill="url(#screening-activity-fill)" /><polyline :points="activity.points" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" /><circle v-for="point in activity.coordinates" :key="point.x" :cx="point.x" :cy="point.y" r="3.5" fill="white" stroke="currentColor" stroke-width="2" /></svg><figcaption><span v-for="day in activity.days" :key="day.key">{{ day.label }}</span></figcaption></figure>
-            <p class="workspace-data-note">Loaded screenings by date.</p>
+            <p class="workspace-data-note">Screenings shown, grouped by date.</p>
           </section>
           <section class="clean-panel workspace-recent-panel">
             <div class="clean-panel-head split-head"><h2>Recent screenings</h2><button type="button" class="mini-view-link" @click="navigate('results')">View all <ArrowUpRight :size="14" /></button></div>
@@ -67,7 +68,7 @@
         <section class="clean-panel workspace-breakdown-panel">
           <div class="clean-panel-head"><h2>Result breakdown</h2></div>
           <div class="classification-ring-wrap">
-            <div class="classification-ring" :style="{ background: ringBackground }" aria-hidden="true"><div><strong>{{ screening.loaded ? screening.rows.length : '—' }}</strong><span>Results loaded</span></div></div>
+            <div class="classification-ring" :style="{ background: ringBackground }" aria-hidden="true"><div><strong>{{ screening.loaded ? screening.rows.length : '—' }}</strong><span>Results shown</span></div></div>
             <div class="classification-legend"><div v-for="item in classifications" :key="item.label"><span class="legend-dot" :style="{ background: item.color }"></span><p>{{ item.label }}</p><strong>{{ item.count }}</strong></div></div>
           </div>
         </section>
@@ -77,7 +78,7 @@
 
     <!-- Keep existing editors mounted: switching sections must not discard drafts or requests. -->
     <section v-show="section === 'students' || section === 'schools'" class="workspace-record-panel">
-      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event" />
+      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event"><template #school-people="{ school, refreshKey, close }"><HostedSchoolPeople :key="school.school_id + '-' + refreshKey" :school="school" :client="client" :profile="profile" @close="close" @access-change="refreshAccount" /></template></HostedDirectory>
     </section>
     <section v-show="section === 'results'" class="workspace-record-panel">
       <HostedScreenings ref="screeningsRef" :client="client" :profile="profile" @access-change="refreshAccount" @snapshot="screening = $event" />
@@ -86,12 +87,13 @@
       <header class="page-header workspace-page-header admin-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><RefreshButton :busy="busy" @click="refreshAccount" /></header>
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
-    <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" @access-change="refreshAccount" @open-result="openResult" />
+    <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" :students-loading="directory.busy && !directory.studentsLoaded" @access-change="refreshAccount" @open-result="openResult" />
     <HostedAdminRecords v-if="section === 'users' || section === 'audit'" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" />
   </AdminLayout>
 </template>
 
 <script setup>
+import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, ref } from 'vue'
@@ -99,6 +101,7 @@ import { AlertTriangle, ArrowUpRight, FileText, GraduationCap, History, LayoutDa
 import brandLogo from '../assets/graphiscan-logo.png'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import HostedDirectory from '../../../shared/HostedDirectory.vue'
+import HostedSchoolPeople from './HostedSchoolPeople.vue'
 import HostedScreenings from './HostedScreenings.vue'
 import HostedAdminProgress from './HostedAdminProgress.vue'
 import HostedAdminSettings from './HostedAdminSettings.vue'
@@ -108,13 +111,13 @@ const emit = defineEmits(['navigation-block'])
 const section=ref('dashboard'), directoryRef=ref(null), screeningsRef=ref(null), pageTitle=ref(null), accountTitle=ref(null), recordsRef=ref(null), progressRef=ref(null), blocked=ref(false), navigationError=ref('')
 const directory=ref({ students:0, schools:0, studentsLoaded:false, schoolsLoaded:false, busy:true, error:'' })
 const screening=ref({ rows:[], loaded:false, busy:true, error:'', allowed:false })
-const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
+const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap},{key:'schools',label:'Schools',icon:School}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
 const refreshing=computed(()=>props.busy || directory.value.busy || screening.value.busy)
 const cards=computed(()=>[
-  {label:'Screenings loaded',value:screening.value.loaded?screening.value.rows.length:'—',icon:FileText,target:'results'},
-  {label:'Students loaded',value:directory.value.studentsLoaded?directory.value.students:'—',icon:GraduationCap,target:'students'},
-  {label:'Schools loaded',value:directory.value.schoolsLoaded?directory.value.schools:'—',icon:School,target:'schools'},
-  {label:'Follow-ups loaded',value:screening.value.loaded?screening.value.rows.filter(r=>r.review?.follow_up_needed===true).length:'—',icon:AlertTriangle,target:'results'}
+  {label:'Screenings shown',value:screening.value.loaded?screening.value.rows.length:'—',icon:FileText,target:'results',loading:screening.value.busy&&!screening.value.loaded},
+  {label:'Students shown',value:directory.value.studentsLoaded?directory.value.students:'—',icon:GraduationCap,target:'students',loading:directory.value.busy&&!directory.value.studentsLoaded},
+  {label:'Schools shown',value:directory.value.schoolsLoaded?directory.value.schools:'—',icon:School,target:'schools',loading:directory.value.busy&&!directory.value.schoolsLoaded},
+  {label:'Follow-up needed',value:screening.value.loaded?screening.value.rows.filter(r=>r.review?.follow_up_needed===true).length:'—',icon:AlertTriangle,target:'results',loading:screening.value.busy&&!screening.value.loaded}
 ])
 const activity=computed(()=>{
   const dates=screening.value.rows.filter(row=>row.date_generated).map(row=>new Date(row.date_generated)).filter(date=>!Number.isNaN(date.getTime()))
@@ -129,8 +132,8 @@ const activity=computed(()=>{
 })
 const reviewBars=computed(()=>[
   {label:'Pending',description:'Waiting for expert review',tone:'pending'},
-  {label:'Validated',description:'Reviewed records',tone:'validated'},
-  {label:'Flagged',description:'Needs attention',tone:'flagged'}
+  {label:'Validated',description:'Reviewed by an expert',tone:'validated'},
+  {label:'Flagged',description:'Flagged for attention',tone:'flagged'}
 ].map(item=>({...item,count:screening.value.rows.filter(r=>r.review?.status===item.label).length})))
 // Preserve exact API classifications, including unfamiliar historical labels.
 const classifications=computed(()=>{
@@ -149,7 +152,7 @@ function statusTone(value){return value==='Validated'?'success':value==='Flagged
 function date(value){const parsed=new Date(value);return Number.isNaN(parsed.getTime())?'Date unavailable':parsed.toLocaleDateString()}
 function studentName(id){return directory.value.records?.find(student=>String(student.student_id)===String(id))?.full_name || 'Student '+id}
 function setNavigationBlock(value){blocked.value=value;emit('navigation-block',value)}
-function navActive(key){return section.value===key || (key==='students' && section.value==='schools')}
+function navActive(key){return section.value===key}
 async function navigate(target,closeMenu){
   if(blocked.value && target!==section.value){navigationError.value='Confirm the pending submission before leaving this section. You can still sign out.';return false}
   navigationError.value='';section.value=target
@@ -189,7 +192,8 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(.sidebar-close-btn) { color:var(--text); background:var(--page-bg); }
 .hosted-workspace :deep(.topbar) { display:flex; min-height:72px; height:72px; padding:0 32px; justify-content:flex-start; background:var(--white); border-bottom:1px solid var(--border); }
 .hosted-workspace :deep(.content) { padding:28px var(--workspace-page-inset) 36px; max-width:1480px; }
-@media(min-width:1101px) { .hosted-workspace :deep(.topbar) { display:none; } }
+.workspace-header-title { font-size:18px; font-weight:700; }
+.hosted-workspace :deep(.directory-page-actions .directory-add-button) { min-height:48px; }
 .modern-admin-dashboard { gap:var(--workspace-section-gap); }
 .dashboard-toolbar { align-items:center; gap:20px; min-height:44px; padding:0; }
 .dashboard-toolbar p { margin:8px 0 0; font-size:14px; }
@@ -259,9 +263,11 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .workspace-record-panel :deep(.user-summary-card span) { font-size:13px; color:var(--muted); }
 .workspace-record-panel :deep(.user-summary-card strong) { font-size:28px; font-weight:600; }
 .workspace-record-panel :deep(.directory-toolbar > p) { margin:0; color:var(--muted); font-size:13px; }
+.workspace-record-panel :deep(.directory-add-button),
 .workspace-record-panel :deep(.directory-toolbar > button),
 .workspace-record-panel :deep(.directory-actions button[type=submit]),
 .workspace-record-panel :deep(.assignment-form button[type=submit]) { background:var(--blue-700); color:var(--white); border-color:var(--blue-700); font-weight:600; }
+.workspace-record-panel :deep(.directory-add-button:hover:not(:disabled)),
 .workspace-record-panel :deep(.directory-toolbar > button:hover:not(:disabled)),
 .workspace-record-panel :deep(.directory-actions button[type=submit]:hover:not(:disabled)),
 .workspace-record-panel :deep(.assignment-form button[type=submit]:hover:not(:disabled)) { background:var(--blue-hover); color:var(--white); }
@@ -293,6 +299,20 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(:is(.hosted-record-panel,.compact-panel,.hosted-security)) { padding:var(--workspace-card-padding); }
 .hosted-workspace :deep(.hosted-security) { margin:0; }
 .hosted-workspace :deep(.compact-panel h2) { margin-bottom:var(--workspace-section-gap); }
+.hosted-workspace :deep(.hosted-progress .history-hint) { margin:16px 0 0; font:400 14px/1.6 var(--font-ui); color:var(--muted); }
+.hosted-workspace :deep(.hosted-progress .history-notice) { margin:var(--workspace-section-gap) 0 0; }
+.hosted-workspace :deep(.admin-page-header :is(.primary-action-btn,.directory-add-button)) { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; min-height:48px; min-width:112px; margin:0; padding:10px 16px; border:1px solid var(--blue-700); border-radius:8px; background:var(--blue-700); color:var(--white); font:600 14px/1.5 var(--font-ui); white-space:nowrap; cursor:pointer; }
+.hosted-workspace :deep(.admin-page-header :is(.primary-action-btn,.directory-add-button):hover:not(:disabled)) { background:var(--blue-hover); border-color:var(--blue-hover); color:var(--white); }
+.hosted-workspace :deep(.admin-page-header :is(.primary-action-btn,.directory-add-button):disabled) { opacity:.6; cursor:default; }
+.hosted-workspace :deep(.admin-page-header :is(.account-page-actions,.directory-page-actions)) { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:308px; max-width:100%; align-items:center; gap:12px; }
+.hosted-workspace :deep(.admin-page-header :is(.account-page-actions,.directory-page-actions) > button) { box-sizing:border-box; width:100%; min-width:0; height:48px; min-height:48px; padding:10px 12px; }
+.hosted-workspace :deep(.admin-page-header .account-page-actions:not(:has(.primary-action-btn))) { width:148px; grid-template-columns:minmax(0,1fr); }
+
+/* Shared record surface: filters and rows use the same inset on every page. */
+.hosted-workspace .workspace-record-panel :deep(:is(.directory-records-panel,.screening-records-panel)) { display:flex; flex-direction:column; gap:var(--workspace-section-gap); min-width:0; padding:var(--workspace-card-padding); border:1px solid var(--border); border-radius:14px; background:var(--white); }
+.hosted-workspace .workspace-record-panel :deep(:is(.directory-records-panel,.screening-records-panel) > :is(.directory-filters,.screening-filters)) { margin:0; padding:0; border:0; border-radius:0; background:transparent; }
+.hosted-workspace .workspace-record-panel :deep(:is(.directory-records-panel,.screening-records-panel) > :is(.table-wrapper,.directory-toolbar,.admin-loading,p)) { margin:0; }
+.hosted-workspace :deep(:is(.clean-panel,.compact-panel,.hosted-record-panel,.hosted-security,.directory-records-panel,.screening-records-panel)) { border-radius:14px; }
 
 /* One page rhythm for every hosted section; dialogs keep their own layout. */
 .hosted-workspace :deep(:is(.modern-admin-dashboard,.hosted-admin-records,.hosted-progress,.workspace-account,.directory,.hosted-screenings)) { display:flex; flex-direction:column; gap:var(--workspace-section-gap); min-width:0; margin:0; }
@@ -300,7 +320,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(.content .admin-page-header) { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-auto-rows:minmax(48px,auto); align-items:center; gap:16px; flex:none; min-height:48px; margin:0; padding:0; }
 .hosted-workspace :deep(.content .admin-page-header :is(h1,h2)) { display:block; min-height:0; margin:0; padding:0; font:600 var(--admin-page-title)/1.25 var(--font-ui); letter-spacing:-.025em; }
 .hosted-workspace :deep(.admin-page-header > div) { min-width:0; }
-.hosted-workspace :deep(.admin-page-header .account-page-actions) { width:auto; flex-wrap:nowrap; }
+.hosted-workspace :deep(.admin-page-header .account-page-actions) { flex-wrap:nowrap; }
 .hosted-workspace :deep(.admin-page-header .account-page-actions > button) { width:auto; flex:none; }
 .hosted-workspace :deep(.admin-page-header :is(.primary-action-btn,.soft-action-btn)) { min-height:48px; }
 .hosted-workspace :deep(.hosted-security) { max-width:none; border-radius:14px; }
@@ -359,6 +379,13 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 
 @media (min-width:701px) and (max-width:1250px) { .hosted-workspace { --workspace-page-inset:24px; } }
 @media (max-width:700px) {
+  .hosted-workspace :deep(.content .admin-page-header) { grid-template-columns:minmax(0,1fr); grid-template-rows:48px 48px; gap:12px; align-items:center; }
+  .hosted-workspace :deep(.hosted-schools-table td[data-label="Actions"]) { display:block; }
+  .hosted-workspace :deep(.hosted-schools-table td[data-label="Actions"]::before) { display:block; margin-bottom:8px; }
+  .hosted-workspace :deep(.school-row-actions) { display:grid; grid-template-columns:1fr; }
+  .hosted-workspace :deep(.school-row-actions button) { width:100%; }
+  .hosted-workspace :deep(.content .admin-page-header > :is(button,div)) { justify-self:start; }
+  .hosted-workspace :deep(.admin-page-header .account-page-actions) { justify-content:flex-start; }
   .hosted-workspace { --workspace-page-inset:16px; --workspace-section-gap:20px; --workspace-card-padding:20px; --workspace-control-gap:12px; --workspace-metric-padding:16px; --workspace-metric-height:104px; }
   .hosted-workspace :deep(.content) { padding:24px var(--workspace-page-inset) 32px; }
   .hosted-workspace :deep(.dashboard-empty-panel) { min-height:300px; }
@@ -367,7 +394,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
   .hosted-workspace :deep(.directory-filters) { grid-template-columns:1fr; }
 }
 @media (max-width:380px) {
-  .hosted-workspace :deep(.content .admin-page-header:has(.account-page-actions)) { grid-template-columns:minmax(0,1fr); }
-  .hosted-workspace :deep(.content .admin-page-header .account-page-actions) { justify-content:flex-start; }
+  .hosted-workspace :deep(.content .admin-page-header:has(.account-page-actions, .directory-page-actions)) { grid-template-columns:minmax(0,1fr); }
+  .hosted-workspace :deep(.content .admin-page-header :is(.account-page-actions,.directory-page-actions)) { justify-content:flex-start; }
 }
 </style>
