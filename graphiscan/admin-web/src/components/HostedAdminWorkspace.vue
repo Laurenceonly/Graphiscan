@@ -3,9 +3,7 @@
     <template #brand>
       <div class="workspace-brand"><img :src="brandLogo" alt="" width="36" height="36" /><span>Graphi<span>Scan</span></span></div>
     </template>
-    <template #topbar>
-      <strong class="workspace-title">Admin Workspace</strong>
-    </template>
+    <template #topbar><span class="mobile-header-brand">GraphiScan</span></template>
     <template #navigation="{ closeMenu }">
       <div v-for="group in navigation" :key="group.label" class="sidebar-section">
         <p class="sidebar-label">{{ group.label }}</p>
@@ -35,9 +33,9 @@
           <p>{{ screening.busy ? 'Screening records will appear here when they finish loading.' : screening.error ? 'Refresh the dashboard to try loading records again.' : !screening.allowed ? 'Screening records require school assignment permission.' : 'When screenings are recorded, their review status and recent results will appear here.' }}</p>
         </div>
       </section>
-      <div v-else class="workspace-dashboard-grid" :class="{ 'workspace-dashboard-has-activity': activity.distinctDays > 1 }">
+      <div v-else class="workspace-dashboard-grid" :class="{ 'workspace-dashboard-has-activity': activity.distinctDays > 0 }">
         <div class="workspace-dashboard-primary">
-          <section v-if="activity.distinctDays > 1" class="clean-panel workspace-activity" aria-labelledby="activity-title">
+          <section v-if="activity.distinctDays > 0" class="clean-panel workspace-activity" aria-labelledby="activity-title">
             <div class="clean-panel-head split-head"><div><h2 id="activity-title">Screening activity</h2><p>{{ activity.period }}</p></div></div>
             <figure class="workspace-activity-chart"><svg viewBox="0 0 600 170" role="img" :aria-label="activity.description" preserveAspectRatio="none"><defs><linearGradient id="screening-activity-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".16" /><stop offset="100%" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs><g class="workspace-chart-grid"><line v-for="y in [20,70,120]" :key="y" x1="0" :y1="y" x2="600" :y2="y" /></g><text x="0" y="13">{{ activity.maximum }}</text><text x="0" y="154">0</text><path :d="activity.area" fill="url(#screening-activity-fill)" /><polyline :points="activity.points" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" /><circle v-for="point in activity.coordinates" :key="point.x" :cx="point.x" :cy="point.y" r="3.5" fill="white" stroke="currentColor" stroke-width="2" /></svg><figcaption><span v-for="day in activity.days" :key="day.key">{{ day.label }}</span></figcaption></figure>
             <p class="workspace-data-note">Loaded screenings by date.</p>
@@ -191,7 +189,7 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 .hosted-workspace :deep(.sidebar-close-btn) { color:var(--text); background:var(--page-bg); }
 .hosted-workspace :deep(.topbar) { display:flex; min-height:72px; height:72px; padding:0 32px; justify-content:flex-start; background:var(--white); border-bottom:1px solid var(--border); }
 .hosted-workspace :deep(.content) { padding:28px var(--workspace-page-inset) 36px; max-width:1480px; }
-.workspace-title { min-width:0; color:var(--text); font-size:16px; font-weight:700; line-height:1.5; }
+@media(min-width:1101px) { .hosted-workspace :deep(.topbar) { display:none; } }
 .modern-admin-dashboard { gap:var(--workspace-section-gap); }
 .dashboard-toolbar { align-items:center; gap:20px; min-height:44px; padding:0; }
 .dashboard-toolbar p { margin:8px 0 0; font-size:14px; }
