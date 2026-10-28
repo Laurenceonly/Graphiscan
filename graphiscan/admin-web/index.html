@@ -5,9 +5,22 @@
     <link rel="icon" type="image/png" href="/graphiscan-favicon-cutout.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GraphiScan Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/src/assets/graphiscan-logo.png" as="image" />
+    <link rel="preload" href="/src/assets/admin-workspace-preview.png" as="image" />
+    <style>
+      html,body{margin:0;background:#f5f7fa}
+      #admin-startup{position:fixed;inset:0;z-index:2147483647;background:#f5f7fa;transition:opacity 240ms cubic-bezier(.23,1,.32,1)}
+      #admin-startup.ready{opacity:0;pointer-events:none}
+      #admin-startup span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+      @media(prefers-reduced-motion:reduce){#admin-startup{transition:none}}
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="admin-startup" role="status"><span>Loading GraphiScan Admin</span></div>
+    <div id="app" inert aria-busy="true"></div>
+    <noscript>Enable JavaScript to open GraphiScan Admin.</noscript>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
