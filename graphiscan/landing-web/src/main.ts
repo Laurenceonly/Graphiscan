@@ -1,3 +1,4 @@
+import './page-transitions';
 import { site } from './config';
 if (document.querySelector('.hero')) {
   const homeMotion = import('./motion');

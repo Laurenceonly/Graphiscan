@@ -1,3 +1,23 @@
+2026-10-28 approved landing checkpoint: user accepted the visible content fades and requested commit/push. Includes page transitions, content-triggered section fades, local admin-link fallback and prior publication notes. Latest strict build and desktop/mobile browser checks passed as recorded below. Production rollout of this revision remains to be verified after push; APK/device/full application work remains open.
+
+2026-10-28 visible section fade correction: user could not perceive edge fades. Landing motion.ts now triggers on each supporting section's content wrapper at88% viewport entry/12% exit, using a750ms interruptible opacity fade from0.08 to1. Hero retains its original intro. Focus-within CSS covers wrappers; reduced-motion clears their opacity. Build passed. Chromium1440/390 checks for all four wrappers measured0.08 before entry,0.60-0.67 during the fade and1 afterward; reduced-motion restored all to1. Local only; user review pending.
+
+2026-10-28 homepage section fade trial: replaced separate group entrance fades in landing src/motion.ts with one stationary opacity surface per section, easing toward viewport-edge visibility over350ms. Sections become fully opaque in the reading area and fade on exit in either scroll direction; tall sections use edge distances. Existing hero intro and role/workflow selection feedback remain. CSS keeps keyboard-focused sections opaque; reduced motion restores all sections. Build passed. Chromium1440/390 checks measured all four supporting sections near0.45 opacity at entry and1 when aligned, and all five at1 after reduced motion; zero page errors. Physical-device and user visual review remain open; local/unpublished.
+
+2026-10-28 correction: replaced skipped native document transitions with a white fixed curtain:280ms outgoing opacity and360ms CSS entrance, present in all four HTML documents before scripts. Lifecycle/timeout cleanup restores canceled navigation and Back. Local dev now supplies the documented public admin login when VITE_ADMIN_URL is blank; production keeps explicit configuration. Build passed. Chromium1440/390 checks observed active intermediate outgoing opacity on all three supporting routes, visible admin links, cleared curtains, Back and reduced-motion recovery, zero page errors. Live admin destination/physical devices untested; unpublished.
+
+Landing publication2026-10-27: user authorized deployment. Separate Vercel project
+graphiscan now serves https://graphiscan.vercel.app from main, root
+graphiscan/landing-web. Production admin link configured; APK remains Coming soon.
+Local production build and initial four-route public HTTP checks pass. Physical
+device/APK and remaining overall requirements are still open.
+
+Next-session direction2026-10-27: user is stopping after the landing-page session.
+Landing work and tab titles are pushed to main through9afd123. On resume, return
+to overall requirements and remaining project work; reconcile this plan with
+CURRENT_REQUIREMENTS.md, WORK_CHECKLIST.md and verified system behavior before
+choosing the next pending implementation. Do not assume more landing polishing.
+
 Latest landing refinement2026-10-27: static supporting-page content groups, plain
 home links and justified paragraphs implemented; restored prior Platform button
 layout per user. Final build and18 pre-justification supporting-page browser checks

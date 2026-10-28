@@ -1,3 +1,34 @@
+## 2026-10-28 - Approve landing fades for publication
+
+- 2026-10-28 approved landing checkpoint: user accepted the visible content fades and requested commit/push. Includes page transitions, content-triggered section fades, local admin-link fallback and prior publication notes. Latest strict build and desktop/mobile browser checks passed as recorded below. Production rollout of this revision remains to be verified after push; APK/device/full application work remains open.
+
+## 2026-10-28 - Make section fades visible on content entry
+
+- 2026-10-28 visible section fade correction: user could not perceive edge fades. Landing motion.ts now triggers on each supporting section's content wrapper at88% viewport entry/12% exit, using a750ms interruptible opacity fade from0.08 to1. Hero retains its original intro. Focus-within CSS covers wrappers; reduced-motion clears their opacity. Build passed. Chromium1440/390 checks for all four wrappers measured0.08 before entry,0.60-0.67 during the fade and1 afterward; reduced-motion restored all to1. Local only; user review pending.
+
+## 2026-10-28 - Try homepage section fades
+
+- 2026-10-28 homepage section fade trial: replaced separate group entrance fades in landing src/motion.ts with one stationary opacity surface per section, easing toward viewport-edge visibility over350ms. Sections become fully opaque in the reading area and fade on exit in either scroll direction; tall sections use edge distances. Existing hero intro and role/workflow selection feedback remain. CSS keeps keyboard-focused sections opaque; reduced motion restores all sections. Build passed. Chromium1440/390 checks measured all four supporting sections near0.45 opacity at entry and1 when aligned, and all five at1 after reduced motion; zero page errors. Physical-device and user visual review remain open; local/unpublished.
+
+## 2026-10-28 - Correct skipped fades and missing local admin link
+
+- 2026-10-28 correction: replaced skipped native document transitions with a white fixed curtain:280ms outgoing opacity and360ms CSS entrance, present in all four HTML documents before scripts. Lifecycle/timeout cleanup restores canceled navigation and Back. Local dev now supplies the documented public admin login when VITE_ADMIN_URL is blank; production keeps explicit configuration. Build passed. Chromium1440/390 checks observed active intermediate outgoing opacity on all three supporting routes, visible admin links, cleared curtains, Back and reduced-motion recovery, zero page errors. Live admin destination/physical devices untested; unpublished.
+
+## 2026-10-28 - Landing page navigation fades
+
+- Added browser-native cross-document opacity fades (200ms out/250ms in) for public pages, with reduced-motion opt-out. Added guarded outgoing fallback/admin fade, preserving modified clicks, downloads and hash navigation; page lifecycle cleanup and timeout restore visibility after canceled navigation.
+- Changed landing src/main.ts, src/page-transitions.ts and src/style.css. TypeScript/production build passed. Local Chromium navigation checks passed at1440/390 widths for About/Data use/Download, Back visibility, overflow and reduced-motion navigation. Live admin handoff, unsupported-browser fallback, visual flash inspection and physical devices remain unverified. Local changes only; not published.
+
+## 2026-10-27 - Publish the public website on Vercel
+
+- Created a separate Vercel project connected to Laurenceonly/Graphiscan main, root graphiscan/landing-web, Vite, npm run build and dist. Published pushed source 9afd123 through GitHub without uploading local private files. Production public admin/site URL configuration is set; APK remains Coming soon. Existing admin deployment is unchanged.
+- User requested removal of landing from the name: renamed the project to graphiscan and assigned https://graphiscan.vercel.app. Updated canonical site configuration and requested a fresh production build. Landing project production access is public.
+- Local strict TypeScript/production build passed. Both production builds reached Ready; initial four public routes returned HTTP200 with expected titles and nosniff headers. Final shorter domain is verified and bound to the project; Playwright visited all four shorter-domain pages and the390px homepage, with zero console errors/warnings. The final standalone DOM-output command failed without diagnostics, so its individual assertions are not claimed. Updated KNOWLEDGE.md, PROJECT_PLAN.md, RESUME.md and landing README; git diff --check passed. APK/device and full hosted application checks remain open.
+
+## 2026-10-27 - Save the next-session direction
+
+- User will resume later and return from landing-page polishing to the overall project requirements. Updated RESUME.md and PROJECT_PLAN.md with that direction and the pushed landing commits ce15665/9afd123. No application changes or new runtime checks; existing APK/device/publication limitations remain.
+
 ## 2026-10-27 - Shorten browser tab titles
 
 - Homepage tab is GraphiScan; supporting tabs are About | GraphiScan, Data use | GraphiScan and Download | GraphiScan. Updated all four landing HTML title elements for consistent, concise browser tabs. Source titles checked; final production build checked before push.

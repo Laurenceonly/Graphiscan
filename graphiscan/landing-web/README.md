@@ -77,12 +77,17 @@ with the release. QR generation is deferred until a public website URL is known.
 
 ## Vercel
 
+Published 2026-10-27 at https://graphiscan.vercel.app in the KnightLabs Vercel
+project `graphiscan`, connected to the existing GitHub repository/main. Root is
+`graphiscan/landing-web`, framework Vite, build `npm run build`, output `dist`.
+Production has the public admin link and site URL; APK remains Coming soon.
+
 Create a separate Vercel project with Root Directory `graphiscan/landing-web`,
 framework Vite, build `npm run build`, output `dist`. Add the public environment
 variables in that project, then rebuild when changing them. This is a multi-page
 site; do not add an SPA catch-all that swallows /download/, /about/ or /privacy/.
 The included vercel.json applies basic response headers and clean URLs. No other
-application's deployment configuration is changed. Deployment is not performed.
+application's deployment configuration is changed.
 Supply the final domain before adding canonical URLs, sitemap or a download QR.
 
 ## Content boundaries
@@ -93,5 +98,5 @@ real-use workflow or model calibration is claimed. Public medical background
 links to NIH and MedlinePlus; product claims are derived from current app/API source.
 
 Still requires APK, device checks, public URL/QR, public team/contact details,
-approved legal/privacy content, final content approval and deployment. This is
+approved legal/privacy content and final content approval. This is
 the initial website, not a declaration that those project release gates passed.

@@ -5,7 +5,7 @@ function publicUrl(value: string | undefined): string {
   catch { return ''; }
 }
 export const site = {
-  adminUrl: publicUrl(import.meta.env.VITE_ADMIN_URL),
+  adminUrl: publicUrl(import.meta.env.VITE_ADMIN_URL) || (import.meta.env.DEV ? 'https://graphiscan-admin.vercel.app/login' : ''),
   apkUrl: publicUrl(import.meta.env.VITE_APK_URL),
   publicUrl: publicUrl(import.meta.env.VITE_SITE_URL),
   version: import.meta.env.VITE_APP_VERSION?.trim() || '',

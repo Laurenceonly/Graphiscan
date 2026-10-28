@@ -1,4 +1,26 @@
-# Latest landing sizing checkpoint - 2026-10-27
+2026-10-28 approved landing checkpoint: user accepted the visible content fades and requested commit/push. Includes page transitions, content-triggered section fades, local admin-link fallback and prior publication notes. Latest strict build and desktop/mobile browser checks passed as recorded below. Production rollout of this revision remains to be verified after push; APK/device/full application work remains open.
+
+# Latest landing publication checkpoint - 2026-10-27
+
+User resumed and authorized Vercel publication, then requested GraphiScan without
+landing in its address. Project graphiscan serves https://graphiscan.vercel.app,
+connected to the existing GitHub repository/main, root graphiscan/landing-web.
+Production uses npm run build, dist, public admin URL and matching site URL;
+APK configuration remains absent. Initial production build Ready and all four
+public route HTTP/title/header checks pass. Prior unpublished notes are historical.
+Remaining APK/device/full application requirement checks are unchanged.
+
+## Next session: return to overall requirements
+
+User is stopping for now. This session focused on the landing website. Website
+work and browser-tab titles are committed and pushed to main: ce15665 and9afd123.
+Next resume should return to the overall GraphiScan requirements and remaining
+project work rather than assume further landing-page polishing. Read
+CURRENT_REQUIREMENTS.md, PROJECT_PLAN.md, WORK_CHECKLIST.md and KNOWLEDGE.md,
+reconcile implemented/verified behavior with outstanding requirements, then
+continue the appropriate pending work. The landing page remains available for
+later feedback; physical-device checks, actual APK release and publication have
+not been completed by this session.
 
 Latest hover preference: use Data use's400ms border darkening on every content
 box, including Platform, role buttons and dysgraphia cards. Their fill overlays
