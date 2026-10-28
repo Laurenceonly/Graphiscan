@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#ffffff">
   <title>Download | GraphiScan</title><meta name="description" content="Download availability and installation information for the GraphiScan Android app.">
-  <link rel="icon" href="/images/graphiscan-mark.webp"><link rel="stylesheet" href="/src/style.css">
+  <link rel="icon" href="/images/graphiscan-mark.webp"><link rel="preload" href="/fonts/Manrope-Variable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/src/style.css">
+<script>
+/* Resolve the font before revealing the page; the timeout keeps failures usable. */
+if (document.fonts) {
+  document.documentElement.classList.add('fonts-pending');
+  const reveal = () => document.documentElement.classList.remove('fonts-pending');
+  const fontTimeout = setTimeout(() => { document.documentElement.classList.add('font-fallback'); reveal(); }, 2200);
+  document.fonts.load('500 16px Manrope').then(() => {
+    clearTimeout(fontTimeout);
+    requestAnimationFrame(() => requestAnimationFrame(reveal));
+  }, () => { clearTimeout(fontTimeout); reveal(); });
+}
+</script>
 </head>
 <body id="top" class="release-page"><div class="page-curtain" aria-hidden="true"></div>
 <a class="skip-link" href="#main">Skip to content</a>

@@ -1,3 +1,7 @@
+## 2026-10-28 - Resolve font before page entrance
+
+- 2026-10-28 Vercel font-swap correction: reproduced live About font loading with1200ms delayed Manrope request: brand width99.75 before font versus106.89 after, both exposed by curtain opacity0. Added font preload and early bounded font-ready gate to all four HTML heads; curtain stays white until font loads, then fades in. At2200ms timeout the page fixes its fallback font for that document to prevent a later swap. CSS adds pending/fallback classes. Local delayed-font checks on all four pages confirmed cover1 before readiness, cover0 afterward, Manrope applied before reveal and stable subsequent text widths. Strict build passed. Timeout/failure and physical-device checks remain unverified; not committed/pushed yet.
+
 ## 2026-10-28 - Fix outgoing page cover clearing too early
 
 - 2026-10-28 page handoff flash fix: user reported a quick glitch between supporting pages despite earlier settled-state checks. Confirmed live About-to-Data-use pagehide cleared outgoing curtain opacity to0 before departure. Updated landing src/page-transitions.ts to persist opacity1 before navigation and retain it during pagehide; pageshow restores cached pages. Comparison measured live departure0 versus local fixed departure1, with arrival0 and Back0 for both. Strict build passed. Earlier audit did not test this final outgoing state and missed the bug. Fix is local/unpublished; physical-device visual confirmation remains open.

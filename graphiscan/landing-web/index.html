@@ -8,6 +8,18 @@
   <meta name="description" content="GraphiScan connects handwriting screening, expert review and authorized family reports. Explore the platform for teachers, experts and parents.">
   <meta property="og:title" content="GraphiScan · Every stroke tells a story"><meta property="og:description" content="Handwriting screening. Expert review. A shared record of support."><meta property="og:type" content="website">
   <link rel="icon" href="/images/graphiscan-mark.webp"><link rel="preload" href="/images/handwriting-hero.webp" as="image" fetchpriority="high"><link rel="stylesheet" href="/src/style.css">
+<script>
+/* Resolve the font before revealing the page; the timeout keeps failures usable. */
+if (document.fonts) {
+  document.documentElement.classList.add('fonts-pending');
+  const reveal = () => document.documentElement.classList.remove('fonts-pending');
+  const fontTimeout = setTimeout(() => { document.documentElement.classList.add('font-fallback'); reveal(); }, 2200);
+  document.fonts.load('500 16px Manrope').then(() => {
+    clearTimeout(fontTimeout);
+    requestAnimationFrame(() => requestAnimationFrame(reveal));
+  }, () => { clearTimeout(fontTimeout); reveal(); });
+}
+</script>
 </head>
 <body id="top" class="homepage"><div class="page-curtain" aria-hidden="true"></div>
 <a class="skip-link" href="#main">Skip to content</a>

@@ -744,3 +744,8 @@ button{user-select:none}
 @media(prefers-reduced-motion:reduce){.page-curtain{animation:none;opacity:0}}
 /* Keyboard focus keeps a section fully legible at viewport edges. */
 .homepage main>section:focus-within,.homepage main>section:focus-within>.wrap{opacity:1!important}
+
+/* Start the entrance only after the self-hosted font is ready. */
+html.fonts-pending .page-curtain{animation:none;opacity:1}
+
+html.font-fallback{font-family:'Segoe UI',sans-serif}
