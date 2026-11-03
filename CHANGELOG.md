@@ -1,3 +1,9 @@
+## 2026-11-04 - Consistent initial page loading and stable refresh branding
+
+- Added shared AdminPageSkeleton for full content-area first reads on Dashboard, Users, Students, Schools, Results and Audit Logs. Progress uses it only while the student list is pending; selected history/details keep their local loaders. Settings has no artificial loader. Navigation remains mounted and available; existing records remain during same-query refresh and failures resolve to retry/error states. No requests or permissions changed.
+- Refresh shell and real sidebar now share AdminWorkspaceBrand:36px image,19px/650 text,9px gap, matching position,240px sidebar and1100px breakpoint. Reused the same page skeleton during session restoration. Exact desktop geometry matched x22/y22,146.75x36 brand bounds in the fictional browser; mobile hides the refresh rail at the real navigation breakpoint.
+- Verification: admin and retained user builds pass;67 fictional Chromium assertions at1440/390 cover all8 sections, full placeholder coverage, usable navigation, later refresh retention, error/retry, reduced motion and brand geometry; no page errors. Desktop/phone screenshots inspected. Only this UI slice is staged for publication; other local account/password/mobile work preserved. Hosted authenticated/device acceptance remains separate.
+
 ## 2026-11-04 - Make dashboard restoration visually quiet
 
 - Replaced the prominent Opening your workspace / Checking your session screen with a dashboard-shaped skeleton through a presentation-only shared slot and existing AdminLoadingSkeleton. Screen readers retain a Loading workspace status; no private records appear before validation. Connection errors still provide retry/sign-out. Session persistence and server checks unchanged.

@@ -1,3 +1,7 @@
+## Full content-area loaders and matched logo - 2026-11-04
+
+User requested initial skeletons across admin content except navigation and complained about refresh logo size. Implemented shared AdminPageSkeleton across initial data pages, conditional Progress/no Settings loader, refresh data retention and exact shared AdminWorkspaceBrand geometry.67 fictional1440/390 browser checks and both web builds pass; screenshots inspected. Publish task-only UI slice; unrelated edits remain local. No accounts/permissions/credentials changed.
+
 ## Quiet dashboard restoration - 2026-11-04
 
 User disliked the visible session-opening screen after0127f5a. Replaced it with dashboard skeleton and accessible nonvisual status; restore/retry/logout behavior unchanged. Admin build and30 fictional1440/390 browser checks pass; screenshots inspected. Task-only publication continues prior user-authorized session fix; unrelated edits stay local.

@@ -1,5 +1,7 @@
 <template>
   <section class="directory" aria-labelledby="directory-title" :aria-busy="busy">
+    <AdminPageSkeleton v-if="adminPresentation && busy && !(tab === 'students' ? studentsLoaded : schoolsLoaded) && !formKind" :filters="tab === 'students'" :label="tab === 'students' ? 'Loading students' : 'Loading schools'" />
+    <template v-else>
     <header v-if="adminPresentation" class="admin-page-header"><h2 id="directory-title">{{ tab === 'students' ? 'Students' : 'Schools' }}</h2><div class="directory-page-actions"><RefreshButton :busy="busy" :disabled="frozen || schoolUncertain" @click="refreshRecords" /><button v-if="tab === 'students' ? canWriteStudents : canWriteSchools" type="button" class="directory-add-button" :disabled="busy || frozen || schoolUncertain" @click="tab === 'students' ? newStudent() : newSchool()">{{ tab === 'students' ? 'Add student' : 'Add school' }}</button></div></header>
     <h2 v-else id="directory-title">Schools and students</h2>
     <nav v-if="!adminPresentation" class="directory-nav" aria-label="Workspace records">
@@ -80,11 +82,13 @@
       </form>
     </component>
     <p v-if="!adminPresentation" class="directory-hint directory-footnote">Records and assignment choices reflect your current account permissions.</p>
+    </template>
   </section>
 </template>
 
 <script setup>
 import AdminLoadingSkeleton from './AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from './AdminPageSkeleton.vue'
 import RefreshButton from './RefreshButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { createStudentSubmission } from './directory-submission.mjs'

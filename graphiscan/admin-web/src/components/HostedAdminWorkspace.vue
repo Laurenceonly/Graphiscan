@@ -1,7 +1,7 @@
 <template>
   <AdminLayout class="hosted-workspace" :sign-out="signOut">
     <template #brand>
-      <div class="workspace-brand"><img :src="brandLogo" alt="" width="36" height="36" /><span>Graphi<span>Scan</span></span></div>
+      <AdminWorkspaceBrand />
     </template>
     <template #topbar><strong class="workspace-header-title">Admin Workspace</strong></template>
     <template #navigation="{ closeMenu }">
@@ -20,6 +20,8 @@
     <p v-if="message" role="status">{{ message }}</p>
 
     <div v-show="section === 'dashboard'" class="dashboard-page modern-admin-dashboard">
+      <AdminPageSkeleton v-if="(directory.busy && (!directory.studentsLoaded || !directory.schoolsLoaded)) || (screening.busy && !screening.loaded)" dashboard summary label="Loading dashboard" />
+      <template v-else>
       <section class="dashboard-toolbar admin-page-header">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
         <RefreshButton :busy="refreshing" @click="refreshDashboard" />
@@ -74,6 +76,7 @@
         </section>
         </div>
       </div>
+      </template>
     </div>
 
     <!-- Keep existing editors mounted: switching sections must not discard drafts or requests. -->
@@ -94,11 +97,12 @@
 
 <script setup>
 import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
+import AdminWorkspaceBrand from './AdminWorkspaceBrand.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, ref } from 'vue'
 import { AlertTriangle, ArrowUpRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
-import brandLogo from '../assets/graphiscan-logo.png'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import HostedDirectory from '../../../shared/HostedDirectory.vue'
 import HostedSchoolPeople from './HostedSchoolPeople.vue'
