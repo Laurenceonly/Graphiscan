@@ -67,12 +67,12 @@ async page => {
   }else check(!await tab.locator('.restore-rail').isVisible(),'mobile refresh has no mismatched sidebar logo');
   await tab.screenshot({path:'output/playwright/admin-matched-brand-'+width+'.png',fullPage:false});
   holdRefresh=false;release('refresh');await tab.locator('.hosted-workspace').waitFor();await tab.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();
-  await go('Settings');failAccounts=true;await go('Users');await tab.getByRole('button',{name:'Try again',exact:true}).waitFor();
+  await go('Settings');failAccounts=true;await go('Users');await tab.locator('.hosted-admin-records:visible').getByRole('button',{name:'Refresh',exact:true}).click();await tab.getByRole('button',{name:'Try again',exact:true}).waitFor();
   check(!await tab.getByRole('status',{name:'Loading users',exact:true}).isVisible(),'failed initial read ends skeleton and shows retry');
   failAccounts=false;await tab.getByRole('button',{name:'Try again',exact:true}).click();await tab.getByRole('region',{name:'User accounts',exact:true}).waitFor();
   check(await tab.getByRole('region',{name:'User accounts',exact:true}).isVisible(),'initial error retry recovers records');
-  await tab.emulateMedia({reducedMotion:'reduce'});held.add('accounts');await go('Settings');await go('Users');await tab.getByRole('status',{name:'Loading users',exact:true}).waitFor();
-  check(await tab.locator('.hosted-admin-records .shape').first().evaluate(el=>getComputedStyle(el).animationName)==='none','reduced motion disables page skeleton pulse');release('accounts');
+  await tab.emulateMedia({reducedMotion:'reduce'});held.add('accounts');await tab.reload();await tab.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();await go('Users');await tab.getByRole('status',{name:'Loading users',exact:true}).waitFor();
+  check(await tab.locator('.hosted-admin-records:visible .shape').first().evaluate(el=>getComputedStyle(el).animationName)==='none','reduced motion disables page skeleton pulse');release('accounts');
   await tab.close();
  }
  if(errors.length)throw Error(errors.join('\n'));

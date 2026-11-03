@@ -1,5 +1,11 @@
 # GraphiScan admin web
 
+Users/Audit navigation (2026-11-04): each list loads on its first visit and is
+retained while switching sections. Returning preserves rows, filters and paging
+without another skeleton or request. Refresh and filter submission fetch updated
+data. Editors close and password input clears when leaving; a changed profile
+resets lists and applies current permissions. Logout destroys the workspace cache.
+
 Initial loading (2026-11-04): Dashboard, Users, Students, Schools, Results and
 Audit Logs use a shared full content-area skeleton while their first reads are
 pending. Progress uses it while the student picker list loads; selected history
