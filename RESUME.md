@@ -1,3 +1,7 @@
+## Workspace scrollbars/local connection - 2026-11-04
+
+- Hidden visible page/sidebar scrollbars throughout hosted admin without disabling scrolling; normal policy restored on login. Admin build and47 fictional1440/390 checks pass, no page errors. Local API5002 was down; existing ignored runner restarted (session98760), health and CORS login preflight200. Vite5173 running session27464. Local link http://127.0.0.1:5173/login; live https://admin.graphiscan.site/login. School-grade UI69a6687 is already live; clean-start SQL still unapplied. Recheck process liveness after breaks.
+
 ## School-grade UI and clean-start handoff - 2026-11-04
 
 User wants School → Grade → people and reiterates replacing confusing old accounts. Grade view implemented with Grades1-3, scoped paginated students/teachers/parents/review experts, contextual Add student/editor, persistent grade on Refresh/save and stale-response/profile-name safeguards. Users Active default.38 fictional desktop/phone browser checks and both Vue builds pass; no actual student write.

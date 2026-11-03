@@ -1,3 +1,8 @@
+## 2026-11-04 - Hide workspace page scrollbars and restore local API
+
+- User expanded the request from Dashboard to all admin pages. Hidden browser page and sidebar scrollbars only while the hosted workspace is mounted; wheel, touch and keyboard scrolling remain enabled, and login retains its normal policy. No records, navigation, auth or layout clipping changed. Admin production build and 47 fictional desktop/phone browser checks pass across Dashboard, Users, Students, Schools, Results, Audit and Settings, with no page errors.
+- Local admin already targeted loopback API port5002 but its process was stopped. Restarted the existing ignored v1 runner with debug/reloader off; health and local-origin login preflight return200. No account operation or database mutation performed. Local admin is http://127.0.0.1:5173/login. Prior school-grade release69a6687 was pushed and verified in public bundle /assets/index-C-6Hvj_w.js; old-account cleanup SQL remains unapplied.
+
 ## 2026-11-04 - Organize Schools by grade and prepare a clean account setup
 
 - Schools → View grades now shows existing Grades1-3, with school/grade-filtered students and screening reviews. Roster includes assigned teacher and linked parent; reviews include assigned expert. Name lookups remain permission-gated; inactive labels are explicit, caches clear on profile change, and selection versions discard late responses. Pagination, error/retry and directory refresh preserve scope/current grade. No grade entity, endpoint, permission bypass or migration added.
