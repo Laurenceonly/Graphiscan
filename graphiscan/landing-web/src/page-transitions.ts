@@ -28,7 +28,7 @@ document.addEventListener('click', event => {
   if (!['http:', 'https:'].includes(url.protocol)) return;
   if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search) return;
   const localPage = url.origin === location.origin && ['/', '/about/', '/privacy/', '/download/'].includes(url.pathname);
-  if (!localPage && !link.hasAttribute('data-admin-link')) return;
+  if (!localPage) return;
   if (!curtain || reducedMotion.matches) return;
   event.preventDefault();
   if (navigating) return;
@@ -38,7 +38,7 @@ document.addEventListener('click', event => {
   departure = curtain.animate([{ opacity }, { opacity: 1 }], {
     duration: 280, easing: 'cubic-bezier(.23,1,.32,1)', fill: 'forwards',
   });
-  // Recover if navigation fails or is canceled, including a return from admin.
+  // Recover if navigation fails or is canceled.
   recovery = window.setTimeout(restorePage, 2500);
   void departure.finished.then(() => {
     // Persist the final opacity before releasing the animation's fill effect.

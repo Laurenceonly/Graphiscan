@@ -667,6 +667,8 @@ button{user-select:none}
 .info-page,.release-page{min-height:100svh;display:flex;flex-direction:column}
 .info-page .site-header,.release-page .site-header{width:100%;margin-block:0}
 .info-layout p,.info-layout .role-summary span,.download-page p{text-align:justify;text-justify:inter-word;hyphens:auto}
+/* Short release copy needs natural spacing at phone widths. */
+.download-page .download-description,.download-page .release-explanation,.download-page .download-availability{text-align:left;text-justify:auto;hyphens:none}
 .info-page main,.release-page main{flex:1}
 .info-layout.subpage{display:block;padding-top:52px;padding-bottom:80px}
 .info-intro{position:static;max-width:850px;margin-bottom:48px}
