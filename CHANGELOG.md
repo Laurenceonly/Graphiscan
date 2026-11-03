@@ -1,3 +1,9 @@
+## 2026-11-03 - Balance the hero and refine supporting pages on phones
+
+- Removed the hero label and vertically centered the mobile text group, retaining a full-screen hero and safe scrolling on short landscape screens. User reviewed and authorized publication. Desktop positioning retained.
+- Rechecked Download, About and Data use after the user reported a mobile Download issue. Fixed stretched short Download account/installation copy and stacked supporting-page footers on phones with readable link sizes. Long About/Data use paragraph justification retained.
+- Verification: strict TypeScript/Vite build passed. Local hero checks passed at eight phone/tablet/desktop sizes. All three supporting routes passed viewport/content-bound checks at320/360/375/390/414/600/768/820/1024/1440 widths; full-page phone/tablet captures inspected. Live pre-change Download at320/390/768 had no horizontal overflow or cut-off download button; the exact user-observed failure was not reproduced. These browser checks do not establish physical-device/APK or hosted role acceptance.
+
 ## 2026-11-03 - Remove public admin entry links
 
 - Removed Admin portal links and their environment/runtime hooks from all four public landing pages. Admin remains available through its dedicated subdomain. Updated the public site URL example to https://graphiscan.site and setup documentation. Short Download release copy now uses natural left alignment on small screens.
