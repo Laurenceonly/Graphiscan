@@ -1,3 +1,7 @@
+## Admin dashboard reload persistence - 2026-11-04
+
+User requested dashboard refresh preserve sign-in, with /login refresh unchanged, then authorized push. Task-only source stores a refresh token per browser tab/API origin; existing server refresh and current profile gates run before workspace display. Temporary outages offer retry, logout/revocation/role changes clear access.20 focused client tests,28 fictional browser assertions at1440/390, both Vue builds and mobile typecheck pass. Native default session behavior unchanged. No hosted credentials or records changed by tests. Verify deployment/live refresh after push; keep unrelated account/password/mobile/migration work separate.
+
 2026-10-28 approved landing checkpoint: user accepted the visible content fades and requested commit/push. Includes page transitions, content-triggered section fades, local admin-link fallback and prior publication notes. Latest strict build and desktop/mobile browser checks passed as recorded below. Production rollout of this revision remains to be verified after push; APK/device/full application work remains open.
 
 # Latest landing publication checkpoint - 2026-10-27

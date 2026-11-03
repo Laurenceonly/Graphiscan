@@ -1,3 +1,9 @@
+## 2026-11-04 - Preserve admin sign-in across dashboard reloads
+
+- Hosted admin opts into a tab-scoped refresh-token store keyed by API origin. Reloading /workspace rotates the token through the existing server refresh and reloads /me before revealing records. /login refresh remains signed out. No passwords, bearer tokens, profiles or records are saved in storage.
+- Delayed restoration stays on the workspace URL; temporary network/server failures retain the session and offer retry/sign-out. Logout, invalid/revoked refresh and changed workspace roles clear saved access. Existing server role/ownership/onboarding/revocation checks and no-write-replay behavior remain in place. Other clients keep default memory sessions; no migration or backend change.
+- Verification:20 shared-client tests,28 fictional Chromium assertions at1440/390 with no page errors, both web builds and mobile typecheck passed. Browser evidence covers reload/rotation, login refresh, delayed/offline retry, revocation, changed role and logout. Retry capture inspected. Hosted provider acceptance awaits deployment; browser storage denial falls back to memory. User authorized pushing this task only; unrelated local account/password/mobile changes remain unstaged.
+
 ## 2026-11-03 - Correct supporting-page text spacing and footer
 
 - User screenshots identified visibly stretched justified paragraphs and rejected the stacked phone footer. Changed About/Data use/Download paragraphs to natural left alignment without automatic hyphenation; restored the shared single-row footer. This supersedes the earlier retained-justification and stacked-footer decisions.

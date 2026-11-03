@@ -23,7 +23,7 @@ const routes = [
     component: HostedAccess
   },
   {
-    // Reuse the same view instance so hosted tokens stay in memory.
+    // Reuse the view across login/workspace; workspace reload revalidates its tab session.
     path: '/workspace',
     component: HostedAccess
   },

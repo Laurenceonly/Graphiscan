@@ -1,6 +1,7 @@
 <template>
   <div class="hosted-admin">
   <HostedAccess :allowed-roles="['admin','researcher']" :api-origin="origin"
+    persist-tab-session :resume-workspace="route.path === '/workspace'"
     workspace-label="" sign-in-title="Admin sign-in"
     sign-in-description="Sign in with your issued administrator or researcher account."
     :show-existing-sign-in="false" @access-state="syncAccessRoute">

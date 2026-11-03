@@ -1,11 +1,11 @@
-// Hosted bearer/refresh credentials live only in this closure, never web storage.
-export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now = Date.now } = {}) {
+// Bearers stay in memory. Web clients can opt into a tab-scoped refresh-token store.
+export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now = Date.now, sessionStore = null } = {}) {
   const trusted = new URL(origin)
   if (!['http:','https:'].includes(trusted.protocol) || trusted.username || trusted.password || trusted.pathname !== '/' || trusted.search || trusted.hash) throw new Error('Configure a public API origin.')
   const base = trusted.origin + '/api/v1'
   let session = null, generation = 0, refreshing = null
   const failure = (message, code, status) => Object.assign(new Error(message), { code, status })
-  function clear() { session = null; generation += 1 }
+  function clear() { session = null; generation += 1; sessionStore?.remove() }
   async function raw(path, { method = 'GET', body, form, image = false, timeout = 15000, token, envelope = false, idempotencyKey } = {}) {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), Math.min(Math.max(timeout,1000),120000))
@@ -38,6 +38,7 @@ export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now =
       clear(); throw failure('The session response was incomplete. Sign in again.', 'INVALID_SESSION', 401)
     }
     session = { access: data.access_token, refresh: data.refresh_token, expires: now() + data.expires_in * 1000 }
+    sessionStore?.write(session.refresh)
   }
   async function login(email, password) {
     clear()
@@ -50,10 +51,25 @@ export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now =
     const expected = generation, token = session.refresh
     const pending = (async () => {
       try { await retain(await raw('/session/refresh', { method: 'POST', body: { refresh_token: token } }), expected) }
-      catch (error) { if (expected === generation) clear(); throw error }
+      catch (error) {
+        // A temporary outage must not erase an opted-in tab's resumable session.
+        if (expected === generation && (!sessionStore || [401,403].includes(error.status) || error.code==='INVALID_SESSION')) clear()
+        throw error
+      }
     })()
     refreshing = pending
     try { await pending } finally { if (refreshing === pending) refreshing = null }
+  }
+  async function restore() {
+    if (!sessionStore) return false
+    if (!session) {
+      const token = sessionStore.read()
+      if (!token) return false
+      session = { access: null, refresh: token, expires: 0 }
+    }
+    // Always rotate/validate with the server before using a saved session.
+    await refresh()
+    return true
   }
   async function request(path, options = {}) {
     if (!path.startsWith('/') || path.startsWith('//') || path.includes('://') || path.includes('\\') || path.split('?')[0].split('/').some(part=>part==='.' || part==='..')) throw failure('Invalid request path.','INVALID_REQUEST',400)
@@ -80,5 +96,5 @@ export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now =
     clear()
     if (token) await raw('/session/logout', { method: 'POST', token })
   }
-  return { login, logout, clear, request }
+  return { login, logout, clear, request, restore }
 }
