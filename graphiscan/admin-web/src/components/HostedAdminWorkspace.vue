@@ -20,7 +20,7 @@
     <p v-if="message" role="status">{{ message }}</p>
 
     <div v-show="section === 'dashboard'" class="dashboard-page modern-admin-dashboard">
-      <AdminPageSkeleton v-if="(directory.busy && (!directory.studentsLoaded || !directory.schoolsLoaded)) || (screening.busy && !screening.loaded)" dashboard summary label="Loading dashboard" />
+      <AdminPageSkeleton v-if="(directory.busy && (!directory.studentsLoaded || !directory.schoolsLoaded)) || (screening.busy && !screening.loaded) || initialRecordsLoading" dashboard summary label="Loading dashboard" />
       <template v-else>
       <section class="dashboard-toolbar admin-page-header">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
@@ -91,9 +91,8 @@
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
     <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" :students-loading="directory.busy && !directory.studentsLoaded" @access-change="refreshAccount" @open-result="openResult" />
-    <KeepAlive>
-      <HostedAdminRecords v-if="section === 'users' || section === 'audit'" :key="section" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" />
-    </KeepAlive>
+    <HostedAdminRecords v-show="section === 'users'" ref="usersRef" kind="accounts" :active="section === 'users'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="recordSnapshot('accounts', $event)" />
+    <HostedAdminRecords v-show="section === 'audit'" ref="auditRef" kind="audit" :active="section === 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="recordSnapshot('audit', $event)" />
   </AdminLayout>
 </template>
 
@@ -114,7 +113,10 @@ import HostedAdminSettings from './HostedAdminSettings.vue'
 import HostedAdminRecords from './HostedAdminRecords.vue'
 const props = defineProps({ client: { type: Object, required: true }, profile: { type: Object, required: true }, refreshAccount: { type: Function, required: true }, signOut: { type: Function, required: true }, changePassword: { type: Function, required: true }, busy: Boolean, error: String, message: String })
 const emit = defineEmits(['navigation-block'])
-const section=ref('dashboard'), directoryRef=ref(null), screeningsRef=ref(null), pageTitle=ref(null), accountTitle=ref(null), recordsRef=ref(null), progressRef=ref(null), blocked=ref(false), navigationError=ref('')
+const section=ref('dashboard'), directoryRef=ref(null), screeningsRef=ref(null), pageTitle=ref(null), accountTitle=ref(null), usersRef=ref(null), auditRef=ref(null), progressRef=ref(null), blocked=ref(false), navigationError=ref('')
+const initialRecordReads=ref({accounts:false,audit:false})
+const initialRecordsLoading=computed(()=>!initialRecordReads.value.accounts || !initialRecordReads.value.audit)
+function recordSnapshot(kind,state){if(!state.allowed || state.loaded || (state.error && !state.busy))initialRecordReads.value[kind]=true}
 const directory=ref({ students:0, schools:0, studentsLoaded:false, schoolsLoaded:false, busy:true, error:'' })
 const screening=ref({ rows:[], loaded:false, busy:true, error:'', allowed:false })
 const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap},{key:'schools',label:'Schools',icon:School}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
@@ -164,7 +166,7 @@ async function navigate(target,closeMenu){
   navigationError.value='';section.value=target
   if(target==='students'||target==='schools')directoryRef.value?.showTab(target)
   closeMenu?.();await nextTick()
-  const heading=target==='dashboard'?pageTitle.value:target==='settings'?accountTitle.value:target==='results'?screeningsRef.value?.$el.querySelector('h2'):target==='progress'?progressRef.value?.$el.querySelector('h1'):target==='users'||target==='audit'?recordsRef.value?.$el.querySelector('h1'):directoryRef.value?.$el.querySelector('h2')
+  const heading=target==='dashboard'?pageTitle.value:target==='settings'?accountTitle.value:target==='results'?screeningsRef.value?.$el.querySelector('h2'):target==='progress'?progressRef.value?.$el.querySelector('h1'):target==='users'?usersRef.value?.$el.querySelector('h1'):target==='audit'?auditRef.value?.$el.querySelector('h1'):directoryRef.value?.$el.querySelector('h2')
   if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true})}
   window.scrollTo({top:0,behavior:'instant'});return true
 }

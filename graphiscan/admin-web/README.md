@@ -1,10 +1,12 @@
 # GraphiScan admin web
 
-Users/Audit navigation (2026-11-04): each list loads on its first visit and is
-retained while switching sections. Returning preserves rows, filters and paging
-without another skeleton or request. Refresh and filter submission fetch updated
-data. Editors close and password input clears when leaving; a changed profile
-resets lists and applies current permissions. Logout destroys the workspace cache.
+Users/Audit startup (2026-11-04): both authorized lists are requested during the
+initial workspace load, alongside directory and screening reads. The dashboard's
+initial skeleton waits for those first attempts to settle. Opening either list
+afterward preserves rows, filters and paging without another request. Refresh and
+filter submission fetch updated data. Editors/password input clear when leaving;
+profile changes apply current permissions. Logout destroys the in-memory lists.
+Failed initial reads settle into retry states rather than blocking startup forever.
 
 Initial loading (2026-11-04): Dashboard, Users, Students, Schools, Results and
 Audit Logs use a shared full content-area skeleton while their first reads are

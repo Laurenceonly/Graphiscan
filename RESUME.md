@@ -1,3 +1,7 @@
+## Users/Audit prefetched at startup - 2026-11-04
+
+User clarified initial loading should include Users/Audit, not just cache later visits. Both authorized record components now mount up front, Dashboard waits for first reads to settle, and first page visits use prefetched data. Refresh/filter reads remain explicit. Active-section cleanup replaces KeepAlive cleanup; profile/permission reset and logout remain. Admin build and40 fictional1440/390 checks pass including first-read failure/retry. Task-only publish; unrelated work stays local.
+
 ## Users/Audit revisits retained - 2026-11-04
 
 User requested removing repeat skeletons on Users/Audit navigation. Keyed cached components now retain rows/filters/paging; first-load placeholders and explicit Refresh remain. Editor cleanup runs on deactivation and permission/profile changes reset lists. Admin build and34 fictional1440/390 checks pass. Task-only publish; unrelated account/password/mobile work stays local.

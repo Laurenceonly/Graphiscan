@@ -67,17 +67,18 @@ import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
 import AccountAssignmentAccess from './AccountAssignmentAccess.vue'
-import { computed, nextTick, onBeforeUnmount, onDeactivated, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { Search, X } from 'lucide-vue-next'
-const props=defineProps({kind:{type:String,required:true},client:{type:Object,required:true},profile:{type:Object,required:true}})
-const emit=defineEmits(['access-change','navigation-block'])
+const props=defineProps({kind:{type:String,required:true},client:{type:Object,required:true},profile:{type:Object,required:true},active:{type:Boolean,default:true}})
+const emit=defineEmits(['access-change','navigation-block','snapshot'])
 const accounts=computed(()=>props.kind==='accounts')
 const allowed=computed(()=>props.profile.permissions?.includes(accounts.value?'accounts.manage':'audit.read'))
 const userRoles=['admin','teacher','parent','expert']
 const roles=computed(()=>accounts.value?userRoles:['admin','researcher','teacher','parent','expert','guest'])
 const statuses=['active','pending','disabled','rejected']
 const search=ref(''),role=ref(''),status=ref(''),rows=ref([]),cursor=ref(null),busy=ref(false),loaded=ref(false),error=ref(''),notice=ref('')
+watch(()=>({busy:busy.value,loaded:loaded.value,allowed:allowed.value,error:error.value}),value=>emit('snapshot',value),{immediate:true})
 const editor=ref(null),selected=ref(null),saving=ref(false),editorError=ref(''),reconcileNeeded=ref(false)
 const creating=ref(false),schools=ref([]),schoolsBusy=ref(false),schoolsError=ref('')
 const loadingEditor=ref(false),actionTarget=ref(null),actionKind=ref(''),actionStatus=ref(''),actionBlocked=ref(false)
@@ -157,7 +158,7 @@ async function openCreator(){
 function clearEditor(){editor.value?.close();selected.value=null;editorError.value='';draft.temporary_password='';creationKey=null}
 function closeEditor(){if(saving.value||reconcileNeeded.value||loadingEditor.value)return;clearEditor()}
 function onCancel(event){if(saving.value||reconcileNeeded.value||loadingEditor.value){event.preventDefault();return}clearEditor()}
-onDeactivated(clearEditor)
+watch(()=>props.active,active=>{if(!active)clearEditor()})
 async function saveAccount(){
   if(saving.value||loadingEditor.value||!selected.value)return
   if(reconcileNeeded.value){
