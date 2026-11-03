@@ -42,7 +42,9 @@ async page => {
     check(new URL(tab.url()).pathname==='/workspace','login opens dashboard');
     check(await tab.evaluate(()=>Object.keys(sessionStorage).filter(k=>k.startsWith('graphiscan:admin:refresh:')).length)===1,'tab has one saved refresh credential');
     refreshMode='slow';await tab.reload({waitUntil:'domcontentloaded'});
-    await tab.getByRole('heading',{name:'Opening your workspace…',exact:true}).waitFor();
+    await tab.getByRole('status',{name:'Loading workspace',exact:true}).waitFor();
+    check(await tab.getByText(/Opening your workspace|Checking your session/).count()===0,'restoration uses quiet workspace skeleton without session message');
+    await tab.screenshot({path:'output/playwright/admin-session-skeleton-'+width+'.png',fullPage:false});
     check(!await welcome().isVisible()&&new URL(tab.url()).pathname==='/workspace','restoration waits on dashboard route without login flash');
     await dashboard().waitFor();refreshMode='ok';
     check(logins===1&&refreshes===1&&reads>=2,'reload validates saved session and reloads profile');

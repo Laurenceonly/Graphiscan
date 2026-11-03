@@ -1,3 +1,7 @@
+## Quiet dashboard restoration - 2026-11-04
+
+User disliked the visible session-opening screen after0127f5a. Replaced it with dashboard skeleton and accessible nonvisual status; restore/retry/logout behavior unchanged. Admin build and30 fictional1440/390 browser checks pass; screenshots inspected. Task-only publication continues prior user-authorized session fix; unrelated edits stay local.
+
 ## Admin dashboard reload persistence - 2026-11-04
 
 User requested dashboard refresh preserve sign-in, with /login refresh unchanged, then authorized push. Task-only source stores a refresh token per browser tab/API origin; existing server refresh and current profile gates run before workspace display. Temporary outages offer retry, logout/revocation/role changes clear access.20 focused client tests,28 fictional browser assertions at1440/390, both Vue builds and mobile typecheck pass. Native default session behavior unchanged. No hosted credentials or records changed by tests. Verify deployment/live refresh after push; keep unrelated account/password/mobile/migration work separate.

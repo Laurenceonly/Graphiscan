@@ -1,5 +1,6 @@
 <template>
-  <component :is="action === 'ready' && $slots.workspace ? 'div' : 'main'" class="access-page" :class="{ 'access-login-layout': !profile && $slots.welcome, 'access-onboarding-layout': ['change_password','accept_privacy'].includes(action), 'access-privacy-layout': action === 'accept_privacy' }">
+  <slot v-if="restoring && !error && $slots.restoring" name="restoring" />
+  <component v-else :is="action === 'ready' && $slots.workspace ? 'div' : 'main'" class="access-page" :class="{ 'access-login-layout': !profile && $slots.welcome, 'access-onboarding-layout': ['change_password','accept_privacy'].includes(action), 'access-privacy-layout': action === 'accept_privacy' }">
     <slot v-if="action === 'ready' && $slots.workspace" name="workspace" :client="client" :profile="profile" :refresh-account="refreshAccount" :sign-out="signOut" :change-password="submitAccountPassword" :busy="busy" :error="error" :message="message" :navigation-block="setNavigationBlock" />
     <header v-if="!(action === 'ready' && $slots.workspace)" class="access-header"><RouterLink to="/login" class="access-brand"><slot name="brand">GraphiScan</slot></RouterLink><span v-if="workspaceLabel">{{ workspaceLabel }}</span></header>
     <section v-if="!(action === 'ready' && $slots.workspace)" class="access-content" :class="{ 'workspace-ready': action === 'ready', 'custom-signin': !profile && !restoring && $slots['sign-in'] }" aria-labelledby="access-title" :aria-busy="busy">
@@ -7,9 +8,9 @@
         <ol><li :aria-current="action === 'change_password' ? 'step' : undefined">Password</li><li :aria-current="action === 'accept_privacy' || action === 'agreement_unavailable' ? 'step' : undefined">Privacy notice</li><li :aria-current="action === 'ready' ? 'step' : undefined">Ready</li></ol>
       </nav>
       <template v-if="restoring">
-        <h1 id="access-title">{{ busy ? 'Opening your workspace…' : 'Your workspace could not be loaded' }}</h1>
-        <p v-if="busy" role="status">Checking your session. Please wait.</p>
-        <p v-else class="access-error" role="alert">{{ error }}</p>
+        <div v-if="!error" class="access-restore-placeholder" role="status" aria-label="Loading workspace"><span></span><span></span><span></span></div>
+        <h1 v-else id="access-title">Your workspace could not be loaded</h1>
+        <p v-if="error" class="access-error" role="alert">{{ error }}</p>
         <div v-if="!busy" class="access-actions access-restore-actions"><button type="button" class="access-primary" @click="restoreSession">Try again</button><button type="button" @click="signOut">Sign out</button></div>
       </template>
       <template v-else-if="!profile">
@@ -190,6 +191,9 @@ onBeforeRouteLeave(()=>{if(directoryPending.value){error.value='Confirm the pend
 .access-content{width:min(100%,640px);margin:56px auto 40px;background:#fff;border:1px solid #d4dfd8;border-radius:14px;padding:36px}
 .access-content.workspace-ready{width:min(100%,1080px)}
 .access-content .access-restore-actions .access-primary{margin-top:0}
+.access-restore-placeholder{display:grid;gap:16px;padding:12px 0}
+.access-restore-placeholder span{height:16px;border-radius:5px;background:#e6ebef}
+.access-restore-placeholder span:last-child{width:65%}
 .password-setup-symbol,.password-signin-note{display:none}.password-setup-field{display:contents}
 .access-content h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}.access-content h2{font-size:19px;line-height:1.4;margin:24px 0 8px}.access-content p{margin:0 0 24px}
 .access-content form{display:flex;flex-direction:column;gap:10px;margin-top:28px}.access-content label{font-weight:600;margin-top:12px}
