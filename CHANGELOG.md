@@ -1,3 +1,9 @@
+## 2026-11-03 - Correct supporting-page text spacing and footer
+
+- User screenshots identified visibly stretched justified paragraphs and rejected the stacked phone footer. Changed About/Data use/Download paragraphs to natural left alignment without automatic hyphenation; restored the shared single-row footer. This supersedes the earlier retained-justification and stacked-footer decisions.
+- Made mobile reading spacing consistent:20px panel padding,16px card gaps, clearer heading/body spacing and aligned introductions. Download now has a slightly smaller phone preview and compact one-column installation steps with numbers beside the content at widths up to600px. No factual copy, release availability or hero behavior changed.
+- Verification: strict TypeScript/Vite production build passed. Final local browser run passed229 checks across all three supporting pages at14 phone/landscape/tablet/desktop sizes, including natural text alignment, single-row visible footer links, content alignment, viewport fit, disabled unreleased APK and normal-motion navigation/Back-to-home recovery; no page errors. Full-page screenshots visually inspected. Browser evidence does not establish physical-device or APK acceptance.
+
 ## 2026-11-03 - Balance the hero and refine supporting pages on phones
 
 - Removed the hero label and vertically centered the mobile text group, retaining a full-screen hero and safe scrolling on short landscape screens. User reviewed and authorized publication. Desktop positioning retained.
