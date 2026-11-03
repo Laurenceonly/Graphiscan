@@ -175,6 +175,18 @@ async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh
 </script>
 
 <style scoped>
+/* Hide workspace chrome without preventing wheel, touch or keyboard scrolling. */
+:global(html:has(.hosted-workspace)),
+:global(body:has(.hosted-workspace)) {
+  scrollbar-width:none;
+  scrollbar-gutter:auto;
+}
+:global(html:has(.hosted-workspace)::-webkit-scrollbar),
+:global(body:has(.hosted-workspace)::-webkit-scrollbar),
+.hosted-workspace :deep(.sidebar::-webkit-scrollbar) {
+  display:none;
+}
+.hosted-workspace :deep(.sidebar) { scrollbar-width:none; }
 .hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--page-bg); font:400 14px/1.55 var(--font-ui); color:var(--text); }
 /* Short sections share the same full-height canvas as populated pages. */
 .hosted-workspace :deep(.main-panel) { display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; background:var(--page-bg); }
