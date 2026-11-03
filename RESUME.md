@@ -1,3 +1,7 @@
+## Users/Audit revisits retained - 2026-11-04
+
+User requested removing repeat skeletons on Users/Audit navigation. Keyed cached components now retain rows/filters/paging; first-load placeholders and explicit Refresh remain. Editor cleanup runs on deactivation and permission/profile changes reset lists. Admin build and34 fictional1440/390 checks pass. Task-only publish; unrelated account/password/mobile work stays local.
+
 ## Full content-area loaders and matched logo - 2026-11-04
 
 User requested initial skeletons across admin content except navigation and complained about refresh logo size. Implemented shared AdminPageSkeleton across initial data pages, conditional Progress/no Settings loader, refresh data retention and exact shared AdminWorkspaceBrand geometry.67 fictional1440/390 browser checks and both web builds pass; screenshots inspected. Publish task-only UI slice; unrelated edits remain local. No accounts/permissions/credentials changed.

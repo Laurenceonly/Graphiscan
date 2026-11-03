@@ -91,7 +91,9 @@
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
     <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" :students-loading="directory.busy && !directory.studentsLoaded" @access-change="refreshAccount" @open-result="openResult" />
-    <HostedAdminRecords v-if="section === 'users' || section === 'audit'" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" />
+    <KeepAlive>
+      <HostedAdminRecords v-if="section === 'users' || section === 'audit'" :key="section" ref="recordsRef" :kind="section === 'users' ? 'accounts' : 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" />
+    </KeepAlive>
   </AdminLayout>
 </template>
 

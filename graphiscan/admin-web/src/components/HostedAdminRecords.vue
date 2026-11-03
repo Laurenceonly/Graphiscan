@@ -67,7 +67,7 @@ import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
 import AccountAssignmentAccess from './AccountAssignmentAccess.vue'
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onDeactivated, onMounted, reactive, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { Search, X } from 'lucide-vue-next'
 const props=defineProps({kind:{type:String,required:true},client:{type:Object,required:true},profile:{type:Object,required:true}})
@@ -157,6 +157,7 @@ async function openCreator(){
 function clearEditor(){editor.value?.close();selected.value=null;editorError.value='';draft.temporary_password='';creationKey=null}
 function closeEditor(){if(saving.value||reconcileNeeded.value||loadingEditor.value)return;clearEditor()}
 function onCancel(event){if(saving.value||reconcileNeeded.value||loadingEditor.value){event.preventDefault();return}clearEditor()}
+onDeactivated(clearEditor)
 async function saveAccount(){
   if(saving.value||loadingEditor.value||!selected.value)return
   if(reconcileNeeded.value){

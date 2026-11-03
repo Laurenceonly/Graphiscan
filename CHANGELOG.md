@@ -1,3 +1,8 @@
+## 2026-11-04 - Retain Users and Audit lists across navigation
+
+- User requested removing repeated Users/Audit skeletons when returning to those sections. Cache the two keyed record components within the workspace so rows, filters and paging remain in memory; first visit still loads normally. Navigation no longer refetches, while Refresh/filter submission still read fresh records. Deactivation closes the editor and clears password input; profile changes still reset data/permissions and logout destroys cache. Local unpushed credential-handover cleanup is preserved separately.
+- Admin build and34 fictional Chromium assertions at1440/390 pass, covering first reads, cached returns/no extra requests, filter retention, explicit refresh, editor controls, permission-loss clearing and viewport fit; no page errors. Updated prior loading fixture for retained navigation. Only this UI slice is published; no server/account/credential writes performed.
+
 ## 2026-11-04 - Consistent initial page loading and stable refresh branding
 
 - Added shared AdminPageSkeleton for full content-area first reads on Dashboard, Users, Students, Schools, Results and Audit Logs. Progress uses it only while the student list is pending; selected history/details keep their local loaders. Settings has no artificial loader. Navigation remains mounted and available; existing records remain during same-query refresh and failures resolve to retry/error states. No requests or permissions changed.
