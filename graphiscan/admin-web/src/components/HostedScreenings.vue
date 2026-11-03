@@ -1,5 +1,7 @@
 <template>
   <section class="hosted-screenings" aria-labelledby="screenings-title" :aria-busy="busy">
+    <AdminPageSkeleton v-if="canManage && busy && !loaded && !detail" summary filters label="Loading screening results" />
+    <template v-else>
     <header class="admin-page-header"><h2 id="screenings-title">Screening results</h2><RefreshButton v-if="canManage" :busy="busy" @click="loadList(false)" /></header>
     <p v-if="!canManage">Screening records require permission to manage assignments for the relevant school.</p>
     <template v-else>
@@ -67,11 +69,13 @@
         </form>
       </section>
     </template>
+    </template>
   </section>
 </template>
 
 <script setup>
 import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'

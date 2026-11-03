@@ -1,5 +1,13 @@
 # GraphiScan admin web
 
+Initial loading (2026-11-04): Dashboard, Users, Students, Schools, Results and
+Audit Logs use a shared full content-area skeleton while their first reads are
+pending. Progress uses it while the student picker list loads; selected history
+and details retain their local loading states. Settings renders immediately.
+Navigation remains available; already-loaded data stays visible during refresh.
+The refresh shell and sidebar share the same36px logo/19px wordmark component,
+240px desktop sidebar and1100px responsive breakpoint.
+
 Current session behavior (2026-11-04): refreshing `/workspace` revalidates and
 restores the admin's saved tab session; refreshing `/login` stays signed out.
 Only the refresh token is saved in sessionStorage. Access tokens stay in memory.

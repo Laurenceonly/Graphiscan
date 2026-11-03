@@ -1,5 +1,7 @@
 <template>
   <section class="hosted-progress compact-page">
+    <AdminPageSkeleton v-if="studentsLoading" filters label="Loading progress" />
+    <template v-else>
     <header class="page-header compact-header admin-page-header"><h1 tabindex="-1">Student Progress</h1></header>
     <section class="panel-card compact-panel">
       <h2>Screening history</h2>
@@ -17,10 +19,12 @@
       </tr></tbody></table></div>
       <button v-if="cursor" class="soft-action-btn" type="button" :disabled="busy" @click="loadHistory(true)">Load more history</button>
     </section>
+    </template>
   </section>
 </template>
 <script setup>
 import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { formatReportType } from '../utils/hosted-screenings.mjs'
 const props=defineProps({client:{type:Object,required:true},profile:{type:Object,required:true},students:{type:Array,default:()=>[]},studentsLoading:Boolean})

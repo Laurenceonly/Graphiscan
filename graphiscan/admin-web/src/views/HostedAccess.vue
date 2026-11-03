@@ -7,8 +7,8 @@
     :show-existing-sign-in="false" @access-state="syncAccessRoute">
     <template #restoring>
       <div class="admin-restore-skeleton" role="status" aria-label="Loading workspace" aria-busy="true">
-        <aside class="restore-rail" aria-hidden="true"><div class="restore-brand"><img :src="brandLogo" alt="" width="36" height="36" /><span>GraphiScan</span></div><span v-for="row in 7" :key="row" class="restore-nav-line"></span></aside>
-        <main class="restore-main" aria-hidden="true"><div class="restore-topbar"></div><div class="restore-heading"></div><div class="restore-summary"><span v-for="card in 4" :key="card"></span></div><AdminLoadingSkeleton dashboard :rows="3" label="" /></main>
+        <aside class="restore-rail" aria-hidden="true"><div class="restore-brand"><AdminWorkspaceBrand /></div><span v-for="row in 7" :key="row" class="restore-nav-line"></span></aside>
+        <main class="restore-main" aria-hidden="true"><div class="restore-topbar"></div><div class="restore-content"><AdminPageSkeleton dashboard summary /></div></main>
       </div>
     </template>
     <template #brand><img class="admin-brand-logo" :src="brandLogo" alt="" width="56" height="56" /><span>Graphi<span class="admin-brand-accent">Scan</span></span></template>
@@ -25,7 +25,8 @@
 </template>
 <script setup>
 import RefreshButton from '../../../shared/RefreshButton.vue'
-import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
+import AdminWorkspaceBrand from '../components/AdminWorkspaceBrand.vue'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HostedAccess from '../../../shared/HostedAccess.vue'
@@ -48,18 +49,16 @@ watch(() => route.path, () => syncAccessRoute())
 </script>
 
 <style scoped>
-.admin-restore-skeleton{min-height:100dvh;display:grid;grid-template-columns:256px minmax(0,1fr);background:var(--page-bg);color:var(--text);font-family:var(--font-ui)}
-.restore-rail{padding:32px 24px;background:var(--white);border-right:1px solid var(--border)}
-.restore-brand{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:700;margin-bottom:48px}
+.admin-restore-skeleton{min-height:100dvh;display:grid;grid-template-columns:240px minmax(0,1fr);background:var(--page-bg);color:var(--text);font:400 14px/1.55 var(--font-ui)}
+.restore-rail{padding:22px 16px;background:var(--sidebar-bg);border-right:1px solid var(--border)}
+.restore-brand{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 6px 20px;margin-bottom:24px}
 .restore-nav-line{display:block;width:70%;height:14px;margin:28px 0;background:var(--border);border-radius:5px;opacity:.55}
-.restore-main{min-width:0;padding:0 32px 32px}
-.restore-topbar{height:72px;border-bottom:1px solid var(--border);margin-bottom:32px}
-.restore-heading{height:28px;width:172px;background:var(--border);border-radius:5px;margin-bottom:28px}
-.restore-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
-.restore-summary span{height:108px;background:var(--white);border:1px solid var(--border);border-radius:12px}
-.admin-restore-skeleton :deep(.loading-label){display:none}
-@media(max-width:980px){.admin-restore-skeleton{grid-template-columns:minmax(0,1fr)}.restore-rail{display:none}.restore-main{padding:0 24px 24px}}
-@media(max-width:600px){.restore-main{padding:0 16px 24px}.restore-topbar{height:64px;margin-bottom:24px}.restore-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.restore-summary span{height:88px}}
+.restore-main{min-width:0}
+.restore-topbar{height:72px;border-bottom:1px solid var(--border);background:var(--white)}
+.restore-content{max-width:1480px;margin:0 auto;padding:28px 32px 36px}
+@media(max-width:1250px) and (min-width:1101px){.restore-content{padding:24px}}
+@media(max-width:1100px){.admin-restore-skeleton{grid-template-columns:minmax(0,1fr)}.restore-rail{display:none}}
+@media(max-width:700px){.restore-content{padding:24px 16px 32px}.restore-topbar{height:64px}}
 /* Keep the shared account flow intact; adopt the admin's existing visual system. */
 .hosted-admin:has(.hosted-workspace) :deep(.access-page) { padding: 0; }
 .hosted-admin:has(.hosted-workspace) :deep(:is(.directory,.hosted-screenings)) { margin:0; padding:0; border:0; }

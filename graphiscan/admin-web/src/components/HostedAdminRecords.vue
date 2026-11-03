@@ -1,5 +1,7 @@
 <template>
   <section class="hosted-admin-records" :aria-labelledby="kind + '-title'">
+    <AdminPageSkeleton v-if="allowed && busy && !loaded && !selected" :summary="accounts" filters :label="accounts ? 'Loading users' : 'Loading audit logs'" />
+    <template v-else>
     <header class="page-header hosted-page-header admin-page-header"><h1 :id="kind + '-title'" tabindex="-1">{{ accounts ? 'Users' : 'Audit Logs' }}</h1><div class="account-page-actions"><RefreshButton :busy="busy" :disabled="!allowed || saving || reconcileNeeded || loadingEditor" @click="load(false)" /><button v-if="accounts && allowed" type="button" class="primary-action-btn" :disabled="busy || saving || reconcileNeeded || loadingEditor" @click="openCreator">Add user</button></div></header>
     <AdminSummaryCards v-if="allowed && accounts" :items="cards.map(card => ({label:card.label,loading:busy && !loaded,value:loaded ? card.count : '—'}))" label="Loaded account counts" />
     <section class="clean-panel hosted-record-panel">
@@ -55,10 +57,12 @@
     </dialog>
     <AccountActionDialog v-if="actionTarget && actionKind !== 'assignments'" :client="client" :target="actionTarget" :action="actionKind" :status="actionStatus" @close="closeAction" @completed="actionCompleted" @navigation-block="actionBlocked=$event" @access-change="emit('access-change')" />
     <AccountAssignmentAccess v-if="actionTarget && actionKind === 'assignments'" :client="client" :target="actionTarget" :profile="profile" :schools="editorSchools" :school-note="schoolsError" @close="closeAction" @completed="actionCompleted" @navigation-block="actionBlocked=$event" @access-change="emit('access-change')" />
+    </template>
   </section>
 </template>
 <script setup>
 import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
+import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
 import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
 import AccountActionDialog from './AccountActionDialog.vue'
