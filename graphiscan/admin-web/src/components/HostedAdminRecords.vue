@@ -77,7 +77,7 @@ const allowed=computed(()=>props.profile.permissions?.includes(accounts.value?'a
 const userRoles=['admin','teacher','parent','expert']
 const roles=computed(()=>accounts.value?userRoles:['admin','researcher','teacher','parent','expert','guest'])
 const statuses=['active','pending','disabled','rejected']
-const search=ref(''),role=ref(''),status=ref(''),rows=ref([]),cursor=ref(null),busy=ref(false),loaded=ref(false),error=ref(''),notice=ref('')
+const search=ref(''),role=ref(''),status=ref(props.kind==='accounts'?'active':''),rows=ref([]),cursor=ref(null),busy=ref(false),loaded=ref(false),error=ref(''),notice=ref('')
 watch(()=>({busy:busy.value,loaded:loaded.value,allowed:allowed.value,error:error.value}),value=>emit('snapshot',value),{immediate:true})
 const editor=ref(null),selected=ref(null),saving=ref(false),editorError=ref(''),reconcileNeeded=ref(false)
 const creating=ref(false),schools=ref([]),schoolsBusy=ref(false),schoolsError=ref('')
@@ -189,7 +189,7 @@ async function saveAccount(){
   }finally{saving.value=false}
 }
 watch(()=>props.profile,()=>{reset();if(allowed.value)load(false)})
-watch(()=>props.kind,()=>{search.value='';role.value='';status.value='';reset();if(allowed.value)load(false)})
+watch(()=>props.kind,()=>{search.value='';role.value='';status.value=accounts.value?'active':'';reset();if(allowed.value)load(false)})
 const blocked=computed(()=>saving.value||reconcileNeeded.value||loadingEditor.value||actionBlocked.value)
 watch(blocked,value=>emit('navigation-block',value),{immediate:true})
 onBeforeRouteLeave(()=>!blocked.value)

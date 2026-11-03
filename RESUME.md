@@ -1,3 +1,9 @@
+## School-grade UI and clean-start handoff - 2026-11-04
+
+User wants School → Grade → people and reiterates replacing confusing old accounts. Grade view implemented with Grades1-3, scoped paginated students/teachers/parents/review experts, contextual Add student/editor, persistent grade on Refresh/save and stale-response/profile-name safeguards. Users Active default.38 fictional desktop/phone browser checks and both Vue builds pass; no actual student write.
+
+Private owner-run .local-tools/clean-admin-start.sql snapshots exact six old IDs/revisions, keeps admin@gmail.com, disables old accounts without deleting any data/history, adds global school/student assignment scope to the replacement and republishes unchanged professional notice as graphiscan-privacy-v2-20261104 for all properly issued accounts.24 isolated actual-trigger PostgreSQL checks pass. NOT executed hosted. Fresh sign-in and explicit notice acceptance required after operator execution. Existing profile School management grant is independently verified installed. Async question about preserving vs removing demo records remains unanswered; handoff preserves them and never deletes. Never run broad deletion or invent consent.
+
 ## Users/Audit prefetched at startup - 2026-11-04
 
 User clarified initial loading should include Users/Audit, not just cache later visits. Both authorized record components now mount up front, Dashboard waits for first reads to settle, and first page visits use prefetched data. Refresh/filter reads remain explicit. Active-section cleanup replaces KeepAlive cleanup; profile/permission reset and logout remain. Admin build and40 fictional1440/390 checks pass including first-read failure/retry. Task-only publish; unrelated work stays local.

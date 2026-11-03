@@ -1,5 +1,16 @@
 # GraphiScan admin web
 
+Schools and grades (2026-11-04): Schools → View grades opens Grades1-3 for the
+selected school. Student and screening lists use both school and grade filters
+with independent pagination/retry. The roster shows assigned teachers, linked
+parents/guardians and per-screening experts; inactive account labels are explicit
+when account detail access is available. It represents accessible records, not a
+complete staff directory. Name lookups require accounts.manage and clear on
+profile changes. Add student prefills the school/grade and uses the existing
+authorized editor/API. Saving or Refresh reloads the selected grade. Grade values
+remain the existing1-3 constraint; no separate grade table or migration is added.
+Users defaults to Active; All statuses/Disabled remain available for history.
+
 Users/Audit startup (2026-11-04): both authorized lists are requested during the
 initial workspace load, alongside directory and screening reads. The dashboard's
 initial skeleton waits for those first attempts to settle. Opening either list
