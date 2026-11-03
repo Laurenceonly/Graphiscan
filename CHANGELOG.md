@@ -1,3 +1,8 @@
+## 2026-11-03 - Remove public admin entry links
+
+- Removed Admin portal links and their environment/runtime hooks from all four public landing pages. Admin remains available through its dedicated subdomain. Updated the public site URL example to https://graphiscan.site and setup documentation. Short Download release copy now uses natural left alignment on small screens.
+- Verification: strict landing TypeScript/Vite production build passed; 216 responsive checks across four routes and eight viewport sizes, 17 spacing checks, 36 footer/admin-link checks and three navigation/Back recovery checks passed using local browser fixtures. User reviewed the local footer and authorized publication. These checks do not establish APK readiness or the full hosted role workflow.
+
 ## 2026-10-28 - Review admin responsiveness and show school people
 
 - Rechecked all eight hosted admin sections and key flows with fictional responses. Added View people to each school, showing paginated students with their assigned teachers and screening records with their assigned experts. Names resolve through the existing account read when allowed; otherwise account IDs are shown. The lists use existing school-scoped reads and retain their server-side authorization, pagination and error states. Refresh reloads the open detail. Teachers listed are those assigned to the students shown; experts are assigned to individual screenings, not to a school roster. The feature does not claim to show a complete staff roster.

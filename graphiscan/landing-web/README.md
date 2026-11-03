@@ -1,5 +1,16 @@
 # GraphiScan public website
 
+Custom domains (2026-11-03): user confirmed the landing at
+https://graphiscan.site and admin at https://admin.graphiscan.site work.
+The landing project's Production environment should set
+VITE_SITE_URL=https://graphiscan.site, then redeploy to update canonical links.
+At the user's request, Admin portal links are removed from all public pages.
+Administration uses its separate subdomain; VITE_ADMIN_URL is no longer read
+and can be removed from the landing project's environment settings.
+APK URL remains blank until a signed release is published and device-tested.
+Page availability was user-confirmed; this note does not establish independent
+authenticated/native/responsive verification or an environment update.
+
 Standalone Vite + TypeScript multi-page website. Existing admin, Expo, API and
 database applications are unchanged. No protected API requests or analytics.
 
@@ -64,7 +75,6 @@ Copy `.env.example` to ignored `.env.local` and set only public values:
 | VITE_APP_VERSION | Optional actual release version |
 | VITE_APK_SIZE | Optional human-readable file size |
 | VITE_RELEASE_DATE | Optional actual release date |
-| VITE_ADMIN_URL | Existing public HTTPS admin sign-in URL; blank hides link |
 | VITE_SITE_URL | Final public HTTPS website origin; blank omits canonical metadata |
 
 Publish a signed APK to the chosen release host, verify its checksum/signing,

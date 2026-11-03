@@ -98,9 +98,6 @@ document.addEventListener('keydown', event => {
 });
 matchMedia('(min-width: 1001px)').addEventListener('change', () => { void closeMenu(false, false); });
 
-document.querySelectorAll<HTMLAnchorElement>('[data-admin-link]').forEach(link => {
-  if (site.adminUrl) { link.href = site.adminUrl; link.hidden = false; link.rel = 'noopener noreferrer'; }
-});
 if (site.publicUrl) {
   const canonical = document.createElement('link'); canonical.rel = 'canonical';
   canonical.href = new URL(location.pathname, site.publicUrl).href; document.head.append(canonical);
