@@ -667,8 +667,13 @@ button{user-select:none}
 .info-page,.release-page{min-height:100svh;display:flex;flex-direction:column}
 .info-page .site-header,.release-page .site-header{width:100%;margin-block:0}
 .info-layout p,.info-layout .role-summary span,.download-page p{text-align:justify;text-justify:inter-word;hyphens:auto}
+/* Center the phone hero copy within a full-screen canvas, clear of the header. */
+@media(max-width:760px){
+  .hero{display:flex;align-items:center;height:auto;min-height:100svh}
+  .hero-content{position:relative;top:auto;left:auto;right:auto;transform:none;width:100%;max-width:none;padding:104px max(var(--gutter),env(safe-area-inset-right)) 56px max(var(--gutter),env(safe-area-inset-left))}
+}
 /* Short release copy needs natural spacing at phone widths. */
-.download-page .download-description,.download-page .release-explanation,.download-page .download-availability{text-align:left;text-justify:auto;hyphens:none}
+.download-page .download-description,.download-page .release-explanation,.download-page .download-availability,.download-page .download-requirement,.download-page .install-note{text-align:left;text-justify:auto;hyphens:none}
 .info-page main,.release-page main{flex:1}
 .info-layout.subpage{display:block;padding-top:52px;padding-bottom:80px}
 .info-intro{position:static;max-width:850px;margin-bottom:48px}
@@ -751,3 +756,10 @@ button{user-select:none}
 html.fonts-pending .page-curtain{animation:none;opacity:1}
 
 html.font-fallback{font-family:'Segoe UI',sans-serif}
+
+/* Give supporting-page footer links room instead of shrinking them on phones. */
+@media(max-width:600px){
+  .info-page .site-footer.wrap,.release-page .site-footer.wrap{flex-direction:column;align-items:flex-start;gap:8px;padding-inline:max(var(--gutter),env(safe-area-inset-left)) max(var(--gutter),env(safe-area-inset-right))}
+  .info-page .footer-copyright,.release-page .footer-copyright{font-size:.875rem}
+  .info-page .site-footer nav,.release-page .site-footer nav{margin-left:0;gap:20px;font-size:.9375rem;overflow:visible;flex-wrap:wrap}
+}
