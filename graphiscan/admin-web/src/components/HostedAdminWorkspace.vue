@@ -81,7 +81,7 @@
 
     <!-- Keep existing editors mounted: switching sections must not discard drafts or requests. -->
     <section v-show="section === 'students' || section === 'schools'" class="workspace-record-panel">
-      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event"><template #school-people="{ school, refreshKey, close }"><HostedSchoolPeople :key="school.school_id + '-' + refreshKey" :school="school" :client="client" :profile="profile" @close="close" @access-change="refreshAccount" /></template></HostedDirectory>
+      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event"><template #school-people="{ school, refreshKey, close, canAddStudent, addStudent, viewStudent }"><HostedSchoolPeople :key="school.school_id" :school="school" :client="client" :profile="profile" :refresh-key="refreshKey" :can-add-student="canAddStudent" @close="close" @access-change="refreshAccount" @add-student="addStudent" @view-student="viewStudent" /></template></HostedDirectory>
     </section>
     <section v-show="section === 'results'" class="workspace-record-panel">
       <HostedScreenings ref="screeningsRef" :client="client" :profile="profile" @access-change="refreshAccount" @snapshot="screening = $event" />
