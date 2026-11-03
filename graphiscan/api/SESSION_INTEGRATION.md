@@ -1,5 +1,31 @@
 # Hosted sessions and client onboarding slice
 
+## Admin dashboard reload persistence (2026-11-04)
+
+The hosted admin opts into a refresh-token store in browser sessionStorage, keyed
+by API origin. Access tokens, passwords, profiles and records are not persisted.
+Reloading `/workspace` rotates the saved refresh token through the existing API,
+then fetches current `/me` before opening the workspace or its onboarding gate.
+The loading state keeps the workspace URL; network/server failures offer Try
+again and Sign out without discarding the tab session. Invalid/revoked credentials
+and changed roles return to sign-in. Sign-out clears the saved token even if its
+server request fails; generation checks prevent late responses restoring it.
+
+Opening/reloading `/login` does not restore a session or retain unsent form inputs.
+Storage is scoped to the browser tab, with no permanent remember-me option. If
+browser storage is blocked, sign-in remains usable in memory but reload cannot
+restore it. Server role, ownership, privacy/password and revocation checks remain
+authoritative. Mutation requests are not replayed to recover after reload.
+
+Persistence is opt-in for the admin wrapper. Retained user web and Expo clients
+keep their existing default memory behavior. No API endpoint or migration changes.
+The earlier memory-only admin paragraphs below describe the original checkpoint.
+
+Local verification:20 shared-client tests;28 fictional Chromium checks at1440/390
+cover dashboard reload/rotation, login refresh, delayed restore, offline retry,
+revocation, role change and logout; no page errors. Both Vue builds and mobile
+typecheck pass. Hosted provider refresh and deployment acceptance remain separate.
+
 Implemented locally on 2026-10-20. This slice connects a hosted account to an
 actual Vue onboarding screen in both apps. It does not migrate student/result
 resources or map Supabase UUIDs onto legacy numeric MySQL accounts.

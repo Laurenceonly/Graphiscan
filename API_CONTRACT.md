@@ -78,8 +78,10 @@ contract operations in total. The server verifies returned identity and current
 profile/access before returning response-only token fields. `/session/logout`
 requires a verified bearer but bypasses availability/onboarding gates, commits
 durable local-session denial with unapplied migration 008, then calls provider
-local sign-out. The new `/access` Vue flow stores tokens in memory only; it may
-retry a read once after refresh and never replays password/acceptance writes.
+local sign-out. The shared client defaults to memory-only tokens. The hosted admin
+opts into tab-scoped refresh-token storage for workspace reloads, validating through
+server refresh and current /me before restoring access. Login-page refresh stays
+signed out. Reads may retry once after refresh; writes are never replayed.
 Existing resource clients remain on their MySQL APIs; this is not UUID mapping
 or a full cutover. See [session integration](graphiscan/api/SESSION_INTEGRATION.md).
 

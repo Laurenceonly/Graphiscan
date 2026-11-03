@@ -2,11 +2,17 @@
   <component :is="action === 'ready' && $slots.workspace ? 'div' : 'main'" class="access-page" :class="{ 'access-login-layout': !profile && $slots.welcome, 'access-onboarding-layout': ['change_password','accept_privacy'].includes(action), 'access-privacy-layout': action === 'accept_privacy' }">
     <slot v-if="action === 'ready' && $slots.workspace" name="workspace" :client="client" :profile="profile" :refresh-account="refreshAccount" :sign-out="signOut" :change-password="submitAccountPassword" :busy="busy" :error="error" :message="message" :navigation-block="setNavigationBlock" />
     <header v-if="!(action === 'ready' && $slots.workspace)" class="access-header"><RouterLink to="/login" class="access-brand"><slot name="brand">GraphiScan</slot></RouterLink><span v-if="workspaceLabel">{{ workspaceLabel }}</span></header>
-    <section v-if="!(action === 'ready' && $slots.workspace)" class="access-content" :class="{ 'workspace-ready': action === 'ready', 'custom-signin': !profile && $slots['sign-in'] }" aria-labelledby="access-title" :aria-busy="busy">
+    <section v-if="!(action === 'ready' && $slots.workspace)" class="access-content" :class="{ 'workspace-ready': action === 'ready', 'custom-signin': !profile && !restoring && $slots['sign-in'] }" aria-labelledby="access-title" :aria-busy="busy">
       <nav v-if="profile" aria-label="Account setup progress" class="access-steps">
         <ol><li :aria-current="action === 'change_password' ? 'step' : undefined">Password</li><li :aria-current="action === 'accept_privacy' || action === 'agreement_unavailable' ? 'step' : undefined">Privacy notice</li><li :aria-current="action === 'ready' ? 'step' : undefined">Ready</li></ol>
       </nav>
-      <template v-if="!profile">
+      <template v-if="restoring">
+        <h1 id="access-title">{{ busy ? 'Opening your workspace…' : 'Your workspace could not be loaded' }}</h1>
+        <p v-if="busy" role="status">Checking your session. Please wait.</p>
+        <p v-else class="access-error" role="alert">{{ error }}</p>
+        <div v-if="!busy" class="access-actions access-restore-actions"><button type="button" class="access-primary" @click="restoreSession">Try again</button><button type="button" @click="signOut">Sign out</button></div>
+      </template>
+      <template v-else-if="!profile">
         <slot name="sign-in" :fields="signInFields" :busy="busy" :error="error" :message="message" :submit="signIn">
         <h1 id="access-title">{{ signInTitle }}</h1>
         <p>{{ signInDescription }}</p>
@@ -69,18 +75,18 @@
         <HostedDirectory v-if="action === 'ready'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="directoryPending = $event" />
         <slot v-if="action === 'ready'" name="records" :client="client" :profile="profile" :refresh-account="refreshAccount" />
       </template>
-      <p v-if="error && (profile || !$slots['sign-in'])" class="access-error" role="alert">{{ error }}</p>
+      <p v-if="error && !restoring && (profile || !$slots['sign-in'])" class="access-error" role="alert">{{ error }}</p>
       <p v-if="message && (profile || !$slots['sign-in'])" class="access-message" role="status">{{ message }}</p>
-      <div v-if="profile" class="access-actions"><slot name="refresh-action" :busy="busy" :refresh="refreshAccount"><button type="button" :disabled="busy" @click="refreshAccount">Refresh account</button></slot><button type="button" :disabled="busy" @click="signOut">Sign out</button></div>
-      <p class="access-session-note">For your privacy, reloading this page requires signing in again.</p>
+      <div v-if="profile && !restoring" class="access-actions"><slot name="refresh-action" :busy="busy" :refresh="refreshAccount"><button type="button" :disabled="busy" @click="refreshAccount">Refresh account</button></slot><button type="button" :disabled="busy" @click="signOut">Sign out</button></div>
     </section>
-    <slot v-if="!profile" name="welcome" />
+    <slot v-if="!profile && !restoring" name="welcome" />
   </component>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, reactive, ref, toRefs, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { RouterLink, onBeforeRouteLeave } from 'vue-router'
+import { createTabSessionStore } from './tab-session.mjs'
 import { createHostedClient } from './hosted-client.mjs'
 import HostedDirectory from './HostedDirectory.vue'
 const props = defineProps({
@@ -89,25 +95,44 @@ const props = defineProps({
   workspaceLabel: { type: String, default: 'Account access' },
   signInTitle: { type: String, default: 'Sign in to your workspace' },
   signInDescription: { type: String, default: 'Use the account issued by your GraphiScan administrator.' },
-  showExistingSignIn: { type: Boolean, default: true }
+  showExistingSignIn: { type: Boolean, default: true },
+  persistTabSession: { type: Boolean, default: false },
+  resumeWorkspace: { type: Boolean, default: false }
 })
-const client = createHostedClient(props.apiOrigin)
+let tabStorage
+try { if (props.persistTabSession) tabStorage=globalThis.sessionStorage } catch { /* Storage may be disabled. */ }
+const client = createHostedClient(props.apiOrigin, { sessionStore: props.persistTabSession ? createTabSessionStore(props.apiOrigin, tabStorage) : null })
 const emit = defineEmits(['access-state'])
 const signInFields=reactive({email:'',password:'',showPassword:false})
 const {email,password,showPassword}=toRefs(signInFields)
+const restoring=ref(props.persistTabSession && props.resumeWorkspace)
 const currentPassword=ref(''), newPassword=ref(''), confirmPassword=ref('')
 const profile=ref(null), notice=ref(null), accepted=ref(false), busy=ref(false), error=ref(''), message=ref('')
 const privacyBlocks=computed(()=>(notice.value?.content || '').split(/\n\s*\n/).map(block=>block.trim()).filter(Boolean))
 const directoryPending=ref(false)
 function setNavigationBlock(value) { directoryPending.value = value }
 const action=computed(()=>profile.value?.onboarding?.next_action)
-watch(action, value=>emit('access-state', value === 'ready'), { immediate: true })
+watch([action,restoring], ([value,pending])=>{if(!pending)emit('access-state', value === 'ready')}, { immediate: true })
+async function restoreSession() {
+  if(busy.value)return
+  busy.value=true;error.value=''
+  try {
+    if(await client.restore())await loadAccount()
+    restoring.value=false
+  } catch(failure) {
+    if([401,403].includes(failure.status)) {
+      client.clear();profile.value=null;restoring.value=false
+      message.value=failure.code==='WRONG_WORKSPACE' ? failure.message : 'Your session has ended. Sign in again.'
+    } else error.value=failure.message || 'Unable to load your workspace. Try again when your connection returns.'
+  } finally { busy.value=false }
+}
+onMounted(()=>{if(restoring.value)restoreSession()})
 function clearPasswords() { password.value=currentPassword.value=newPassword.value=confirmPassword.value='' }
 async function loadAccount() {
   const me=await client.request('/me')
   if (!props.allowedRoles.includes(me.role)) {
     await client.logout().catch(()=>{})
-    throw new Error('This account is for a different workspace. Use the sign-in page for your role.')
+    throw Object.assign(new Error('This account is for a different workspace. Use the sign-in page for your role.'), {status:403,code:'WRONG_WORKSPACE'})
   }
   profile.value=me
   if (me.onboarding.next_action==='accept_privacy') {
@@ -130,7 +155,7 @@ function signIn() { return run(async()=>{
   finally { password.value='' }
 }) }
 function refreshAccount() { return run(loadAccount) }
-function signOut() { return run(async()=>{ try { await client.logout();message.value='Signed out.' } finally { profile.value=null;notice.value=null;accepted.value=false;clearPasswords() } }) }
+function signOut() { return run(async()=>{ try { await client.logout();message.value='Signed out.' } finally { profile.value=null;notice.value=null;accepted.value=false;restoring.value=false;clearPasswords() } }) }
 async function submitAccountPassword(fields) {
   if (busy.value) return
   currentPassword.value=fields.current_password;newPassword.value=fields.new_password;confirmPassword.value=fields.confirm_password
@@ -164,6 +189,7 @@ onBeforeRouteLeave(()=>{if(directoryPending.value){error.value='Confirm the pend
 .access-brand{font-size:24px;font-weight:700;color:#176347;text-decoration:none}.access-header>span{font-size:14px;color:#466056}
 .access-content{width:min(100%,640px);margin:56px auto 40px;background:#fff;border:1px solid #d4dfd8;border-radius:14px;padding:36px}
 .access-content.workspace-ready{width:min(100%,1080px)}
+.access-content .access-restore-actions .access-primary{margin-top:0}
 .password-setup-symbol,.password-signin-note{display:none}.password-setup-field{display:contents}
 .access-content h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}.access-content h2{font-size:19px;line-height:1.4;margin:24px 0 8px}.access-content p{margin:0 0 24px}
 .access-content form{display:flex;flex-direction:column;gap:10px;margin-top:28px}.access-content label{font-weight:600;margin-top:12px}
@@ -176,6 +202,6 @@ onBeforeRouteLeave(()=>{if(directoryPending.value){error.value='Confirm the pend
 .access-content .access-notice{white-space:pre-wrap;overflow-wrap:anywhere;max-height:55dvh;overflow-y:auto;padding:20px;background:#f3f6f4;border-radius:8px;scrollbar-color:#738d7e #f3f6f4;line-height:1.65}
 .access-content .access-checkbox{display:flex;align-items:flex-start;gap:12px;font-weight:400}.access-checkbox input{accent-color:#176347;width:20px;height:20px;flex-shrink:0;margin-top:3px}
 .access-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.access-content .access-error{color:#922c24;background:#fff0ed;padding:14px;border-radius:8px;margin:24px 0 0}.access-content .access-message{color:#176347;margin:24px 0 0}
-.access-content .access-session-note{font-size:13px;color:#466056;margin:28px 0 0}.access-steps ol{padding:0 0 24px;margin:0 0 28px;display:flex;gap:24px;flex-wrap:wrap;list-style-position:inside;border-bottom:1px solid #d4dfd8;font-size:14px;color:#466056}.access-steps [aria-current=step]{color:#176347;font-weight:700}
+.access-steps ol{padding:0 0 24px;margin:0 0 28px;display:flex;gap:24px;flex-wrap:wrap;list-style-position:inside;border-bottom:1px solid #d4dfd8;font-size:14px;color:#466056}.access-steps [aria-current=step]{color:#176347;font-weight:700}
 .access-page ::selection{background:#c7e4ce;color:#17382d}@media(max-width:600px){.access-page{padding:18px 14px}.access-content{margin-top:32px;padding:24px 20px}.access-content h1{font-size:26px}.access-steps ol{gap:12px}}
 </style>

@@ -1,5 +1,11 @@
 # GraphiScan admin web
 
+Current session behavior (2026-11-04): refreshing `/workspace` revalidates and
+restores the admin's saved tab session; refreshing `/login` stays signed out.
+Only the refresh token is saved in sessionStorage. Access tokens stay in memory.
+Network failures offer retry; sign-out and invalid sessions clear saved access.
+The earlier memory-only/reload-requires-sign-in notes below are historical.
+
 Theme review2026-10-25: local slate/muted blue palette uses #45638a actions,
 #f5f7fa workspace and #f8fafc navigation. User selected the stronger #355c8c
 steel blue login laptop backdrop with white text and steel blue Scan lettering.
@@ -56,7 +62,10 @@ Both Vue builds, shared-client tests and fictional intercepted Playwright checks
 
 Hosted account onboarding is available at `/login`; `/access` redirects there.
 It uses the shared v1 login/refresh/password/privacy/logout flow; tokens remain in
-memory and reload requires sign-in. Requires reviewed migrations through 008 for
+memory by default; this admin wrapper saves only its refresh token in tab-scoped
+sessionStorage to restore `/workspace` through server refresh and current `/me`.
+`/login` refresh stays signed out. A connection outage offers retry; explicit
+logout and invalid/revoked sessions clear saved access. Requires reviewed migrations through 008 for
 durable sign-out. Admin/researcher accounts only. Hosted records use v1; legacy
 `/admin/*` screens use the existing MySQL API. Hosted credentials are never
 forwarded to legacy routes. See [session integration](../api/SESSION_INTEGRATION.md)

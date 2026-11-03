@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createHostedClient } from './hosted-client.mjs'
+import { createTabSessionStore } from './tab-session.mjs'
 const tokens=(suffix='one')=>({access_token:'access-'+suffix,refresh_token:'refresh-'+suffix,token_type:'bearer',expires_in:3600})
 const response=(data,status=200,code='DENIED')=>({ok:status<400,status,json:async()=>status<400?{data}:{error:{code,message:'Fixed failure'}}})
 
@@ -63,7 +64,7 @@ test('login tokens are used only in bearer requests and never exposed by client 
   assert.deepEqual(await client.request('/me'),{role:'teacher'})
   assert.equal(calls[1][1].headers.Authorization,'Bearer access-one')
   assert.equal(calls[1][1].credentials,'omit')
-  assert.deepEqual(Object.keys(client),['login','logout','clear','request'])
+  assert.deepEqual(Object.keys(client),['login','logout','clear','request','restore'])
 })
 
 test('a recoverable read 401 refreshes once and retries with the rotated bearer',async()=>{
@@ -134,4 +135,83 @@ test('a late refresh cannot resurrect state after logout',async()=>{
   const pending=client.request('/me');await client.logout();deliver()
   await assert.rejects(pending,/cancelled/)
   assert.deepEqual(revoked,['Bearer access-one','Bearer access-two'])
+})
+
+const tabStorage=()=>{
+  const values=new Map()
+  return {values,getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)}
+}
+test('an opted-in tab restores through server refresh and saves only the rotated refresh token',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage),calls=[]
+  const fetchImpl=async(url,options)=>{
+    calls.push([url,options])
+    return response(url.endsWith('/login')?tokens():url.endsWith('/refresh')?tokens('two'):{role:'admin'})
+  }
+  await createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl}).login('private@example.invalid','private-password')
+  assert.deepEqual([...storage.values.values()],['refresh-one'])
+  const reloaded=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl})
+  assert.equal(await reloaded.restore(),true)
+  assert.deepEqual(JSON.parse(calls[1][1].body),{refresh_token:'refresh-one'})
+  assert.equal(calls[1][1].headers.Authorization,undefined)
+  await reloaded.request('/me')
+  assert.equal(calls[2][1].headers.Authorization,'Bearer access-two')
+  assert.deepEqual([...storage.values.values()],['refresh-two'])
+})
+test('client construction does not restore or contact the server on the login page',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage)
+  store.write('refresh-one');let calls=0
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async()=>{calls++;return response(tokens())}})
+  await assert.rejects(client.request('/me'),/Sign in/)
+  assert.equal(calls,0)
+  assert.deepEqual([...storage.values.values()],['refresh-one'])
+})
+test('empty storage stays signed out without a provider request',async()=>{
+  const store=createTabSessionStore('https://synthetic.invalid',tabStorage())
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async()=>assert.fail('unexpected fetch')})
+  assert.equal(await client.restore(),false)
+})
+test('a restore outage retains the tab session and can be retried',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage)
+  store.write('refresh-one');let offline=true
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async()=>{
+    if(offline)throw Error('offline');return response(tokens('two'))
+  }})
+  await assert.rejects(client.restore(),/Unable to reach/)
+  assert.deepEqual([...storage.values.values()],['refresh-one'])
+  offline=false;assert.equal(await client.restore(),true)
+  assert.deepEqual([...storage.values.values()],['refresh-two'])
+})
+test('server failure retains the saved token, revoked refresh removes it',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage)
+  store.write('refresh-one');let status=503
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async()=>response(null,status)})
+  await assert.rejects(client.restore());assert.equal(storage.values.size,1)
+  status=401;await assert.rejects(client.restore());assert.equal(storage.values.size,0)
+  assert.equal(await client.restore(),false)
+})
+test('sign-out removes a saved session even if the network is unavailable',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage)
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async(url)=>{
+    if(url.endsWith('/login'))return response(tokens());throw Error('offline')
+  }})
+  await client.login('x@y','synthetic');await assert.rejects(client.logout())
+  assert.equal(storage.values.size,0)
+  assert.equal(await createHostedClient('https://synthetic.invalid',{sessionStore:store}).restore(),false)
+})
+test('a late restore cannot save credentials after sign-out',async()=>{
+  const storage=tabStorage(),store=createTabSessionStore('https://synthetic.invalid',storage)
+  store.write('refresh-one');let finish
+  const client=createHostedClient('https://synthetic.invalid',{sessionStore:store,fetchImpl:async(url)=>{
+    if(url.endsWith('/refresh'))return new Promise(resolve=>{finish=()=>resolve(response(tokens('late')))})
+    return response({})
+  }})
+  const pending=client.restore();await client.logout();finish()
+  await assert.rejects(pending,/cancelled/);assert.equal(storage.values.size,0)
+})
+test('tab stores isolate API origins, reject corrupt values and tolerate unavailable storage',async()=>{
+  const storage=tabStorage(),one=createTabSessionStore('https://one.invalid',storage),two=createTabSessionStore('https://two.invalid',storage)
+  one.write('refresh-one');assert.equal(two.read(),null);assert.equal(one.read(),'refresh-one')
+  one.write('x'.repeat(16385));assert.equal(one.read(),null);assert.equal(storage.values.size,0)
+  const denied=createTabSessionStore('https://one.invalid',{getItem(){throw Error()},setItem(){throw Error()},removeItem(){throw Error()}})
+  denied.write('synthetic');assert.equal(denied.read(),null);denied.remove()
 })
