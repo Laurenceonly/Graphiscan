@@ -1,3 +1,8 @@
+## 2026-11-04 - Make dashboard restoration visually quiet
+
+- Replaced the prominent Opening your workspace / Checking your session screen with a dashboard-shaped skeleton through a presentation-only shared slot and existing AdminLoadingSkeleton. Screen readers retain a Loading workspace status; no private records appear before validation. Connection errors still provide retry/sign-out. Session persistence and server checks unchanged.
+- Admin build and30 fictional desktop/phone Chromium checks pass with no page errors;1440/390 loading captures visually inspected. Existing reduced-motion skeleton behavior retained. No real accounts, credentials or records touched. Publish only this correction; unrelated local work preserved.
+
 ## 2026-11-04 - Preserve admin sign-in across dashboard reloads
 
 - Hosted admin opts into a tab-scoped refresh-token store keyed by API origin. Reloading /workspace rotates the token through the existing server refresh and reloads /me before revealing records. /login refresh remains signed out. No passwords, bearer tokens, profiles or records are saved in storage.
