@@ -625,7 +625,7 @@ button{user-select:none}
 .info-sections section{padding-bottom:36px;border-bottom:1px solid var(--line)}
 .info-sections section:last-child{border:0;padding-bottom:0}
 .info-layout h2{font-size:1.625rem;letter-spacing:-.025em;line-height:1.3;margin:0 0 16px}
-.info-layout p,.info-layout li{color:var(--muted);font-size:1rem;line-height:1.85}
+.info-layout p,.info-layout li{color:var(--muted);font-size:1rem;line-height:1.75}
 .info-layout p+p{margin-top:16px}
 .info-layout .asset-credit{font-size:.9375rem;margin-top:22px}
 .info-layout a:not(.back-link){text-decoration:underline;text-underline-offset:4px}
@@ -666,7 +666,7 @@ button{user-select:none}
 /* Supporting pages use static, consistent surfaces with no entrance motion. */
 .info-page,.release-page{min-height:100svh;display:flex;flex-direction:column}
 .info-page .site-header,.release-page .site-header{width:100%;margin-block:0}
-.info-layout p,.info-layout .role-summary span,.download-page p{text-align:justify;text-justify:inter-word;hyphens:auto}
+.info-layout p,.info-layout .role-summary span,.download-page p{text-align:left;text-justify:auto;hyphens:none}
 /* Center the phone hero copy within a full-screen canvas, clear of the header. */
 @media(max-width:760px){
   .hero{display:flex;align-items:center;height:auto;min-height:100svh}
@@ -707,17 +707,34 @@ button{user-select:none}
 }
 @media(max-width:600px){
  .info-layout h1{font-size:clamp(36px,10vw,46px)}
- .info-layout .intro{font-size:1.0625rem;line-height:1.8}
- .info-sections section,.info-sections section:last-child{padding:24px}
+ .info-layout.subpage{padding-top:32px;padding-bottom:48px}
+ .info-intro{margin-bottom:28px}
+ .info-layout .intro{font-size:1.0625rem;line-height:1.7;margin-top:20px}
+ .info-sections{gap:16px}
+ .info-sections section,.info-sections section:last-child{padding:20px}
+ .info-layout h2{font-size:1.375rem;line-height:1.35;margin-bottom:12px}
+ .info-layout p+p{margin-top:14px}
+ .info-layout .role-summary{gap:16px}
+ .info-layout .page-next{margin-top:20px}
  .release-page .site-header{padding-block:18px;min-height:84px}
  .release-page .site-header .brand{font-size:20px;gap:8px;letter-spacing:-.035em}
  .release-page .site-header .brand img{width:30px;height:30px}
  .release-page .site-header .text-link{font-size:.9375rem}
- .download-hero{padding-top:32px}
+ .download-hero{padding-block:32px 40px;gap:32px}
  .download-copy h1{font-size:clamp(40px,11vw,52px)}
- .download-release{padding:22px;max-width:none}
- .download-device .role-device{width:230px}
- .download-install{padding-block:36px 56px}
+ .download-description{margin-top:20px;line-height:1.7}
+ .download-release{padding:20px;max-width:none;margin-top:24px}
+ .download-release .release-explanation{margin-top:12px;line-height:1.7}
+ .download-release .button{margin-top:20px;padding-inline:12px}
+ .download-requirement{margin-top:16px}
+ .download-device .role-device{width:216px}
+ .download-install{padding-block:32px 48px}
+ .download-install ol{grid-template-columns:1fr;gap:12px;margin-top:24px}
+ .download-install li{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:12px;row-gap:6px;padding:20px}
+ .download-install li>span{grid-column:1;grid-row:1/3;line-height:1.5}
+ .download-install h3{grid-column:2;margin-top:0;line-height:1.35}
+ .download-install li>p{grid-column:2;max-width:none;margin-top:0}
+ .download-install .install-note{margin-top:24px}
 }
 
 /* White release controls and stationary feedback across supporting-page boxes. */
@@ -756,10 +773,3 @@ button{user-select:none}
 html.fonts-pending .page-curtain{animation:none;opacity:1}
 
 html.font-fallback{font-family:'Segoe UI',sans-serif}
-
-/* Give supporting-page footer links room instead of shrinking them on phones. */
-@media(max-width:600px){
-  .info-page .site-footer.wrap,.release-page .site-footer.wrap{flex-direction:column;align-items:flex-start;gap:8px;padding-inline:max(var(--gutter),env(safe-area-inset-left)) max(var(--gutter),env(safe-area-inset-right))}
-  .info-page .footer-copyright,.release-page .footer-copyright{font-size:.875rem}
-  .info-page .site-footer nav,.release-page .site-footer nav{margin-left:0;gap:20px;font-size:.9375rem;overflow:visible;flex-wrap:wrap}
-}
