@@ -1,3 +1,9 @@
+## 2026-11-04 - Prefetch Users and Audit during workspace startup
+
+- Corrected the remaining first-visit delay: both authorized record components now mount with the initial workspace and request their first lists alongside directory/screening reads. Dashboard initial placeholders wait for those attempts to settle; opening Users/Audit afterward uses prefetched rows. Refresh/filter submission remain explicit. Initial failures end in retry states, and later query/refresh activity does not restart the dashboard's initial loading gate.
+- Active-section cleanup replaces deactivation cleanup so hidden editors/password inputs clear while the mounted lists persist. Profile/permission changes still reset rows, and logout destroys in-memory records. No server endpoints, grants or credentials changed. Local unpushed handover cleanup remains separate.
+- Admin build and40 fictional1440/390 browser assertions pass: requests before navigation, instant first visits, retained filters, Refresh, editor controls, permission-loss clearing, failed startup reads and retry; no page errors. Updated existing loading fixture for eager startup. Only this UI slice is published; unrelated edits preserved.
+
 ## 2026-11-04 - Retain Users and Audit lists across navigation
 
 - User requested removing repeated Users/Audit skeletons when returning to those sections. Cache the two keyed record components within the workspace so rows, filters and paging remain in memory; first visit still loads normally. Navigation no longer refetches, while Refresh/filter submission still read fresh records. Deactivation closes the editor and clears password input; profile changes still reset data/permissions and logout destroys cache. Local unpushed credential-handover cleanup is preserved separately.

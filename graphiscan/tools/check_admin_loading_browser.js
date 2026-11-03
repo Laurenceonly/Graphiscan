@@ -71,7 +71,7 @@ async page => {
   check(!await tab.getByRole('status',{name:'Loading users',exact:true}).isVisible(),'failed initial read ends skeleton and shows retry');
   failAccounts=false;await tab.getByRole('button',{name:'Try again',exact:true}).click();await tab.getByRole('region',{name:'User accounts',exact:true}).waitFor();
   check(await tab.getByRole('region',{name:'User accounts',exact:true}).isVisible(),'initial error retry recovers records');
-  await tab.emulateMedia({reducedMotion:'reduce'});held.add('accounts');await tab.reload();await tab.getByRole('heading',{name:'Dashboard',exact:true}).waitFor();await go('Users');await tab.getByRole('status',{name:'Loading users',exact:true}).waitFor();
+  await tab.emulateMedia({reducedMotion:'reduce'});held.add('accounts');await tab.reload();await tab.locator('.hosted-workspace').waitFor();await go('Users');await tab.getByRole('status',{name:'Loading users',exact:true}).waitFor();
   check(await tab.locator('.hosted-admin-records:visible .shape').first().evaluate(el=>getComputedStyle(el).animationName)==='none','reduced motion disables page skeleton pulse');release('accounts');
   await tab.close();
  }
