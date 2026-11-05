@@ -1363,6 +1363,88 @@
             }
           }
         }
+      },
+      "delete": {
+        "operationId": "deleteSchool",
+        "summary": "Delete an unused school",
+        "tags": [
+          "schools"
+        ],
+        "description": "Admin with schools.manage only. Requires migration026. Rechecks session, onboarding, scope, revision and every school foreign-key dependency. Linked schools return SCHOOL_IN_USE; no cascade.",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "400": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "401": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "403": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "404": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "409": {
+            "description": "School is linked or revision changed."
+          },
+          "422": {
+            "description": "Authorized deletion result or structured error."
+          },
+          "503": {
+            "description": "Authorized deletion result or structured error."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "expected_revision",
+                  "confirmation"
+                ],
+                "properties": {
+                  "expected_revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "confirmation": {
+                    "type": "string",
+                    "enum": [
+                      "DELETE"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-roles": [
+          "admin"
+        ],
+        "x-permission": "schools.manage",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-record-scope": "Current session and school-scoped server grant; deletion rechecks all live school references."
       }
     },
     "/schools/{school_id}/assignment-options": {
@@ -3853,6 +3935,60 @@
             }
           }
         }
+      }
+    },
+    "/schools/{school_id}/deletion-check": {
+      "get": {
+        "operationId": "checkSchoolDeletion",
+        "summary": "Check school links before deletion",
+        "tags": [
+          "schools"
+        ],
+        "description": "Admin with schools.manage only. Returns current revision, students/teachers/experts and total linked records, and can_delete. Counts include inactive people. Requires migration026.",
+        "parameters": [
+          {
+            "name": "school_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "School linkage counts and deletion eligibility."
+          },
+          "400": {
+            "description": "Structured error."
+          },
+          "401": {
+            "description": "Structured error."
+          },
+          "403": {
+            "description": "Structured error."
+          },
+          "404": {
+            "description": "Structured error."
+          },
+          "422": {
+            "description": "Structured error."
+          },
+          "503": {
+            "description": "Structured error."
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-roles": [
+          "admin"
+        ],
+        "x-permission": "schools.manage",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-record-scope": "Current session and school-scoped server grant; deletion rechecks all live school references."
       }
     }
   },

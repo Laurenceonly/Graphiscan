@@ -1,3 +1,79 @@
+## 2026-11-06 - User-authorized web/mobile publication checkpoint
+
+- User requested pushing current changes to test account creation on hosted admin. Includes manual Login email entry/direct handover, audited unused-school deletion with independently verified installed026, red confirmation actions, audit inner scrolling/automatic pagination, school save-feedback removal and Expo UI/recovery/launcher configuration. Prior entries contain actual test evidence and native/hosted acceptance limits.
+- Reviewed tracked publication paths: configuration/secrets, local cleanup and inspection scripts, database state, uploaded images, captures and generated exports remain excluded. No real account is created by publication. Latest local503 creation report is unresolved: available local logs show a transient session-refresh503 followed by successful refresh/list reads, with no recorded account POST in that inspected interval. Publication is not evidence that the transient failure is fixed.
+- Publishing to origin/main under explicit user authorization; commit/push/deployment outcome reported after execution. No standalone APK release implied.
+
+## 2026-11-06 - Login email is manually entered
+
+- User clarified that Login email must be typed as earlier, rather than generated. Removed name-derived address generation and random suffixes. Add user has a blank editable email input with teacher@graphiscan.com as an example; it accepts the full valid address the admin enters, without silently adding a domain. Delivery stays manual and email delivery remains absent. Existing accounts unchanged.
+- Admin build and33 fictional desktop/phone account workflow assertions pass, including editable login email, manual creation and handover/recovery behavior. No real account, email or provider writes; no push. This supersedes generated-address notes.
+
+## 2026-11-06 - Generated graphiscan.com login emails
+
+- User clarified that accounts should receive a generated email-style login ending @graphiscan.com, replacing accounts.graphiscan.invalid; this supersedes the preceding entered-personal-email interpretation. Add user/receipt now label it Login email. Generated value uses a normalized name plus an eight-hex uniqueness suffix; the suffix is stable while completing a draft. Editing an existing user's name does not change their login. Field is read-only, delivery remains manual, no inbox is provisioned and no email is sent. Existing identities unchanged.
+- Admin build and35 fictional account workflow assertions at1440/390 pass, including generated domain/name pattern, read-only login, no email-delivery option and preserved account action/recovery flows. No real account issuance, email, domain ownership claim or push.
+
+## 2026-11-06 - Add user uses entered email and direct handover only
+
+- User removed email delivery for now and requested a formal email login. HostedAdminRecords.vue removes the delivery selector and generated reserved-domain ID. Add user now requires an entered Email address; direct handover receipt uses the same label. Issuance explicitly sends delivery_method=manual, retaining temporary password/privacy gates and existing Auth uniqueness. No email is sent, existing accounts are unchanged, and server optional mail support remains available for future configuration.
+- Admin build and31 fictional account workflow assertions at1440/390 pass, including entered email, absent delivery selector, manual creation payload, masked/cleared handover, role actions and uncertain-operation recovery. No real account/Auth/mail writes or push.
+
+## 2026-11-06 - Remove routine school save confirmation
+
+- User chose removal after reporting that Saved was poorly positioned. Shared HostedDirectory.vue now omits the routine success message after school saves; duplicate-name warnings and request errors remain. The interim inline status placement was removed. Saving still closes the editor and refreshes the displayed name through existing reads. Student/deletion feedback unchanged.
+- Admin build and15 fictional browser checks at1440/390/320 pass: current revision sent, new name displayed, no Saved/School updated message, no separate status row/table shift or horizontal overflow. No real school changes or push.
+
+## 2026-11-06 - Audit list-only scrolling and automatic pagination
+
+- Audit Logs now fixes its heading/filters while only the inner activity table scrolls; scoped audit-directory layout removes the enclosing panel scrollbar, including short landscape. Removed the audit Load more button; an IntersectionObserver rooted in the inner list loads the next cursor page near its end. Inactive/unauthorized/error/busy states pause automatic reads, unmount disconnects the observer, and repeated cursors fail visibly rather than looping. Account pagination remains unchanged. Existing page errors retain current rows and explicit read retry.
+- Admin build passes.45 fictional browser assertions at1440x900,1366x768,390x844,320x568,568x320 verify no outer/page overflow, a usable scrolling inner table, fixed filters, no Load more button, successful two-page append, preserved rows on failure, no automatic error retry loop and recovery without page errors. No hosted records changed or push.
+
+## 2026-11-06 - Consistent red delete and logout confirmations
+
+- Shared admin style.css now gives school-delete, account-delete/disable and existing legacy delete/logout confirmation buttons the same dark red fill, white text, darker hover/pressed states, red focus outline and disabled styling. Cancel remains neutral. No behavior, authorization or API changes.
+- Admin production build and diff whitespace check pass.48 fictional school-delete/logout color and workflow assertions pass at1440/390/320;31 fictional account workflow assertions pass at1440/390, including default red account-delete buttons. Phone logout capture inspected. No real logout/account/school writes or push.
+
+## 2026-11-06 - School deletion activated; remove modal refresh action
+
+- User reports026 succeeded. Independent read-only catalog check confirms function source matches (Windows line endings normalized), security definer/pinned search path, only password-writer execute among checked application roles, reader/anon/authenticated/service_role/admin-writer denied. No school/account records read or changed by verification; actual school deletion remains untested.
+- Removed Refresh school list from the delete confirmation at user request in shared/HostedDirectory.vue. Cancel/close and fresh checks on reopening remain; no automatic mutation retries added. Admin build passes. No push.
+
+## 2026-11-06 - Delete school inside Edit; migration026 prepared
+
+- User requested school deletion with a warning for linked students/teachers/experts, then specified Delete belongs inside Edit. Shared HostedDirectory.vue adds an admin-only Delete school action within Edit, leading to a checked confirmation modal with student/teacher/expert membership counts. Linked records/assignments block deletion; cancel sends no mutation, unknown responses cannot enable deletion, revision is taken from fresh preflight, and uncertain writes require list reconciliation. School table remains View/Edit only. No real school deleted.
+- New GET /api/v1/schools/{id}/deletion-check and DELETE /api/v1/schools/{id}, strict JSON/revision/DELETE confirmation validation and SCHOOL_IN_USE409 mapping. Prepared026_school_deletion.sql repeats current session/onboarding/admin/scoped-schools.manage checks, locks profile/school, counts live FK dependencies (including future tables), refuses linked schools without cascading, and audits successful deletion atomically. Function-only password-writer execution; no direct table grants. Legacy Flask/MySQL routes unchanged. OpenAPI/API_CONTRACT updated.
+- Verification:12 Python directory API tests,654 contract checks and all isolated SQL suites pass, including25 new school-deletion checks (roles/grants/session/revision, membership/student counts, future cascading FK refusal, audit rollback and success). Admin build passes.33 fictional browser assertions at1440/390/320 cover Edit-to-delete, modal counts/warnings, disabled linked delete, cancel, exact confirmation/revision, row removal and no horizontal overflow/page errors. Phone modal capture inspected. No real mutation/provider write in tests.
+- Restarted only the process verified as run_v1_admin_local.py on5002. Updated API health200; anonymous deletion-check401. Local frontend5173 reflects changes. Migration026 is NOT applied hosted; owner must run graphiscan/db/postgres/026_school_deletion.sql before actual link checks/deletion work. No push/deployment. Existing mobile changes preserved.
+## 2026-11-06 - User-requested resume checkpoint saved
+
+- Saved explicit current status, verified checks, local/unpublished state, preview helpers and remaining Android/hosted acceptance steps in RESUME.md. Completed cleanup is marked superseding historical pending notes; reset must not be repeated. No further app or hosted changes in this checkpoint.
+
+## 2026-11-06 - Expo role UI and recovery polish
+
+- Reviewed teacher/expert/parent hosted screens and existing GraphiScan branding. Explicit Android standard launcher icon now matches the existing adaptive icon and supplied glossy logo. No replacement artwork or APK installation is claimed.
+- HostedApp aligns Model output and Expert review with the page edges, handles missing model metadata, avoids duplicate first-page refresh requests, disables paging during reads, and provides detail retry. Native stack uses fade_from_bottom with reduced-motion none; tabs remain immediate and hide for the keyboard. Sign-out/image-removal dialogs fade unless reduced motion is enabled. Shared fields now show focus consistently and scrolling dismisses the keyboard.
+- useRecords preserves same-scope data after transient refresh failures while clearing it for401/403/404; directory wrapper now propagates failures to this common behavior. Home retains cached recent records on refresh errors and describes current school/grade expert scope. Private-image responses are generation-guarded and images can be hidden. Upload student/model reads have retries, selected student remains identified across pages, and model paging can return to the first page.
+- Verification: TypeScript and18 mobile tests pass; final Android Hermes/web exports pass with public API origin and no fixture endpoints.53 fictional onboarding/white-canvas/role browser assertions pass; six role/phone cases at320/390 pass populated navigation, no horizontal overflow and transient detail-read recovery. Final image fixture passes selection/replacement/removal, Cancel/Escape, equal action sizing, busy/uncertain locks and same-idempotency-key retry with zero page errors. Home/upload/detail captures inspected; final detail sections align. git diff --check passes.
+- Limits: adb reports no connected devices. No installed APK, native keyboard/camera/Back, release-device motion performance, real role Auth/inference/Storage acceptance or publication verified. Browser fixtures use only fictional intercepted APIs. Current preview: http://127.0.0.1:5187. Local changes only.
+## 2026-11-05 - Fictional reset completed and verified
+
+- Owner reports reset SQL executed. Live read-only worker preflight verified committed manifest: one captured image and six old Auth identities. Ran .local-tools/finish-fictional-reset.py --apply under user authorization; image confirmed absent, all six old identities deleted via Auth API with individual absence checks. Final Auth inventory and public profiles each contain only the retained active administrator. No password changed.
+- Owner transaction preserves schools/models, clears fictional student/screening records, retains audit and professional notice text, and publishes an unrestricted notice requiring explicit acceptance. Updated KNOWLEDGE.md, PROJECT_PLAN.md and RESUME.md. Full real role workflows remain untested; next is retained-admin sign-in, notice acceptance and fresh role-account setup. Do not rerun reset SQL.
+
+## 2026-11-05 - Fictional reset authorized and prepared; owner execution pending
+
+- User confirms the six older accounts and linked students/screenings/images are fictional and authorizes deletion while retaining the replacement admin and schools. Supabase owner project was identified, but native input targeted inconsistently; no destructive UI submission was attempted. Browser connector host is unavailable.
+- Prepared ignored .local-tools/reset-fictional-data.sql: exact seven-account/revision guards; atomic fictional record cleanup; old profiles disabled pending Auth API deletion; captured image manifest; schools/models preserved; retained admin's existing permissions reissued with explicit audit rather than relabelled grant authorship. Historical audit remains. Append-only review fixtures use an explicit TRUNCATE list without CASCADE, dropped constraints, or disabled triggers. Old test notices/consents are removed; current professional text is retained and republished for future issued accounts, requiring explicit new acceptance.
+- Live read-only preflight confirms current professional notice approved by retained admin and its four existing grants. No hosted data/credential/account mutation performed. Disposable PGlite verification passes33 checks using actual core schema/revision/immutability/session triggers, including late-failure rollback, changed/extra-account rejection, unchanged schools/models, exact image capture, and simulated Auth cascades with old admin deleted last.
+- Prepared ignored .local-tools/finish-fictional-reset.py for bounded Storage deletion and Auth admin deletion after the owner stages SQL. It defaults to read-only, verifies the named project/exact target set, checks object absence and final Auth/profile counts, and never prints provider errors or secrets. API worker is source-reviewed, not executed or runtime-verified yet. Owner SQL execution and actual Storage/Auth completion remain pending.
+
+## 2026-11-05 - Clean-test account deletion requested; scope pending
+
+- User requests retaining the replacement admin and deleting all other users before careful workflow testing. Live read-only profile/Auth inventory confirms seven profiles and identifies the existing replacement; six older profiles remain active. No account, credential or data mutations performed.
+- Read-only foreign-key counts show known history for five old accounts; several protected reference tables are unreadable by the configured reader, so linked student/screening/audit impact is incomplete. Existing lifecycle SQL permits only unused-account deletion and must retain its guards. The earlier clean-admin-start.sql disables accounts and is not a permanent-deletion implementation; it was not run.
+- Pending user clarification: delete linked old test students/screenings/images as well, or retain existing records. Prepare a bounded, verified deletion plan after scope is resolved; retain the replacement admin's access and do not assume historical approvals/consent can be erased or reassigned.
+
 ## 2026-11-05 - User-authorized publication checkpoint
 
 - User requested pushing the accumulated admin, account, audit, role-assignment and responsive UI work after reviewing the school toolbar. Includes migrations022-025, already independently metadata-verified installed, and their tests/runbooks. Final admin build and school toolbar desktop/phone/color checks pass; user web build passes. Prior comprehensive verification and remaining real hosted/native acceptance limits are in ADMIN_RELEASE_CHECK.md.

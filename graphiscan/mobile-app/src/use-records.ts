@@ -10,7 +10,7 @@ export function useRecords<T>(load: () => Promise<T>, dependencies: unknown[] = 
     setLoading(true)
     setSnapshot(previous => ({ scope, data: previous?.scope === scope ? previous.data : null, error: '' }))
     load().then(value => { if (alive) setSnapshot({ scope, data: value, error: '' }) })
-      .catch(failure => { if (alive) setSnapshot({ scope, data: null, error: failure.message || 'Unable to load records.' }) })
+      .catch(failure => { if (alive) setSnapshot(previous => ({ scope, data: previous?.scope === scope && ![401,403,404].includes(failure.status) ? previous.data : null, error: failure.message || 'Unable to load records.' })) })
       .finally(() => { if (alive) setLoading(false) })
     return () => { alive = false }
   }, [scope, attempt]))

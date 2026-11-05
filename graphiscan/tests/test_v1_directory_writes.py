@@ -148,6 +148,23 @@ class DirectoryWriteTests(unittest.TestCase):
                 self.assertIn('idempotency-key', response.headers['Access-Control-Allow-Headers'].lower())
                 self.assertIn(method, response.headers['Access-Control-Allow-Methods'])
 
+    def test_school_deletion_requires_admin_confirmation_and_revision(self):
+        body = {'expected_revision': 1, 'confirmation': 'DELETE'}
+        self.assertEqual(self.send('/schools/9', body, 'DELETE').status_code, 200)
+        self.assertIn('graphiscan_school_deletion', self.repository.execute.call_args.args[0])
+        self.assertEqual(self.client.get('/api/v1/schools/9/deletion-check', headers=self.headers).status_code, 200)
+        for invalid in [{}, {'expected_revision': True, 'confirmation': 'DELETE'},
+                        {'expected_revision': 1, 'confirmation': 'yes'}, {**body, 'cascade': True}]:
+            self.assertEqual(self.send('/schools/9', invalid, 'DELETE').status_code, 422)
+        self.repository.execute.return_value = {'result': {'code': 'SCHOOL_IN_USE'}}
+        self.assertEqual(self.send('/schools/9', body, 'DELETE').status_code, 409)
+        self.repository.execute.reset_mock()
+        for role in ['researcher', 'teacher', 'expert', 'parent']:
+            self.state = replace(self.state, role=role)
+            self.assertEqual(self.send('/schools/9', body, 'DELETE').status_code, 403)
+            self.assertEqual(self.client.get('/api/v1/schools/9/deletion-check', headers=self.headers).status_code, 403)
+        self.repository.execute.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

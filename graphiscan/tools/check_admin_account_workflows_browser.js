@@ -61,6 +61,9 @@ async rootPage => {
   await page.getByRole('button',{name:'Add user',exact:true}).click();
   let dialog=page.getByRole('dialog',{name:'Add user',exact:true});
   await dialog.getByLabel('Full name',{exact:true}).fill('Sample New Parent');
+  await dialog.getByLabel('Login email',{exact:true}).fill('test.parent@graphiscan.com');
+  check(await dialog.getByLabel('Login email',{exact:true}).getAttribute('readonly')===null,width+': login email editable');
+  check(await dialog.getByRole('combobox',{name:'Give the user their login details',exact:true}).count()===0,width+': email-delivery option absent');
   await dialog.getByRole('combobox',{name:/^Role/}).selectOption('parent');
   await dialog.getByLabel('Temporary password',{exact:true}).fill('FictionalPass1!');
   const before=writes.length;await dialog.getByRole('button',{name:'Create user',exact:true}).click();await dialog.waitFor({state:'hidden'});

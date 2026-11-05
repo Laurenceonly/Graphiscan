@@ -255,6 +255,8 @@ admin-only backend has model inference disabled.
 | `GET /account-operations/{operation_id}` | Issuing administrator's durable reset/delete operation status and completion receipt; no credentials |
 | `GET /schools` | Actor-authorized school directory; guest has no private student summaries |
 | `POST /schools`, `PATCH /schools/{school_id}` | `schools.manage`; nonblank name; revision on update |
+| `GET /schools/{school_id}/deletion-check` | Admin with scoped `schools.manage`; current revision, linked student/teacher/expert counts and all FK link count; migration026 required |
+| `DELETE /schools/{school_id}` | Admin with scoped `schools.manage`; `expected_revision` and `confirmation: DELETE`; only unused schools, transactional audit, no cascade; linked records return409 SCHOOL_IN_USE |
 | `GET /schools/{school_id}/assignment-options` | Minimum eligible teacher/parent/expert identities for an explicitly permitted assignment operation; no unrestricted account search |
 | `GET /students` | Authorized student list; filters `q`, `school_id`, `grade_level`; teacher/parent filters cannot widen actor scope |
 | `POST /students` | `full_name`, `age`, `school_id`, `grade_level`, `teacher_id` for authorized admin assignment, optional `parent_id`; derive teacher actor's own assignment |

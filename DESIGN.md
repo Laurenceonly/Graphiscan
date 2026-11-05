@@ -417,3 +417,7 @@ font-scale/visual recapture remains separate.
 - Don't turn screening scores or visual state colors into a diagnosis, model availability promise or release claim.
 
 Not canonized or repaired by this documentation: local composition spacing and the generic Field focus-state gap remain source exceptions, not permission to expand them into new global rules. The centered login is the latest proposed source after delegated reference selection; user visual approval is pending. No decorative kicker, glyph-icon convention, custom shadow or system display face is established. Native finish approval, device behavior and any later reviewer findings remain open until separately evidenced.
+
+2026-11-06 refinement: hosted result sections share the outer content inset with quiet top dividers. Standard/adaptive Android launchers reference the supplied glossy logo. Native stack fade_from_bottom and native modal fades honor reduced motion; tabs remain immediate. Field focus uses the primary border. Transient refresh failures retain current-scope records; authorization/not-found errors clear them. Browser review passed; native device motion remains unverified.
+
+2026-11-06 admin confirmation direction: delete and logout confirmation actions use dark red danger-text fill with white labels, darker red hover/pressed states and red keyboard focus; Cancel stays neutral. Shared rule covers school/account deletion, disable and legacy confirmation classes.

@@ -6053,3 +6053,27 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
   .admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) > :is(button, a) { min-width: 0; }
   .admin-shell :is(.modal-actions, .logout-modal-actions, .account-editor-form footer, .hosted-directory-modal .directory-actions) > :only-child { grid-column: 1 / -1; }
 }
+/* Destructive confirmations share one red treatment across hosted and legacy dialogs. */
+#app .admin-shell :is(button.confirm-delete-btn, button.account-danger-action, button.school-delete-button) {
+  background:var(--danger-text);
+  border:1px solid var(--danger-text);
+  color:var(--white);
+  box-shadow:none;
+}
+#app .admin-shell :is(button.confirm-delete-btn, button.account-danger-action, button.school-delete-button):hover:not(:disabled) {
+  background:#9f1239;
+  border-color:#9f1239;
+  color:var(--white);
+}
+#app .admin-shell :is(button.confirm-delete-btn, button.account-danger-action, button.school-delete-button):active:not(:disabled) {
+  background:#881337;
+  border-color:#881337;
+}
+#app .admin-shell :is(button.confirm-delete-btn, button.account-danger-action, button.school-delete-button):focus-visible {
+  outline:3px solid var(--danger-text);
+  outline-offset:3px;
+}
+#app .admin-shell :is(button.confirm-delete-btn, button.account-danger-action, button.school-delete-button):disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}

@@ -436,6 +436,23 @@ def install_api_v1(app, backend: AccessBackend | None = None):
     def update_school(school_id):
         return write_directory('schools.update', school_id)
 
+    @api.get('/schools/<school_id>/deletion-check')
+    @require_access(roles={'admin'})
+    def check_school_deletion(school_id):
+        from flask import current_app
+        if request.args:
+            raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'directory_write_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return jsonify(**service.write(g.v1_identity, 'schools.delete_check', school_id, {}, None,
+            g.v1_request_id), request_id=g.v1_request_id)
+
+    @api.delete('/schools/<school_id>')
+    @require_access(roles={'admin'})
+    def delete_school(school_id):
+        return write_directory('schools.delete', school_id)
+
     @api.post('/students')
     @require_access(roles={'admin', 'researcher', 'teacher'})
     def create_student():

@@ -460,3 +460,15 @@ html:has(#app .hosted-workspace), body:has(#app .hosted-workspace) {
  #app .hosted-workspace .admin-summary-grid .admin-summary-label { font-size:11px; }
  #app .hosted-workspace .admin-summary-grid .admin-summary-value>strong { font-size:20px; line-height:24px; }
 }
+/* Audit filters stay in place; only the activity records scroll. */
+#app .hosted-workspace .audit-directory { display:flex; flex-direction:column; }
+#app .hosted-workspace .audit-directory .hosted-record-panel { display:flex; flex-direction:column; overflow:hidden; gap:16px; }
+#app .hosted-workspace .audit-directory .hosted-record-panel > :not(.hosted-record-table) { flex:none; }
+#app .hosted-workspace .audit-directory .hosted-record-table { flex:1 1 0; min-height:0; max-height:none; margin:0; overflow:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
+#app .hosted-workspace .audit-directory .hosted-load-more { align-self:start; }
+@media(max-height:600px) and (min-width:480px) {
+  #app .hosted-workspace .audit-directory .audit-filters { grid-template-columns:minmax(0,1fr) minmax(100px,.65fr) auto; gap:12px; }
+}
+@media(max-height:600px) and (min-width:480px) {
+  #app .hosted-workspace .audit-directory .audit-filters > button { grid-column:auto; min-width:112px; }
+}
