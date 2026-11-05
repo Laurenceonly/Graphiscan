@@ -35,7 +35,7 @@ def validate_action(action, body):
     if action == 'reset_password':
         password = body[extra]
         if (not isinstance(password, str) or not 8 <= len(password) <= 128 or
-                not all(re.search(pattern, password) for pattern in (r'[A-Z]', r'[a-z]', r'[0-9]', r'[^A-Za-z0-9]'))):
+                not all(re.search(pattern, password) for pattern in (r'[A-Z]', r'[a-z]', r'[0-9]', r'[^A-Za-z0-9\s]'))):
             raise ApiError(422, 'INVALID_PASSWORD', 'Use 8–128 characters with uppercase, lowercase, a number and a symbol.')
     elif body['confirmation'] != 'DELETE':
         raise ApiError(422, 'INVALID_INPUT', 'Type DELETE to confirm account removal.')

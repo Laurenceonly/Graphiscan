@@ -1,0 +1,71 @@
+﻿// Scope-based expert responsibility, exercised only in the existing PGlite transaction.
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+module.exports=async({db,root,q,A,E,T,P,a,s1,s2,c1,c2,c3,set,rev,fresh,U})=>{
+ let checks=0,n=997000;const check=(ok,msg)=>{assert(ok,msg);checks++};
+ const migration=fs.readFileSync(path.join(root,'graphiscan/db/postgres/025_expert_grade_responsibility.sql'),'utf8');
+ try{await db.exec(migration.replace(/^BEGIN;\r?$/gm,'').replace(/^COMMIT;\r?$/gm,''))}catch(error){
+  throw Error('Expert grade migration install: '+error.message);
+ }
+ const preflight=(await q(fs.readFileSync(path.join(root,'graphiscan/db/postgres/025_expert_grade_responsibility_preflight.sql'),'utf8'))).rows[0];
+ for(const [name,passed]of Object.entries(preflight))check(passed===true,'Migration025 preflight: '+name);
+ const bodySnapshot=async()=>JSON.stringify((await q("SELECT proname,prosrc,proacl::text FROM pg_proc WHERE proname IN ('graphiscan_read_directory','graphiscan_read_screenings','graphiscan_write_review') ORDER BY proname")).rows);
+ const installedBodies=await bodySnapshot();
+ await db.exec(migration.replace(/^BEGIN;\r?$/gm,'').replace(/^COMMIT;\r?$/gm,''));
+ check(await bodySnapshot()===installedBodies,'Owner rerun is a no-op preserving function bodies and grants');
+ await db.exec(migration.replace(/^BEGIN;\r?$/gm,'').replace(/^COMMIT;\r?$/gm,''));
+ check(await bodySnapshot()===installedBodies,'Repeated owner rerun remains safe');
+ const move=async scopes=>set(A,a,E,{expected_revision:await rev(E),school_grades:scopes});
+ let changed=await move([{school_id:s1,grade_level:2}]);check(!changed.code,'Expert scope setup');
+ let session=await fresh(E);
+ await db.exec("CREATE SCHEMA IF NOT EXISTS storage;CREATE TABLE IF NOT EXISTS storage.buckets(id text PRIMARY KEY,public boolean NOT NULL);INSERT INTO storage.buckets(id,public) VALUES('fictional-private',false) ON CONFLICT DO NOTHING;");
+ const directory=async(sid=session)=>(await q("SELECT graphiscan_read_directory($1,$2,'students','',NULL,NULL,NULL,NULL,100,NULL) r",[E,sid])).rows[0].r;
+ let visible=await directory();check(visible.rows.some(row=>row.student_id===c2)&&!visible.rows.some(row=>[c1,c3].includes(row.student_id)),'Expert sees all current grade students without screenings');
+ const newChild=String((await q("INSERT INTO students(full_name,age,school_id,grade_level,teacher_id) VALUES('Future Grade Child',8,$1,2,$2) RETURNING student_id",[s1,T])).rows[0].student_id);
+ check((await directory()).rows.some(row=>row.student_id===newChild),'Future student automatically belongs to grade expert');
+ const model=(await q("SELECT model_id FROM model_registry WHERE task_type='binary' LIMIT 1")).rows[0].model_id;
+ const results=[],reports=[];
+ for(const [student,type]of [[c2,'Initial Screening'],[c2,'Follow-up Screening'],[c1,'Initial Screening'],[c3,'Initial Screening']]){
+  const sample=(await q("INSERT INTO handwriting_samples(student_id,teacher_id,storage_path) VALUES($1,$2,'fictional-private/sample.png') RETURNING sample_id",[student,T])).rows[0].sample_id;
+  const result=String((await q("INSERT INTO screening_results(sample_id,model_id,task_type,classification,confidence_score,class_probabilities,decision_rule,model_snapshot,provenance) VALUES($1,$2,'binary','Normal',0.9,'{\"normal\":0.9,\"high_potential\":0.1}','{\"kind\":\"argmax\"}','{}','legacy_unverified') RETURNING result_id",[sample,model])).rows[0].result_id);
+  results.push(result);await q("INSERT INTO expert_validations(result_id,status) VALUES($1,'Pending')",[result]);
+  const hasInitial=(await q("SELECT EXISTS(SELECT 1 FROM screening_reports WHERE student_id=$1 AND report_type='Initial Screening') found",[student])).rows[0].found;
+  reports.push(String((await q("INSERT INTO screening_reports(student_id,result_id,report_type) VALUES($1,$2,$3) RETURNING report_id",[student,result,hasInitial?'Follow-up Screening':type])).rows[0].report_id));
+ }
+ const read=async(resource='screenings',target=null,who=E,sid=session)=>(await q('SELECT graphiscan_read_screenings($1,$2,$3,$4::jsonb,NULL,NULL,100,$5,false) r',[who,sid,resource,'{}',target])).rows[0].r;
+ check((await read()).rows.filter(row=>results.includes(row.result_id)).length===2,'Existing and future results in current grade visible without per-result assignments');
+ check((await read('history',c2)).rows.filter(row=>results.includes(row.result_id)).length===2,'Expert reads complete same-grade history');
+ check((await read('screening',results[2])).rows.length===0,'Another grade detail denied');
+ check((await read('report',reports[3])).rows.length===0,'Another school report denied');
+ const image=async target=>(await q('SELECT graphiscan_screening_image($1,$2,$3) r',[E,session,target])).rows[0].r;
+ check(!(await image(results[0])).code,'Current grade permits authorized private image read');
+ check((await image(results[2])).code==='NOT_FOUND','Another grade private image denied');
+ const student=(await q("SELECT graphiscan_read_directory($1,$2,'student','',NULL,NULL,NULL,NULL,1,$3) r",[E,session,newChild])).rows[0].r;
+ check(student.rows.length===1,'Student detail does not require a prior result');
+ const review=async(result,key,revision=1,sid=session)=>(await q('SELECT graphiscan_write_review($1,$2,$3,$4::jsonb,$5,$6) r',[E,sid,result,JSON.stringify({expected_revision:revision,status:'Validated',remarks:'Fictional grade review',follow_up_needed:false}),key,U(n++)])).rows[0].r;
+ const key='grade_review_request_0001';
+ let response=await review(results[0],key);check(!response.code&&response.data.expert_id===E,'Grade expert can review an unassigned screening with true authorship');
+ check(!(await review(results[0],key)).code,'Review retry is idempotent');
+ check((await q("SELECT count(*)::int n FROM audit_logs WHERE actor_id=$1 AND action='screenings.review' AND resource_id=$2",[E,results[0]])).rows[0].n===1,'Review retry does not duplicate audit');
+ check((await review(results[0],'grade_review_stale_0001')).code==='REVISION_CONFLICT','Stale review revision rejected');
+ check((await review(results[2],'grade_review_denied_001')).code==='NOT_FOUND','Expert cannot review another grade');
+ await q('UPDATE students SET parent_id=$1 WHERE student_id=$2',[P,c2]);
+ const parentSession=await fresh(P);
+ check((await read('screenings',null,P,parentSession)).rows.filter(row=>results.includes(row.result_id)).length===1,'Parent receives only the validated linked result');
+ await q('INSERT INTO screening_expert_assignments(result_id,assigned_expert_id,assigned_by) VALUES($1,$2,$3)',[results[0],E,A]);
+ session=await fresh(E);const oldSession=session;
+ changed=await move([{school_id:s2,grade_level:3}]);check(!changed.code,'Admin moves expert scope');
+ check((await directory(oldSession)).code==='AUTHENTICATION_REQUIRED','Scope change revokes existing expert session');
+ session=await fresh(E);visible=await directory();
+ check(visible.rows.some(row=>row.student_id===c3)&&!visible.rows.some(row=>[c1,c2,newChild].includes(row.student_id)),'Fresh expert session follows new school and grade');
+ check((await read('screening',results[0])).rows.length===0,'Historical per-result assignment cannot retain previous-grade access');
+ check((await image(results[0])).code==='NOT_FOUND','Moving scope removes old private image access');
+ check((await review(results[0],'grade_review_moved_0001',2)).code==='NOT_FOUND','Moved expert cannot review old grade');
+ check((await read('screening',results[3])).rows.length===1,'New grade screenings become accessible without routing writes');
+ const author=(await q('SELECT expert_id FROM expert_validations WHERE result_id=$1',[results[0]])).rows[0].expert_id;
+ check(author===E,'Reassignment preserves historical reviewer authorship');
+ await move([]);
+ session=await fresh(E);check((await directory()).rows.length===0&&(await read()).rows.length===0,'Removing all scopes removes expert record access');
+ for(const role of ['anon','authenticated','service_role'])check(!(await q("SELECT has_function_privilege($1,'graphiscan_write_review(uuid,uuid,bigint,jsonb,text,uuid)','EXECUTE') ok",[role])).rows[0].ok,'Review function exposed to '+role);
+ console.log('Expert grade responsibility SQL: PASS ('+checks+' checks).');
+ return checks;
+};

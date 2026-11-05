@@ -6,22 +6,32 @@ from v1_directory import DirectoryService, invalid_query, record_id
 class AssignmentOptionsService(DirectoryService):
     def read_options(self, identity, school, args):
         record_id(school)
-        if any(key not in {'limit','cursor'} or len(args.getlist(key))!=1 for key in args):
+        if any(key not in {'limit','cursor','grade_level'} or len(args.getlist(key))!=1 for key in args):
             raise invalid_query()
         limit=args.get('limit','25')
         if not limit.isascii() or not limit.isdecimal() or limit.startswith('0') or len(limit)>3 or not 1<=int(limit)<=100:
             raise invalid_query()
         limit=int(limit)
+        grade=args.get('grade_level')
+        if grade is not None and grade not in {'1','2','3'}:
+            raise invalid_query()
         binding=[identity.user_id,identity.session_id,'assignment-options',school,limit]
+        if grade is not None:
+            binding.extend(['grade_level',grade])
         after_time=after_user=None
         if 'cursor' in args:
             after_time,after_user=self.decode_cursor(args['cursor'],binding,uuid_key=True)
         try:
             with self.connect() as connection:
                 with connection.cursor() as cursor:
-                    cursor.execute('''SELECT public.graphiscan_assignment_options(
+                    if grade is None:
+                        cursor.execute('''SELECT public.graphiscan_assignment_options(
                         %s::uuid,%s::uuid,%s::bigint,%s::timestamptz,%s::uuid,%s::integer) AS result''',
                         (identity.user_id,identity.session_id,school,after_time,after_user,limit))
+                    else:
+                        cursor.execute('''SELECT public.graphiscan_assignment_options_by_grade(
+                            %s::uuid,%s::uuid,%s::bigint,%s::smallint,%s::timestamptz,%s::uuid,%s::integer) AS result''',
+                            (identity.user_id,identity.session_id,school,int(grade),after_time,after_user,limit))
                     result=cursor.fetchone()['result']
             if not isinstance(result,dict) or 'code' not in result or not isinstance(result.get('rows'),list):
                 raise BackendUnavailable()

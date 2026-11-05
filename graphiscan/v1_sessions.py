@@ -1,5 +1,6 @@
 """Session issuance/refresh and durable sign-out. Tokens are response-only secrets."""
 from api_v1 import ApiError, BackendUnavailable, InvalidSession, ROLES
+from uuid import uuid4
 
 
 def login_fields(body):
@@ -25,7 +26,7 @@ class SessionService:
     def __init__(self,backend,provider,writer):
         self.backend,self.provider,self.writer=backend,provider,writer
 
-    def issue(self,body,*,refresh=False):
+    def issue(self,body,*,refresh=False,request_id=None):
         try:
             result=self.provider.call('POST','/token?grant_type='+('refresh_token' if refresh else 'password'),body=body)
         except ApiError as error:
@@ -46,6 +47,14 @@ class SessionService:
             state=self.backend.load_access(identity)
             if state is None or state.user_id!=identity.user_id or state.account_status!='active' or state.role not in ROLES:
                 raise ApiError(403,'ACCOUNT_UNAVAILABLE','This account is unavailable.')
+            if not refresh:
+                if self.writer is None:
+                    raise BackendUnavailable()
+                saved=self.writer.execute(
+                    'SELECT public.graphiscan_record_login(%s::uuid,%s::uuid,%s::uuid) AS ok',
+                    (identity.user_id,identity.session_id,request_id or str(uuid4())))
+                if not saved or saved.get('ok') is not True:
+                    raise BackendUnavailable()
             return dict(access_token=token,refresh_token=refresh_token,token_type='bearer',expires_in=expires)
         except Exception:
             if cleanup_token:
@@ -53,9 +62,9 @@ class SessionService:
                 except Exception:pass
             raise
 
-    def login(self,body):
+    def login(self,body,request_id=None):
         email,password=login_fields(body)
-        return self.issue(dict(email=email,password=password))
+        return self.issue(dict(email=email,password=password),request_id=request_id)
 
     def refresh(self,body):
         return self.issue({'refresh_token':refresh_field(body)},refresh=True)

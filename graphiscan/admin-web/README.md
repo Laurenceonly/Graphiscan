@@ -1,5 +1,22 @@
 # GraphiScan admin web
 
+Current local review (2026-11-04): **Manage assignments** is role-based.
+Teachers and experts receive schools and Grades1-3; parents are linked to
+specific students using school/grade filters. School/grade eligibility does not
+automatically transfer student ownership or assign screening reviews. Parent
+access still requires its current student link and a Validated result.
+Migration023 is now owner-applied and verified read-only; the local API was
+restarted with the new GET/PATCH account assignment endpoints. No assigning-staff
+picker is used. These source/UI changes have not been pushed or deployed.
+
+Local review (2026-11-04): Edit user uses one **Manage assignments** button.
+Its **Schools** section edits school memberships; **Assigning staff** controls
+who may select the user for assignments in a school. Each retains its existing
+authorized API and revision checks. Save or cancel pending changes before
+switching sections. School-write conflicts require checking the current account;
+the client does not automatically repeat a write. Administrators have no school
+assignment controls. This UI revision is tested locally and not yet published.
+
 Schools and grades (2026-11-04): Schools → View grades opens Grades1-3 for the
 selected school. Student and screening lists use both school and grade filters
 with independent pagination/retry. The roster shows assigned teachers, linked

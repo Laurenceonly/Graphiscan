@@ -1,16 +1,25 @@
 /* =========================================================
    01. FONT + DESIGN TOKENS
    GRAPHISCAN Admin Web Panel
-   Slate surfaces with muted blue actions
+   White surfaces with muted blue actions
 ========================================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/InterVariable.woff2') format('woff2');
+}
 
 :root {
+  --admin-motion-quick: 180ms;
+  --admin-motion-enter: 240ms;
+  --admin-motion-ease: cubic-bezier(0.23, 1, 0.32, 1);
   --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --white: #ffffff;
-  --page-bg: #f5f7fa;
-  --sidebar-bg: #f8fafc;
+  --page-bg: #ffffff;
+  --sidebar-bg: #ffffff;
   --feature-bg: #355c8c;
   --brand-blue: #355c8c;
 
@@ -1369,6 +1378,8 @@ textarea {
 
 .admin-shell .admin-search-control > svg {
   position: absolute;
+  width: 18px;
+  height: 18px;
   left: 14px;
   top: 50%;
   transform: translateY(-50%);

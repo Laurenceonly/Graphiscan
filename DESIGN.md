@@ -6,7 +6,7 @@ colors:
   brand-pressed: "#29496f"
   on-brand: "#ffffff"
   brand-muted: "#e4ecf5"
-  bg: "#f5f7fa"
+  bg: "#ffffff"
   surface: "#ffffff"
   text: "#263445"
   muted: "#5e6c7c"
@@ -20,20 +20,6 @@ colors:
   normal-surface: "#e7f4ec"
   high: "#895500"
   high-surface: "#fff2d9"
-  bg-dark: "#141d29"
-  surface-dark: "#1e2937"
-  text-dark: "#f3f5f8"
-  muted-dark: "#b8c3d0"
-  border-dark: "#425064"
-  primary-dark: "#aac0dd"
-  on-primary-dark: "#182a41"
-  soft-dark: "#2b3b50"
-  skeleton-dark: "#3a4a60"
-  error-dark: "#ffb4b0"
-  normal-dark: "#9bd8ac"
-  normal-surface-dark: "#173f33"
-  high-dark: "#f7cc83"
-  high-surface-dark: "#49381e"
 typography:
   title:
     fontSize: "26px"
@@ -177,6 +163,41 @@ components:
 ---
 
 # Design System: GraphiScan Android
+
+User direction2026-11-03 supersedes earlier cool-paper/dark-mode notes: all mobile
+page backgrounds, navigation surfaces and safe areas are white. The application
+uses the light palette in either OS scheme with dark status-bar content. Onboarding
+has no enclosing padded card. Keep blue primary actions and meaningful selection
+or status colors; separate reading groups with spacing and quiet dividers.
+
+Admin palette update2026-11-04: the page canvas and sidebar now use pure white
+(#ffffff), matching panels and headers across all admin pages. Subtle borders,
+muted blue actions, focus/hover states and status colors retain their purpose.
+Schools uses the same table vocabulary as the other record pages; the card trial
+and Grades1–3 badge were removed at the user's request.
+
+Admin refinement2026-11-04 follows the user's third supplied dashboard reference:
+white canvas, thin borders, aligned filters/tables and a single divided summary
+row. Selected navigation uses the existing blue fill; the header stays quiet with
+no redundant account/Administrator labels. Corresponding controls share dimensions
+and all directory searches share the same18px icon artwork. School View opens a
+compact heading/action/grade strip above an internally scrolling roster. This is
+the web Operate surface; the native specifications below remain separately scoped.
+
+Latest admin direction2026-11-04: related value columns use thin vertical dividers
+and matching header/value insets. Stack phone records with horizontal separators.
+Field labels use dark semibold text, not colored highlight backgrounds; values
+remain regular text on white surfaces.
+Progress uses an interactive timeline of recorded model labels in chronological
+screening order, with clear Initial/Follow-up metadata. Confidence is not a clinical
+progress score. A singleton is a point, unknown labels remain distinct, and the
+chart keeps a stable frame above the fixed search; only the student list scrolls. The action
+is named View progress.
+Student View is a full workspace subpage with record details and screening history,
+no sidebar item; Edit stays explicit. Screening headings use their recorded Initial
+or Follow-up type, and Reviewed by identifies actual authorship. No manual expert
+assignment form appears on that detail screen; this visual change does not alter
+the server's expert-routing/ownership policy.
 
 Palette direction2026-10-25: user extended the admin's steel blue/slate theme to
 Expo. Brand actions and light-mode Scan lettering use #355c8c, shared controls

@@ -1,5 +1,14 @@
 # Hosted account management
 
+Account delivery update (2026-11-03): hosted account creation now optionally sends
+temporary credentials through a configured Brevo HTTPS sender after confirmed
+creation, or generates a login ID in the admin UI for direct handover without
+email. Completed replays never resend; delivery failures retain the created
+account and have separate status. No migration is required. This is local source
+and mocked-test evidence, not deployed sender/inbox verification. See
+[ACCOUNT_DELIVERY.md](ACCOUNT_DELIVERY.md); the older no-email note below describes
+the prior implementation.
+
 Current evidence (2026-10-22): schema through019 is installed and API/admin are
 published. Authorized UI checks created a fictional teacher201 (forced password
 change), edited name/synthetic-school membership200, disabled/reactivated200,
@@ -84,3 +93,16 @@ Latest actual hosted check (2026-10-21): migration017 installation, all catalog/
 The hosted Users page supports editing name, role, and status, plus the prepared account-creation flow above. The update API also accepts school memberships and permission-grant replacement. Edit now keeps uncertain saves gated until a successful list refresh, includes network failures in that recovery state, and blocks section/route navigation while saving or reconciling. Temporary-password reset, account deletion, populated role workflows, database cutover, and live hosted writes remain unverified or unimplemented. No real Auth key or user was created for this work.
 
 Supabase references: [Auth admin access](https://supabase.com/docs/reference/python/admin-api), [administrator-created users](https://supabase.com/docs/reference/python/auth-admin-createuser).
+
+2026-11-05 expert responsibility policy (prepared migration025): the administrator
+sets expert school/grade scopes through Manage assignments. Current scope
+authorizes all students, results, reports, private images and review writes in
+that school/grade, including history and new records. Moving/removing scope
+revokes existing expert sessions; fresh requests cannot access the old grade.
+Historical reviewer authorship is retained. Legacy per-result assignment remains
+deprecated metadata and cannot override current grade scope. Teacher ownership,
+parent links/Validated release, revisions, idempotency and audit remain unchanged.
+School staff comes from grade-filtered assignment options and reloads after a
+confirmed assignment save.025 is prepared and isolated-tested, NOT applied hosted.
+Earlier per-screening-only descriptions document the pre025 runtime. Legacy MySQL
+routes retain their separate existing authorization.

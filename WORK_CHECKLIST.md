@@ -1,5 +1,43 @@
 # GraphiScan consolidated work checklist
 
+## Software-only priority - 2026-11-03
+
+Latest initial review: see [UI_FLOW_CHECK.md](UI_FLOW_CHECK.md). Local browser
+flow/layout checks are complete within their recorded fixtures/viewports, including
+Initial/Follow-up, review/parent release/Flagged visibility and failed-read recovery.
+Public Admin portal links are removed in source; layout/build checks pass.
+Native emulator ADB timeouts prevented new device captures. Standalone APK and
+actual hosted role workflow remain open; do not mark those complete from exports.
+
+Latest domain checkpoint: user confirms landing graphiscan.site and admin
+admin.graphiscan.site work. Public source examples/development fallback and
+access-email template now use the custom domains; strict landing build passed
+with the intended public values. Production Vercel variable updates/redeployment
+and independent authenticated/link/canonical verification remain pending.
+
+Defense is November11; manuscript/presentation work is deferred. Use
+[DEFENSE_SOFTWARE_AUDIT.md](DEFENSE_SOFTWARE_AUDIT.md) for the current panel mapping
+and acceptance order. Account email/direct-handover source is implemented locally:
+41 mocked Python tests,614 contract/507 isolated SQL checks, final admin build
+and97 fictional browser assertions pass. Deployment, sender verification and
+actual email remain open. The interpreter works with approved access; the initial
+missing-Python symptom was sandbox restriction.
+
+User now reports graphiscan.site purchased; DNS/Vercel connection is unverified.
+Latest initial review passed89 combined mocked Python workflow tests after a
+NumPy test-isolation correction, plus614 contract/507 isolated SQL checks.
+Fictional browser flow reached Initial/review/parent-release/Follow-up/Flagged
+visibility, but final viewport/error/native checks remain open. A missing mobile
+failed-read retry action was fixed in source; final browser check remains pending.
+Public hosted health returned200; no live authenticated role flow was run. Continue
+core role workflow and Initial/Follow-up acceptance, native UI review, standalone
+APK build/device testing, all-model/access/retry checks and remaining privacy,
+model-evidence and historical-data/release requirements while domain setup proceeds.
+Primary user delivery is APK; public landing and admin
+must remain responsive on phones/tablets as well as desktop.
+The earlier overall percentages below include deferred paper work and are not
+current software readiness scores.
+
 ## Current reconciliation - 2026-10-24
 
 Publication/progress: all reviewed public source is committed/pushed and PR#11

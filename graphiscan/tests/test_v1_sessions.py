@@ -37,6 +37,24 @@ class SessionTests(unittest.TestCase):
             self.assertEqual(self.login(body).status_code,422)
         self.provider.call.assert_not_called()
 
+    def test_login_records_verified_identity_without_credentials(self):
+        self.assertEqual(self.login().status_code,200)
+        sql,params=self.writer.execute.call_args.args
+        self.assertIn('graphiscan_record_login',sql)
+        self.assertEqual(params[:2],(USER,SESSION))
+        self.assertNotIn('synthetic',str(params))
+
+    def test_refresh_does_not_fabricate_a_new_login(self):
+        self.assertEqual(self.client.post('/api/v1/session/refresh',json={'refresh_token':'synthetic-refresh'}).status_code,200)
+        self.writer.execute.assert_not_called()
+
+    def test_login_audit_failure_cleans_provider_session(self):
+        self.writer.execute.side_effect=BackendUnavailable()
+        response=self.login()
+        self.assertEqual(response.status_code,503)
+        self.assertNotIn('synthetic-access',response.get_data(as_text=True))
+        self.assertEqual(self.provider.call.call_args.args[1],'/logout?scope=local')
+
     def test_bad_credentials_rate_limit_and_backend_outage_are_fixed_errors(self):
         for error,status in [(ApiError(422,'CURRENT_PASSWORD_INVALID','Denied'),401),
                              (ApiError(429,'RATE_LIMITED','Wait'),429),(BackendUnavailable(),503)]:

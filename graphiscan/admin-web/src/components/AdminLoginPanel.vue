@@ -55,7 +55,7 @@ import workspacePreview from '../assets/admin-workspace-preview.png'
 }
 .login-product-preview {
   position:relative;
-  width:min(100%,calc((100dvh - 340px) * 1.44));
+  width:min(100%,calc((100dvh - 240px) * 1.44));
   max-width:960px;
   margin:auto;
   align-self:center;
@@ -69,7 +69,6 @@ import workspacePreview from '../assets/admin-workspace-preview.png'
 @media (max-width: 1150px) {
   .hero-panel.login-product-panel { padding: 36px 28px; }
   .login-product-panel .hero-content h2 { font-size: 24px; }
-  .login-product-preview { width:min(100%,calc((100dvh - 340px) * 1.44)); }
 }
 @media (min-width: 981px) and (max-height: 760px) {
   .hero-panel.login-product-panel { padding-top: 32px; }

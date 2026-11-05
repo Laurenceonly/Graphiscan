@@ -79,6 +79,13 @@ async function main() {
   accept('AccountCreate', account, true);
   accept('AccountCreate', {...account,temporary_password:'weak'}, false);
   accept('AccountCreate', {...account,email:'not-an-email'}, false);
+  accept('AccountCreate', {...account,delivery_method:'manual'}, true);
+  accept('AccountCreate', {...account,email:'fictional@example.com',delivery_method:'email'}, true);
+  accept('AccountCreate', {...account,delivery_method:'sms'}, false);
+  accept('CredentialDelivery', {method:'email',status:'accepted'}, true);
+  accept('CredentialDelivery', {method:'email',status:'not_repeated'}, true);
+  accept('CredentialDelivery', {method:'email',status:'delivered'}, false);
+  accept('CredentialDelivery', {method:'email',status:'accepted',temporary_password:'must-never-be-returned'}, false);
   accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'accounts.manage',school_id:'1'}]}, false);
   accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'accounts.manage',school_id:null}]}, true);
   accept('AccountUpdate', {expected_revision:1,permission_grants:[{permission_key:'assignments.manage',school_id:'1'}]}, true);
@@ -194,6 +201,7 @@ async function main() {
     await require('./check_v1_admin_sql.cjs')({db, root, U, validateRow:(name,row)=>{
       const validator=ajv.compile(schemas[name]);return {ok:validator(row),errors:validator.errors};
     }});
+    await require('./check_role_assignments_sql.cjs')({db,root});
   } finally { await db.close(); }
 }
 main().catch(error=>{console.error('Contract validation FAILED: '+error.message+

@@ -5,13 +5,13 @@
     <link rel="icon" type="image/png" href="/graphiscan-favicon-cutout.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GraphiScan Admin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/graphiscan-logo.png" as="image" />
     <link rel="preload" href="/src/assets/admin-workspace-preview.png" as="image" />
     <style>
-      html,body{margin:0;background:#f5f7fa}
-      #admin-startup{position:fixed;inset:0;z-index:2147483647;background:#f5f7fa;transition:opacity 240ms cubic-bezier(.23,1,.32,1)}
+      :root{--admin-motion-quick:180ms;--admin-motion-enter:240ms;--admin-motion-ease:cubic-bezier(.23,1,.32,1)}
+      html,body{margin:0;background:#fff}
+      #admin-startup{position:fixed;inset:0;z-index:2147483647;background:#fff;transition:opacity var(--admin-motion-enter) var(--admin-motion-ease)}
       #admin-startup.ready{opacity:0;pointer-events:none}
       #admin-startup span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
       @media(prefers-reduced-motion:reduce){#admin-startup{transition:none}}

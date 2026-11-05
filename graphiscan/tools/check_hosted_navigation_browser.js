@@ -67,16 +67,16 @@ async page => {
         }
         if(name==='Audit Logs')await page.getByText('fictional_account_action',{exact:true}).waitFor();
         if(name==='Progress'){
-          await page.getByLabel('Student',{exact:true}).selectOption('17');await page.getByRole('button',{name:'View history',exact:true}).click();await page.getByRole('button',{name:'View history result 71',exact:true}).waitFor();
-          await page.getByRole('button',{name:'Load more history',exact:true}).click();await page.getByRole('button',{name:'View history result 72',exact:true}).waitFor();
-          check('history pagination at '+width,await page.getByRole('button',{name:'Load more history',exact:true}).count()===0);
+          await page.getByLabel('Student',{exact:true}).selectOption('17');await page.getByRole('button',{name:'View progress',exact:true}).click();await page.getByRole('button',{name:'View history result 71',exact:true}).waitFor();
+          await page.getByRole('button',{name:'View history result 72',exact:true}).waitFor();
+          check('complete history automatically paged at '+width,await page.locator('.screening-trend .trend-point').count()===2&&await page.getByRole('button',{name:'Load more history',exact:true}).count()===0);
         }
         if([1440,390].includes(width)&&['Users','Students','Results','Progress','Audit Logs','Settings'].includes(name))await page.screenshot({path:'output/playwright/hosted-'+name.toLowerCase().replace(' ','-')+'-'+width+'.png',fullPage:true,animations:'disabled'});
       }
     }
     await page.setViewportSize({width:1440,height:1000});await nav('Progress',1440);await page.getByLabel('Student',{exact:true}).selectOption('17');failHistory=true;
-    await page.getByRole('button',{name:'View history',exact:true}).click();await page.getByText('Synthetic history failure',{exact:true}).waitFor();
-    failHistory=false;await page.getByRole('button',{name:'View history',exact:true}).click();await page.getByRole('button',{name:'View history result 71',exact:true}).waitFor();check('history failure can retry',true);
+    await page.getByRole('button',{name:'View progress',exact:true}).click();await page.getByText('Synthetic history failure',{exact:true}).waitFor();
+    failHistory=false;await page.getByRole('button',{name:'View progress',exact:true}).click();await page.getByRole('button',{name:'View history result 71',exact:true}).waitFor();check('history failure can retry',true);
     await nav('Settings',1440);
     await page.getByLabel('Current password',{exact:true}).fill('FictionalOld!1');await page.getByLabel('New password',{exact:true}).fill('FictionalNext!2');await page.getByLabel('Confirm new password',{exact:true}).fill('FictionalMismatch!3');
     await page.getByText('New passwords do not match.',{exact:true}).waitFor();

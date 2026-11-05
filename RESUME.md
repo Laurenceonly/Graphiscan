@@ -1,32 +1,202 @@
+2026-11-05 migration025 installed: owner ran it twice; the second run raised the old-body guard. Read-only verification confirms all four scope preflight checks true, all001-025 objects present and all52 latest function bodies match source; current admin-writer grants exact. First run succeeded, second run did not undo it. Migration025 now safely skips already-installed predicates;34 isolated expert-scope checks include two repeated runs preserving function bodies and ACLs. No agent hosted writes or live workflow acceptance. This supersedes earlier025-unapplied notes.
+
+2026-11-05 latest pre-push checkpoint: user resolved expert responsibility: admin school/grade assignments authorize all current/future students and screenings in that scope; reassignment removes access. Implemented in prepared migration025, NOT applied hosted.001-024 remain metadata-verified installed. Admin/mobile scope UI updated; historical review authorship retained. Full local checks pass; see ADMIN_RELEASE_CHECK.md. No push, hosted writes, actual inference or native-device acceptance claimed. This supersedes earlier pending-routing and per-screening-only notes.
+
+﻿2026-11-05 latest migration audit supersedes earlier022-pending notes: all numbered001-024 expected catalog objects are present and all52 latest function bodies match source (including023 dynamic rewrites).022 now independently verified applied. Current admin-writer function grants match the seven-function allowlist; old017 preflight's extra-function flag is explained by023. No missing numbered migration found, no database writes performed. See CHANGELOG and .local-tools/migration-audit-report.json. Live workflow acceptance remains separate.
+2026-11-05 migration checkpoint superseding earlier unapplied024 notes:024 independently metadata-verified and updated local API started5002, health200 (session87133).023 grade functions/ACLs/RLS reverified installed.022 is NOT active: both functions differ and lack mobile-only password policy; reset still forces all roles. Owner must apply022 for agreed policy. No real login/audit writes performed by checks.
+## ACTIVE LOCAL REVIEW - admin refinements and student progress - 2026-11-04
+
+Latest checkpoint: Student Progress has an interactive chronological label chart,
+complete authorized oldest-first history paging, View progress naming and an
+uncompressed table below it. Final66 fictional desktop/phone checks, admin build
+and layout scan pass; captures inspected. All changes remain local/unpublished.
+Expert automatic-routing policy is still awaiting the multiple-expert choice;
+the database's existing per-record expert ownership gates remain unchanged.
+
+Latest fix: user reported dashboard warning. HostedScreenings.queryList had accidentally inherited student.value.grade_level from the expert-options query; student is null before opening details. List now uses only its independent filters. Real local API log confirms screening GET200 after HMR, admin build and79 fictional dashboard checks pass. New role fixture explicitly asserts startup screening request and no dashboard warning; rerun passed40 checks. No DB change or push for this fix.
+
+User ran023 and said done. Independently verified read-only: grade table and role-read function installed, all8 runtime resource functions contain grade checks, reader/writer execute capabilities correct, reader cannot write, grade table RLS enabled. No user records inspected or mutated by verification. Identified port5002 ownerPID2004 via command line as the existing run_v1_admin_local.py; stopped only that verified process and restarted it with updated code, session57065. Health200; new anonymous assignments GET401 (was404), local PATCH CORS preflight checked. Local frontend remains http://127.0.0.1:5173/login. User may now review authenticated role assignment saves; no real save performed by agent. No push/deployment. Final checks:20 Python API tests,644 contract checks/all prior SQL suites plus54 role SQL checks,38 fictional role-browser checks, both web builds and corrected mobile typecheck pass; role screenshots visually inspected. Historical paused/pending notes below are superseded by this checkpoint.
+
+## PAUSED BY USER - role-based assignments - 2026-11-04
+
+Resume update: user resumed; final mobile typecheck passed, contract suite passed644 checks and role-assignment SQL passed54 checks; teacher desktop and parent phone screenshots inspected. Attempt to inspect Chrome through computer-use returned "Computer Use app approval timed out" before any SQL action. Hosted migration remains unapplied. Restart attempt could not start the new local API because port5002 is already occupied; do not stop an unidentified process. Existing local API may still have old routes. User needs owner execution of graphiscan/db/postgres/023_role_assignments.sql unless the existing Supabase session becomes accessible, then identify the port owner before restarting the local API. No push or real database write.
+
+User: "im 1 percent on token lets resume alter". STOP all active work until they resume. No hosted migration, role changes, cleanup, push or deployment performed in this slice. Prior instruction to keep page-review changes local remains. Latest user meaning supersedes all prior Assigning staff UI: teacher/expert = schools + Grades1-3; parent = school/grade context + explicit student links; admin = overseer without assignment controls. User said "okay do" to implementing and applying the necessary database update, then explicitly paused before application. Do not apply while paused.
+
+Implemented locally (uncommitted): AccountRoleAssignments.vue replaces the old Assigning staff manager in HostedAdminRecords.vue. Staff school/grade checkboxes, multischool summary; parent school/grade-filtered paginated student checkboxes, explicit replacement notice, link/unlink deltas with student revisions, query-version guards, read-only conflict reconciliation; profile change clears open editors/actions to remove stale personal data. New GET/PATCH /api/v1/accounts/{id}/assignments in api_v1.py, v1_role_assignments.py, backend composition in v1_backend.py. Existing v1 backend mail changes are unrelated local work; preserve them. Existing AccountAssignmentAccess.vue remains unused legacy UI code, legacy HTTP endpoints retained for compatibility.
+
+Prepared owner migration graphiscan/db/postgres/023_role_assignments.sql: RLS/private user_school_grades, role assignment read/write functions, explicit per-student parent deltas with operator school authority and revisions, parent-session revocation, audit/transaction rollback, school memberships derived from selected grade scopes. Existing staff memberships backfill Grades1-3 to preserve prior scope. Migration refuses active legacy staff ownership without membership rather than adding memberships silently. Guarded pg_get_functiondef replacements preserve existing session/privacy/ownership gates while enforcing grade limits on directory/screening reads, student writes, expert assignment/review and upload reservation/completion/status. Authorized admins use grade eligibility instead of per-assigning-actor eligibility. Teacher clients cannot change parent links; parent access still requires actual link and Validated result. No automatic ownership, grants or notice acceptance. File is complete with BEGIN/COMMIT and has passed isolated installation; NOT applied hosted.
+
+Other relevant changes: optional grade_level and cursor binding in v1_assignment_options.py; grade_levels metadata and OpenAPI/API_CONTRACT catalogue updated. Shared HostedDirectory.vue/Admin HostedScreenings.vue use grade-filtered candidate options; teachers discover their own grade list and parent fields are read-only. Mobile HostedStudentEditor.tsx/core/hosted-directory.ts use assigned grade choices and admin-managed parent links. A remaining setParentName reference was fixed after the first TypeScript failure; final typecheck rerun is pending inspection. No native APK built.
+
+Verified before pause: 20 focused Python API/options/admin-write tests pass (run ../.venv/Scripts/python.exe from graphiscan with escalation; root cwd previously caused import failure). Full offline contract check passed 644 checks and all existing isolated SQL suites plus51 new role SQL checks. Additional grade-only revocation/parent-transfer rollback checks were then added and rerun via functions cell350; inspect its completion before claiming the final count. Standalone migration harness .local-tools/check-role-assignments.cjs passed installation plus49 role SQL checks before those additions. Tracked test module graphiscan/tools/check_role_assignments_sql.cjs is called by check_api_contract.cjs. Role browser fixture graphiscan/tools/check_role_assignments_browser.js passed38 fictional1440/390 checks, including scoped saves, cancellation, failure/retry, late query discard, parent deltas, and permission-loss cleanup. All browser writes intercepted. Admin and retained user web builds passed; inspect final typecheck session14252 and functions.wait cell350 (contract rerun result also there). Older build sessions37145/92306/18923 were already read;18923 was the initial TS error, now fixed. Browser screenshots output/playwright/role-assignments-teacher-1440.png/-390.png and parent equivalents were generated but still need visual inspection.
+
+Actual hosted metadata: .local-tools/check-role-migration-access.py read-only check confirms grade table/read function absent. Both configured reader/writer connections lack schema-owner ability (no values printed). No database connector tool available. Browser provider cua.getState reports browser host unavailable, but NATIVE COMPUTER USE WORKS and Chrome has an existing Supabase owner SQL tab. Apply only after remaining verification and user resume. Native skill read: C:/Users/MY_PC/.codex/plugins/cache/openai-bundled/computer-use/26.1027.51404/skills/computer-use/SKILL.md plus docs/guidance.md and confirmations.md read fully. Announced computer-use skill. Use functions-discovered tools.mcp__node_repl__js and @oai/sky, not PowerShell UI automation. Node global sky/apps/targetApp/targetWindow/state initialized. Chrome app id process:C:\Program Files\Google\Chrome\Application\chrome.exe, unique returned window67194; last title Vercel - Google Chrome. Last read-only UIA observation showed tab "Untitled query | SQL Editor | graphiscan-test | KnightLabs | Supabase" (index59959 then). DO NOT reuse old indexes; reobserve current state. No UI input has been sent. Select existing Supabase tab, create a new query to preserve old content, load tested migration only, and apply/verify after resume if owner session remains available. Never automate login/password dialogs or disclose credentials. User authorization persists; no redundant approval unless required by higher rules. Scope of authorized SQL is023 only, NOT clean-start/old-account retirement or unrelated022.
+
+Local services before pause: Vite5173 session27464; API5002 session98760 still running OLD loaded Python modules (debug/reloader off). After DB/schema work, restart ONLY this known API via existing .local-tools/run_v1_admin_local.py to register new endpoints, then verify health/options/anonymous401 and read-only new capability status. Do not run hosted mutations merely to test. Public main remains school-grade release69a6687; local prior f5f0339 hide-scrollbar commit exists, never pushed. All page-review changes remain dirty/uncommitted. Preserve other longstanding account/mail/password/mobile files. Root .gitignore protections unchanged. Do not git add all.
+
+Remaining after resume: inspect pending test outputs and role screenshots; resolve any failures; finish rollout docs/KNOWLEDGE/PROJECT_PLAN/CHANGELOG for new role-based semantics (currently not fully updated beyond this resume entry); optionally add targeted migration preflight metadata instructions. Apply tested023 through existing authorized owner Supabase session if available, then verify installed capabilities read-only. Restart local API and verify routes. Keep web source local until user asks to publish. If owner session is unavailable, give concrete023 SQL handoff and explain app credentials cannot DDL. Old .local-tools/clean-admin-start.sql remains unapplied and must not be bundled into this change.
+
+## Single assignment manager - 2026-11-04 (LOCAL REVIEW)
+
+- Latest user direction: remove the main School access/checkbox box and restore a single Manage assignments entry. Implemented in HostedAdminRecords.vue and AccountAssignmentAccess.vue. Manager contains Schools (existing account membership PATCH) and Assigning staff (existing eligibility PATCH), retaining separate server permissions/revisions. No automatic grants. Pending drafts cannot switch sections; Cancel discards; school conflicts require read-back, not write replay. Main editor keeps profile edits; admin create/promotion behavior remains. No admin/self management control. Accounts.manage-only viewers can still manage memberships without seeing staff eligibility controls.
+- Admin build/38 fictional1440/390 browser checks pass, including writes, scope/revisions, Cancel, conflict recovery and parent/expert/permission paths; captures inspected. No real writes. Still local/unpushed pending page-by-page user review. This supersedes the temporary School access disclosure placement.
+
+## Admin editor school controls - 2026-11-04 (LOCAL REVIEW)
+
+- Latest small follow-up removes the divider directly above Cancel/Save changes in Edit user only. Admin build and desktop/phone computed-border/button/Cancel checks pass; no real writes, still local/unpushed.
+- User wants admin overseers without school assignments, then requested removal of the explanatory sentence. Admin create/edit now hides school controls and assignment-access action, with no extra sentence. Creates/promotions use empty school IDs; authorized saves of another admin clear old links via existing API. Self-access prohibition retained: own-name edits never send membership/role/grant changes; existing self links require another authorized operator. No auto permission grants, backend policy/migration or real cleanup. Admin build/27 fictional desktop-phone checks pass, captures inspected; local/unpushed.
+
+## Users summary correction - 2026-11-04 (LOCAL REVIEW)
+
+- Latest user correction: typing must not change the top summary boxes. Cards now count unfiltered loaded rows; below-search feedback shows matching count out of loaded count. Search remains instant/local and layout stable, including no matches. Admin build/53 fictional desktop-phone checks pass. No global count inferred from pagination. Still local/unpushed for user review.
+
+## Users local search/stable box - 2026-11-04 (LOCAL REVIEW)
+
+- User wants instant filtering of loaded users (not server queries while typing), no Updating users text, summary label Users, and no stretching as results change. Implemented in HostedAdminRecords.vue plus Users-only viewport CSS: derived local name/email partial-term matching, case/accent handling, matching counts, clickable status cards/reset, role/status server scope reads with stale-response guards, editable fields during reads, explicit refresh/pagination preserving search. Typing/Enter/Apply for unchanged scope make no network search; clear restores loaded rows. Audit remains manual. Permission loss clears loaded data.
+- Desktop Users panel/table frame/header/column widths stay fixed for matches and no matches; narrow screens preserve outer panel size and normal stacked records. Admin build and49 fictional desktop/phone checks pass, including geometry/no-query assertions and scope/race/pagination/permission behavior; screenshots inspected. No real writes. All page-review changes remain local and unpushed; preserve unrelated dirty account/mail/mobile work. User is reviewing Users after Dashboard.
+
+## Dashboard interactions - 2026-11-04 (LOCAL REVIEW)
+
+- User reviews page by page, starting Dashboard. No scroll inside line graph; new DashboardActivityChart.vue fits available height, with hover/focus counts and click/tap/Enter/Space pinned day selection/Escape clear. Summary hover/focus improved; review rows open existing Results list with matching validation_status and cleared grade; legend buttons highlight ring category/count and toggle all. Exact labels and server permissions retained. Admin build/79 fictional desktop/phone browser checks pass; captures inspected. No live writes. All changes remain local and unpushed pending user review. Fixed-layout work below remains applicable.
+
+## Fixed workspace and balanced insets - 2026-11-04 (LOCAL REVIEW)
+
+- Latest clarification: no whole-page scrolling; scroll only content boxes, with balanced header/title and bottom spacing. Implemented local workspace-viewport.css imported in HostedAdminWorkspace.vue, replacing hidden-scrollbar rules. Viewport shell, internal panel scrolling, list/detail replacement,20px equal desktop insets/16px narrow, compact short-laptop dashboard and mobile card regions. Admin build and343+19 fictional browser checks pass; screenshots inspected; no real writes. All eight sections checked, plus school grades/result details/student dialogs/login restoration. No backend change.
+- User said to check locally first: DO NOT PUSH until authorized. Local-only prior commit f5f0339 exists; origin/main remains69a6687 (school grades). Current fixed-layout changes uncommitted; preserve other longstanding dirty files. Local admin http://127.0.0.1:5173/login; API5002 session98760 and Vite5173 session27464 started this session. Recheck liveness after breaks. Clean-start SQL remains unapplied.
+
 ## Workspace scrollbars/local connection - 2026-11-04
 
 - Hidden visible page/sidebar scrollbars throughout hosted admin without disabling scrolling; normal policy restored on login. Admin build and47 fictional1440/390 checks pass, no page errors. Local API5002 was down; existing ignored runner restarted (session98760), health and CORS login preflight200. Vite5173 running session27464. Local link http://127.0.0.1:5173/login; live https://admin.graphiscan.site/login. School-grade UI69a6687 is already live; clean-start SQL still unapplied. Recheck process liveness after breaks.
 
 ## School-grade UI and clean-start handoff - 2026-11-04
 
-User wants School → Grade → people and reiterates replacing confusing old accounts. Grade view implemented with Grades1-3, scoped paginated students/teachers/parents/review experts, contextual Add student/editor, persistent grade on Refresh/save and stale-response/profile-name safeguards. Users Active default.38 fictional desktop/phone browser checks and both Vue builds pass; no actual student write.
+- UI published as 69a6687; public admin bundle /assets/index-C-6Hvj_w.js verified with grade action/roster. Exact staged admin build passed. Account cleanup SQL still unapplied.
+User wants School â†’ Grade â†’ people and reiterates replacing confusing old accounts. Grade view implemented with Grades1-3, scoped paginated students/teachers/parents/review experts, contextual Add student/editor, persistent grade on Refresh/save and stale-response/profile-name safeguards. Users Active default.38 fictional desktop/phone browser checks and both Vue builds pass; no actual student write.
 
 Private owner-run .local-tools/clean-admin-start.sql snapshots exact six old IDs/revisions, keeps admin@gmail.com, disables old accounts without deleting any data/history, adds global school/student assignment scope to the replacement and republishes unchanged professional notice as graphiscan-privacy-v2-20261104 for all properly issued accounts.24 isolated actual-trigger PostgreSQL checks pass. NOT executed hosted. Fresh sign-in and explicit notice acceptance required after operator execution. Existing profile School management grant is independently verified installed. Async question about preserving vs removing demo records remains unanswered; handoff preserves them and never deletes. Never run broad deletion or invent consent.
+
+## Add school permission handoff - 2026-11-04
+
+- User requests Add school. Existing UI/form/server support it, but read-only live grants show both admins missing schools.manage. Prepared .local-tools/enable-admin-school-management.sql to add only the required global grant to exact active admin@gmail.com with audit.8 isolated PostgreSQL checks pass; NOT run hosted. User runs entire file in existing Supabase SQL Editor, then signs out/in because grant security triggers revoke existing sessions. Schools should show Add school beside Refresh; actual form/save acceptance remains pending. No new UI or account/record writes by agent.
+
+## Startup-prefetch live - 2026-11-04
+
+-3642d9a pushed; production admin now serves /assets/index-DHNt5J8q.js. Users/Audit authorized first lists now load with initial workspace, dashboard waits for first attempts to settle, opening lists uses prefetched rows.40 fictional browser checks/exact release build pass. Refresh/retry/permissions/editor cleanup retained; no server/account changes, unrelated edits preserved.
 
 ## Users/Audit prefetched at startup - 2026-11-04
 
 User clarified initial loading should include Users/Audit, not just cache later visits. Both authorized record components now mount up front, Dashboard waits for first reads to settle, and first page visits use prefetched data. Refresh/filter reads remain explicit. Active-section cleanup replaces KeepAlive cleanup; profile/permission reset and logout remain. Admin build and40 fictional1440/390 checks pass including first-read failure/retry. Task-only publish; unrelated work stays local.
 
+## Users/Audit caching live - 2026-11-04
+
+-c43d2ef pushed; public admin new /assets/index-CO-r1L6Y.js includes keyed list caching. First visits still load; subsequent navigation retains rows/filters/paging, Refresh still fetches. Build and34 fictional browser checks passed, including profile permission loss. No account/database changes; other edits remain local.
+
 ## Users/Audit revisits retained - 2026-11-04
 
 User requested removing repeat skeletons on Users/Audit navigation. Keyed cached components now retain rows/filters/paging; first-load placeholders and explicit Refresh remain. Editor cleanup runs on deactivation and permission/profile changes reset lists. Admin build and34 fictional1440/390 checks pass. Task-only publish; unrelated account/password/mobile work stays local.
+
+## Loading and logo fixes live - 2026-11-04
+
+-a1b1007 pushed; live admin /assets/index-BQ7ZycNq.js contains full-page skeletons/shared brand/Progress loader. Exact release build and67 fictional desktop/phone assertions pass. Sidebar stays usable on initial data reads; Settings immediate, Progress conditional. Logo and text match exact geometry before/after reload. No account/auth policy changes; dev/preview servers stopped. Unrelated work remains local.
 
 ## Full content-area loaders and matched logo - 2026-11-04
 
 User requested initial skeletons across admin content except navigation and complained about refresh logo size. Implemented shared AdminPageSkeleton across initial data pages, conditional Progress/no Settings loader, refresh data retention and exact shared AdminWorkspaceBrand geometry.67 fictional1440/390 browser checks and both web builds pass; screenshots inspected. Publish task-only UI slice; unrelated edits remain local. No accounts/permissions/credentials changed.
 
+## Quiet restoration live - 2026-11-04
+
+- Public bundle /assets/index-3sU-EfcE.js now contains dashboard skeleton and no opening-workspace message after5f41302.30 fictional browser checks/build pass; user live visual confirmation remains. Earlier rollout-pending note below is historical.
+
+## Quiet restoration published - 2026-11-04
+
+-5f41302 pushed to main. Build passes;30 fictional desktop/phone browser assertions pass and skeleton captures inspected. First public asset probe still served the previous C5vYzcaG bundle; rollout confirmation pending. No account/session-policy changes; unrelated work preserved.
+
 ## Quiet dashboard restoration - 2026-11-04
 
 User disliked the visible session-opening screen after0127f5a. Replaced it with dashboard skeleton and accessible nonvisual status; restore/retry/logout behavior unchanged. Admin build and30 fictional1440/390 browser checks pass; screenshots inspected. Task-only publication continues prior user-authorized session fix; unrelated edits stay local.
 
+## Session fix published - 2026-11-04
+
+-0127f5a pushed to main; live admin bundle /assets/index-C5vYzcaG.js contains session restoration. Exact staged release: build,20 client tests,28 fictional1440/390 browser checks pass. User must sign in once using updated page then refresh /workspace; real-account/provider refresh still needs user acceptance. /login refresh unchanged. Other work remains local and old-account retirement remains separate.
+
 ## Admin dashboard reload persistence - 2026-11-04
 
 User requested dashboard refresh preserve sign-in, with /login refresh unchanged, then authorized push. Task-only source stores a refresh token per browser tab/API origin; existing server refresh and current profile gates run before workspace display. Temporary outages offer retry, logout/revocation/role changes clear access.20 focused client tests,28 fictional browser assertions at1440/390, both Vue builds and mobile typecheck pass. Native default session behavior unchanged. No hosted credentials or records changed by tests. Verify deployment/live refresh after push; keep unrelated account/password/mobile/migration work separate.
+
+# Resume checkpoint - 2026-11-03 (user paused)
+
+User explicitly asked to stop for now and remember this work. Resume from this
+checkpoint; older notes below describe earlier states and preferences.
+
+## Next: admin-first test reset
+
+- User wants ALL6 existing accounts removed/replaced, then one real-Gmail admin
+  with an easy testing login. They will personally check the admin workspace's UI,
+  responsiveness and role behavior. Other mobile user accounts come later.
+- Still need the new admin Gmail address the user controls; do not invent a Gmail
+  inbox or ask for passwords in chat. A GraphiScan account does not create a Gmail
+  inbox. Prefer browser-managed autofill to repeated typing; preserve the agreed
+  password rules.
+- Still need the decision on linked test data: erase it as part of a full reset,
+  or retain history and deactivate old accounts. The user confirmed ALL accounts,
+  but has not yet answered the separate linked-data question.
+- Read-only live inventory found6 profiles (1 admin,2 teachers,2 experts,1 parent).
+  Five have known account/consent/school/access references. Other reference tables
+  are outside the reader's direct grants; no reference count is proof of an unused
+  account. Normal lifecycle SQL protects used accounts and the sole active admin.
+  Verify replacement access before retiring the old admin; preserve server guards.
+- NO accounts, passwords, consent, student records or database state were changed.
+  No real email was sent. Browser access host was unavailable; native window
+  inventory only was read. No existing signed-in owner session was established.
+
+## Implemented locally, awaiting review/publication
+
+- User's intended role policy: temporary password and first-change setup for
+  teacher/expert/parent mobile users; permanent initial/reset passwords for
+  admin/researcher accounts, with normal Settings changes. Prepared
+  graphiscan/db/postgres/022_mobile_password_onboarding.sql, NOT applied hosted.
+  Exact live function-marker checks found the expected policy absent. An earlier
+  broad marker matched unrelated protected-role logic; do not rely on it.
+- Password policy: at least8 characters with uppercase, lowercase, digit and a
+  non-whitespace symbol, matching confirmation and different current password.
+  Existing provider hashing retained (Supabase Auth; salted Werkzeug for legacy).
+  Weak/space-only-symbol cases now blocked consistently. No client pre-hashing or
+  duplicate credential storage. See graphiscan/api/PASSWORD_CHANGE.md.
+- Cleaned setup: removed decorative lock, duplicate sign-in note and reload
+  footnote; button says Save password. Removed repeated Progress/upload guidance
+  and dashboard empty-state decoration. Functional controls and state guidance stay.
+- Mobile now has WHITE full-screen backgrounds/navigation/safe areas with a light
+  palette even under dark OS preference; no separate padded onboarding card.
+- Public supporting pages: natural reading paragraph spacing, selectively centered
+  mobile titles/intros/short download messages, one-line footer. The centered-copy
+  refinement remains LOCAL. Do not restore justified paragraphs or stacked footer.
+- Mail/credential handover is role-aware; optional server-only admin access URL
+  added. Actual mail sender/key/inbox delivery remain unconfigured/unverified.
+
+## Verification and Git boundary
+
+-66 focused mocked Python tests,614 contract/532 isolated SQL checks passed.
+- Admin build, retained user-web build and mobile typecheck passed;18 mobile tests
+  passed earlier in this session. Admin cleanup:74 fictional checks across8 sections
+  and7 sizes. Role-aware admin creator/handover/reset:51 checks,8 fictional creations.
+- White mobile fixed-export review:53 checks,18 workspace captures plus setup
+  captures across all3 roles, ordered password/privacy and invalid-password checks,
+  no page errors. Web export969 modules passed. This is browser evidence, NOT a
+  signed APK, installed-native/physical-device or complete hosted-role acceptance.
+- Last pushed commit: cd0993f (supporting-page spacing and inline-footer correction).
+  New centered landing copy, mobile white theme, password/UI/account-policy/API and
+  documentation changes remain uncommitted/unpushed alongside earlier account-email
+  work. Do not stage/push everything or discard unrelated local changes.
+- Test scripts/captures live in ignored .local-tools/ and output/playwright/;
+  output/mobile-ui-review-20261103/ is ignored. Task-only static server5187 stopped.
+  Never commit configuration, credentials, real records, uploads or model binaries.
+- Read latest CHANGELOG.md, PROJECT_PLAN.md, KNOWLEDGE.md, UI_FLOW_CHECK.md and
+  DEFENSE_SOFTWARE_AUDIT.md before continuing. Defense is November11; software only
+  for now, manuscript/deck deferred. APK/device and controlled hosted role acceptance
+  remain release gates.
+
+---
 
 2026-10-28 approved landing checkpoint: user accepted the visible content fades and requested commit/push. Includes page transitions, content-triggered section fades, local admin-link fallback and prior publication notes. Latest strict build and desktop/mobile browser checks passed as recorded below. Production rollout of this revision remains to be verified after push; APK/device/full application work remains open.
 
@@ -59,7 +229,7 @@ Installation spacing browser-verified at320/390/1440/1908 and capture inspected.
 
 Latest polish: white Download button/Coming soon label; stationary border feedback
 on supporting-page boxes and disabled Download button hover. FAQ no longer forces
-a viewport of empty space above the footer; bottom padding40–72px. Short install
+a viewport of empty space above the footer; bottom padding40â€“72px. Short install
 card sentences now left-align without hyphenation to fix screenshot word spacing;
 longer supporting-page paragraphs stay justified. Build and focused hover/FAQ
 browser checks pass. No deployment.
@@ -75,7 +245,7 @@ Latest mobile/supporting-page pass: Who it is for reserves the longest role text
 and a consistent mobile mockup stage; all role switches retain layout. FAQ rows
 use equal spacing and expansion no longer recenters the section. Mobile menu is
 transparent with plain Get the app and smooth interruptible opening/closing.
-Footer shows full GraphiScan ©2026 at every tested width and retains all links.
+Footer shows full GraphiScan Â©2026 at every tested width and retains all links.
 About/Data use have shared responsive reading layouts; Download has refined
 spacing and installation cards. Core text is larger/darker, workflow cards equal
 with stationary darker hover, sources stay inline. Strict build and focused
@@ -304,9 +474,9 @@ and denial, then Follow-up/retry checks. Browser workflow testing precedes APK.
 Do not rerun setup/migrations or repeat the initial upload just to resume.
 No new runtime, deployment or completion claim is made by this handoff.
 
-# Resume checkpoint — 2026-10-24
+# Resume checkpoint â€” 2026-10-24
 
-## Paused by user — resume next session
+## Paused by user â€” resume next session
 
 Resumed2026-10-25: user selected slate/muted blue, then chose a stronger steel
 blue #355c8c laptop backdrop with white text. User extended the theme to Expo and
@@ -445,7 +615,7 @@ approximately65%, an engineering judgment rather than a measured task score.
 
 Earlier dated checkpoints below are history; this section takes precedence.
 
-## Results loading refinement — 2026-10-24
+## Results loading refinement â€” 2026-10-24
 
 Latest: user extended the request to Students and other roles, plus minimal
 search affordances. Hosted Students/Children and legacy Students/progress now use
@@ -470,7 +640,7 @@ existing Pixel6; OS settings restored and GraphiScan reopened afterward. No real
 records were written or source published. Actual hosted inference and full
 teacher/expert/parent/Follow-up workflow remain deferred/unverified.
 
-## Linux continuation — 2026-10-24
+## Linux continuation â€” 2026-10-24
 
 Latest activation update: user supplied wrong GRAPHISCAN_MODEL_V1_MANIFEST key,
 then reported successful deployment after instructed correction to
@@ -548,7 +718,7 @@ is nonsecret. Browser controls currently return no providers; user is opening
 Render in an in-app tab and referencing @Browser. Public inference remains
 disabled. Preserve local modal fix.
 
-## Active model hosting work — 2026-10-23
+## Active model hosting work â€” 2026-10-23
 
 User approved moving from UI to online model screening and then the controlled
 teacher/expert/parent workflow. Profiled existing3-model pinned runtime with the
@@ -588,10 +758,10 @@ Current provider facts: Render Free512MB, ordinary HF Docker/Gradio creation pai
 Modal card required with credits/spend limits. Card preference was asked but not
 answered; continue local no-charge investigation, no paid resource/secret upload.
 Public API still admin-only; no SQL rerun. Full hosted workflow and release gates
-remain open; estimate60–65%. Modal balance fix remains local/uncommitted alongside
+remain open; estimate60â€“65%. Modal balance fix remains local/uncommitted alongside
 these new tools/docs; do not overwrite or conflate it with a hosted release.
 
-## Modal balance correction — 2026-10-23
+## Modal balance correction â€” 2026-10-23
 
 User supplied a cropped logout modal screenshot and rejected its balance.
 Adjusted only SignOutAction action layout plus optional shared Button styling:
@@ -600,9 +770,9 @@ above1.4 font scale. TypeScript and six fictional light/dark phone captures
 passed, including equal geometry and Cancel/Escape/one-confirm behavior. No real
 logout. Native opener was unavailable to automation, so native recapture remains
 open. Earlier source is committed as a0131af; this correction is local/uncommitted
-for user visual review. Overall planning estimate remains60–65%.
+for user visual review. Overall planning estimate remains60â€“65%.
 
-## Logout/loading follow-up — 2026-10-23
+## Logout/loading follow-up â€” 2026-10-23
 
 User confirmed native pages work and requested logout confirmation plus feed
 skeletons on all loading screens. Implemented shared SignOutAction across manual
@@ -625,9 +795,9 @@ earlier full Expo checkpoint is e87bf07 on feat/expo-design-refinement.
 Next: review new dialog/loading on the emulator, then controlled role/core workflow,
 model hosting and release gates. Existing configuration-reload failure remains
 open; do not reset/restart a session with uncertain writes without reconciliation.
-Public API/model/privacy/data/paper limits and approximately60–65% estimate remain.
+Public API/model/privacy/data/paper limits and approximately60â€“65% estimate remain.
 
-## Active continuation — 2026-10-23
+## Active continuation â€” 2026-10-23
 
 User agreed to proceed, then chose an emulator and confirmed Android Studio is
 already installed. Used that SDK/JBR, installed Android16/API36 Google APIs
@@ -658,12 +828,12 @@ EventEmitter error in expo-modules-core; fresh Expo Go process recovered. The
 underlying cause and standalone native-build behavior are unverified. Preserve
 pending-write recovery state before restarting; none exists in this login session.
 Full role/device/native design approval, model hosting, real privacy publication,
-historical data, physical Android/APK and paper gates remain open. Overall60–65%.
+historical data, physical Android/APK and paper gates remain open. Overall60â€“65%.
 
-## Latest checkpoint — 2026-10-23
+## Latest checkpoint â€” 2026-10-23
 
 Latest user request: reviewed requirements/plan and asked overall progress and
-remaining work. Recorded approximately60–65% full-project engineering estimate
+remaining work. Recorded approximately60â€“65% full-project engineering estimate
 in CURRENT_REQUIREMENTS.md, with workstream evidence and remaining gates.
 Corrected stale schema-through019/apply021 summaries in the checklist/plan.
 Documentation/Git-status review only; no runtime tests, mutations, commit or
@@ -697,7 +867,7 @@ manuscript/APK and credential gates remain open.
 
 ---
 
-## Saved checkpoint — resume2026-10-23
+## Saved checkpoint â€” resume2026-10-23
 
 User requested: finish this slice, save the checkpoint, and commit tomorrow.
 No git add, commit, push, PR merge or deployment was performed in this slice.
@@ -866,10 +1036,10 @@ Latest user confirmation (2026-10-22): user replied "works" to the hosted privat
 
 This checkpoint supersedes the older pending019 and uncommitted-source notes below.
 
-## Active admin completion and deployment — 2026-10-22
+## Active admin completion and deployment â€” 2026-10-22
 
 - User deferred Expo and requested remaining admin work, then deployment. Implemented019 lifecycle source, account detail/school/permission editor and status/reset/delete dialogs. New reset/delete operations require issuer password, durable gates and one provider write; deletion limited to unused accounts without assignments/history. Source hardens role/pending-account checks and update validation ordering. No actual reset/delete performed.
-- User attempted019 and reported SQL syntax error at AS $. Fixed the generation bug (JavaScript replacement-string interpretation), rebuilt full019 from017 with literal callbacks, and compiled corrected DDL in empty disposable PostgreSQL with001–018. Five019 catalog flags passed. Told user to clear old SQL Editor query and copy the current full file again. Await hosted019 success/check; do not rerun017/018.
+- User attempted019 and reported SQL syntax error at AS $. Fixed the generation bug (JavaScript replacement-string interpretation), rebuilt full019 from017 with literal callbacks, and compiled corrected DDL in empty disposable PostgreSQL with001â€“018. Five019 catalog flags passed. Told user to clear old SQL Editor query and copy the current full file again. Await hosted019 success/check; do not rerun017/018.
 - Final admin/user builds pass; eight-file Python parse and production admin-only factory review pass; source scan found no configured secret values. Fictional action dialogs inspected at1440/390. See `graphiscan/api/ADMIN_RELEASE.md` for evidence/recovery/deployment scope. Additional export helper/root Python version are prepared; no configuration exported/uploaded yet.
 - Vercel CLI logged in as existing user; GitHub PR#1 open on `deploy/free-hosting`. Preparing reviewed source commit/push. Render browser opened at login; async request asks user to sign in. No Render service/deployment/secret transfer yet. Continue source/deployment preparation while waiting; do not claim public hosting.
 - Local API current owned session59639 is still older than019 source; restart it after hosted019 confirmation, respecting exact process identity/occupied5002 guard. One actual user-created018 Auth/profile pair was confirmed. Model host remains separate/free. Earlier paused/missing-secret/source-limit entries below are historical.
@@ -888,7 +1058,7 @@ Latest018 rollout (2026-10-22): user applied018. Actual restricted read-only wri
 
 Resumed (2026-10-22): user asked to continue and questioned017 status. Fresh actual restricted read-only catalog/writer check returned `admin-writer-setup-passed` with `migration_017_installed=true` and018 issuance capabilities absent. No database writes occurred. Do not repeat017; next remains review/rollout of prepared018 and private Auth secret configuration. The pause checkpoint below is historical; deployment/MySQL work remains paused.
 
-## Paused by user — 2026-10-22
+## Paused by user â€” 2026-10-22
 
 - User explicitly requested to continue later. Stop account rollout and deployment work until resumed.
 - Completed locally: consistent admin controls/refresh buttons/dialogs; Add user UI/API source; Edit uncertain-save recovery/navigation guards; prepared migration018 and private Auth-key setup helper. Changes remain uncommitted and unpushed on `deploy/free-hosting`; preserve unrelated pending hosting files and exclude generated `output/`.
@@ -906,7 +1076,7 @@ Git handoff (2026-10-22): source commit `1905309` is pushed to `origin/deploy/fr
 
 Latest hosting checkpoint (2026-10-22): user requires free model hosting. Cloud Run choice is on hold. Vercel admin project is created/GitHub-connected; unused Vercel API project is disconnected. Portable v1 Flask factory/Gunicorn/container files and private model provisioning runbook are prepared, with stable cursor signing and exact model-source byte preservation.35 focused Python checks and admin build passed; all3 local model/source pins verified. No Docker build, live deployment, secret upload, model account or paid resource. Save latest source on `deploy/free-hosting`; its Vercel auto-deployment is disabled until API origin/runtime are ready. Pending user input: free host must be card-free or may use card verification with $0 spending. Render Free512MB is unproven for this TensorFlow runtime; Modal credits require payment method; new HF CPU Docker/Gradio Spaces require paid plan. Preserve all models and classification/evaluation behavior. Supabase schema through017 is verified; legacy MySQL recovery/data import stay paused.
 
-Latest UI steering implemented (2026-10-21): full-tab login, 42/58 white/blue, no outer margin/frame; proper fully visible laptop preview with current fictional dashboard capture. Keep right headline “Handwriting screening and progress” connected on one line; center Welcome back/subtitle/privacy note, field labels left. Hosted workspace white sidebar, blue active state, no brand underline or top-right profile.28px page titles and16px section titles in Inter; removed filler descriptions, duplicate cards/actions. Dashboard panels align by rows and chart requires multiple actual loaded dates. Original eight menu choices remain. Existing hosted016 is installed/verified; no SQL repetition. Deployment remains unperformed. See newest CHANGELOG for verification.
+Latest UI steering implemented (2026-10-21): full-tab login, 42/58 white/blue, no outer margin/frame; proper fully visible laptop preview with current fictional dashboard capture. Keep right headline â€œHandwriting screening and progressâ€ connected on one line; center Welcome back/subtitle/privacy note, field labels left. Hosted workspace white sidebar, blue active state, no brand underline or top-right profile.28px page titles and16px section titles in Inter; removed filler descriptions, duplicate cards/actions. Dashboard panels align by rows and chart requires multiple actual loaded dates. Original eight menu choices remain. Existing hosted016 is installed/verified; no SQL repetition. Deployment remains unperformed. See newest CHANGELOG for verification.
 
 Additional live evidence (2026-10-21): after current API43008 restart, authenticated `/accounts?limit=25` and `/audit-logs?limit=25` both returned200 in normal UI requests. No response rows/credentials were printed or inspected. User confirmation of displayed records remains pending. Corrected accidental extra `.` in saved015 source; no rerun or hosted015 change. SQL read-list installation/integration is complete; account actions and UI/deployment work remain open.
 
@@ -916,7 +1086,7 @@ NEXT (2026-10-21): user is completing missing migration 016 before UI/deployment
 
 Current admin checkpoint (2026-10-21): aligned hosted Students, Results, Progress, Users, Audit and Settings page grid/Inter typography; dashboard reshaped toward two user-supplied dense dashboard references with compact metrics and tabular recent screenings. Added read-only hosted account/audit routes, minimal SQL function in unapplied 016 migration and lists with filters/pagination. Separate global `accounts.manage`/`audit.read` grants are required; none were issued. Account actions remain open. Admin build, 6 Python tests, 132 isolated SQL checks, contract checks and synthetic six-width browser checks passed; no live hosted account/audit verification. See latest CHANGELOG.
 
-Admin pages (2026-10-21): hosted `/workspace` now has all eight original sidebar choices. Dashboard, Students/Schools, Results, Progress recorded-history pagination and Settings password change use existing v1 functionality. Progress desktop spacing, account/student history reset, password rules/Clear/mismatch feedback and responsive Users/Audit unavailable states are implemented. Users and Audit Logs still need new scoped hosted backend reads and account actions; old MySQL routes are separate. Admin/user builds passed; 53 synthetic six-width page checks, 16 screening checks and dashboard/modal checks passed; screenshots inspected. No live provider write or populated hosted end-to-end test. Next UI/backend step is Users/Audit API migration; first real hosted upload → assignment → expert review → parent release remains open.
+Admin pages (2026-10-21): hosted `/workspace` now has all eight original sidebar choices. Dashboard, Students/Schools, Results, Progress recorded-history pagination and Settings password change use existing v1 functionality. Progress desktop spacing, account/student history reset, password rules/Clear/mismatch feedback and responsive Users/Audit unavailable states are implemented. Users and Audit Logs still need new scoped hosted backend reads and account actions; old MySQL routes are separate. Admin/user builds passed; 53 synthetic six-width page checks, 16 screening checks and dashboard/modal checks passed; screenshots inspected. No live provider write or populated hosted end-to-end test. Next UI/backend step is Users/Audit API migration; first real hosted upload â†’ assignment â†’ expert review â†’ parent release remains open.
 
 Clarified palette and original-page references (2026-10-21): user clarified3-color limit applies to theme/background surfaces, not functional actions/status colors. Original dashboard, management, screening and forms are the authoritative visual references throughout admin. Restored red logout/signout and green/amber/red review/classification colors in hosted dashboard and older dashboard. Hosted Students/Schools now use original-style record tables, toolbars/filters, loaded-count summaries and native modal editors via opt-in adminPresentation in shared HostedDirectory; user app default presentation retained. HostedScreenings now uses original-style desktop table/phone record cards, loaded review counts, badges and primary assignment save styling. Native editors preserve validation/uncertain-save guards, show errors within dialog, block unsafe Escape dismissal, lock background scroll and retain signout during unresolved saves. Updated HostedAdminWorkspace.vue, HostedScreenings.vue, HostedAccess.vue, shared HostedDirectory.vue, AdminDashboard.vue, style.css, README and dashboard browser fixture. Final admin/user builds passed;16 existing intercepted screening checks passed after table conversion; final six-size dashboard/management/screening checks passed, including student/school modal focus/open/close, unknown labels, refresh error/retry, visible modal errors, uncertain-save Escape protection/signout and normal logout. Desktop/phone table/form screenshots inspected; final phone modal screenshot is viewport-only. No real writes, Auth/backend/model/API changes. Users/Progress/Audit Logs hosted feature migration and real populated workflow remain pending; their original pages remain the reference.
 
@@ -975,21 +1145,21 @@ Hosted API5002 session64897, admin5173 session37587, hosted Expo localhost5174 s
 
 ## User stopped for later; resume at teacher onboarding, 2026-10-20
 
-User requested “lets continue later save progress”. Work stopped after saving this checkpoint. Overall roughly56%, not measured production readiness.
+User requested â€œlets continue later save progressâ€. Work stopped after saving this checkpoint. Overall roughly56%, not measured production readiness.
 
 Completed: user created3 fictional Auth accounts; user applied atomic015; all23 agent restricted read-only setup checks passed. Updated hosted API5002(session43462) health200. User confirmed admin fresh sign-in/newnotice acceptance/synthetic school+student; API logs support login/me/notice/acceptance/schools/students/screenings HTTP200, content/visual confirmation user-reported. Earlier162 v1 Python/114 isolated actual-bundle SQL tests passed.
 
-NEXT when user resumes: open http://localhost:5174 (HOSTED Expo, session77508), sign in as graphiscan.teacher.test@example.invalid with privately saved TEMP password; choose/save private new password, sign in again, explicitly accept graphiscan-workflow-test-v1, open Students and confirm Synthetic Workflow Student. This teacher onboarding is NOT yet reported done. Then onboard expert and parent individually, followed by synthetic teacher upload→admin expert assignment→expert review→parent release/withdrawal and stored Follow-up checks. Keep admin http://127.0.0.1:5173/access available; admin account uses its existing current password and already accepted new notice.
+NEXT when user resumes: open http://localhost:5174 (HOSTED Expo, session77508), sign in as graphiscan.teacher.test@example.invalid with privately saved TEMP password; choose/save private new password, sign in again, explicitly accept graphiscan-workflow-test-v1, open Students and confirm Synthetic Workflow Student. This teacher onboarding is NOT yet reported done. Then onboard expert and parent individually, followed by synthetic teacher uploadâ†’admin expert assignmentâ†’expert reviewâ†’parent release/withdrawal and stored Follow-up checks. Keep admin http://127.0.0.1:5173/access available; admin account uses its existing current password and already accepted new notice.
 
 Services were intentionally left as-is; availability after a break is NOT guaranteed. Verify liveness before restarting anything: hosted API5002, Vue admin5173, Expo http://localhost:5174 (NOT numeric127.0.0.1 for this Expo binding). Expo was launched explicit EXPO_PUBLIC_API_MODE=hosted, EXPO_PUBLIC_HOSTED_API_ORIGIN=http://127.0.0.1:5002, CI/offline/BROWSER=none, --web --port5174 --localhost. CI disables auto reload. Hosted login rendered in clean browser without credentials; CORS5174 allowed. Legacy API5000 was previously restored, irrelevant to hosted work. Do not restart live services unnecessarily or infer passwords from config.
 
-DO NOT repeat migrations001–015, model publication/Storage setup, Auth creation, old seeds, or original first-change/privacy checkers. Do not reset admin/passwords or seed acceptance. No secrets saved in checkpoint. New-role onboarding, populated hosted uploads/reviews/parent release, native/device/deployment/three-class work remain unverified. XAMPP repair STOPPED by user direction; legacy data has verified offline file copy but accounts/students NOT deleted. Do not resume repair/deletion merely to clear old data.
+DO NOT repeat migrations001â€“015, model publication/Storage setup, Auth creation, old seeds, or original first-change/privacy checkers. Do not reset admin/passwords or seed acceptance. No secrets saved in checkpoint. New-role onboarding, populated hosted uploads/reviews/parent release, native/device/deployment/three-class work remain unverified. XAMPP repair STOPPED by user direction; legacy data has verified offline file copy but accounts/students NOT deleted. Do not resume repair/deletion merely to clear old data.
 
 ## Admin onboarding confirmed; hosted Expo web ready, 2026-10-20
 
 Supporting API43462 logs show login/me/notice/acceptance and schools/students/screenings HTTP200 at22:22. Content/visual confirmation remains user-reported; no agent credentials used.
 
-User said “yes done” to admin fresh sign-in/newnotice acceptance/synthetic school+student check. Record as user-reported success, not independent full admin browser/write verification. Started mobile-app Expo in HOSTED mode, public API origin http://127.0.0.1:5002, web port5174, --localhost, CI/offline/BROWSER=none; session77508 active. IMPORTANT browser address is http://localhost:5174 (numeric127.0.0.1:5174 refused because localhost binding). Root HTTP200; bundle605modules compiled; clean Playwright snapshot showed actual hosted “issued teacher, expert or parent” login/fields, no blocking console error. No credentials entered or role changes. CORS preflight for5174 allowed. DevTools installer fell back after sandbox write denial, app nevertheless compiled/rendered; no need to fix it. CI means no automatic source reload; restart only if code changes.
+User said â€œyes doneâ€ to admin fresh sign-in/newnotice acceptance/synthetic school+student check. Record as user-reported success, not independent full admin browser/write verification. Started mobile-app Expo in HOSTED mode, public API origin http://127.0.0.1:5002, web port5174, --localhost, CI/offline/BROWSER=none; session77508 active. IMPORTANT browser address is http://localhost:5174 (numeric127.0.0.1:5174 refused because localhost binding). Root HTTP200; bundle605modules compiled; clean Playwright snapshot showed actual hosted â€œissued teacher, expert or parentâ€ login/fields, no blocking console error. No credentials entered or role changes. CORS preflight for5174 allowed. DevTools installer fell back after sandbox write denial, app nevertheless compiled/rendered; no need to fix it. CI means no automatic source reload; restart only if code changes.
 
 NEXT USER ACTION: at http://localhost:5174 sign in as graphiscan.teacher.test@example.invalid with privately saved TEMP password; change to privately saved new password, sign in again, explicitly accept new notice, open Students and confirm Synthetic Workflow Student. Never ask passwords in chat. Teacher first; expert/parent next. Keep admin5173 open for later expert assignment. No real hosted upload/review/release/device test yet. Overall56%. No SQL/setup/checker repeat or XAMPP work.
 
@@ -999,13 +1169,13 @@ User reported015_workflow_fixtures.sql SUCCESS. DO NOT repeat bundle/source/prio
 
 Verified exact5002 listener process command, stopped ONLY that listener and started updated hosted API; session43462 active. /api/v1/health200, admin5173/access200, anonymous screenings+notice401. No other services stopped, no SQL/credential/XAMPP/legacy-deletion changes. Overall56%.
 
-NEXT USER ACTION: fresh sign-in at http://127.0.0.1:5173/access with existing Synthetic Test Admin/current password; grant normally invalidated old sessions. Read/explicitly accept graphiscan-workflow-test-v1, then confirm synthetic school/student. NO admin password reset. After user confirms: start/verify mobile-app Expo in HOSTED mode (public origin5002; web port5174 aligns existing CORS), onboard teacher/expert/parent individually with private temporary→new passwords and new notice. Do not reuse old MySQL sign-in or old forced-change checker. No populated hosted upload/review/parent/client/device/deployment evidence yet. Keep XAMPP repair stopped; legacy accounts archived, not deleted. Following apply015 instructions are historical/superseded.
+NEXT USER ACTION: fresh sign-in at http://127.0.0.1:5173/access with existing Synthetic Test Admin/current password; grant normally invalidated old sessions. Read/explicitly accept graphiscan-workflow-test-v1, then confirm synthetic school/student. NO admin password reset. After user confirms: start/verify mobile-app Expo in HOSTED mode (public origin5002; web port5174 aligns existing CORS), onboard teacher/expert/parent individually with private temporaryâ†’new passwords and new notice. Do not reuse old MySQL sign-in or old forced-change checker. No populated hosted upload/review/parent/client/device/deployment evidence yet. Keep XAMPP repair stopped; legacy accounts archived, not deleted. Following apply015 instructions are historical/superseded.
 
 ## User created3 Auth users; atomic015 ready, 2026-10-20
 
-NEXT USER STEP: paste ENTIRE `graphiscan/db/postgres/015_workflow_fixtures.sql` into a NEW Supabase SQL Editor query and run ONCE. Bundle prepared/tested, NOT APPLIED. Do NOT run015_privacy_test_audience.sql or seed_workflow_fixtures.sql separately or repeat001–014. Source seed contains builder placeholder; only generated bundle is executable handoff. No XAMPP work needed.
+NEXT USER STEP: paste ENTIRE `graphiscan/db/postgres/015_workflow_fixtures.sql` into a NEW Supabase SQL Editor query and run ONCE. Bundle prepared/tested, NOT APPLIED. Do NOT run015_privacy_test_audience.sql or seed_workflow_fixtures.sql separately or repeat001â€“014. Source seed contains builder placeholder; only generated bundle is executable handoff. No XAMPP work needed.
 
-User reports exact teacher/expert/parent Auth accounts created; passwords private. Bundle adds bounded1–16-ID notice audience to bootstrap, notice-read, acceptance, directory AND screening direct gate while preserving old singleton/ordinary behavior/ACLs. Creates3 active forced-first-change profiles,1 fictional school/student,ONLY admin school-scoped assignments.manage,2 memberships/4 eligibility links and new notice for exact4 IDs. Preserves admin password and old notice text/audience/acceptances; retires old current flag, seeds no acceptances. Missing/unconfirmed/banned/deleted/conflicting state aborts all DDL/data; repeat refuses without overwrite. No hosted/Auth/model/screening/image/delete writes or restart yet.
+User reports exact teacher/expert/parent Auth accounts created; passwords private. Bundle adds bounded1â€“16-ID notice audience to bootstrap, notice-read, acceptance, directory AND screening direct gate while preserving old singleton/ordinary behavior/ACLs. Creates3 active forced-first-change profiles,1 fictional school/student,ONLY admin school-scoped assignments.manage,2 memberships/4 eligibility links and new notice for exact4 IDs. Preserves admin password and old notice text/audience/acceptances; retires old current flag, seeds no acceptances. Missing/unconfirmed/banned/deleted/conflicting state aborts all DDL/data; repeat refuses without overwrite. No hosted/Auth/model/screening/image/delete writes or restart yet.
 
 Verified162 v1 Python tests +114 isolated PGlite actual-bundle assertions including rollback/scope/compatibility/session invalidation/ACLs and restricted-reader verifier query. Read-only `tools/check_v1_workflow_setup.py --connect` prepared/compiled, not hosted-run. AFTER user-reported SQL success: run this checker, then restart ONLY hosted5002 after verifying exact live process. Existing admin grant invalidates old sessions: fresh sign-in/new notice acceptance needed, NO admin password reset. Then connect hosted Expo and individually onboard newroles without rerunning old forced-change fixture checker. Overall55%; populated upload/review/parent/device/deployment unverified. Legacy repair remains stopped, records archived not deleted.
 
@@ -1013,7 +1183,7 @@ Verified162 v1 Python tests +114 isolated PGlite actual-bundle assertions includ
 
 Latest user steering: asks whether XAMPP is still needed and explicitly wants no tokens spent fixing it if unnecessary. Hosted Supabase/API5002/Vue admin/Expo workflow does NOT require XAMPP or legacy MySQL. STOP MySQL repair work and continue selected fictional hosted admin/teacher/expert/parent setup. Legacy demo-account deletion remains authorized but unperformed; do not spend further repair effort to achieve it absent new user request. Preserve archived legacy data for now; no claim of deletion.
 
-Diagnosis before stop: console startup identified fatal “Incorrect file format 'global_priv'” in MariaDB's internal privilege table. Offline copy verified all172 files/111410390bytes at ignored `.local-backups/mysql-offline-20261020T123327Z-56badc`; manifest explicitly says database_restore_verified false (file preservation only). Disposable copied global_priv check/recover/check all exited1, classified not-Aria; ORIGINAL privilege/application files never repaired/replaced/deleted. No backup reset or credentials changed. Added `tools/backup_mysql_offline.py`. Last foreground mysqld attempt exited1; no new running MySQL process started afterward. Hosted APIs were restored earlier(session83381 port5002,23855 port5000), admin Vite5173 remains. Overall53%. Next implement/test bounded notice audience+guarded selected fictional fixtures, then user manually creates3 Auth accounts with private temporary passwords; do not unrestrict old notice or seed acceptances.
+Diagnosis before stop: console startup identified fatal â€œIncorrect file format 'global_priv'â€ in MariaDB's internal privilege table. Offline copy verified all172 files/111410390bytes at ignored `.local-backups/mysql-offline-20261020T123327Z-56badc`; manifest explicitly says database_restore_verified false (file preservation only). Disposable copied global_priv check/recover/check all exited1, classified not-Aria; ORIGINAL privilege/application files never repaired/replaced/deleted. No backup reset or credentials changed. Added `tools/backup_mysql_offline.py`. Last foreground mysqld attempt exited1; no new running MySQL process started afterward. Hosted APIs were restored earlier(session83381 port5002,23855 port5000), admin Vite5173 remains. Overall53%. Next implement/test bounded notice audience+guarded selected fictional fixtures, then user manually creates3 Auth accounts with private temporary passwords; do not unrestrict old notice or seed acceptances.
 
 ## Stopped APIs restored; MySQL accepts TCP but sends no greeting, 2026-10-20
 
@@ -1023,7 +1193,7 @@ MySQL after user's restart still returns2013 to read-only inventory. Credential-
 
 ## User selected fictional fixtures and authorized old legacy demo account removal, 2026-10-20
 
-Latest steering: use proposed admin-through-parent fictional accounts; user then said “yes okayy dewlete old acc” after recommendation to delete old LEGACY DEMO accounts/synthetic students after backup, preserving current HOSTED Synthetic Test Admin/new hosted setup/model/audit evidence. Treat identified legacy demo-account deletion as authorized; do not ask permission again for that scope. Do not delete uncertain/real records, hosted fixtures or models. No new fictional Auth users, role profiles, notice/audience migration or fixture SQL have been created/applied yet; the draft package remains proposed implementation.
+Latest steering: use proposed admin-through-parent fictional accounts; user then said â€œyes okayy dewlete old accâ€ after recommendation to delete old LEGACY DEMO accounts/synthetic students after backup, preserving current HOSTED Synthetic Test Admin/new hosted setup/model/audit evidence. Treat identified legacy demo-account deletion as authorized; do not ask permission again for that scope. Do not delete uncertain/real records, hosted fixtures or models. No new fictional Auth users, role profiles, notice/audience migration or fixture SQL have been created/applied yet; the draft package remains proposed implementation.
 
 Cleanup attempted: new `tools/inspect_legacy_retirement.py` is count-only/read-only. Elevated actual run initially MySQL2003. Started C:/xampp/mysql/bin/mysqld.exe with existing my.ini and --standalone, hidden process20348. Two read-only retries returned2013; elevated logs show crash recovery/startup and port3306 listening, but usable SQL connection is unverified. NO inventory rows obtained, backup, deletion, database-file repair, hosted writes or API restart. Need usable MySQL, then verified backup and exact demo/dependency inventory before authorized deletion. XAMPP MySQL now relevant only to legacy cleanup; Apache unnecessary. Overall53%. Earlier awaiting-fixture-choice note is superseded; do not treat selected fictional setup as authorization to unrestrict old admin-only notice.
 
@@ -1043,7 +1213,7 @@ Rough overall53%. Next dependent work is issued teacher/expert/parent profiles w
 
 User provided all12 passing model-catalogue-check results: hosted3 version metadata/accuracies, unique selectable MobileNetV2 default, anonymous denial and temporary Auth-session cleanup. Agent added/ran tools/check_v1_storage_io.py --apply; all5 passed (configured, syntheticPNG put, byte-exact authorized get, public-route denied, delete+confirmed404). Only generated whitePNG used; no screening/database writes. Temporary ignored model/storage-check.local receipt was removed after confirmed cleanup. Credentials never printed. No rerun/restart needed; current API40531.
 
-Rough overall51%. Next coding task can proceed without accounts: hosted admin screening list/detail and current eligible expert assignment controls, replacing the hosted shared workspace's later-update placeholder. Existing admin is Vue, user app Expo; preserve legacy interfaces. Current only issued fixture/notice is Synthetic Test Admin, no automatic manager grants or student access. Populated teacher→expert→parent testing still requires specifically issued role profiles, school/eligibility links and a separately reviewed appropriate notice (do not broaden old admin-only notice). Native/device, production and three-class work open. Earlier publication/check/Storage-not-verified notes superseded.
+Rough overall51%. Next coding task can proceed without accounts: hosted admin screening list/detail and current eligible expert assignment controls, replacing the hosted shared workspace's later-update placeholder. Existing admin is Vue, user app Expo; preserve legacy interfaces. Current only issued fixture/notice is Synthetic Test Admin, no automatic manager grants or student access. Populated teacherâ†’expertâ†’parent testing still requires specifically issued role profiles, school/eligibility links and a separately reviewed appropriate notice (do not broaden old admin-only notice). Native/device, production and three-class work open. Earlier publication/check/Storage-not-verified notes superseded.
 
 ## Publication reported, API active, interactive catalogue check next, 2026-10-20
 
@@ -1055,7 +1225,7 @@ User authorized integration. Implemented v1_models.py schema-v2 runtime with3 fi
 
 Ran tools/prepare_v1_model_catalogue.py successfully: all3 ignored hash-named weights staged under model/versions; model/deployment.local.json saved and server .env manifest path configured. Prepared UNAPPLIED graphiscan/db/postgres/publish_binary_models.sql, image-level measured evaluation and3 versions/defaultMobileNetV2, no account/grant/student writes. Existing conflicting default/identity/withdrawal aborts transaction; exact repeat-safe. Next user action: run ONLY this publication SQL in a new Supabase query. Do not rerun migrations or old prepare_v1_model_manifest.py (would conflict with new manifest). API5002 session32790 still predates saved Storage/manifest; restart after publication, then authenticated metadata/uploads. No automatic deployment/cutover.
 
-Verification:160 v1 tests passed before final2 upload cases; expanded upload suite18 passed;11 isolated PGlite publication assertions passed using actual001–003 schema (metadata/default/repeat/conflict rollback/withdrawal); actual VersionedBinaryRuntime loaded and inferred synthetic whitePNG on all3 model artifacts (session89226 exited0). No Storage writes/real user images/database writes in smoke. Docs api/MODEL_EVIDENCE.md and SCREENING_WRITES.md current. Rough overall49%; populated role/privacy/upload/review/release, native/device, production and planned three-class work remain pending.
+Verification:160 v1 tests passed before final2 upload cases; expanded upload suite18 passed;11 isolated PGlite publication assertions passed using actual001â€“003 schema (metadata/default/repeat/conflict rollback/withdrawal); actual VersionedBinaryRuntime loaded and inferred synthetic whitePNG on all3 model artifacts (session89226 exited0). No Storage writes/real user images/database writes in smoke. Docs api/MODEL_EVIDENCE.md and SCREENING_WRITES.md current. Rough overall49%; populated role/privacy/upload/review/release, native/device, production and planned three-class work remain pending.
 
 ## Model evidence found and locally reevaluated, 2026-10-20
 
@@ -1085,7 +1255,7 @@ User reported 012 success. Agent ran tools/check_v1_screening_reads.py --connect
 
 Implemented ScreeningReadService, four guarded v1 read routes and **unapplied 012_screening_reads.sql**, granting only a single function to the existing reader. Scope/gates repeat in SQL; parent current Validated release filtering precedes pagination. Added React EXPO_PUBLIC_API_MODE=hosted Auth/password/privacy and directory/results/history/report flow reusing the shared client; legacy stays default until hosted writes exist. No legacy/Supabase token or UUID bridge. The only hosted fixture is still an admin and its test notice is admin-only; do not bypass user-role/notice setup to test React. Seven prior count/read tests are separate from this v1 suite.
 
-Verified: 141 v1 Python tests, 13 shared JS tests, 11 mobile tests, TypeScript, 494 contract checks, 44 new +284 prior isolated SQL checks, Expo web/Android JS exports and both Vue builds passed. No live database modification, 012 application, authenticated React/device test, upload/review/image write or deployment. **Next user step is apply only 012 once** in the existing Supabase SQL Editor as owner; then agent checks function permissions and zero-identity denial, restarts the updated API, and continues hosted writes/account/notice prerequisites. Do not repeat 001–011/password/seeds/refresh routines. See graphiscan/api/SCREENING_READS.md. Current rough overall progress 41%.
+Verified: 141 v1 Python tests, 13 shared JS tests, 11 mobile tests, TypeScript, 494 contract checks, 44 new +284 prior isolated SQL checks, Expo web/Android JS exports and both Vue builds passed. No live database modification, 012 application, authenticated React/device test, upload/review/image write or deployment. **Next user step is apply only 012 once** in the existing Supabase SQL Editor as owner; then agent checks function permissions and zero-identity denial, restarts the updated API, and continues hosted writes/account/notice prerequisites. Do not repeat 001â€“011/password/seeds/refresh routines. See graphiscan/api/SCREENING_READS.md. Current rough overall progress 41%.
 
 Same-slice upload correction: both legacy/API dictionary cursor count reads now use explicit report_count alias/key instead of numeric [0]. Seven isolated Python tests pass, including a simulated multipart API upload with stubbed predictor/DB for Initial and Follow-up cases. Ten React tests remain passed; no live upload/data change or concurrency guarantee. This supersedes any following unchanged-upload note for that narrow bug fix.
 
@@ -1099,7 +1269,7 @@ Updated 2026-10-20 (Asia/Manila) after workspace directory UI and assignment-cho
 
 ## Where we stopped
 
-- Disposable Supabase setup is complete for the current read-only Auth foundation. User reported applying migrations 001–005 and seeding the fictional test profile. Do not repeat migrations, seed creation or reader-password setup.
+- Disposable Supabase setup is complete for the current read-only Auth foundation. User reported applying migrations 001â€“005 and seeding the fictional test profile. Do not repeat migrations, seed creation or reader-password setup.
 - Agent-executed hosted TLS/read-only preflight passed all 24 checks.
 - User's latest interactive `graphiscan/tools/check_v1_auth.py` report was `auth-check-passed`, all 11 checks passing: sign-in, verified identity/bootstrap, forced-password state, blocked protected features, local sign-out, provider-session revocation and denial of the original token.
 - The test session was cleaned up. Report showed no application database writes and no saved credentials. Passwords/tokens must stay private.
@@ -1249,3 +1419,69 @@ on assignment_eligibilities (RLS enabled). User should apply only
 `graphiscan/db/postgres/021_assignment_table_privileges.sql`, then rerun
 `check_v1_admin_writer.py --connect --require-assignment-access` before publication.
 021 is prepared, not applied; prior020-absent notes below are historical.
+## Active follow-up - 2026-11-04
+
+- User accepts a simple manual admin identifier such as admin@gmail.com; no mailbox creation or email delivery requested. Preserve old creation/deletion activity; do not erase linked records or bypass used-account deletion guards. New account/password NOT created; existing accounts unchanged.
+- Current blocker: custom admin origin missing from live API CORS responses. Public bundle uses correct API and health200. Old Vercel-origin preflight has allow-origin headers; custom admin-origin preflight does not. Append https://admin.graphiscan.site to Render GRAPHISCAN_CORS_ALLOWED_ORIGINS, preserve intended existing entries, save/redeploy and recheck before login/account work. No remote environment edit made.
+- Browser host unavailable; native browser access was stopped by Computer Use because the current URL could not be verified confidently. User must open/sign into the admin portal privately when connectivity is restored. No credential was requested in chat.
+
+## Latest privacy blocker - 2026-11-04
+
+- User created a replacement account, initially Teacher by mistake, then reported Privacy notice unavailable. Current role/sign-in identity not independently verified. Read-only hosted aggregate check:7 profiles; current graphiscan-workflow-test-v1 notice approved/published/digest-valid but restricted to4 selected profiles. Newly created profiles are not automatically included. No audience/account/consent edits made. Preserve old admin; use a narrowly scoped test-audience amendment for fictional testing or publish approved real-use wording as appropriate, without bypassing explicit acceptance.
+
+## Replacement admin verified; SQL handoff - 2026-11-04
+
+- Read-only lookup confirms requested admin@gmail.com exists exactly once and is active admin, must_change_password=false, credential_update_pending=false. Privacy restriction remains the blocker.
+- Owner-run fix prepared at .local-tools/add-replacement-admin-test-notice.sql (ignored). Adds only that active admin to exact current fictional notice's bounded test audience, with audit event and no acceptance/role/grant/password changes. NOT executed or runtime-tested. User must run entire file in existing Supabase SQL Editor, then Refresh/read/accept privately. Verify new admin permissions before retiring old accounts; granting Admin role does not itself create management permission grants.
+
+## Corrected privacy SQL handoff - 2026-11-04
+
+- First user-run audience UPDATE failed against immutable approved-notice trigger. Corrected same .local-tools/add-replacement-admin-test-notice.sql to publish graphiscan-workflow-test-v2-admin-20261104 with unchanged fictional test wording plus replacement admin in selected audience. Old row only deactivated; old consent preserved and new acceptance remains explicit for ALL included accounts.10 isolated actual-trigger PostgreSQL checks pass; corrected SQL NOT applied hosted. User keeps old admin in normal Chrome, replacement in separate session. Previous in-place update instructions are superseded.
+
+## User rejects test notice; professional notice next - 2026-11-04
+
+- User wants a real professional GraphiScan experience and rejects fictional-workflow notice wording. Do not publish another test-copy version as the final policy. Existing hosted body has stale embedded v1 alongside v2 metadata; final notice should display server version once.
+- Updated graphiscan/api/PRIVACY_AGREEMENT_DRAFT.md as the professional publication draft. Asked for responsible organization, privacy email and retention duration; also verify participation/processing basis, request process and providers before publishing. No answers yet, no hosted notice/consent mutations. Continue drafting from verified behavior while awaiting facts; do not invent contact/policy promises. Preserve old admin and verify replacement permissions before account retirement.
+
+## Professional notice ready for user-run publication - 2026-11-04
+
+- User said make it professional for now. Canonical wording: graphiscan/api/privacy-notice-v1.txt; synced draft preview. No fictional framing, embedded version, invented email/retention/compliance claim. Uses documented project/role/storage facts and existing issuing-admin contact channel.
+- Run ENTIRE .local-tools/publish-professional-privacy-notice.sql in existing Supabase SQL Editor as owner after reviewing wording. Publishes graphiscan-privacy-v1-20261104 from either known test predecessor, retains selected audience plus exact active admin@gmail.com replacement and old notice/consent history, audits owner maintenance and requires fresh explicit acknowledgement.13 isolated actual-trigger PostgreSQL checks pass; NOT applied hosted. Old admin stays open in normal Chrome; replacement separate session. Verify account permissions before retiring old accounts; do not seed grants/consent silently. Final retention/contact/participant policy decisions remain pending for real-data rollout.
+
+## Professional notice published - 2026-11-04
+
+- User-run SQL succeeded; independent read-only hosted check confirms current graphiscan-privacy-v1-20261104, approved/published/digest-valid, audience5 of7 profiles. Replacement account is active admin without password/pending-credential gate. Next Refresh/read/accept in replacement window; old admin may also prompt for this version. Confirm actual replacement management permissions before retiring old accounts. No automatic consent or account deletion performed.
+
+## Replacement admin missing permissions - 2026-11-04
+
+- User sees no data on replacement. Independent read-only comparison: BOTH admins accepted current notice; replacement grants=[]; old admin has accounts.manage(global), audit.read(global), assignments.manage(school1). Neither has school memberships. No records moved/deleted.
+- Prepared .local-tools/restore-replacement-admin-access.sql (ignored) to copy ONLY exact verified3 source grants to active admin@gmail.com, with audit/idempotency/strict source checks.8 isolated PostgreSQL checks pass; NOT applied hosted. Next user runs entire SQL in existing Supabase SQL Editor, then Refresh/sign in new account and verify same accessible workspace. Keep old admin active until this succeeds; no broader permissions silently added.
+
+2026-11-04 latest local review: Students now matches Users summary/header/filter/table structure. Removed student initial circles; Edit/View row labels. Users/Students count lines have12px vertical spacing. Shared record filter buttons48px/128px desktop and table actions44px with matching phone Edit widths. Both web builds/44 fictional browser checks pass; screenshots inspected. Students summaries count current loaded filtered records; filtering API unchanged. No push. Continue user page-by-page review; preserve unrelated dirty work.
+
+2026-11-04 current direction: user rejected the initial Schools appearance, asked to try a different layout, then paused to state the overall preference: white across all admin page/sidebar backgrounds, not just cards. Implemented white admin surface tokens. Current Schools card layout is a LOCAL TRIAL awaiting feedback; name/ID search is local, View grades/Edit buttons equal44px, existing dialogs/roster preserved. Login mockup was too small: reduced height reserve340â†’240px; now662px at1280x720 versus547px.43 fictional school checks +49 white/login checks pass, both web builds pass, captures inspected. No push or real writes. Continue listening to user's design direction; do not treat Schools trial as approved.
+
+2026-11-04 latest: user approved third reference direction (white/thin borders/aligned groups), then requested removing the redundant account/Admin label, matching Users/Students search icons, and school card View instead of View grades plus repaired detail alignment. Implemented shared divided summary row, simpler record framing, solid blue nav selection, quiet header, shared18px AdminSearchIcon.vue and compact school heading/actions/tabs above scrolling rosters. Direct shared-folder lucide import failed production resolution and was replaced with local shared SVG; both web builds now pass.69 fictional school checks pass across1440/1366/390; populated screenshots inspected. Final53 directory/icon +79 dashboard reruns pending output. No real writes/push. New web-specific Impeccable surface brief; do not apply native Android guidance to Vue admin. Schools card layout remains a local trial, user visual review pending.
+
+2026-11-04 final verification:53 directory/icon/header/geometry checks and79 dashboard interaction checks pass after shared SVG correction and school View rename. Both web builds pass; layout detector[]; school populated desktop/phone and final dashboard captures inspected. Local review only, no push.
+
+2026-11-04 latest follow-up: school detail now hides page-header Refresh and Add school; Close restores them on the school list. Add student/Close inside detail remain. Admin build/72 fictional desktop-phone school checks pass, including hide/restore. Local only, not pushed.
+
+2026-11-04 latest school review: assigned teacher/expert names are deduplicated into a separate area above students, not repeated on each student/screening row. Final labels are Assigned teacher and Assigned expert, with no Grade N staff heading. Lists derive from loaded actual student/review assignments, support multiple staff, retain scope/permission/name lookup and pagination; no backend changes.81 fictional browser checks passed before label-only refinement; final admin build passes. No push/real writes.
+
+2026-11-04 latest: corrected View student opening the edit form. Shared directory now opens read-only Student details (school roster and main Students list), with explicit permission-checked Edit student action that rereads current data/revision. View has no form/save controls, cancellation/reopen resets to view; creation and conflict reload retain editing behavior.96 fictional browser checks/both web builds pass; desktop/phone captures inspected. Local only, not pushed.
+
+2026-11-04 ACTIVE latest: completed requested local UI stream: (1) full student workspace subpage with all existing record fields + scoped paginated screening history, explicit Edit/current revision, Back preserving original grade/list filter; no new nav entry. (2) vertical dividers/aligned top values across tables and detail/staff grids. (3) Initial/Follow-up screening detail titles from report metadata. (4) removed Expert assignment dropdown/save form; Reviewed by resolves actual expert_id, never assigned_expert_id. (5) user rejected school cards: now table rows, no Grades1-3 badge, equal View/Edit.126 school/student/history/edit/reviewer checks,73 table alignment checks,45 Schools table checks and both web builds pass; captures inspected. No push/real writes. IMPORTANT pending async question: expert auto-routing all grade experts vs one; backend still requires per-screening assignment, and UI removal DID NOT automate or broaden access. Need user rule before server/migration work; never claim automatic routing works. New component HostedStudentDetails.vue and workspace-viewport.css remain untracked among much unrelated dirty work; don't git add all. Earlier modal/card docs below are superseded.
+
+2026-11-04 latest visual clarification: labels/headings should be dark and semibold, with NO colored highlight background. Applied to tables, student details, assigned staff and screening details (including phone labels). Final admin build passes; local only/not pushed. Automatic expert-routing question remains unanswered and backend routing unchanged.
+
+2026-11-04 latest: student-page Refresh moved into header immediately to the right of Edit student; matching48px controls/equal columns, single Refresh when no edit permission. No duplicate next to Screenings. Existing history refresh behavior preserved. Admin build passes; local only/not pushed.
+
+2026-11-04 latest: removed Results shown/Pending/Validated/Flagged summary strip from Screening results, including its first-load skeleton. Filters/list/detail/status/request behavior unchanged. Admin build passes; local only/not pushed.
+
+2026-11-04 latest clarification: Results overview keeps shared count cards (Results/Pending/Validated/Flagged), but individual screening details hide them. Close details restores the overview cards; initial skeleton matches. Admin build passes; local only/not pushed. Supersedes the blanket summary removal below.
+
+2026-11-04 ACTIVE latest: Progress now has StudentScreeningChart.vue (stored Normal/High Potential label timeline, initial/follow-up, selectable points/keyboard/dropdown, selected date/status and existing View screening). HostedAdminProgress reads ALL existing scoped history pages with limit100/orderoldest, stops stale/repeated cursors, no partial-complete chart. Renamed button View progress; fixed table getting crushed by flex under chart (block contents in scrolling panel), explicit selected-screening label, mobile header height. One record = one point/no fake line; user screenshot singleton explanation given. Final66 fictional cases pass at1440/1366/390, including table-height assertion; captures inspected. Admin build/layout scan[] pass. Updated older nav fixture Progress expectations but did not run that entire historical fixture. No push/real writes/model/backend changes. Pending expert auto-routing choice still unanswered; don't conflate grade eligibility with per-screening ownership.
+
+
+2026-11-05 critical continuation: admin UI/motion/fonts/mockup changes are local. New login audit source requires graphiscan/db/postgres/024_login_audit.sql BEFORE restarting the Python server;024 is NOT applied. Running API was not restarted.14 session tests/12 isolated login-audit SQL checks pass. UI has no routine Refresh controls; browser reload restores selected account-scoped section. See latest CHANGELOG for checks and pending final audit/refresh preview.

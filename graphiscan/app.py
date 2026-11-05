@@ -211,7 +211,7 @@ def validate_password_strength(password):
     if not re.search(r"[0-9]", password):
         errors.append("Password must contain at least one number.")
 
-    if not re.search(r"[^A-Za-z0-9]", password):
+    if not re.search(r"[^A-Za-z0-9\s]", password):
         errors.append("Password must contain at least one symbol.")
 
     if password != password.strip():

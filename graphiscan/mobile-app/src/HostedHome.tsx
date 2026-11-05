@@ -42,6 +42,6 @@ const s=StyleSheet.create({
   role:{fontSize:12,lineHeight:18,fontWeight:'500',paddingHorizontal:10,paddingVertical:5,borderRadius:8,overflow:'hidden'},
   primaryAction:{flexDirection:'row',alignItems:'center',gap:14,minHeight:112,padding:18,borderRadius:16},primaryCopy:{flex:1,minWidth:0,gap:6},
   primaryTitle:{fontSize:20,lineHeight:27,fontWeight:'600',letterSpacing:-.3},primaryDetail:{fontSize:14,lineHeight:21},
-  empty:{gap:8,padding:20,borderRadius:16},emptyTitle:{fontSize:16,lineHeight:23,fontWeight:'600'},
+  empty:{gap:8,paddingVertical:16},emptyTitle:{fontSize:16,lineHeight:23,fontWeight:'600'},
   refresh:{minHeight:48,flexDirection:'row',gap:8,alignItems:'center',justifyContent:'center'},
 })

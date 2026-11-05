@@ -154,7 +154,7 @@ def install_api_v1(app, backend: AccessBackend | None = None):
     @api.post("/session/login")
     def login_session():
         try:
-            return jsonify(data=session_service().login(session_body()),request_id=g.v1_request_id)
+            return jsonify(data=session_service().login(session_body(),request_id=g.v1_request_id),request_id=g.v1_request_id)
         except InvalidSession:
             raise ApiError(401,"AUTHENTICATION_REQUIRED","Sign in to continue.") from None
         except BackendUnavailable:
@@ -313,6 +313,29 @@ def install_api_v1(app, backend: AccessBackend | None = None):
         if request.args:
             raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
         return jsonify(**admin_lifecycle().status(g.v1_identity, operation_id), request_id=g.v1_request_id)
+
+    def role_assignments_service():
+        from flask import current_app
+        service = getattr(current_app.extensions['graphiscan_v1_backend'], 'role_assignments_service', None)
+        if service is None:
+            raise BackendUnavailable()
+        return service
+
+    @api.get('/accounts/<user_id>/assignments')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def get_role_assignments(user_id):
+        if request.args:
+            raise ApiError(400, 'INVALID_REQUEST', 'Do not supply query parameters.')
+        return jsonify(**role_assignments_service().read(g.v1_identity, user_id), request_id=g.v1_request_id)
+
+    @api.patch('/accounts/<user_id>/assignments')
+    @require_access(roles={'admin', 'researcher'}, permission='accounts.manage')
+    def set_role_assignments(user_id):
+        request.max_content_length = 65536
+        if request.args or not request.is_json:
+            raise ApiError(400, 'INVALID_REQUEST', 'Supply a JSON object without query parameters.')
+        return jsonify(**role_assignments_service().write(g.v1_identity, user_id,
+            request.get_json(silent=True), g.v1_request_id), request_id=g.v1_request_id)
 
     def account_assignment_access(user_id, write=False):
         from flask import current_app
