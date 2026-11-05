@@ -584,7 +584,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Implemented in source; migration 018 and server-only Supabase Auth secret setup are required. Requires global accounts.manage and current onboarding/session gates. Commits an email reservation before a single Auth admin create; completion verifies provider app metadata and creates an active profile requiring a password change. No automatic grants or email delivery. Pending requests require operator reconciliation; never automatically replay the Auth write.",
+        "description": "Requires migration 018, server-only Auth setup, global accounts.manage and current onboarding/session gates. Reserves before one Auth create; confirmed completion creates the active profile. Migration022 requires first-password change only for teacher/expert/parent; admin/researcher credentials are permanent. Optional delivery_method email requires a configured HTTPS mailer and sends once after completion. Mail failure returns the created account with separate credential_delivery metadata; it never replays Auth or email. Completed request replays return not_repeated and never trust the replay password. No automatic permission grants. Pending issuance needs operator reconciliation.",
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -623,6 +623,9 @@
                     },
                     "request_id": {
                       "type": "string"
+                    },
+                    "credential_delivery": {
+                      "$ref": "#/components/schemas/CredentialDelivery"
                     }
                   },
                   "required": [
@@ -983,7 +986,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Migration019. Verify issuer password, durably block old sessions before one provider password update, then require first-login password change. Consent history retained. No credential persistence or automatic write replay.",
+        "description": "Migrations019 and022. Verify issuer password and durably block old sessions before one provider password update. Confirmed completion requires first-login change for teacher/expert/parent, while admin/researcher passwords are permanent. The legacy endpoint/field names are retained. Consent history and revocation checks remain; no credential persistence or automatic write replay.",
         "parameters": [
           {
             "name": "user_id",
@@ -1369,7 +1372,7 @@
         "tags": [
           "schools"
         ],
-        "description": "Implemented minimum actor-specific eligible identities, filtered before timestamp/UUID pagination. Requires current session/onboarding and assignments.manage for the school, or teacher membership. Teachers receive self and explicitly eligible active parents; administrative actors receive only explicitly eligible active teacher/parent/expert candidates, with school membership for teachers/experts. Membership alone grants no school-wide account search. Response data contains only user_id, full_name, role. Signed actor/session/school/limit-bound cursors expire after 30 minutes or API restart. No eligibility is created.",
+        "description": "With migration023, candidate schools/grades determine teacher/expert eligibility for authorized administrators. Optional grade_level filters scope and is cursor-bound. Teacher self discovery includes grade_levels; parent candidates already have explicit student links in the selected context. Teacher clients cannot change parent links. Individual student/review ownership, session/onboarding checks and operator school permission remain required. No actor eligibility links or permission grants are seeded.",
         "parameters": [
           {
             "name": "school_id",
@@ -1395,6 +1398,15 @@
             "schema": {
               "type": "string",
               "maxLength": 2048
+            }
+          },
+          {
+            "name": "grade_level",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
             }
           }
         ],
@@ -1459,7 +1471,7 @@
           "researcher",
           "teacher"
         ],
-        "x-record-scope": "Only identities explicitly eligible for this actor, school and permitted assignment operation; no global account directory."
+        "x-record-scope": "Authorized school and optional grade; staff eligibility by school/grade, parent candidates by existing student links, teacher self only for teacher callers."
       }
     },
     "/students": {
@@ -2505,7 +2517,7 @@
         "tags": [
           "screenings"
         ],
-        "description": "Check screening revision. Change assignment without overwriting reviewer authorship. Advance both screening and current-review revisions.",
+        "description": "Legacy per-screening assignment metadata. After migration025, it does not grant or retain expert access; current school/grade assignments are authoritative. Check screening revision and preserve actual review authorship. The admin UI manages expert responsibility through account school-and-grade assignments.",
         "parameters": [
           {
             "name": "result_id",
@@ -2587,7 +2599,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/screenings/{result_id}/review": {
@@ -2597,7 +2610,7 @@
         "tags": [
           "screenings"
         ],
-        "description": "Human remarks required; human recommendation optional. Append immutable review history. A new Flagged state immediately removes subsequent parent result/report/image access.",
+        "description": "After migration025, the expert must currently hold the student school and grade assignment; no per-screening assignment is required. Current session, onboarding and review revision checks still apply. Human remarks required; human recommendation optional. Append immutable review history. A new Flagged state immediately removes subsequent parent result/report/image access. Migration025 rollout must be verified separately.",
         "parameters": [
           {
             "name": "result_id",
@@ -3451,7 +3464,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed.",
+        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed. Legacy compatibility endpoint; migration023 role-based assignment flows no longer use actor-specific eligibility to select teacher/expert candidates.",
         "parameters": [
           {
             "name": "user_id",
@@ -3551,7 +3564,7 @@
         "tags": [
           "accounts"
         ],
-        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed.",
+        "description": "Source requires migration020. Global accounts.manage plus assignments.manage for the selected school; SQL repeats session/onboarding/scope checks. Explicit actor/candidate pair only. Teacher actors may select eligible parents in their school; admin/researcher actors require existing school assignment authority. Teacher/expert candidates need membership. Protected actor ceilings, current candidate revision and credential-operation locks apply. Changes audit atomically; no role, permission, membership or existing record assignment is created or removed. Legacy compatibility endpoint; migration023 role-based assignment flows no longer use actor-specific eligibility to select teacher/expert candidates.",
         "parameters": [
           {
             "name": "user_id",
@@ -3645,6 +3658,197 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AssignmentAccessWrite"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{user_id}/assignments": {
+      "get": {
+        "operationId": "getRoleAssignments",
+        "summary": "Read role-based assignments",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Migration023 stores teacher/expert school-and-grade assignments and explicit parent/student links. After migration025, expert assignments determine responsibility for all current and future students and screenings in those school/grade scopes, including historical results; changing scopes revokes existing expert sessions and re-evaluates record access. Teacher ownership and parent release/link rules remain unchanged. Revisions, scoped admin authority and transactional audit apply. Migration025 must be installed before claiming grade-based review access is active.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-permission": "accounts.manage",
+        "responses": {
+          "200": {
+            "description": "Authorized result; no-store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoleAssignments"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-record-scope": "Teacher/expert account school/grade scopes; parent student links only within the operator school assignment authority. Admin/self targets excluded."
+      },
+      "patch": {
+        "operationId": "setRoleAssignments",
+        "summary": "Set role-based assignments",
+        "tags": [
+          "accounts"
+        ],
+        "description": "Migration023 stores teacher/expert school-and-grade assignments and explicit parent/student links. After migration025, expert assignments determine responsibility for all current and future students and screenings in those school/grade scopes, including historical results; changing scopes revokes existing expert sessions and re-evaluates record access. Teacher ownership and parent release/link rules remain unchanged. Revisions, scoped admin authority and transactional audit apply. Migration025 must be installed before claiming grade-based review access is active.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized operation.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                },
+                "description": "Protected responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoleAssignments"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "x-implementation-status": "foundation",
+        "x-gates": [
+          "active_account",
+          "password_changed",
+          "privacy_current"
+        ],
+        "x-roles": [
+          "admin",
+          "researcher"
+        ],
+        "x-record-scope": "Teacher/expert account school/grade scopes; parent student links only within the operator school assignment authority. Admin/self targets excluded.",
+        "x-permission": "accounts.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleAssignmentsUpdate"
               }
             }
           }
@@ -4123,6 +4327,16 @@
               "parent",
               "expert"
             ]
+          },
+          "grade_levels": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 3,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            }
           }
         },
         "required": [
@@ -5272,7 +5486,7 @@
           "new_password": {
             "type": "string",
             "minLength": 8,
-            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9\\s])[\\s\\S]+$",
             "writeOnly": true
           },
           "confirm_password": {
@@ -5329,7 +5543,7 @@
           "temporary_password": {
             "type": "string",
             "minLength": 8,
-            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9\\s])[\\s\\S]+$",
             "writeOnly": true,
             "maxLength": 128
           },
@@ -5342,6 +5556,15 @@
             },
             "uniqueItems": true,
             "maxItems": 128
+          },
+          "delivery_method": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "email"
+            ],
+            "default": "manual",
+            "description": "Manual handover sends no email. Email requires a configured server-side sender and a real inbox; sends once after confirmed account completion."
           }
         },
         "required": [
@@ -5401,7 +5624,7 @@
           "temporary_password": {
             "type": "string",
             "minLength": 8,
-            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9\\s])[\\s\\S]+$",
             "writeOnly": true
           },
           "expected_revision": {
@@ -6443,7 +6666,7 @@
           "temporary_password": {
             "type": "string",
             "minLength": 8,
-            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9])[\\s\\S]+$",
+            "pattern": "^(?=[\\s\\S]*[A-Z])(?=[\\s\\S]*[a-z])(?=[\\s\\S]*[0-9])(?=[\\s\\S]*[^A-Za-z0-9\\s])[\\s\\S]+$",
             "writeOnly": true,
             "maxLength": 128
           }
@@ -6545,6 +6768,228 @@
           }
         },
         "description": "eligible is a stored actor/candidate/school link; effective also requires current active roles, membership and actor authority. can_grant describes current prerequisites. This link permits selection, not record access or guardian verification."
+      },
+      "CredentialDelivery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "email"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "accepted",
+              "failed",
+              "unknown",
+              "not_repeated"
+            ],
+            "description": "accepted means the provider accepted the message, not inbox delivery. not_repeated is a completed account replay: no send and no verification of the submitted password."
+          }
+        },
+        "required": [
+          "method",
+          "status"
+        ]
+      },
+      "RoleGradeAssignment": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "school_id",
+          "grade_level"
+        ],
+        "properties": {
+          "school_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          }
+        }
+      },
+      "RoleSchoolGrade": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "school_id",
+          "school_name",
+          "grade_level"
+        ],
+        "properties": {
+          "school_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "school_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          }
+        }
+      },
+      "RoleLinkedStudent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "student_id",
+          "full_name",
+          "school_id",
+          "school_name",
+          "grade_level",
+          "revision",
+          "parent_id"
+        ],
+        "properties": {
+          "student_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "full_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "school_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "school_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "grade_level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          "parent_id": {
+            "$ref": "#/components/schemas/UserId"
+          }
+        }
+      },
+      "RoleAssignments": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "user_id",
+          "role",
+          "revision",
+          "school_grades",
+          "students"
+        ],
+        "properties": {
+          "user_id": {
+            "$ref": "#/components/schemas/UserId"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "teacher",
+              "expert",
+              "parent"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          "school_grades": {
+            "type": "array",
+            "maxItems": 384,
+            "items": {
+              "$ref": "#/components/schemas/RoleSchoolGrade"
+            }
+          },
+          "students": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleLinkedStudent"
+            }
+          }
+        }
+      },
+      "RoleAssignmentsUpdate": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "expected_revision",
+              "school_grades"
+            ],
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9223372036854776000
+              },
+              "school_grades": {
+                "type": "array",
+                "maxItems": 384,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/components/schemas/RoleGradeAssignment"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "expected_revision",
+              "student_links"
+            ],
+            "properties": {
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9223372036854776000
+              },
+              "student_links": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 128,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "student_id",
+                    "expected_revision",
+                    "linked"
+                  ],
+                  "properties": {
+                    "student_id": {
+                      "$ref": "#/components/schemas/Id"
+                    },
+                    "expected_revision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9223372036854776000
+                    },
+                    "linked": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     }
   },

@@ -185,7 +185,7 @@ const passwordRules = computed(() => {
     uppercase: /[A-Z]/.test(password.value),
     lowercase: /[a-z]/.test(password.value),
     number: /[0-9]/.test(password.value),
-    symbol: /[^A-Za-z0-9]/.test(password.value)
+    symbol: /[^A-Za-z0-9\s]/.test(password.value)
   }
 })
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef, useState } from 'react'
-import { FlatList, Pressable, Text, View, useColorScheme, useWindowDimensions } from 'react-native'
-import { NavigationContainer, DarkTheme, DefaultTheme, useNavigation } from '@react-navigation/native'
+import { FlatList, Pressable, Text, View, useWindowDimensions } from 'react-native'
+import { NavigationContainer, DefaultTheme, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator, type NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createBottomTabNavigator, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -56,7 +56,7 @@ function RecordList({ historyId }: { historyId?: string }) {
     refreshing={record.loading&&record.data!==null} onRefresh={start}
     ListHeaderComponent={historyId||profile.role==='parent'||record.error?<View style={{gap:16,paddingBottom:20}}>
       {profile.role==='parent'&&<Body muted>Only currently reviewed reports for your linked children are shown.</Body>}
-      {historyId&&<Button label={order==='newest'?'Show oldest first':'Show newest first'} secondary onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/>}<Notice error message={record.error}/></View>:undefined}
+      {historyId&&<Button label={order==='newest'?'Show oldest first':'Show newest first'} secondary onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/>}<Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={start}/>}</View>:undefined}
     ListEmptyComponent={record.loading?<LoadingSkeleton fillHeight={listHeight||windowHeight}/>:!record.error?<Body>No screening records are available for your account.</Body>:undefined}
     renderItem={({item,index}:any)=>{const student=students.data?.data.find((student:any)=>student.student_id===item.student_id);return <ScreeningRow record={item} studentName={student?.full_name} grade={student?.grade_level} last={index===(record.data?.data.length??0)-1} onPress={()=>navigation.navigate('Screening',{id:item.result_id})}/>}}
     ListFooterComponent={<View style={{gap:12,paddingTop:20}}>{record.data?.page?.next_cursor&&<Button label="Next page" onPress={()=>setCursor(record.data.page.next_cursor)}/>}{cursor&&<Button label="Return to first page" secondary onPress={start}/>}</View>}/></Screen>
@@ -84,7 +84,7 @@ function Detail({route,report=false}:{route:{params:{id:string}};report?:boolean
     </View><View style={[styles.panel,{borderWidth:0,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap'}]}><Heading>Expert review</Heading><Status value={row.review.status}/></View><RecordValue label="Remarks" value={row.review.remarks||'Not recorded'}/><RecordValue label="Expert recommendation" value={row.review.expert_recommendation||'Not recorded'}/><RecordValue label="Follow-up needed" value={row.review.follow_up_needed===true?'Yes':row.review.follow_up_needed===false?'No':'Not recorded'}/>
     {row.review.validation_date&&<Body muted>Reviewed {dateLabel(row.review.validation_date)}</Body>}
     </View><HostedImage request={request} id={row.result_id}/>
-    {!report&&profile.role==='expert'&&row.review.assigned_expert_id===profile.user_id&&<HostedReview request={request} id={row.result_id} review={row.review} onSaved={record.refresh}/>}
+    {!report&&profile.role==='expert'&&<HostedReview request={request} id={row.result_id} review={row.review} onSaved={record.refresh}/>}
     {!report&&row.report?.report_id&&<Button label="Open report" secondary onPress={()=>navigation.navigate('Report',{id:row.report.report_id})}/>}
     <Button label="View student history" secondary onPress={()=>navigation.navigate('History',{id:row.student_id})}/></>}
     <Button label="Refresh record" secondary disabled={record.loading} onPress={record.refresh}/></Screen>
@@ -112,7 +112,7 @@ function Main(){
 
 function HostedRoot(){
   const client=useRef<HostedClient|null>(null);if(!client.current)client.current=createHostedClient(origin)
-  const api=client.current,[profile,setProfile]=useState<Profile|null>(null),[signInNotice,setSignInNotice]=useState(''),dark=useColorScheme()==='dark',colors=useColors()
+  const api=client.current,[profile,setProfile]=useState<Profile|null>(null),[signInNotice,setSignInNotice]=useState(''),colors=useColors()
   async function logout(){setProfile(null);setSignInNotice('');try{await api.logout()}catch{setSignInNotice('You are signed out on this device. The server could not confirm sign-out.')}}
   async function refresh(){
     try{const next=await api.request('/me');if(!['teacher','expert','parent'].includes(next.role)){await logout().catch(()=>{});throw new Error('Use an issued teacher, expert or parent account.')}setProfile(next)}
@@ -124,8 +124,8 @@ function HostedRoot(){
     try{return await api.request(path,options)}catch(e:any){if(e.status===401){api.clear();setProfile(null)}else if(['PASSWORD_CHANGE_REQUIRED','PRIVACY_ACCEPTANCE_REQUIRED','AGREEMENT_NOT_CONFIGURED'].includes(e.code)){await refresh().catch(()=>{})}throw e}
   }).current
   const ready=profile?.onboarding.next_action==='ready'
-  const base=dark?DarkTheme:DefaultTheme
-  return <NavigationContainer theme={{...base,colors:{...base.colors,primary:colors.primary,background:colors.bg,card:colors.surface,text:colors.text,border:colors.border}}}><StatusBar style={dark?'light':'dark'}/>
+  const base=DefaultTheme
+  return <NavigationContainer theme={{...base,colors:{...base.colors,primary:colors.primary,background:colors.bg,card:colors.surface,text:colors.text,border:colors.border}}}><StatusBar style="dark"/>
     {!profile?<HostedLogin login={login} notice={signInNotice}/>:!ready?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><AccountSetup key={profile.user_id+profile.onboarding.next_action} client={api} action={profile.onboarding.next_action} refresh={refresh} logout={logout} passwordChanged={()=>{setProfile(null);setSignInNotice('Password updated. Sign in with your new password.')}}/></SafeAreaView>:<Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator key={profile.user_id} screenOptions={{headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'}}}>
       <Stack.Screen name="Main" component={Main} options={{headerShown:false}}/><Stack.Screen name="Screening" component={Detail} options={{title:'Screening result'}}/>
       <Stack.Screen name="History" component={History} options={{title:'Student history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>

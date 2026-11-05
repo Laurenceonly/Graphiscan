@@ -5,7 +5,8 @@
     "scheme": "graphiscan",
     "version": "1.0.0",
     "icon": "./assets/graphiscan-logo.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFFFFF",
     "ios": {
       "supportsTablet": true
     },

@@ -12,19 +12,26 @@ from v1_admin_writes import ERRORS, _school_ids
 
 def validate_creation(body, key):
     fields = {'full_name', 'email', 'role', 'temporary_password', 'school_ids'}
-    if not isinstance(body, dict) or set(body) != fields:
+    if not isinstance(body, dict) or not fields <= set(body) or set(body) - fields - {'delivery_method'}:
         raise ApiError(422, 'INVALID_INPUT', 'Complete all account fields.')
     if any(not isinstance(body[field], str) for field in fields - {'school_ids'}):
         raise ApiError(422, 'INVALID_INPUT', 'Check the supplied account fields.')
     name = ' '.join(body['full_name'].split())
     email = body['email'].strip().lower()
     password = body['temporary_password']
+    delivery = body.get('delivery_method', 'manual')
+    if delivery not in ('manual', 'email'):
+        raise ApiError(422, 'INVALID_INPUT', 'Choose email delivery or direct handover.')
+    if delivery == 'email':
+        from v1_account_mail import deliverable_address
+        if not deliverable_address(email):
+            raise ApiError(422, 'INVALID_INPUT', 'Use a real inbox address for email delivery.')
     if (not 1 <= len(name) <= 200 or any(ord(c) < 32 or ord(c) == 127 for c in body['full_name'])
             or len(email) > 254 or not re.fullmatch(r'[^\s@]+@[^\s@]+\.[^\s@]+', email)
             or body['role'] not in {'admin', 'researcher', 'teacher', 'parent', 'expert', 'guest'}):
         raise ApiError(422, 'INVALID_INPUT', 'Check the supplied account fields.')
     if (not 8 <= len(password) <= 128 or not all(re.search(pattern, password)
-            for pattern in (r'[A-Z]', r'[a-z]', r'[0-9]', r'[^A-Za-z0-9]'))):
+            for pattern in (r'[A-Z]', r'[a-z]', r'[0-9]', r'[^A-Za-z0-9\s]'))):
         raise ApiError(422, 'INVALID_PASSWORD', 'Use 8–128 characters with uppercase, lowercase, a number and a symbol.')
     try:
         if not isinstance(key, str) or str(UUID(key)) != key:
@@ -94,11 +101,16 @@ class SupabaseAccountProvider:
 
 
 class AccountIssuanceService:
-    def __init__(self, repository, provider):
+    def __init__(self, repository, provider, mailer=None):
         self.repository, self.provider = repository, provider
+        self.mailer = mailer
 
     def create(self, identity, body, key, request_id):
         fields = validate_creation(body, key)
+        delivery = body.get('delivery_method', 'manual')
+        if delivery == 'email' and self.mailer is None:
+            raise ApiError(503, 'ACCOUNT_EMAIL_UNAVAILABLE',
+                           'Email delivery is not configured. Choose direct handover or contact the system operator.')
         try:
             UUID(request_id)
         except (ValueError, TypeError):
@@ -108,7 +120,9 @@ class AccountIssuanceService:
             'SELECT public.graphiscan_begin_account_issuance(%s::uuid,%s::uuid,%s::uuid,%s::jsonb) AS result',
             (identity.user_id, identity.session_id, key, json.dumps(fields))))
         if isinstance(reservation.get('data'), dict):
-            return {'data': reservation['data']}
+            # The password is write-only and not bound into a stored replay body.
+            # Never send a replay's supplied password, or claim it is current.
+            return {'data': reservation['data'], 'credential_delivery': {'method': delivery, 'status': 'not_repeated'}}
         if reservation.get('reserved') is not True:
             raise BackendUnavailable()
         try:
@@ -118,8 +132,18 @@ class AccountIssuanceService:
                 (identity.user_id, identity.session_id, key, target, request_id)))
             if not isinstance(result.get('data'), dict) or result['data'].get('user_id') != target:
                 raise _pending()
-            return {'data': result['data']}
         except Exception:
             # An orphan Auth identity has no profile and cannot access the API.
             # Preserve reservation for operator reconciliation; never delete/retry.
             raise _pending() from None
+        # Email is outside the issuance saga: a mail failure cannot undo a created
+        # account or turn a confirmed creation into a pending/failed Auth operation.
+        status = 'manual'
+        if delivery == 'email':
+            try:
+                status = self.mailer.send(fields, body['temporary_password'])
+                if status not in ('accepted', 'failed', 'unknown'):
+                    status = 'unknown'
+            except Exception:
+                status = 'unknown'
+        return {'data': result['data'], 'credential_delivery': {'method': delivery, 'status': status}}

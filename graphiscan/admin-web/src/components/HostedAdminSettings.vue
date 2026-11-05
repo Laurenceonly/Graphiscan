@@ -23,7 +23,7 @@ const draft=reactive({current_password:'',new_password:'',confirm_password:''})
 const visible=reactive({current_password:false,new_password:false,confirm_password:false})
 const fields=[{key:'current_password',label:'Current password'},{key:'new_password',label:'New password'},{key:'confirm_password',label:'Confirm new password'}]
 const mismatch=computed(()=>Boolean(draft.confirm_password&&draft.new_password!==draft.confirm_password))
-const rules=computed(()=>[{label:'At least 8 characters',met:draft.new_password.length>=8},{label:'One uppercase letter',met:/[A-Z]/.test(draft.new_password)},{label:'One lowercase letter',met:/[a-z]/.test(draft.new_password)},{label:'One number',met:/[0-9]/.test(draft.new_password)},{label:'One symbol',met:/[^A-Za-z0-9]/.test(draft.new_password)}])
+const rules=computed(()=>[{label:'At least 8 characters',met:draft.new_password.length>=8},{label:'One uppercase letter',met:/[A-Z]/.test(draft.new_password)},{label:'One lowercase letter',met:/[a-z]/.test(draft.new_password)},{label:'One number',met:/[0-9]/.test(draft.new_password)},{label:'One symbol (not a space)',met:/[^A-Za-z0-9\s]/.test(draft.new_password)}])
 function clear(){for(const key of Object.keys(draft)){draft[key]='';visible[key]=false}}
 async function submit(){if(props.busy||mismatch.value)return;try{await props.changePassword({...draft})}finally{clear()}}
 onBeforeUnmount(clear)

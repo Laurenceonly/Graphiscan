@@ -1,6 +1,6 @@
 import React from 'react'
-import { Platform, View, useColorScheme, useWindowDimensions } from 'react-native'
-import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native'
+import { Platform, View, useWindowDimensions } from 'react-native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -31,11 +31,11 @@ function MainTabs() {
   </Tabs.Navigator>
 }
 function Navigation() {
-  const { user } = useSession(), dark = useColorScheme() === 'dark', colors = useColors()
-  const base = dark ? DarkTheme : DefaultTheme
+  const { user } = useSession(), colors = useColors()
+  const base = DefaultTheme
   return <NavigationContainer theme={{ ...base, colors: { ...base.colors, primary: colors.primary, background: colors.bg, card: colors.surface, text: colors.text, border: colors.border } }}
     linking={{ prefixes: ['graphiscan://'], config: { screens: { ResetPassword: 'reset-password' } } }}>
-    <StatusBar style={dark ? 'light' : 'dark'} />
+    <StatusBar style="dark" />
     <Stack.Navigator>{user ? <Stack.Group navigationKey={'signed-in-' + user.user_id}>
       <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
       {user.role === 'teacher' && <Stack.Screen name="AddStudent" component={StudentAddScreen} options={{ title: 'Add student' }} />}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -15,11 +15,11 @@ type Props = {
 export default function SignInPanel({ email, password, busy, error, notice, onEmail, onPassword, onSubmit, onForgotPassword }: Props) {
   const [visible, setVisible] = useState(false)
   const [focused, setFocused] = useState<'email' | 'password' | null>(null)
-  const c = useColors(), dark=useColorScheme()==='dark'
+  const c = useColors()
   useEffect(() => { if (!password) setVisible(false) }, [password])
   const disabled = busy || !email.trim() || !password
   return <SafeAreaView edges={['top','bottom']} style={[s.page,{backgroundColor:c.surface}]}>
-    <StatusBar style={dark?'light':'dark'} />
+    <StatusBar style="dark" />
     <KeyboardAvoidingView style={[s.page,{backgroundColor:c.surface}]} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}>
         <View style={s.brandRegion}>

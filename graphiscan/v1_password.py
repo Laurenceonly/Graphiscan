@@ -18,7 +18,7 @@ def validate_password_change(body):
         raise ApiError(422, "INVALID_PASSWORD", "Provide all three password fields.")
     current, new = body["current_password"], body["new_password"]
     if (new != body["confirm_password"] or new == current or len(new) < 8 or
-            not all(re.search(pattern, new) for pattern in (r"[A-Z]", r"[a-z]", r"[0-9]", r"[^A-Za-z0-9]"))):
+            not all(re.search(pattern, new) for pattern in (r"[A-Z]", r"[a-z]", r"[0-9]", r"[^A-Za-z0-9\s]"))):
         raise ApiError(422, "INVALID_PASSWORD", "Use matching, different passwords with at least eight characters, uppercase, lowercase, a digit and a symbol.")
     return current, new
 

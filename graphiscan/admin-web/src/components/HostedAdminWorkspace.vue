@@ -1,9 +1,9 @@
-<template>
-  <AdminLayout class="hosted-workspace" :sign-out="signOut">
+﻿<template>
+  <AdminLayout ref="workspaceLayout" class="hosted-workspace" :sign-out="signOutAndForgetPage">
     <template #brand>
       <AdminWorkspaceBrand />
     </template>
-    <template #topbar><strong class="workspace-header-title">Admin Workspace</strong></template>
+    <template #topbar><span class="workspace-header-title">Admin Workspace</span></template>
     <template #navigation="{ closeMenu }">
       <div v-for="group in navigation" :key="group.label" class="sidebar-section">
         <p class="sidebar-label">{{ group.label }}</p>
@@ -24,14 +24,13 @@
       <template v-else>
       <section class="dashboard-toolbar admin-page-header">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
-        <RefreshButton :busy="refreshing" @click="refreshDashboard" />
+
       </section>
-      <p v-if="screening.error || directory.error" class="workspace-alert" role="alert">Some dashboard information could not be loaded. Refresh to try again.</p>
+      <p v-if="screening.error || directory.error" class="workspace-alert" role="alert">Some dashboard information could not be loaded. Reload the page to try again.</p>
       <AdminSummaryCards :items="cards" label="Loaded record counts" interactive @select="navigate($event.target)" />
-      <AdminLoadingSkeleton v-if="screening.busy && !screening.loaded" dashboard label="Loading dashboard…" :rows="3" />
+      <AdminLoadingSkeleton v-if="screening.busy && !screening.loaded" dashboard label="Loading dashboard..." :rows="3" />
       <section v-else-if="!screening.rows.length" class="clean-panel dashboard-empty-panel" aria-labelledby="dashboard-empty-title" aria-live="polite">
         <div class="dashboard-empty-copy">
-          <span class="dashboard-empty-icon"><FileText :size="21" aria-hidden="true" /></span>
           <h2 id="dashboard-empty-title">{{ screening.busy ? 'Loading screenings' : screening.error ? 'Screenings unavailable' : !screening.allowed ? 'No screening access' : 'No screening results yet' }}</h2>
           <p>{{ screening.busy ? 'Screening records will appear here when they finish loading.' : screening.error ? 'Refresh the dashboard to try loading records again.' : !screening.allowed ? 'Screening records require school assignment permission.' : 'When screenings are recorded, their review status and recent results will appear here.' }}</p>
         </div>
@@ -40,8 +39,7 @@
         <div class="workspace-dashboard-primary">
           <section v-if="activity.distinctDays > 0" class="clean-panel workspace-activity" aria-labelledby="activity-title">
             <div class="clean-panel-head split-head"><div><h2 id="activity-title">Screening activity</h2><p>{{ activity.period }}</p></div></div>
-            <figure class="workspace-activity-chart"><svg viewBox="0 0 600 170" role="img" :aria-label="activity.description" preserveAspectRatio="none"><defs><linearGradient id="screening-activity-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".16" /><stop offset="100%" stop-color="currentColor" stop-opacity="0" /></linearGradient></defs><g class="workspace-chart-grid"><line v-for="y in [20,70,120]" :key="y" x1="0" :y1="y" x2="600" :y2="y" /></g><text x="0" y="13">{{ activity.maximum }}</text><text x="0" y="154">0</text><path :d="activity.area" fill="url(#screening-activity-fill)" /><polyline :points="activity.points" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" /><circle v-for="point in activity.coordinates" :key="point.x" :cx="point.x" :cy="point.y" r="3.5" fill="white" stroke="currentColor" stroke-width="2" /></svg><figcaption><span v-for="day in activity.days" :key="day.key">{{ day.label }}</span></figcaption></figure>
-            <p class="workspace-data-note">Screenings shown, grouped by date.</p>
+            <DashboardActivityChart :activity="activity" />
           </section>
           <section class="clean-panel workspace-recent-panel">
             <div class="clean-panel-head split-head"><h2>Recent screenings</h2><button type="button" class="mini-view-link" @click="navigate('results')">View all <ArrowUpRight :size="14" /></button></div>
@@ -53,25 +51,25 @@
                 <time :datetime="row.date_generated">{{ date(row.date_generated) }}</time>
               </button>
             </div>
-            <div v-else class="clean-empty-state small"><FileText :size="24" /><h3>{{ screening.busy ? 'Loading screenings' : screening.error ? 'Screenings unavailable' : !screening.allowed ? 'No screening access' : 'No recent results' }}</h3><p>{{ screening.error ? 'Use Refresh to try again.' : 'Records available to your account will appear here.' }}</p></div>
+            <div v-else class="clean-empty-state small"><h3>{{ screening.busy ? 'Loading screenings' : screening.error ? 'Screenings unavailable' : !screening.allowed ? 'No screening access' : 'No recent results' }}</h3><p>{{ screening.error ? 'Use Refresh to try again.' : 'Records available to your account will appear here.' }}</p></div>
           </section>
         </div>
         <div v-if="screening.rows.length" class="workspace-dashboard-secondary">
         <section class="clean-panel workspace-review-panel">
           <div class="clean-panel-head"><h2>Review status</h2></div>
           <div class="analytics-bar-list">
-            <div v-for="item in reviewBars" :key="item.label" class="analytics-bar-item">
-              <div class="analytics-bar-top"><div><strong>{{ item.label }}</strong><small>{{ item.description }}</small></div><span>{{ screening.loaded ? item.count : '—' }}</span></div>
+            <button v-for="item in reviewBars" :key="item.label" type="button" class="analytics-bar-item dashboard-review-action" :disabled="screening.busy" :aria-label="'View ' + item.label.toLowerCase() + ' screening results: ' + item.count" @click="openReviewStatus(item.label)">
+              <div class="analytics-bar-top"><div><strong>{{ item.label }}</strong><small>{{ item.description }}</small></div><span>{{ screening.loaded ? item.count : '-' }}</span></div>
               <div class="analytics-bar-track" aria-hidden="true"><div class="analytics-bar-fill" :class="item.tone" :style="{ width: percent(item.count, screening.rows.length) + '%' }"></div></div>
-            </div>
+            </button>
           </div>
           <p v-if="!screening.allowed" class="workspace-scope">Screening records require school assignment permission.</p>
         </section>
         <section class="clean-panel workspace-breakdown-panel">
           <div class="clean-panel-head"><h2>Result breakdown</h2></div>
-          <div class="classification-ring-wrap">
-            <div class="classification-ring" :style="{ background: ringBackground }" aria-hidden="true"><div><strong>{{ screening.loaded ? screening.rows.length : '—' }}</strong><span>Results shown</span></div></div>
-            <div class="classification-legend"><div v-for="item in classifications" :key="item.label"><span class="legend-dot" :style="{ background: item.color }"></span><p>{{ item.label }}</p><strong>{{ item.count }}</strong></div></div>
+          <div class="result-breakdown-chart">
+            <div class="breakdown-ring-space"><div class="classification-ring" :style="{ background: ringBackground }" aria-hidden="true"><div><strong>{{ selectedClassification?.count ?? screening.rows.length }}</strong><span>{{ selectedClassification ? 'Selected results' : 'Results shown' }}</span></div></div></div>
+            <div class="breakdown-legend"><button v-for="item in classifications" :key="item.label" type="button" class="breakdown-legend-row" :aria-pressed="classificationSelection === item.label" :aria-label="item.label + ': ' + item.count + ' results. Select to highlight.'" @click="classificationSelection = classificationSelection === item.label ? null : item.label"><span class="legend-dot" :style="{ background: item.color }"></span><span>{{ item.label }}</span><strong>{{ item.count }}</strong></button></div>
           </div>
         </section>
         </div>
@@ -81,32 +79,38 @@
 
     <!-- Keep existing editors mounted: switching sections must not discard drafts or requests. -->
     <section v-show="section === 'students' || section === 'schools'" class="workspace-record-panel">
-      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event"><template #school-people="{ school, refreshKey, close, canAddStudent, addStudent, viewStudent }"><HostedSchoolPeople :key="school.school_id" :school="school" :client="client" :profile="profile" :refresh-key="refreshKey" :can-add-student="canAddStudent" @close="close" @access-change="refreshAccount" @add-student="addStudent" @view-student="viewStudent" /></template></HostedDirectory>
+      <HostedDirectory ref="directoryRef" :client="client" :profile="profile" :sign-out="signOut" admin-presentation @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="directory = $event">
+        <template #school-people="{ school, refreshKey, close, canAddStudent, addStudent, viewStudent, studentOpen }"><HostedSchoolPeople v-show="!studentOpen" :key="school.school_id" :school="school" :client="client" :profile="profile" :refresh-key="refreshKey + assignmentRevision" :can-add-student="canAddStudent" @close="close" @access-change="refreshAccount" @add-student="addStudent" @view-student="viewStudent" /></template>
+        <template #student-details="{ studentId, schools, refreshKey, backLabel, canEdit, editingBusy, close, edit }"><HostedStudentDetails :key="studentId" :student-id="studentId" :client="client" :profile="profile" :schools="schools" :refresh-key="refreshKey" :back-label="backLabel" :can-edit="canEdit" :editing-busy="editingBusy" @close="close" @edit="edit" @access-change="refreshAccount" @open-result="openResult" /></template>
+      </HostedDirectory>
     </section>
     <section v-show="section === 'results'" class="workspace-record-panel">
       <HostedScreenings ref="screeningsRef" :client="client" :profile="profile" @access-change="refreshAccount" @snapshot="screening = $event" />
     </section>
     <section v-show="section === 'settings'" class="workspace-account">
-      <header class="page-header workspace-page-header admin-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1><RefreshButton :busy="busy" @click="refreshAccount" /></header>
+      <header class="page-header workspace-page-header admin-page-header"><h1 ref="accountTitle" tabindex="-1">Settings</h1></header>
       <HostedAdminSettings v-if="section === 'settings'" :change-password="changePassword" :busy="busy" />
     </section>
     <HostedAdminProgress v-if="section === 'progress'" ref="progressRef" :client="client" :profile="profile" :students="directory.records || []" :students-loading="directory.busy && !directory.studentsLoaded" @access-change="refreshAccount" @open-result="openResult" />
-    <HostedAdminRecords v-show="section === 'users'" ref="usersRef" kind="accounts" :active="section === 'users'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="recordSnapshot('accounts', $event)" />
+    <HostedAdminRecords v-show="section === 'users'" ref="usersRef" kind="accounts" @assignments-change="assignmentRevision++" :active="section === 'users'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="recordSnapshot('accounts', $event)" />
     <HostedAdminRecords v-show="section === 'audit'" ref="auditRef" kind="audit" :active="section === 'audit'" :client="client" :profile="profile" @access-change="refreshAccount" @navigation-block="setNavigationBlock" @snapshot="recordSnapshot('audit', $event)" />
   </AdminLayout>
 </template>
 
 <script setup>
+import '../styles/workspace-viewport.css'
+import { fadeAdminSurface, cancelAdminFade } from '../utils/admin-motion.mjs'
+import DashboardActivityChart from './DashboardActivityChart.vue'
 import AdminLoadingSkeleton from '../../../shared/AdminLoadingSkeleton.vue'
 import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
 import AdminWorkspaceBrand from './AdminWorkspaceBrand.vue'
-import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminSummaryCards from '../../../shared/AdminSummaryCards.vue'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { AlertTriangle, ArrowUpRight, FileText, GraduationCap, History, LayoutDashboard, School, Settings, TrendingUp, Users } from 'lucide-vue-next'
 import AdminLayout from '../layouts/AdminLayout.vue'
 import HostedDirectory from '../../../shared/HostedDirectory.vue'
 import HostedSchoolPeople from './HostedSchoolPeople.vue'
+import HostedStudentDetails from './HostedStudentDetails.vue'
 import HostedScreenings from './HostedScreenings.vue'
 import HostedAdminProgress from './HostedAdminProgress.vue'
 import HostedAdminSettings from './HostedAdminSettings.vue'
@@ -114,6 +118,18 @@ import HostedAdminRecords from './HostedAdminRecords.vue'
 const props = defineProps({ client: { type: Object, required: true }, profile: { type: Object, required: true }, refreshAccount: { type: Function, required: true }, signOut: { type: Function, required: true }, changePassword: { type: Function, required: true }, busy: Boolean, error: String, message: String })
 const emit = defineEmits(['navigation-block'])
 const section=ref('dashboard'), directoryRef=ref(null), screeningsRef=ref(null), pageTitle=ref(null), accountTitle=ref(null), usersRef=ref(null), auditRef=ref(null), progressRef=ref(null), blocked=ref(false), navigationError=ref('')
+const workspaceLayout=ref(null),assignmentRevision=ref(0)
+const pageStorageKey='graphiscan:admin:page:'+props.profile.user_id
+const pageKeys=['dashboard','users','students','schools','results','progress','audit','settings']
+try { const saved=sessionStorage.getItem(pageStorageKey);if(pageKeys.includes(saved))section.value=saved } catch { /* Storage can be disabled. */ }
+onMounted(()=>{if(section.value!=='dashboard')navigate(section.value)})
+async function signOutAndForgetPage(){try{sessionStorage.removeItem(pageStorageKey)}catch{};await props.signOut()}
+watch(section,()=>{
+  try{sessionStorage.setItem(pageStorageKey,section.value)}catch{}
+  const content=workspaceLayout.value?.$el?.querySelector('.content')
+  fadeAdminSurface(content)
+},{flush:'post'})
+onBeforeUnmount(()=>cancelAdminFade(workspaceLayout.value?.$el?.querySelector('.content')))
 const initialRecordReads=ref({accounts:false,audit:false})
 const initialRecordsLoading=computed(()=>!initialRecordReads.value.accounts || !initialRecordReads.value.audit)
 function recordSnapshot(kind,state){if(!state.allowed || state.loaded || (state.error && !state.busy))initialRecordReads.value[kind]=true}
@@ -122,10 +138,10 @@ const screening=ref({ rows:[], loaded:false, busy:true, error:'', allowed:false 
 const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap},{key:'schools',label:'Schools',icon:School}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
 const refreshing=computed(()=>props.busy || directory.value.busy || screening.value.busy)
 const cards=computed(()=>[
-  {label:'Screenings shown',value:screening.value.loaded?screening.value.rows.length:'—',icon:FileText,target:'results',loading:screening.value.busy&&!screening.value.loaded},
-  {label:'Students shown',value:directory.value.studentsLoaded?directory.value.students:'—',icon:GraduationCap,target:'students',loading:directory.value.busy&&!directory.value.studentsLoaded},
-  {label:'Schools shown',value:directory.value.schoolsLoaded?directory.value.schools:'—',icon:School,target:'schools',loading:directory.value.busy&&!directory.value.schoolsLoaded},
-  {label:'Follow-up needed',value:screening.value.loaded?screening.value.rows.filter(r=>r.review?.follow_up_needed===true).length:'—',icon:AlertTriangle,target:'results',loading:screening.value.busy&&!screening.value.loaded}
+  {label:'Screenings',value:screening.value.loaded?screening.value.rows.length:'-',icon:FileText,target:'results',loading:screening.value.busy&&!screening.value.loaded},
+  {label:'Students',value:directory.value.studentsLoaded?directory.value.students:'-',icon:GraduationCap,target:'students',loading:directory.value.busy&&!directory.value.studentsLoaded},
+  {label:'Schools',value:directory.value.schoolsLoaded?directory.value.schools:'-',icon:School,target:'schools',loading:directory.value.busy&&!directory.value.schoolsLoaded},
+  {label:'Follow-up needed',value:screening.value.loaded?screening.value.rows.filter(r=>r.review?.follow_up_needed===true).length:'-',icon:AlertTriangle,target:'results',loading:screening.value.busy&&!screening.value.loaded}
 ])
 const activity=computed(()=>{
   const dates=screening.value.rows.filter(row=>row.date_generated).map(row=>new Date(row.date_generated)).filter(date=>!Number.isNaN(date.getTime()))
@@ -136,7 +152,7 @@ const activity=computed(()=>{
   for(const date of dates){const day=days.find(day=>day.key===key(date));if(day)day.count++}
   const maximum=Math.max(1,...days.map(day=>day.count))
   const coordinates=days.map((day,index)=>({x:12+index*96,y:134-day.count/maximum*106}))
-  return {days,coordinates,maximum,distinctDays:days.filter(day=>day.count>0).length,points:coordinates.map(point=>`${point.x},${point.y}`).join(' '),area:`M 12 150 L ${coordinates.map(point=>`${point.x} ${point.y}`).join(' L ')} L 588 150 Z`,period:days[0].date.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+end.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}),description:'Screenings in loaded records: '+days.map(day=>`${day.label}: ${day.count}`).join(', ')}
+  return {days,coordinates,maximum,distinctDays:days.filter(day=>day.count>0).length,points:coordinates.map(point=>`${point.x},${point.y}`).join(' '),area:`M 12 150 L ${coordinates.map(point=>`${point.x} ${point.y}`).join(' L ')} L 588 150 Z`,period:days[0].date.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' - '+end.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}),description:'Screenings in loaded records: '+days.map(day=>`${day.label}: ${day.count}`).join(', ')}
 })
 const reviewBars=computed(()=>[
   {label:'Pending',description:'Waiting for expert review',tone:'pending'},
@@ -149,10 +165,11 @@ const classifications=computed(()=>{
   for(const row of screening.value.rows){const label=row.classification || 'Not recorded';groups.set(label,(groups.get(label)||0)+1)}
   return [...groups].map(([label,count])=>({label,count,color:label.toLowerCase()==='normal'?'var(--success)':/high potential|potential dysgraphia/i.test(label)?'var(--danger)':'var(--blue-700)'}))
 })
+const classificationSelection=ref(null)
+const selectedClassification=computed(()=>classifications.value.find(item=>item.label===classificationSelection.value))
 const ringBackground=computed(()=>{
-  if(!screening.value.rows.length)return 'var(--border)'
   let end=0
-  return 'conic-gradient('+classifications.value.map(item=>{const start=end;end+=percent(item.count,screening.value.rows.length);return `${item.color} ${start}% ${end}%`}).join(',')+')'
+  return 'conic-gradient('+classifications.value.map(item=>{const start=end;end+=percent(item.count,screening.value.rows.length);return `${selectedClassification.value && item.label !== selectedClassification.value.label ? 'var(--border)' : item.color} ${start}% ${end}%`}).join(',')+')'
 })
 const recent=computed(()=>[...screening.value.rows].sort((a,b)=>new Date(b.date_generated)-new Date(a.date_generated)).slice(0,5))
 function percent(value,total){return total?value/total*100:0}
@@ -171,22 +188,11 @@ async function navigate(target,closeMenu){
   window.scrollTo({top:0,behavior:'instant'});return true
 }
 async function openResult(id){if(await navigate('results'))await screeningsRef.value?.openResult(id)}
+async function openReviewStatus(status){if(await navigate('results'))await screeningsRef.value?.showReviewStatus(status)}
 async function refreshDashboard(){await Promise.all([directoryRef.value?.refresh(),screeningsRef.value?.refresh()])}
 </script>
 
 <style scoped>
-/* Hide workspace chrome without preventing wheel, touch or keyboard scrolling. */
-:global(html:has(.hosted-workspace)),
-:global(body:has(.hosted-workspace)) {
-  scrollbar-width:none;
-  scrollbar-gutter:auto;
-}
-:global(html:has(.hosted-workspace)::-webkit-scrollbar),
-:global(body:has(.hosted-workspace)::-webkit-scrollbar),
-.hosted-workspace :deep(.sidebar::-webkit-scrollbar) {
-  display:none;
-}
-.hosted-workspace :deep(.sidebar) { scrollbar-width:none; }
 .hosted-workspace { --sidebar-width:240px; --topbar-height:72px; --admin-page-title:28px; --admin-section-title:16px; --workspace-page-inset:32px; --workspace-section-gap:24px; --workspace-card-padding:24px; --workspace-control-gap:16px; --workspace-metric-padding:20px; --workspace-metric-height:112px; background:var(--page-bg); font:400 14px/1.55 var(--font-ui); color:var(--text); }
 /* Short sections share the same full-height canvas as populated pages. */
 .hosted-workspace :deep(.main-panel) { display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; background:var(--page-bg); }

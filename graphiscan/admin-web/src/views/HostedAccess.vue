@@ -1,5 +1,5 @@
-<template>
-  <div class="hosted-admin">
+﻿<template>
+  <div ref="accessRoot" class="hosted-admin">
   <HostedAccess :allowed-roles="['admin','researcher']" :api-origin="origin"
     persist-tab-session :resume-workspace="route.path === '/workspace'"
     workspace-label="" sign-in-title="Admin sign-in"
@@ -16,7 +16,7 @@
       <AdminSignInForm :fields="fields" :busy="busy" :error="error" :message="message" @submit="submit" />
     </template>
     <template #welcome><AdminLoginPanel /></template>
-    <template #refresh-action="{ busy, refresh }"><RefreshButton :busy="busy" @click="refresh" /></template>
+    <template #refresh-action></template>
     <template #workspace="{ client, profile, refreshAccount, signOut, changePassword, busy, error, message, navigationBlock }">
       <HostedAdminWorkspace :client="client" :profile="profile" :refresh-account="refreshAccount" :sign-out="signOut" :change-password="changePassword" :busy="busy" :error="error" :message="message" @navigation-block="navigationBlock" />
     </template>
@@ -24,10 +24,10 @@
   </div>
 </template>
 <script setup>
-import RefreshButton from '../../../shared/RefreshButton.vue'
 import AdminPageSkeleton from '../../../shared/AdminPageSkeleton.vue'
 import AdminWorkspaceBrand from '../components/AdminWorkspaceBrand.vue'
-import { ref, watch } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
+import { fadeAdminSurface, cancelAdminFade } from '../utils/admin-motion.mjs'
 import { useRoute, useRouter } from 'vue-router'
 import HostedAccess from '../../../shared/HostedAccess.vue'
 import HostedAdminWorkspace from '../components/HostedAdminWorkspace.vue'
@@ -38,6 +38,9 @@ const origin=(import.meta.env.VITE_HOSTED_API_ORIGIN || import.meta.env.VITE_API
 const route = useRoute()
 const router = useRouter()
 const workspaceReady = ref(false)
+const accessRoot = ref(null)
+watch(workspaceReady, () => fadeAdminSurface(accessRoot.value, { full: true }), { flush: 'post' })
+onBeforeUnmount(() => cancelAdminFade(accessRoot.value))
 function syncAccessRoute(ready = workspaceReady.value) {
   workspaceReady.value = ready
   const destination = ready ? '/workspace' : '/login'
@@ -160,7 +163,7 @@ watch(() => route.path, () => syncAccessRoute())
   text-underline-offset: 4px;
 }
 .hosted-admin :deep(.access-return:hover) { text-decoration: underline; }
-.hosted-admin :deep(.access-content :is(.access-hint, .access-session-note, .directory-hint)) {
+.hosted-admin :deep(.access-content :is(.access-hint, .directory-hint)) {
   color: var(--muted);
   font-size: 13px;
 }
@@ -225,10 +228,6 @@ watch(() => route.path, () => syncAccessRoute())
 }
 .hosted-admin :deep(.access-onboarding-layout .access-steps [aria-current=step]) { color: var(--blue-700); font-weight: 600; }
 .hosted-admin :deep(.access-onboarding-layout .access-steps [aria-current=step]::before) { background: var(--blue-700); color: #fff; border-color: var(--blue-700); }
-.hosted-admin :deep(.access-onboarding-layout .password-setup-symbol) {
-  display: grid; place-items: center; width: 48px; height: 48px;
-  border: 1px solid #dbe6f0; border-radius: 14px; color: var(--blue-700); margin-bottom: 20px;
-}
 .hosted-admin :deep(.access-onboarding-layout h1) { font-size: 28px; line-height: 1.25; letter-spacing: -.035em; margin: 0 0 10px; }
 .hosted-admin :deep(.access-onboarding-layout .password-setup-description) { font-size: 14px; line-height: 1.65; color: #64748b; margin: 0; max-width: 45ch; }
 .hosted-admin :deep(.access-onboarding-layout .password-setup-form) { margin-top: 28px; gap: 20px; }
@@ -237,11 +236,9 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(.access-onboarding-layout .password-setup-field input) { height: 50px; min-height: 50px; border: 1px solid #d4dde8; border-radius: 9px; padding: 12px 14px; }
 .hosted-admin :deep(.access-onboarding-layout #hosted-strength) { margin: 1px 0 0; font-size: 12px; line-height: 1.6; color: #718096; }
 .hosted-admin :deep(.access-onboarding-layout .access-primary) { min-height: 50px; margin: 2px 0 0; border-radius: 9px; font-size: 14px; }
-.hosted-admin :deep(.access-onboarding-layout .password-signin-note) { display: block; margin: -9px 0 0; text-align: center; color: #718096; font-size: 12px; }
 .hosted-admin :deep(.access-onboarding-layout .access-actions) { margin-top: 24px; padding-top: 20px; justify-content: space-between; }
 .hosted-admin :deep(.access-onboarding-layout .access-actions button) { min-height: 36px; padding: 7px 0; background: transparent; border: 0; font-size: 12px; color: #64748b; }
 .hosted-admin :deep(.access-onboarding-layout .access-actions button:hover:not(:disabled)) { color: var(--blue-700); text-decoration: underline; }
-.hosted-admin :deep(.access-onboarding-layout .access-session-note) { margin: 16px 0 0; text-align: center; font-size: 11px; line-height: 1.6; color: #8290a3; }
 @media (max-width: 600px) {
   .hosted-admin :deep(.access-page.access-onboarding-layout) { padding: 16px 16px 28px; }
   .hosted-admin :deep(.access-onboarding-layout .access-content) { margin-top: 20px; padding: 24px 20px; border-radius: 16px; }
@@ -338,7 +335,6 @@ watch(() => route.path, () => syncAccessRoute())
 .hosted-admin :deep(.custom-signin button.admin-signin-submit:hover:not(:disabled)) { background: var(--blue-hover); border-color: transparent; color: var(--white); }
 .hosted-admin :deep(.custom-signin .admin-signin-error) { color: #991b1b; background: #fef2f2; border-radius: 8px; padding: 12px 14px; margin: 0; font-size: 14px; }
 .hosted-admin :deep(.custom-signin .admin-signin-message) { color: var(--blue-700); margin: 0; font-size: 14px; }
-.hosted-admin :deep(.custom-signin .access-session-note) { width: min(100%, 440px); margin: 28px auto 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.6; }
 @media (max-width: 980px) {
   .hosted-admin :deep(.access-login-layout) { max-width: none; min-height: 100dvh; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
   .hosted-admin :deep(.access-login-layout .login-right) { display: none; }
@@ -375,7 +371,6 @@ watch(() => route.path, () => syncAccessRoute())
   .hosted-admin :deep(.access-login-layout) { min-height: 100dvh; }
   .hosted-admin :deep(.access-login-layout .access-header) { padding-top: 16px; }
   .hosted-admin :deep(.access-login-layout .custom-signin) { padding-top: 16px; padding-bottom: 24px; }
-  .hosted-admin :deep(.custom-signin .access-session-note) { margin-top: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hosted-admin :deep(.access-content button) { transition: none; }

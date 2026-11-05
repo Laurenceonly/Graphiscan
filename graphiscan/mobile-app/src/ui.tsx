@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
-  const dark = useColorScheme() === 'dark'
   const brand={brand:'#355c8c',brandPressed:'#29496f',onBrand:'#ffffff',brandMuted:'#e4ecf5'}
-  return dark ? { ...brand,brandAccent:'#aac0dd',bg: '#141d29', surface: '#1e2937', text: '#f3f5f8', muted: '#b8c3d0', border: '#425064', primary: '#aac0dd', onPrimary: '#182a41', soft:'#2b3b50', skeleton:'#3a4a60',error: '#ffb4b0', normal: '#9bd8ac', normalSurface:'#173f33', high: '#f7cc83', highSurface:'#49381e' }
-    : { ...brand,brandAccent:brand.brand,bg: '#f5f7fa', surface: '#ffffff', text: '#263445', muted: '#5e6c7c', border: '#c5cfdb', primary: '#45638a', onPrimary: '#ffffff', soft:'#edf2f8', skeleton:'#dde5ef',error: '#a72535', normal: '#176b3a', normalSurface:'#e7f4ec', high: '#895500', highSurface:'#fff2d9' }
+  return { ...brand,brandAccent:brand.brand,bg: '#ffffff', surface: '#ffffff', text: '#263445', muted: '#5e6c7c', border: '#c5cfdb', primary: '#45638a', onPrimary: '#ffffff', soft:'#edf2f8', skeleton:'#dde5ef',error: '#a72535', normal: '#176b3a', normalSurface:'#e7f4ec', high: '#895500', highSurface:'#fff2d9' }
 }
 export const styles = StyleSheet.create({
   page: { flex: 1 }, content: { padding: 20, gap: 20, width: '100%', maxWidth: 600, alignSelf: 'center', paddingBottom: 32 },

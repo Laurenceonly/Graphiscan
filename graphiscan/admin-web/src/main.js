@@ -13,8 +13,9 @@ async function revealStartup() {
   // Fetch assets together, and bound the wait rather than depending on the API.
   let fontReady = false
   const fonts = document.fonts
-    ? Promise.all([400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 16px Inter`)))
-      .then(() => { fontReady = document.fonts.check('400 16px Inter') })
+    ? Promise.all([300, 400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 16px Inter`)))
+      // check() also returns true for an undefined family. Require real loaded faces.
+      .then(groups => { fontReady = groups.every(faces => faces.length > 0 && faces.every(face => face.status === 'loaded')) })
       .catch(() => {})
     : Promise.resolve()
   const images = [...app.querySelectorAll('img')].filter(image => image.getClientRects().length)

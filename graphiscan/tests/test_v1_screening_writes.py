@@ -4,6 +4,7 @@ from io import BytesIO
 import json
 from random import Random
 import unittest
+import numpy  # Load compiled modules before patch.dict restores sys.modules.
 from unittest.mock import Mock,patch
 from tempfile import TemporaryDirectory
 from pathlib import Path

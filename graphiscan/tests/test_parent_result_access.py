@@ -64,6 +64,10 @@ class ParentResultAccessTests(unittest.TestCase):
                 expert_recommendation TEXT, follow_up_needed TEXT,
                 validation_date TEXT, expert_id INTEGER
             );
+            CREATE TABLE reports (
+                report_id INTEGER PRIMARY KEY, result_id INTEGER,
+                student_id INTEGER, report_type TEXT, generated_at TEXT
+            );
             INSERT INTO users VALUES (1, 'Parent One', 'one@example.invalid', 'parent', 'active');
             INSERT INTO users VALUES (2, 'Parent Two', 'two@example.invalid', 'parent', 'active');
             INSERT INTO users VALUES (3, 'Teacher', 'teacher@example.invalid', 'teacher', 'active');

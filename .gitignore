@@ -36,6 +36,7 @@ graphiscan/config.py
 /.local-backups/
 /.playwright-cli/
 /output/playwright/
+/output/mobile-ui-review-20261103/
 /.impeccable/config.local.json
 /.impeccable/questions/
 /.impeccable/review/

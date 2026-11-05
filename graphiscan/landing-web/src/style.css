@@ -710,6 +710,9 @@ button{user-select:none}
  .info-layout.subpage{padding-top:32px;padding-bottom:48px}
  .info-intro{margin-bottom:28px}
  .info-layout .intro{font-size:1.0625rem;line-height:1.7;margin-top:20px}
+ .info-intro{text-align:center}
+ .info-layout h1{margin-inline:auto}
+ .info-layout .intro{text-align:center;max-width:36ch;margin-inline:auto;text-wrap:balance}
  .info-sections{gap:16px}
  .info-sections section,.info-sections section:last-child{padding:20px}
  .info-layout h2{font-size:1.375rem;line-height:1.35;margin-bottom:12px}
@@ -723,18 +726,24 @@ button{user-select:none}
  .download-hero{padding-block:32px 40px;gap:32px}
  .download-copy h1{font-size:clamp(40px,11vw,52px)}
  .download-description{margin-top:20px;line-height:1.7}
+ .download-copy{text-align:center}
+ .download-page .download-description{text-align:center;margin-inline:auto;text-wrap:balance}
  .download-release{padding:20px;max-width:none;margin-top:24px}
  .download-release .release-explanation{margin-top:12px;line-height:1.7}
+ .download-page .download-release .release-explanation,.download-page .download-release .download-availability{text-align:center;text-wrap:balance}
  .download-release .button{margin-top:20px;padding-inline:12px}
  .download-requirement{margin-top:16px}
+ .download-page .download-requirement{text-align:center;margin-inline:auto;max-width:32ch;text-wrap:balance}
  .download-device .role-device{width:216px}
  .download-install{padding-block:32px 48px}
+ .download-install h2{text-align:center}
  .download-install ol{grid-template-columns:1fr;gap:12px;margin-top:24px}
  .download-install li{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:12px;row-gap:6px;padding:20px}
  .download-install li>span{grid-column:1;grid-row:1/3;line-height:1.5}
  .download-install h3{grid-column:2;margin-top:0;line-height:1.35}
  .download-install li>p{grid-column:2;max-width:none;margin-top:0}
  .download-install .install-note{margin-top:24px}
+ .download-page .install-note{text-align:center;text-wrap:balance}
 }
 
 /* White release controls and stationary feedback across supporting-page boxes. */

@@ -16,6 +16,7 @@ module.exports=async({db,root,U,validateRow})=>{
   check((await q(read('020_assignment_access_preflight'))).rows[0].assignment_table_protected===false,
     'Preflight missed leftover non-DML table privileges');
   await db.exec(read('021_assignment_table_privileges'));
+  await db.exec(read('022_mobile_password_onboarding'));
   for(const file of ['017_account_management_preflight','018_account_issuance_preflight','019_admin_account_lifecycle_preflight','020_assignment_access_preflight']){
     const row=(await q(read(file))).rows[0];
     for(const [key,value]of Object.entries(row))check(value===true,file+': '+key);
@@ -90,6 +91,18 @@ module.exports=async({db,root,U,validateRow})=>{
     const start=async(actor,key,target,action,rev)=>writer('SELECT graphiscan_begin_admin_account_operation($1,$2,$3,$4,$5,$6,$7) result',[actor,sessions[actor],key,target,action,rev??await revision(target),request]);
     const complete=(actor,key)=>writer('SELECT graphiscan_complete_admin_account_operation($1,$2,$3,$4) result',[actor,sessions[actor],key,request]);
     const status=(actor,key)=>reader('SELECT graphiscan_read_admin_account_operation($1,$2,$3) result',[actor,sessions[actor],key]);
+    for(const [index,role]of ['admin','researcher','teacher','expert','parent'].entries()){
+      const target=U(45000+index),issueKey=U(45100+index),resetKey=U(45200+index),email='role-policy-'+role+'@example.invalid';
+      const temporary=['teacher','expert','parent'].includes(role);
+      check((await begin(A,issueKey,{full_name:'Fictional '+role,email,role,school_ids:[]})).reserved===true,'Role issuance reservation failed: '+role);
+      await q('INSERT INTO auth.users(id,email,email_confirmed_at,raw_app_meta_data) VALUES($1,$2,clock_timestamp(),$3::jsonb)',[target,email,JSON.stringify({graphiscan_issuance_id:issueKey})]);
+      const issued=await finish(issueKey,target);
+      check(issued.code===null&&issued.data.must_change_password===temporary,'Wrong issuance password policy: '+role);
+      check((await start(A,resetKey,target,'reset_password')).reserved===true,'Role reset reservation failed: '+role);
+      const changed=await complete(A,resetKey);
+      check(changed.code===null&&changed.data.must_change_password===temporary,'Wrong reset password policy: '+role);
+      check((await detail(A,target)).data.credential_update_pending===false,'Confirmed reset left pending: '+role);
+    }
     const reset=U(44001),yRevision=await revision(Y);
     check((await start(A,U(44000),A,'reset_password')).code==='FORBIDDEN','Self credential operation accepted');
     check((await start(R,U(44000),B,'reset_password')).code==='FORBIDDEN','Researcher reset protected account');

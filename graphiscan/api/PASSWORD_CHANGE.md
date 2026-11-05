@@ -27,10 +27,20 @@ All 103 Python, 465 contract and 123 isolated SQL checks passed.
 `POST /api/v1/me/password` accepts exactly `current_password`, `new_password`,
 and `confirm_password`. An active issued account and valid current session are
 required. Password/privacy onboarding gates are bypassed only for this operation.
-Strength is the existing contract's eight characters, ASCII upper/lower/digit and
-symbol; match/difference are checked without trimming. Each field is limited to
+Strength is at least eight characters, ASCII upper/lower/digit and a non-whitespace
+symbol; spaces, tabs and nonbreaking spaces do not satisfy the symbol rule.
+Match/difference are checked without trimming. Each field is limited to
 4096 characters and the JSON body to 16 KiB. Credentials never appear in responses,
 audit rows, operation rows or exception text. Request-body logging must remain off.
+
+Password hashing belongs to the authentication service: the hosted adapter sends
+the new credential over HTTPS to Supabase Auth, which stores bcrypt password
+hashes, not plaintext ([provider documentation](https://supabase.com/docs/guides/auth/password-security)).
+Do not pre-hash in the client or duplicate the credential in application tables.
+The retained MySQL routes separately use Werkzeug PBKDF2-SHA256 with a random salt
+and server-side pepper; they share the same minimum character requirements.
+Local verification on2026-11-03 uses fictional credentials/mock provider responses
+and isolated legacy helpers. It does not inspect or modify hosted Auth records.
 
 ## Sequence and failure behavior
 

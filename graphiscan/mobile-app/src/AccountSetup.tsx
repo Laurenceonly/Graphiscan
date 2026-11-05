@@ -32,7 +32,7 @@ export default function AccountSetup({ client, action, refresh, logout, password
   const [agreement, setAgreement] = useState<Agreement | null>(null), [accepted, setAccepted] = useState(false)
   const [busy, setBusy] = useState(false), [loading, setLoading] = useState(false), [error, setError] = useState(''), [attempt, setAttempt] = useState(0)
   const mismatch = Boolean(confirm && password !== confirm)
-  const validPassword = password.length >= 8 && password.length <= 128 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password) && password !== current
+  const validPassword = password.length >= 8 && password.length <= 128 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9\s]/.test(password) && password !== current
   useEffect(() => {
     let alive = true
     setAgreement(null); setAccepted(false); setError(''); setLoading(privacy)
@@ -93,8 +93,8 @@ export default function AccountSetup({ client, action, refresh, logout, password
 const s = StyleSheet.create({
   brand: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8 }, logo: { width: 36, height: 36 }, wordmark: { fontSize: 22, fontWeight: '700', letterSpacing: -.6 },
   intro: { gap: 8 }, title: { fontSize: 26, lineHeight: 34, fontWeight: '600', letterSpacing: -.5 },
-  card: { padding: 20, borderRadius: 16, gap: 20 }, passwordField: { gap: 8 },
-  passwordFrame: { flexDirection:'row',alignItems:'center',minHeight:52,borderWidth:1,borderRadius:10 }, passwordInput: { flex:1,minWidth:0,minHeight:50,paddingHorizontal:14,paddingVertical:12,fontSize:16 },
+  card: { gap: 20 }, passwordField: { gap: 8 },
+  passwordFrame: { flexDirection:'row',alignItems:'center',minHeight:52,borderWidth:1,borderRadius:10 }, passwordInput: { flex:1,minWidth:0,minHeight:50,paddingHorizontal:14,paddingVertical:12,fontSize:16,outlineWidth:0 },
   visibility: { minHeight: 50, minWidth:48, alignItems:'center', justifyContent: 'center' },
   agreementTitle: { fontSize: 18, lineHeight: 26, fontWeight: '600' },
   consent: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 20, borderTopWidth: 1 }, consentText: { flex: 1, minWidth: 0, fontSize: 14, lineHeight: 21 },

@@ -222,8 +222,10 @@ def backend_from_environment(environ=None):
             auth_secret = env.get('GRAPHISCAN_V1_SUPABASE_AUTH_SECRET_KEY', '')
             if auth_secret:
                 from v1_account_issuance import AccountIssuanceService, SupabaseAccountProvider
+                from v1_account_mail import mailer_from_environment
                 backend.account_issuance_service = AccountIssuanceService(
-                    PostgresAdminWriteRepository(admin_connect), SupabaseAccountProvider(verifier, auth_secret))
+                    PostgresAdminWriteRepository(admin_connect), SupabaseAccountProvider(verifier, auth_secret),
+                    mailer_from_environment(env))
         from v1_sessions import SessionService
         from v1_password import SupabasePasswordProvider
         from v1_admin_lifecycle import AdminLifecycleService
@@ -233,6 +235,9 @@ def backend_from_environment(environ=None):
             getattr(backend, 'admin_write_service', None).repository if getattr(backend, 'admin_write_service', None) else None,
             issuer.provider if issuer else None, SupabasePasswordProvider(verifier))
         from v1_assignment_access import AssignmentAccessService
+        from v1_role_assignments import RoleAssignmentsService
+        backend.role_assignments_service = RoleAssignmentsService(PostgresAdminWriteRepository(connect),
+            getattr(backend, 'admin_write_service', None).repository if getattr(backend, 'admin_write_service', None) else None)
         backend.assignment_access_service = AssignmentAccessService(PostgresAdminWriteRepository(connect),
             getattr(backend, 'admin_write_service', None).repository if getattr(backend, 'admin_write_service', None) else None)
         backend.session_service = SessionService(backend,SupabasePasswordProvider(verifier),

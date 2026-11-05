@@ -29,9 +29,8 @@
         </slot>
       </template>
       <template v-else-if="action === 'change_password'">
-        <div class="password-setup-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></div>
         <h1 id="access-title">Choose your own password</h1>
-        <p class="password-setup-description">Set a personal password to secure your account before continuing.</p>
+        <p class="password-setup-description">Replace your temporary password to continue.</p>
         <form class="password-setup-form" @submit.prevent="changePassword">
           <div class="password-setup-field">
           <label for="hosted-current">Current password</label><input id="hosted-current" v-model="currentPassword" type="password" required autocomplete="current-password" :disabled="busy" />
@@ -43,8 +42,7 @@
           <div class="password-setup-field">
           <label for="hosted-confirm">Confirm new password</label><input id="hosted-confirm" v-model="confirmPassword" type="password" required autocomplete="new-password" :disabled="busy" />
           </div>
-          <button class="access-primary" type="submit" :disabled="busy">{{ busy ? 'Saving…' : 'Save password and sign in again' }}</button>
-          <p class="password-signin-note">You will sign in again with your new password.</p>
+          <button class="access-primary" type="submit" :disabled="busy">{{ busy ? 'Saving…' : 'Save password' }}</button>
         </form>
       </template>
       <template v-else-if="action === 'accept_privacy'">
@@ -87,9 +85,9 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { RouterLink, onBeforeRouteLeave } from 'vue-router'
-import { createTabSessionStore } from './tab-session.mjs'
 import { createHostedClient } from './hosted-client.mjs'
 import HostedDirectory from './HostedDirectory.vue'
+import { createTabSessionStore } from './tab-session.mjs'
 const props = defineProps({
   allowedRoles: { type: Array, required: true },
   apiOrigin: { type: String, required: true },
@@ -106,9 +104,9 @@ const client = createHostedClient(props.apiOrigin, { sessionStore: props.persist
 const emit = defineEmits(['access-state'])
 const signInFields=reactive({email:'',password:'',showPassword:false})
 const {email,password,showPassword}=toRefs(signInFields)
-const restoring=ref(props.persistTabSession && props.resumeWorkspace)
 const currentPassword=ref(''), newPassword=ref(''), confirmPassword=ref('')
 const profile=ref(null), notice=ref(null), accepted=ref(false), busy=ref(false), error=ref(''), message=ref('')
+const restoring=ref(props.persistTabSession && props.resumeWorkspace)
 const privacyBlocks=computed(()=>(notice.value?.content || '').split(/\n\s*\n/).map(block=>block.trim()).filter(Boolean))
 const directoryPending=ref(false)
 function setNavigationBlock(value) { directoryPending.value = value }
@@ -164,6 +162,8 @@ async function submitAccountPassword(fields) {
 }
 function changePassword() { return run(async()=>{
   if (newPassword.value!==confirmPassword.value) throw new Error('The new passwords do not match.')
+  if (newPassword.value===currentPassword.value) throw new Error('Choose a different password from your current password.')
+  if (newPassword.value.length<8 || !/[A-Z]/.test(newPassword.value) || !/[a-z]/.test(newPassword.value) || !/[0-9]/.test(newPassword.value) || !/[^A-Za-z0-9\s]/.test(newPassword.value)) throw new Error('Use at least 8 characters with an uppercase letter, a lowercase letter, a number and a symbol. Spaces do not count as symbols.')
   try {
     await client.request('/me/password',{method:'POST',body:{current_password:currentPassword.value,new_password:newPassword.value,confirm_password:confirmPassword.value}})
     client.clear();profile.value=null;message.value='Password saved. Sign in with your new password.'
@@ -194,7 +194,7 @@ onBeforeRouteLeave(()=>{if(directoryPending.value){error.value='Confirm the pend
 .access-restore-placeholder{display:grid;gap:16px;padding:12px 0}
 .access-restore-placeholder span{height:16px;border-radius:5px;background:#e6ebef}
 .access-restore-placeholder span:last-child{width:65%}
-.password-setup-symbol,.password-signin-note{display:none}.password-setup-field{display:contents}
+.password-setup-field{display:contents}
 .access-content h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}.access-content h2{font-size:19px;line-height:1.4;margin:24px 0 8px}.access-content p{margin:0 0 24px}
 .access-content form{display:flex;flex-direction:column;gap:10px;margin-top:28px}.access-content label{font-weight:600;margin-top:12px}
 .access-content input:not([type=checkbox]){width:100%;min-height:48px;padding:10px 12px;border:1px solid #9bab9f;border-radius:8px;background:#fff;color:#17382d;font:inherit;caret-color:#176347}

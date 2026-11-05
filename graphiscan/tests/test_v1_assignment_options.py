@@ -62,6 +62,18 @@ class AssignmentOptionTests(unittest.TestCase):
         self.assertEqual(self.calls[-1][1][3:5],(STAMP,SESSION))
         self.assertEqual(self.get('/schools/2/assignment-options?limit=1&cursor='+token).status_code,422)
 
+    def test_grade_filter_is_strict_and_bound_into_cursor(self):
+        self.result['rows']=[{'data':{'user_id':SESSION,'role':'expert','full_name':'Synthetic','grade_levels':[2]},'created_at':STAMP},
+            {'data':{'user_id':USER,'role':'teacher','full_name':'Synthetic','grade_levels':[2]},'created_at':STAMP}]
+        response=self.get('/schools/1/assignment-options?limit=1&grade_level=2')
+        self.assertEqual(response.status_code,200);self.assertEqual(response.json['data'][0]['grade_levels'],[2])
+        self.assertIn('assignment_options_by_grade',self.calls[-1][0]);self.assertEqual(self.calls[-1][1][3],2)
+        token=response.json['page']['next_cursor'];self.result['rows']=[]
+        self.assertEqual(self.get('/schools/1/assignment-options?limit=1&grade_level=2&cursor='+token).status_code,200)
+        self.assertEqual(self.get('/schools/1/assignment-options?limit=1&grade_level=1&cursor='+token).status_code,422)
+        for grade in ['0','4','02','', 'true']:
+            self.assertEqual(self.get('/schools/1/assignment-options?grade_level='+grade).status_code,422)
+
     def test_current_sql_denial_overrides_previous_guard_access(self):
         for code,status in [('AUTHENTICATION_REQUIRED',401),('FORBIDDEN',403),
                             ('PRIVACY_ACCEPTANCE_REQUIRED',403),('NOT_FOUND',404)]:

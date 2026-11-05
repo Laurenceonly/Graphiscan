@@ -68,6 +68,21 @@ class PasswordRouteTests(unittest.TestCase):
         self.backend.load_access.return_value = AccessState(USER, 'Fictional', 'teacher', 'active', False, 'v1', 'v1')
         self.assertEqual(self.post(json=BODY).status_code, 200)
 
+    def test_each_missing_strength_rule_rejected_before_credential_write(self):
+        for new in ('abcdef1!', 'ABCDEF1!', 'Abcdefg!', 'Abcdefg1', 'Ab1!xyz',
+                    'Abcdef1 ', 'Abc def1', 'Abcdef1\t', 'Abcdef1\u00a0'):
+            with self.subTest(case=new):
+                response = self.post(json={**BODY, 'new_password': new, 'confirm_password': new})
+                self.assertEqual(response.status_code, 422)
+                self.assertNotIn(new, response.get_data(as_text=True))
+        self.backend.password_service.change.assert_not_called()
+
+    def test_eight_character_password_with_every_rule_is_accepted(self):
+        new = 'Abcdef1!'
+        self.assertEqual(self.post(json={**BODY, 'new_password': new,
+                                         'confirm_password': new}).status_code, 200)
+        self.assertEqual(self.backend.password_service.change.call_count, 1)
+
     def test_errors_are_sanitized(self):
         self.backend.password_service.change.side_effect = RuntimeError('private DSN/password')
         response = self.post(json=BODY)
@@ -189,7 +204,8 @@ class ProviderTests(unittest.TestCase):
         self.assertNotIn('private', str(error.exception))
 
     def test_strength_requires_each_contract_class_without_trimming_password(self):
-        for new in ('abcdefgh1!', 'ABCDEFGH1!', 'Abcdefghi!', 'Abcdefghi1', 'Aa1!'):
+        for new in ('abcdefgh1!', 'ABCDEFGH1!', 'Abcdefghi!', 'Abcdefghi1', 'Aa1!',
+                    'Abcdef1 ', 'Abc def1', 'Abcdef1\t', 'Abcdef1\u00a0'):
             with self.assertRaises(ApiError):
                 validate_password_change({**BODY, 'new_password': new, 'confirm_password': new})
         self.assertEqual(validate_password_change(BODY), (BODY['current_password'], BODY['new_password']))

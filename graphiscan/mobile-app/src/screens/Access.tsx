@@ -40,7 +40,7 @@ export function ResetPasswordScreen({ route, navigation }: NativeStackScreenProp
   const [saved, setSaved] = useState(false)
   async function submit() {
     if (!token || busy) return
-    if (password !== confirm || password.length < 8) { setError('Use matching passwords with at least eight characters.'); return }
+    if (password !== confirm || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) { setError('Use matching passwords with at least 8 characters, an uppercase letter, a lowercase letter, a number and a symbol. Spaces do not count as symbols.'); return }
     setBusy(true); setError('')
     try { await api.request('/reset-password', { method: 'POST', body: { token, password, confirm_password: confirm } }); setSaved(true) }
     catch (failure: any) { setError(failure.message) } finally { setPassword(''); setConfirm(''); setBusy(false) }

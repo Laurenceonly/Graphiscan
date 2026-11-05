@@ -1,4 +1,5 @@
 import { nextTick } from 'vue'
+import { fadeAdminSurface, cancelAdminFade } from '../utils/admin-motion.mjs'
 
 let nextDialogId = 0
 let openDialogs = 0
@@ -66,6 +67,7 @@ export default {
       if (!dialog.contains(event.target)) focusFirst()
     }
     states.set(backdrop, state)
+    fadeAdminSurface(backdrop, { full: true })
     document.addEventListener('keydown', state.onKeydown, true)
     document.addEventListener('focusin', state.onFocus)
     openDialogs++
@@ -77,6 +79,7 @@ export default {
     if (state) state.close = binding.value
   },
   beforeUnmount(backdrop) {
+    cancelAdminFade(backdrop)
     const state = states.get(backdrop)
     if (!state) return
     document.removeEventListener('keydown', state.onKeydown, true)

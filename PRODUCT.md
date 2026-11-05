@@ -1,5 +1,12 @@
 # GraphiScan product
 
+User direction2026-11-03: the mobile app uses a continuous white page background,
+including onboarding, navigation and safe areas. Use the light palette regardless
+of OS theme; dark text remains readable. Separate content through spacing and
+quiet dividers instead of white boxes floating on a tinted canvas. Temporary
+password onboarding is for teacher/expert/parent mobile accounts. Newly issued
+admin/researcher accounts use permanent credentials and normal Settings changes.
+
 <!-- impeccable:product-schema 1 -->
 
 ## Platform
