@@ -1,13 +1,6 @@
 # Administrator-issued account delivery
 
-FINAL user clarification2026-11-06 supersedes previous generated-email notes: admin types the full Login email in an editable blank field (example teacher@graphiscan.com). No email is generated or sent; issuance uses manual delivery. Existing logins unchanged.
-
-Latest user clarification2026-11-06: direct handover now generates a read-only Login email as name.<eight-hex-suffix>@graphiscan.com. This supersedes the entered-email UI note below. No mailbox is provisioned, email delivery stays hidden and manual mode sends no mail. Existing logins are unchanged.
-
-2026-11-06 current admin UI: only direct handover is offered. Admin enters the user's email address as the login; no generated login ID or email-delivery selector is shown. Requests use delivery_method=manual. Optional server email support below is retained for future use; its earlier UI choices describe historical behavior.
-
-Implemented locally on 2026-11-03. Sender configuration, deployment and actual
-inbox delivery are not established by source changes or mocked tests.
+Current admin UI (2026-11-06, implementation30ac401 published): the administrator enters the complete Login email in a blank editable field, e.g. teacher@graphiscan.com, and gives the password directly. No generated address, forced domain, delivery selector or email sending. An email-style login does not provision a mailbox. Existing identities are unchanged. Optional backend mail support described below is retained for future setup; it is not offered by the current UI.
 
 Role-policy correction2026-11-03: apply022_mobile_password_onboarding.sql after021
 before deploying this role-aware account UI. Newly issued or confirmed-reset
@@ -20,22 +13,12 @@ the role. Server GRAPHISCAN_ACCOUNT_ADMIN_ACCESS_URL selects the admin portal li
 (default https://admin.graphiscan.site/login); mobile mail uses
 GRAPHISCAN_ACCOUNT_ACCESS_URL. Both URLs must be clean public HTTPS links.
 
-## Creation choices
+## Current creation flow
 
-- **Give details directly:** the admin form generates
-  `gs-<12 hex characters>@accounts.graphiscan.invalid`. This is a login ID, not a
-  mailbox. After confirmed creation, a temporary panel shows the ID and masked
-  password, with explicit Show/Hide and Done controls. Opening another creator,
-  changing profile or leaving the page clears it. No browser storage or automatic
-  clipboard copy is used.
-- **Email login details:** enter the user's existing Gmail or other inbox. After
-  confirmed Auth/profile creation, one HTTPS Brevo request sends the role-appropriate
-  GraphiScan password and configured access link. Mailbox passwords are never
-  requested. The link contains no credentials or authentication bypass.
-
-Both retain role-appropriate first-password change, explicit privacy acceptance and
-existing server role/school/ownership checks. Issuance creates no permission grant,
-student relationship or agreement acceptance automatically.
+- Enter the user's name, chosen Login email, role and role-appropriate password. Optional school selection remains available; school/grade and parent/student assignments are managed separately.
+- Requests explicitly use delivery_method=manual. After confirmed creation, the direct-handover panel shows the Login email and masked password with Show/Hide and Done controls. Leaving/dismissing clears this temporary panel.
+- First-password change and current privacy acceptance remain explicit server gates for mobile roles. No grant, student link or consent is automatically invented by account creation.
+- Optional server email delivery below is future configuration only. Backend support and response statuses remain documented for compatibility.
 
 ## Setup without buying a domain
 

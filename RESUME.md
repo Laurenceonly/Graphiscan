@@ -1,3 +1,49 @@
+# Current resume checkpoint � 2026-11-06
+
+This is the current handoff. Historical checkpoints below are superseded when they conflict.
+
+## Published state
+
+- Implementation commit **30ac401** was pushed to **origin/main** (GitHub: Laurenceonly/Graphiscan). Admin, API, mobile source and related docs are included. A following documentation-only commit records this handoff.
+- Hosted admin: https://admin.graphiscan.site/login. Public HTTP200 and bundle /assets/index-BNpvENF4.js verified to include editable Login email, no email-delivery choice, audit automatic pagination and school-deletion UI.
+- Hosted API: https://graphiscan-admin-api.onrender.com. Latest read-only checks: /api/v1/health200; unauthenticated /api/v1/schools/1/deletion-check401 (previously404 while deploying). This confirms route availability, not authenticated school deletion/account creation.
+- Migrations001�025 were previously metadata-verified;026_school_deletion.sql is now independently verified installed, matching source with correct search path/security-definer/ACLs. Do not rerun migrations or cleanup to resume.
+
+## Final agreed behavior
+
+- Add user: admin TYPES the complete Login email, e.g. teacher@graphiscan.com. Blank editable field; no generation, suffix, automatic domain or requirement to use a personal inbox. GraphiScan does not provision a mailbox. Direct password handover only; email-delivery option removed. Optional backend mail adapter remains but local mail configuration is unavailable.
+- Teacher/expert/parent accounts change their temporary GraphiScan password on first sign-in, then explicitly accept the current privacy notice. Admin/researcher accounts use permanent credentials.
+- School Delete lives INSIDE Edit. Its confirmation checks linked students, teachers, experts and all school FK dependencies; any live links block deletion. No cascade. Red destructive/logout confirmations, neutral Cancel. No Refresh school list button. Routine school Saved feedback removed; warnings/errors retained.
+- Audit Logs: only inner records scroll; fixed filters; no Load more button; cursor pages load near list end. Failed page reads retain rows and pause automatic retries. Users pagination unchanged.
+- Expo: teacher/expert/parent UI polish, aligned result sections, shared field focus, reduced-motion-aware native stack/dialog transitions, stable transient-error refreshes, guarded private-image responses/Hide, upload read retries and model/student paging. Supplied glossy GraphiScan logo retained for standard/adaptive Android icons.
+
+## Cleanup and test status
+
+- Authorized fictional reset COMPLETED and verified earlier: six old Auth identities deleted, fictional student/screening data cleared, one captured image confirmed absent, schools/models retained. Only retained admin remained at that check. Subsequent creation of fresh role accounts has NOT been confirmed. Never rerun reset scripts.
+- User reported local account creation: �The service is temporarily unavailable.� Inspected local logs showed session-refresh503 followed by successful refresh/list reads and no account POST in that inspected interval. Root cause remains unconfirmed; pushing is not proof it is fixed. Check hosted Users before retrying to avoid duplicate/uncertain creation. Never replay credential writes automatically.
+- Verification recorded in CHANGELOG:12 Python directory tests;654 contract checks/all isolated SQL suites including25 deletion checks; admin/user web builds;18 mobile tests/TypeScript; Android Hermes/web exports with public API and no fixture endpoint. Fictional browser checks include33 final account,33 school-delete,48 red school/logout,31 red account workflow,45 audit scroll/paging/recovery,15 school-save feedback,53 Expo onboarding/role cases, six mobile role/phone recovery cases and image-action flows. These are separate runs, not one end-to-end live acceptance.
+- No release APK built/installed, real hosted inference/upload/review/parent-release cycle, physical-device camera/keyboard/Back/font-scale or native motion performance has been verified.
+
+## Next session � one role at a time
+
+1. Check current Git status and hosted Users. User will create ONE teacher through hosted admin; do not create accounts on their behalf without instruction or collect passwords in chat. Assign school/Grade1 through Manage assignments.
+2. Restore Android emulator connection. Installed AVD: GraphiScan_Pixel_6 (Android16/API36). Emulator was launched, but adb went offline/timed out; Expo preview failed adb reverse/package query. Do not claim the app opened. Verify current processes/device state first.
+3. Manual emulator opening: Android Studio ? Device Manager ? Play beside GraphiScan_Pixel_6. From graphiscan/mobile-app run npm.cmd run preview:android. It serves local source through Expo/Metro8081 while calling the hosted API. Testing current local source against the server does not require a push. Expo Go development preview is not the standalone APK.
+4. Test teacher sign-in ? required password change ? sign in again ? privacy acceptance ? scoped students/add/edit ? camera/gallery/screening. Check backend inference availability before promising upload completion: previous hosting notes say inference disabled; no fix/enablement verified.
+5. Create/test expert next: admin-assigned school/grade scope, screenings/history/images, review/reassignment, actual authorship. Then parent: explicitly linked student and Validated-only released results/history.
+6. Resolve issues, then prepare/build/install the APK and verify branding and real-device workflows. Do not equate an Expo export with an APK.
+
+## Local tools and restart information
+
+- Last local admin: http://127.0.0.1:5173/login; Vite script npm.cmd run dev -- --host 127.0.0.1 --port 5173 --strictPort from graphiscan/admin-web. Local API runner .local-tools/run_v1_admin_local.py on5002 uses hosted Supabase; verify port owner before restarting. Processes may stop after logout.
+- SDK: C:/Users/MY_PC/AppData/Local/Android/Sdk; emulator/emulator.exe -list-avds and platform-tools/adb.exe devices. Sandbox access can require approved execution; do not mistake denied access for missing SDK/Python.
+- Ignored helpers/captures remain local: .local-tools/check-public-release.cjs, check-school-deletion-installed.py, check-audit-inner-scroll.js, check-school-delete-browser.js, check-school-status.js, check-red-confirmations.js, expo-current-recovery.js, expo-current-images.js; output/playwright contains screenshots. Native/browser evidence must not be overstated.
+- No credentials, keys or passwords belong in Git or handoff notes. Keep .gitignore protections. User is logging out and requested this checkpoint; resume from this section, not old plans below.
+
+---
+
+# Historical checkpoints � superseded
+
 2026-11-06 PUBLICATION CHECKPOINT: user authorizes committing/pushing all current reviewed admin/API/mobile/documentation changes to origin/main for hosted account testing. Supersedes prior local-only publication intentions. Final Login email is manually typed, direct handover only;026 installed and verified. Keep historical no-hosted/native-acceptance limits. Local account creation503 remains undiagnosed; do not automatically replay an uncertain creation. After deployment verify current hosted admin, then user creates one teacher and tests before expert/parent. APK/emulator acceptance remains open.
 
 2026-11-06 FINAL login-email direction: Add user has a blank editable Login email field; admin types the full address, e.g. teacher@graphiscan.com. No generation, suffix, forced domain or email delivery. Direct password handover only. Existing accounts unchanged. Supersedes earlier generated-address and personal-email-only interpretations. Build/33 fictional account checks pass; local/unpushed.

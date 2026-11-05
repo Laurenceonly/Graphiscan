@@ -1,3 +1,9 @@
+## 2026-11-06 - Publication verified and logout handoff saved
+
+- Implementation30ac401 successfully pushed origin/main. Public admin HTTP200/current bundle index-BNpvENF4.js independently checked for final manual Login email/direct handover, absent email-delivery option, audit autopaging and school-delete UI. API health200; new anonymous school deletion-check now401, superseding initial404 during rollout. No authenticated account/school mutation performed by these checks.
+- Updated RESUME.md with authoritative current state and ordered next steps; older conflicting checkpoints explicitly historical. KNOWLEDGE.md/PROJECT_PLAN.md now record publication and actual acceptance limits. ACCOUNT_DELIVERY.md current UI explanation consolidated to remove conflicting generated/personal-email instructions.
+- User plans to log out. Teacher account creation remains user-run/unconfirmed; inspect Users before retry after prior local503. Emulator was launched but Expo failed ADB reverse/package query; native app opening is unverified. Next: teacher test, then expert, then parent, then APK build/install acceptance. No cleanup/migration rerun needed. Documentation-only checkpoint to be committed/pushed for cross-session continuity.
+
 ## 2026-11-06 - User-authorized web/mobile publication checkpoint
 
 - User requested pushing current changes to test account creation on hosted admin. Includes manual Login email entry/direct handover, audited unused-school deletion with independently verified installed026, red confirmation actions, audit inner scrolling/automatic pagination, school save-feedback removal and Expo UI/recovery/launcher configuration. Prior entries contain actual test evidence and native/hosted acceptance limits.
