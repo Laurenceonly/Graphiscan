@@ -84,7 +84,16 @@
             <label v-if="!isTeacher">Teacher<select v-model="draft.teacher_id" :required="!editing"><option value="">{{ editing ? 'No teacher assigned (existing record)' : 'Choose an eligible teacher' }}</option><option v-if="draft.teacher_id && !options.some(p => p.user_id === draft.teacher_id)" :value="draft.teacher_id">Current teacher - eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'teacher')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
             <p v-else class="directory-hint">You will be the assigned teacher.</p>
             <label v-if="!isTeacher">Parent or guardian<select v-model="draft.parent_id"><option value="">No linked parent</option><option v-if="draft.parent_id && !options.some(p => p.user_id === draft.parent_id)" :value="draft.parent_id">Current parent - eligibility must be confirmed</option><option v-for="person in options.filter(p => p.role === 'parent')" :key="person.user_id" :value="person.user_id">{{ person.full_name }}</option></select></label>
-            <p v-if="isTeacher && selfGradeScopeKnown && !selfGradeLevels.length" class="directory-hint">No grades are assigned for this school. Contact your administrator.</p><p v-if="isTeacher" class="directory-hint">Parent links are managed by an administrator.</p><p v-else class="directory-hint">Choices match this school and grade.</p>
+            <template v-if="isTeacher">
+              <p>Parent / Guardian: {{ draft.parent_id ? (teacherParentMatch?.user_id === draft.parent_id ? teacherParentMatch.full_name : 'Current linked parent') : 'Not linked' }}</p>
+              <label>Parent login email<input v-model="teacherParentEmail" type="email" autocomplete="off" placeholder="parent@graphiscan.com" @input="teacherParentMatch = null; teacherParentSearched = false" /></label>
+              <button type="button" :disabled="!draft.school_id || !teacherParentEmail.trim()" @click="findTeacherParent">Find parent</button>
+              <p class="directory-hint">Use the existing parent account's login email provided by your administrator.</p>
+              <template v-if="teacherParentMatch"><p>{{ teacherParentMatch.full_name }}</p><button type="button" :disabled="draft.parent_id === teacherParentMatch.user_id" @click="draft.parent_id = teacherParentMatch.user_id">{{ draft.parent_id === teacherParentMatch.user_id ? 'Parent selected' : 'Select parent' }}</button></template>
+              <p v-else-if="teacherParentSearched" class="directory-hint">No eligible parent account was found for that email.</p>
+              <button v-if="draft.parent_id" type="button" @click="draft.parent_id = ''">Remove parent link</button>
+            </template>
+            <p v-if="isTeacher && selfGradeScopeKnown && !selfGradeLevels.length" class="directory-hint">No grades are assigned for this school. Contact your administrator.</p><p v-if="!isTeacher" class="directory-hint">Choices match this school and grade.</p>
           </template>
         </fieldset>
         <div v-if="formKind === 'school' && editing && canDeleteSchools" class="school-delete-entry"><button type="button" class="school-delete-button" :disabled="busy || frozen || schoolUncertain" @click="openSchoolDeletion(editing)">Delete school</button></div>
@@ -137,6 +146,15 @@ const canDeleteSchools=computed(()=>props.adminPresentation&&props.profile.role=
 watch(formKind,async value=>{if(!props.adminPresentation)return;document.body.classList.toggle('hosted-directory-dialog-open',Boolean(value));if(value){await nextTick();if(formRegion.value&&!formRegion.value.open)formRegion.value.showModal()}},{flush:'post'})
 function cancelEditor(event){if(!props.adminPresentation)return;event.preventDefault();if(!busy.value&&!frozen.value&&!schoolUncertain.value)closeForm()}
 const draft=reactive({full_name:'',age:8,grade_level:1,school_id:'',teacher_id:'',parent_id:''})
+const teacherParentEmail=ref(''),teacherParentMatch=ref(null),teacherParentSearched=ref(false)
+function resetTeacherParentLookup(){teacherParentEmail.value='';teacherParentMatch.value=null;teacherParentSearched.value=false}
+function findTeacherParent(){
+  if(!isTeacher.value||!draft.school_id)return
+  const email=teacherParentEmail.value.trim().toLowerCase(),school=draft.school_id,grade=draft.grade_level
+  if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){error.value='Enter the parent’s full login email.';return}
+  teacherParentMatch.value=null;teacherParentSearched.value=false
+  return run(async()=>{const result=await props.client.request('/schools/'+encodeURIComponent(school)+'/assignment-options?grade_level='+grade+'&parent_email='+encodeURIComponent(email),{envelope:true});if(!alive||formKind.value!=='student'||draft.school_id!==school||draft.grade_level!==grade||teacherParentEmail.value.trim().toLowerCase()!==email)return;teacherParentMatch.value=result.data.length===1&&result.data[0].role==='parent'?result.data[0]:null;teacherParentSearched.value=true})
+}
 const isTeacher=computed(()=>props.profile.role==='teacher')
 const selfGradeLevels=computed(()=>options.value.find(item=>item.user_id===props.profile.user_id)?.grade_levels||[])
 const selfGradeScopeKnown=computed(()=>options.value.some(item=>item.user_id===props.profile.user_id&&Array.isArray(item.grade_levels)))
@@ -154,7 +172,7 @@ function loadStudents(more=false){return run(()=>queryStudents(more))}
 function refreshRecords(){return run(async()=>{if(selectedSchool.value)schoolPeopleRefresh.value++;const results=await Promise.allSettled([querySchools(),queryStudents()]);const failed=results.find(result=>result.status==='rejected');if(failed)throw failed.reason})}
 async function queryOptions(more=false){if(!draft.school_id)return;const query=new URLSearchParams({limit:'25'});if(!isTeacher.value)query.set('grade_level',String(draft.grade_level));if(more&&optionCursor.value)query.set('cursor',optionCursor.value);const result=await props.client.request('/schools/'+draft.school_id+'/assignment-options?'+query,{envelope:true});if(!alive)return;options.value=more?[...options.value,...result.data]:result.data;optionCursor.value=result.page.next_cursor;if(isTeacher.value&&!editing.value&&selfGradeLevels.value.length&&!selfGradeLevels.value.includes(draft.grade_level))draft.grade_level=selfGradeLevels.value[0]}
 function loadOptions(more=false){return run(()=>queryOptions(more))}
-function closeForm(){if(frozen.value)return;formKind.value='';editing.value=null;studentReadOnly.value=true;conflict.value=false;schoolUncertain.value=false;options.value=[];optionCursor.value=null;emit('navigation-block',false)}
+function closeForm(){if(frozen.value)return;resetTeacherParentLookup();formKind.value='';editing.value=null;studentReadOnly.value=true;conflict.value=false;schoolUncertain.value=false;options.value=[];optionCursor.value=null;emit('navigation-block',false)}
 async function focusForm(){await nextTick();if(alive)formRegion.value?.focus()}
 function newSchool(){closeForm();Object.assign(draft,{full_name:''});formKind.value='school';message.value='';focusForm()}
 async function openSchoolDeletion(school){
@@ -187,8 +205,8 @@ function viewStudent(id){if(props.adminPresentation&&slots['student-details']){i
 async function closeStudentPage(){viewedStudentId.value='';await nextTick();if(studentViewTrigger?.isConnected)studentViewTrigger.focus({preventScroll:true});studentViewTrigger=null}
 function editStudentFromPage(){if(!canWriteStudents.value||!viewedStudentId.value)return;return run(()=>populateStudent(viewedStudentId.value,false))}
 function editViewedStudent(){if(!canWriteStudents.value||!editing.value||formKind.value!=='student')return;return run(()=>populateStudent(editing.value.student_id,false))}
-function schoolChanged(){options.value=[];optionCursor.value=null;draft.teacher_id='';draft.parent_id='';loadOptions()}
-function gradeChanged(){if(isTeacher.value)return;options.value=[];optionCursor.value=null;draft.teacher_id='';draft.parent_id='';loadOptions()}
+function schoolChanged(){resetTeacherParentLookup();options.value=[];optionCursor.value=null;draft.teacher_id='';draft.parent_id='';loadOptions()}
+function gradeChanged(){resetTeacherParentLookup();if(isTeacher.value)return;options.value=[];optionCursor.value=null;draft.teacher_id='';draft.parent_id='';loadOptions()}
 function reloadRecord(){return run(async()=>{if(formKind.value==='student')await populateStudent(editing.value.student_id,false);else{await querySchools();schoolUncertain.value=false;closeForm();message.value='School list refreshed. Check the list before creating or editing a school again.'}conflict.value=false})}
 function save(){if(formKind.value==='student'&&studentReadOnly.value)return;return run(async()=>{
   message.value='';let result;emit('navigation-block',true)

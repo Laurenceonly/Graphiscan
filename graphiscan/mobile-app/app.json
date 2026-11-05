@@ -22,11 +22,12 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Select a handwriting sample for screening.",
+          "photosPermission": "Choose a handwriting sample or profile photo.",
           "cameraPermission": "Photograph a handwriting sample for screening.",
           "microphonePermission": false
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "web": {
       "favicon": "./assets/graphiscan-logo.png"

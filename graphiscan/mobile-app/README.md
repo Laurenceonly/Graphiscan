@@ -1,3 +1,29 @@
+2026-11-06 teacher parent-link activation:027 is installed and independently metadata-verified. Matching hosted API deployment is still pending; local Expo source alone cannot enable the exact-email lookup on an old API.
+
+Teacher parent linking (local, 2026-11-06): Add/Edit student now offers Parent login email -> Find parent -> Select parent -> Save student, plus Remove parent link. It needs new migration027 and the matching hosted API deployment; source/fictional checks do not establish live availability. Teachers remain limited to their own students and assigned school/grades; parent accounts remain admin-issued. See ../api/TEACHER_PARENT_LINKING.md.
+
+## Local mobile continuation - 2026-11-06
+
+Hosted mobile sign-in now saves only its refresh token in Expo SecureStore,
+separately per API origin; browser preview uses sessionStorage. App startup rotates
+and validates it, then reads current /me before opening role/onboarding screens.
+Network/server outages retain it with retry. Explicit logout, invalid/revoked
+credentials and password changes clear it. Passwords, access tokens and records
+are not saved. Install dependencies after pulling this change; native release
+builds require the new expo-secure-store config plugin. Sign in once after the
+first restart to initialize storage. Native end-to-end persistence is not yet
+verified; TypeScript/tests/export and fictional browser restoration pass.
+
+Privacy renders bold numbered section headings without repeating its title or
+showing the internal version; consent still uses the server's exact version.
+Profile shows authorized school names instead of status/refresh. Tap the circular
+avatar to choose a photo; Remove photo restores initials. Photos stay on this
+device per account and do not sync to the server or other devices. They are kept
+through sign-out until removed or app data is cleared. Native files use the app's
+document directory; browser preview uses localStorage. Profile navigation remains
+visible with keyboard dismissal on tab changes. Grade assignment rules are unchanged.
+
+
 # GraphiScan Expo application
 
 Branding2026-10-25: steel blue #355c8c actions/wordmark accents, muted blue controls

@@ -1454,7 +1454,7 @@
         "tags": [
           "schools"
         ],
-        "description": "With migration023, candidate schools/grades determine teacher/expert eligibility for authorized administrators. Optional grade_level filters scope and is cursor-bound. Teacher self discovery includes grade_levels; parent candidates already have explicit student links in the selected context. Teacher clients cannot change parent links. Individual student/review ownership, session/onboarding checks and operator school permission remain required. No actor eligibility links or permission grants are seeded.",
+        "description": "Existing admin/researcher school/grade candidate reads remain unchanged. With migration027, teachers may supply parent_email plus grade_level to find one existing active parent by exact normalized login email, including an account without linked students. Teacher school/grade, current session and onboarding gates are repeated in SQL. This lookup exposes only user_id, full_name and role, supports no cursor or broad directory search, and returns no match for unknown/ineligible accounts. Without parent_email, existing teacher self-discovery includes grade_levels. Teachers may link/change/remove a parent only on their own students within assigned school/grade scope; another teacher, school moves and grade-scope expansion remain forbidden.",
         "parameters": [
           {
             "name": "school_id",
@@ -1489,6 +1489,16 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 3
+            }
+          },
+          {
+            "name": "parent_email",
+            "in": "query",
+            "description": "Teacher-only exact parent login email lookup; requires grade_level and forbids cursor. Available after migration027 and matching API deployment.",
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "maxLength": 254
             }
           }
         ],
@@ -1683,7 +1693,7 @@
         "tags": [
           "students"
         ],
-        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB. With migration027 teachers may link, replace or clear an existing active parent on a student they own in their assigned school/grade scope. Parent accounts remain admin-issued; exact-email discovery uses assignment-options. Parent links are revalidated at save; current parent ownership plus Validated-only report release still controls parent access.",
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -1867,7 +1877,7 @@
         "tags": [
           "students"
         ],
-        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB.",
+        "description": "Implemented transactional directory mutation. SQL repeats current session/onboarding and scoped management/ownership checks. School creation requires a global schools.manage grant; edits require the current expected_revision. Teacher student creation derives teacher_id and requires current school membership; administrative assignments require assignments.manage for source/destination schools, active teacher membership and explicit candidate eligibility. Eligible parent links may be cleared with null. Teachers cannot change schools or assign another teacher. Student creation requires a durable Idempotency-Key; replay reauthorizes and returns current metadata without duplicate insert/audit. Names normalize whitespace; duplicate_name is a scoped warning and does not merge records. JSON is bounded to 8 KiB. With migration027 teachers may link, replace or clear an existing active parent on a student they own in their assigned school/grade scope. Parent accounts remain admin-issued; exact-email discovery uses assignment-options. Parent links are revalidated at save; current parent ownership plus Validated-only report release still controls parent access.",
         "parameters": [
           {
             "name": "student_id",

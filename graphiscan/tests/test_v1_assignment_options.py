@@ -80,6 +80,32 @@ class AssignmentOptionTests(unittest.TestCase):
             self.result={'code':code,'rows':[]}
             self.assertEqual(self.get().status_code,status)
 
+    def test_parent_lookup_uses_exact_normalized_email_and_current_school_grade(self):
+        self.result['rows']=[{'data':{'user_id':SESSION,'role':'parent','full_name':'Fictional Parent'},'created_at':STAMP}]
+        response=self.get('/schools/1/assignment-options?grade_level=2&parent_email=Parent%40Example.invalid')
+        self.assertEqual(response.status_code,200)
+        self.assertIn('graphiscan_teacher_parent_options',self.calls[-1][0])
+        self.assertEqual(self.calls[-1][1],(USER,SESSION,'1',2,'parent@example.invalid'))
+        self.assertEqual(response.json['page'],{'next_cursor':None})
+        self.assertEqual(set(response.json['data'][0]),{'user_id','role','full_name'})
+
+    def test_parent_lookup_refuses_broad_or_cursor_queries(self):
+        for query in ['parent_email=parent%40example.invalid','grade_level=1&parent_email=',
+                      'grade_level=1&parent_email=parent','grade_level=1&parent_email=%25',
+                      'grade_level=1&parent_email=a%40b.invalid&cursor=anything',
+                      'grade_level=1&parent_email=a%40b.invalid&parent_email=c%40d.invalid']:
+            self.assertEqual(self.get('/schools/1/assignment-options?'+query).status_code,422)
+        self.assertEqual(self.calls,[])
+
+    def test_parent_lookup_does_not_return_a_directory_or_private_fields(self):
+        row={'data':{'user_id':SESSION,'role':'parent','full_name':'Fictional'},'created_at':STAMP}
+        for rows in [[row,row],[{'data':{**row['data'],'email':'private@example.invalid'}}],
+                     [{'data':{**row['data'],'role':'teacher'}}]]:
+            self.result={'code':None,'rows':rows}
+            response=self.get('/schools/1/assignment-options?grade_level=1&parent_email=parent%40example.invalid')
+            self.assertEqual(response.status_code,503)
+            self.assertNotIn('private@example.invalid',response.text)
+
     def test_malformed_or_unknown_result_is_sanitized(self):
         for result in [None,{'code':'private SQL','rows':[]},{'code':None,'rows':None}]:
             self.result=result

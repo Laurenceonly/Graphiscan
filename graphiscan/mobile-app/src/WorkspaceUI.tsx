@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { dateLabel, screeningType } from './core/presentation'
 import { Status, useColors } from './ui'
@@ -15,9 +15,9 @@ export function AppBrand() {
   </View>
 }
 
-export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
+export function Avatar({ name, size = 40, uri }: { name: string; size?: number; uri?: string }) {
   const c = useColors(), initials = name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase()
-  return <View style={[s.avatar,{width:size,height:size,borderRadius:size/2,backgroundColor:c.soft}]}><Text style={{color:c.primary,fontSize:size*.36,fontWeight:'600'}}>{initials || 'G'}</Text></View>
+  return <View style={[s.avatar,{width:size,height:size,borderRadius:size/2,backgroundColor:c.soft,overflow:'hidden'}]}>{uri ? <Image key={uri} source={{uri}} accessibilityLabel="Profile photo" resizeMode="cover" style={{width:size,height:size}}/> : <Text style={{color:c.primary,fontSize:size*.36,fontWeight:'600'}}>{initials || 'G'}</Text>}</View>
 }
 
 export function SectionTitle({ title, action, onPress }: { title: string; action?: string; onPress?: () => void }) {

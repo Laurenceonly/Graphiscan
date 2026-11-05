@@ -1,3 +1,21 @@
+## Mobile session restoration - 2026-11-06 (local source)
+
+Expo now opts into refresh-only persistence using SecureStore on native and
+tab-scoped sessionStorage in its browser preview. Retained Vue user web remains
+memory-only; admin's existing tab persistence is unchanged. This supersedes the
+older statement below that Expo is memory-only. Every restore first rotates the
+refresh credential and reads current /me; role, password/privacy and revocation
+gates still apply. Startup outages offer retry without clearing stored credentials.
+Shared refresh handling now also preserves memory-only sessions after network/503
+failures, while invalid/revoked credentials still clear them. Mutations are never
+replayed by restoration. Explicit logout writes a synchronous empty stored value
+to prevent delayed deletion racing a later login. No API endpoint/migration change.
+
+Verified with20 mobile tests,29 shared client/submission tests and12 fictional
+browser discard/reload/outage/logout checks. Native real-account secure-store
+restart acceptance remains open; no release APK or deployment is claimed.
+
+
 # Hosted sessions and client onboarding slice
 
 ## Admin dashboard reload persistence (2026-11-04)

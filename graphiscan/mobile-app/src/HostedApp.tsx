@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'react-native-reanimated'
-import { FlatList, Pressable, Text, View, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, FlatList, Keyboard, Pressable, Text, View, useWindowDimensions } from 'react-native'
 import { NavigationContainer, DefaultTheme, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator, type NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createBottomTabNavigator, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
@@ -20,11 +20,14 @@ import LoadingSkeleton from './LoadingSkeleton'
 import SignOutAction from './SignOutAction'
 import HostedStudents from './HostedStudents'
 import HostedStudentEditor from './HostedStudentEditor'
+import { ProfilePhotoProvider, useProfilePhoto } from './ProfilePhoto'
+import type { School } from './core/hosted-directory'
+import { mobileSessionStore } from './mobile-session-store'
 import { AppBrand, Avatar, RecordValue, ScreeningRow, StudentRow, workspaceStyles } from './WorkspaceUI'
 
 type Routes = { Main: undefined; Screening: { id: string }; History: { id: string }; Report: { id: string }; StudentEditor: {id?:string} }
 type TabRoutes = { Home: undefined; Results: undefined; Students: undefined; Upload: undefined; Profile: undefined }
-interface Profile { user_id: string; full_name: string; role: string; account_status: string; onboarding: { next_action: string } }
+interface Profile { user_id: string; full_name: string; role: string; account_status: string; school_ids: string[]; onboarding: { next_action: string } }
 interface HostedSession { profile: Profile; request: HostedClient['request']; refresh: () => Promise<void>; logout: () => Promise<void> }
 const Context = createContext<HostedSession | null>(null)
 function useHosted() { const value = useContext(Context); if (!value) throw new Error('Sign in required.'); return value }
@@ -92,17 +95,40 @@ function Detail({route,report=false}:{route:{params:{id:string}};report?:boolean
 }
 function Report({route}:{route:{params:{id:string}}}){return <Detail route={route} report/>}
 function Profile(){
-  const {profile,refresh,logout}=useHosted(),[error,setError]=useState(''),[busy,setBusy]=useState(false),c=useColors()
-  async function update(){setBusy(true);setError('');try{await refresh()}catch(e:any){setError(e.message)}finally{setBusy(false)}}
-  return <Screen><View style={{alignItems:'center',gap:14,paddingVertical:16}}><Avatar name={profile.full_name} size={72}/><Text accessibilityRole="header" style={[styles.title,{color:c.text,textAlign:'center'}]}>{profile.full_name}</Text></View>
-    <View style={[styles.panel,{borderWidth:0,backgroundColor:c.surface}]}><RecordValue label="Account role" value={profile.role==='parent'?'Parent / Guardian':profile.role==='teacher'?'Teacher':'Expert'}/><View style={{borderTopWidth:1,borderTopColor:c.border,paddingTop:16}}><RecordValue label="Account status" value={profile.account_status==='active'?'Active':profile.account_status}/></View></View>
-    <Notice error message={error}/><Button label={busy?'Refreshing...':'Refresh account'} secondary disabled={busy} onPress={update}/><SignOutAction disabled={busy} onSignOut={logout} onError={setError}/></Screen>
+  const {profile,request,logout}=useHosted(),[error,setError]=useState(''),c=useColors(),photo=useProfilePhoto()
+  const schools=useRecords(async()=>{
+    const rows:School[]=[],seen=new Set<string>();let cursor:string|null=null
+    do {
+      const page=await request('/schools?limit=100'+(cursor?'&cursor='+encodeURIComponent(cursor):''),{envelope:true})
+      rows.push(...page.data);cursor=page.page?.next_cursor??null
+      if(cursor&&seen.has(cursor))throw new Error('School details could not be loaded. Try again.')
+      if(cursor)seen.add(cursor)
+    }while(cursor)
+    return profile.role==='parent'?rows:rows.filter(school=>profile.school_ids.includes(school.school_id))
+  },[request,profile.user_id,profile.role,profile.school_ids.join(',')])
+  return <Screen><View style={{alignItems:'center',gap:12,paddingVertical:16}}>
+    <Pressable accessibilityRole="button" accessibilityLabel={photo.uri?'Change profile photo':'Add profile photo'} accessibilityHint="Choose a photo from your gallery" accessibilityState={{disabled:photo.busy}} disabled={photo.busy} onPress={photo.choose} style={{padding:4}}>
+      <Avatar name={profile.full_name} size={88} uri={photo.uri}/><View style={{position:'absolute',right:0,bottom:0,width:30,height:30,borderRadius:15,backgroundColor:c.primary,alignItems:'center',justifyContent:'center',borderWidth:2,borderColor:c.surface}}><MaterialIcons name="photo-camera" size={17} color={c.onPrimary}/></View>
+    </Pressable>
+    <Text accessibilityRole="header" style={[styles.title,{color:c.text,textAlign:'center'}]}>{profile.full_name}</Text>
+    <Body muted>{profile.role==='parent'?'Parent / Guardian':profile.role==='teacher'?'Teacher':'Expert'}</Body>
+    <Body muted>Profile photo is saved on this device.</Body>
+    {photo.uri&&<Button label="Remove photo" secondary disabled={photo.busy} onPress={photo.remove}/>}
+    <Notice error message={photo.error}/>
+    </View>
+    <View style={{borderTopWidth:1,borderTopColor:c.border,paddingTop:20,gap:12}}>
+      <Heading>{profile.role==='parent'?"Children’s schools":'Assigned schools'}</Heading>
+      {schools.loading&&!schools.data?<LoadingSkeleton kind="field" label="Loading schools"/>:schools.data?.length?schools.data.map(school=><Body key={school.school_id}>{school.name}</Body>):!schools.error?<Body muted>{profile.role==='parent'?'No linked schools.':profile.school_ids.length?'Assigned school names are not available yet.':'No schools assigned.'}</Body>:null}
+      {profile.role!=='parent'&&Boolean(schools.data?.length)&&schools.data!.length<profile.school_ids.length&&<Body muted>Some assigned school names are not available yet.</Body>}
+      <Notice error message={schools.error}/>{Boolean(schools.error)&&<Button label="Retry schools" secondary disabled={schools.loading} onPress={schools.refresh}/>}
+    </View>
+    <Notice error message={error}/><SignOutAction disabled={photo.busy} onSignOut={logout} onError={setError}/></Screen>
 }
 function Upload(){const {request}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>();return <HostedUpload request={request} onComplete={id=>navigation.navigate('Screening',{id})}/>}
 function Main(){
-  const {profile}=useHosted(),colors=useColors(),insets=useSafeAreaInsets()
+  const {profile}=useHosted(),colors=useColors(),insets=useSafeAreaInsets(),photo=useProfilePhoto()
   const icons: Record<keyof TabRoutes,React.ComponentProps<typeof MaterialIcons>['name']>={Home:'home',Students:'groups',Results:'assignment',Upload:'upload-file',Profile:'person'}
-  return <Tabs.Navigator screenOptions={({route,navigation})=>({animation:'none',tabBarHideOnKeyboard:true,headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'},headerTitle:route.name==='Home'?()=> <AppBrand/>:undefined,headerRight:route.name==='Home'?()=> <Pressable accessibilityRole="button" accessibilityLabel="Open profile" onPress={()=>navigation.navigate('Profile')} style={workspaceStyles.headerButton}><Avatar name={profile.full_name} size={36}/></Pressable>:undefined,tabBarActiveTintColor:colors.primary,tabBarInactiveTintColor:colors.muted,tabBarItemStyle:{marginHorizontal:3,borderRadius:12},tabBarStyle:{backgroundColor:colors.surface,borderTopColor:colors.border,height:74+insets.bottom,paddingTop:8,paddingBottom:Math.max(insets.bottom,10)},tabBarLabelStyle:{fontSize:12,lineHeight:16},tabBarIcon:({color,size,focused})=><View style={{width:56,height:32,borderRadius:16,alignItems:'center',justifyContent:'center',backgroundColor:focused?colors.soft:'transparent'}}><MaterialIcons name={icons[route.name]} color={color} size={size} accessible={false}/></View>})}>
+  return <Tabs.Navigator screenListeners={{tabPress:()=>Keyboard.dismiss()}} screenOptions={({route,navigation})=>({animation:'none',tabBarHideOnKeyboard:route.name!=='Profile',headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'},headerTitle:route.name==='Home'?()=> <AppBrand/>:undefined,headerRight:route.name==='Home'?()=> <Pressable accessibilityRole="button" accessibilityLabel="Open profile" onPress={()=>{Keyboard.dismiss();navigation.navigate('Profile')}} style={workspaceStyles.headerButton}><Avatar name={profile.full_name} size={36} uri={photo.uri}/></Pressable>:undefined,tabBarActiveTintColor:colors.primary,tabBarInactiveTintColor:colors.muted,tabBarItemStyle:{marginHorizontal:3,borderRadius:12},tabBarStyle:{backgroundColor:colors.surface,borderTopColor:colors.border,height:74+insets.bottom,paddingTop:8,paddingBottom:Math.max(insets.bottom,10)},tabBarLabelStyle:{fontSize:12,lineHeight:16},tabBarIcon:({color,size,focused})=><View style={{width:56,height:32,borderRadius:16,alignItems:'center',justifyContent:'center',backgroundColor:focused?colors.soft:'transparent'}}><MaterialIcons name={icons[route.name]} color={color} size={size} accessible={false}/></View>})}>
     <Tabs.Screen name="Home" component={Home} options={{title:'GraphiScan',tabBarLabel:'Home',tabBarAccessibilityLabel:'Home'}}/>
     <Tabs.Screen name="Students" component={Students} options={{title:profile.role==='parent'?'Children':'Students',tabBarAccessibilityLabel:profile.role==='parent'?'Children':'Students'}}/>
     {profile.role==='teacher'&&<Tabs.Screen name="Upload" component={Upload} options={{title:'Screen handwriting',tabBarLabel:'Screen',tabBarAccessibilityLabel:'Screen handwriting'}}/>}
@@ -112,13 +138,30 @@ function Main(){
 }
 
 function HostedRoot(){
-  const client=useRef<HostedClient|null>(null);if(!client.current)client.current=createHostedClient(origin)
+  const client=useRef<HostedClient|null>(null);if(!client.current)client.current=createHostedClient(origin,{sessionStore:mobileSessionStore(origin)})
   const api=client.current,[profile,setProfile]=useState<Profile|null>(null),[signInNotice,setSignInNotice]=useState(''),colors=useColors()
-  async function logout(){setProfile(null);setSignInNotice('');try{await api.logout()}catch{setSignInNotice('You are signed out on this device. The server could not confirm sign-out.')}}
+  const [restoring,setRestoring]=useState(true),[restoreError,setRestoreError]=useState(''),restoreGeneration=useRef(0)
+  async function logout(){restoreGeneration.current++;setRestoring(false);setRestoreError('');setProfile(null);setSignInNotice('');try{await api.logout()}catch{setSignInNotice('You are signed out on this device. The server could not confirm sign-out.')}}
   async function refresh(){
-    try{const next=await api.request('/me');if(!['teacher','expert','parent'].includes(next.role)){await logout().catch(()=>{});throw new Error('Use an issued teacher, expert or parent account.')}setProfile(next)}
+    try{const next=await api.request('/me');if(!['teacher','expert','parent'].includes(next.role)){await logout().catch(()=>{});throw new Error('Use an issued teacher, expert or parent account.')}setProfile({...next,school_ids:Array.isArray(next.school_ids)?next.school_ids:[]})}
     catch(e:any){if(e.status===401){api.clear();setProfile(null)}throw e}
   }
+  async function restoreSession(){
+    const attempt=++restoreGeneration.current;setRestoring(true);setRestoreError('')
+    try{
+      if(await api.restore()){
+        const next=await api.request('/me')
+        if(attempt!==restoreGeneration.current)return
+        if(!['teacher','expert','parent'].includes(next.role)){await logout();setSignInNotice('Use an issued teacher, expert or parent account.');return}
+        setProfile({...next,school_ids:Array.isArray(next.school_ids)?next.school_ids:[]})
+      }
+    }catch(e:any){
+      if(attempt!==restoreGeneration.current)return
+      if([401,403].includes(e.status)||e.code==='INVALID_SESSION'){api.clear();setProfile(null);setSignInNotice('Your session has ended. Sign in again.')}
+      else setRestoreError(e.message||'Unable to reconnect. Try again.')
+    }finally{if(attempt===restoreGeneration.current)setRestoring(false)}
+  }
+  useEffect(()=>{void restoreSession();return()=>{restoreGeneration.current++}},[api])
   async function login(email:string,password:string){setSignInNotice('');try{await api.login(email,password);await refresh()}catch(e){await logout().catch(()=>{});throw e}}
   // Stable identity is needed by focus effects; no bearer/refresh token is exposed.
   const request=useRef<HostedClient['request']>(async(path,options)=>{
@@ -128,11 +171,11 @@ function HostedRoot(){
   const ready=profile?.onboarding.next_action==='ready'
   const base=DefaultTheme
   return <NavigationContainer theme={{...base,colors:{...base.colors,primary:colors.primary,background:colors.bg,card:colors.surface,text:colors.text,border:colors.border}}}><StatusBar style="dark"/>
-    {!profile?<HostedLogin login={login} notice={signInNotice}/>:!ready?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><AccountSetup key={profile.user_id+profile.onboarding.next_action} client={api} action={profile.onboarding.next_action} refresh={refresh} logout={logout} passwordChanged={()=>{setProfile(null);setSignInNotice('Password updated. Sign in with your new password.')}}/></SafeAreaView>:<Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator key={profile.user_id} screenOptions={{animation:reducedMotion?'none':'fade_from_bottom',contentStyle:{backgroundColor:colors.bg},headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'}}}>
+    {restoring||restoreError?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><Screen><AppBrand/>{restoring?<View style={{gap:16,paddingVertical:32}}><ActivityIndicator color={colors.primary} accessibilityLabel="Restoring your session"/><Body muted>Opening your workspace…</Body></View>:<><Notice error message={restoreError}/><Button label="Try again" onPress={restoreSession}/><SignOutAction onSignOut={logout} onError={setRestoreError}/></>}</Screen></SafeAreaView>:!profile?<HostedLogin login={login} notice={signInNotice}/>:!ready?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><AccountSetup key={profile.user_id+profile.onboarding.next_action} client={api} action={profile.onboarding.next_action} refresh={refresh} logout={logout} passwordChanged={()=>{setProfile(null);setSignInNotice('Password updated. Sign in with your new password.')}}/></SafeAreaView>:<ProfilePhotoProvider key={profile.user_id} userId={profile.user_id}><Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator key={profile.user_id} screenOptions={{animation:reducedMotion?'none':'fade_from_bottom',contentStyle:{backgroundColor:colors.bg},headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'}}}>
       <Stack.Screen name="Main" component={Main} options={{headerShown:false}}/><Stack.Screen name="Screening" component={Detail} options={{title:'Screening result'}}/>
       <Stack.Screen name="History" component={History} options={{title:'Student history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>
       {profile.role==='teacher'&&<Stack.Screen name="StudentEditor" component={StudentEditor} options={({route})=>({title:route.params.id?'Edit student':'Add student'})}/>}
-    </Stack.Navigator></Context.Provider>}
+    </Stack.Navigator></Context.Provider></ProfilePhotoProvider>}
   </NavigationContainer>
 }
 export default function HostedApp(){return <SafeAreaProvider><HostedRoot/></SafeAreaProvider>}

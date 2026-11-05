@@ -10,6 +10,7 @@ import SignOutAction from './SignOutAction'
 import { DirectorySelect, SchoolSelect, grades, useScopedPage, type Request } from './HostedDirectoryControls'
 import { studentPayload, type AssignmentOption, type School, type Student, type StudentForm } from './core/hosted-directory'
 import { useRecords } from './use-records'
+import TeacherParentLink from './TeacherParentLink'
 
 const blank:StudentForm={name:'',age:'',school:'',grade:'1',parent:''}
 type Props={request:Request;teacherId:string;id?:string;onHistory:(id:string)=>void;onCancel:()=>void;logout:()=>Promise<void>}
@@ -80,8 +81,7 @@ export default function HostedStudentEditor({request,teacherId,id,onHistory,onCa
       <Body muted>{id?'School changes are managed by an administrator. You remain the assigned teacher.':'You will be the assigned teacher. Creation requires current membership in the selected school.'}</Body>
     </View>
     <View style={{gap:12}}>
-      <RecordValue label="Parent / Guardian" value={form.parent?'Linked by the administrator':'Not linked'}/>
-      <Body muted>Parent links are managed by an administrator.</Body>
+      <TeacherParentLink request={request} school={form.school} grade={form.grade} value={form.parent} disabled={locked||assignedGrades?.length===0} onChange={value=>update('parent',value)}/>
       <Notice error message={options.error}/>
       {Boolean(options.error)&&<Button label="Reload assigned grades" secondary disabled={locked} onPress={options.refresh}/>}
       {(options.data?.page.next_cursor||optionCursor)&&<View style={styles.wrap}>

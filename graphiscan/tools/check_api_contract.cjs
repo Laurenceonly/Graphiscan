@@ -203,6 +203,7 @@ async function main() {
     }});
     await require('./check_role_assignments_sql.cjs')({db,root});
     await require('./check_school_deletion_sql.cjs')({db,root});
+    await require('./check_teacher_parent_linking_sql.cjs')({db,root,U});
   } finally { await db.close(); }
 }
 main().catch(error=>{console.error('Contract validation FAILED: '+error.message+
