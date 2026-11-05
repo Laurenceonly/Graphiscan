@@ -56,12 +56,23 @@
     <slot v-if="adminPresentation && tab === 'schools' && selectedSchool" name="school-people" :school="selectedSchool" :refresh-key="schoolPeopleRefresh" :can-add-student="canWriteStudents" :add-student="addStudentToSchool" :view-student="viewStudent" :student-open="Boolean(viewedStudentId)" :close="() => selectedSchool = null" />
     <slot v-if="adminPresentation && viewedStudentId" name="student-details" :student-id="viewedStudentId" :schools="schools" :refresh-key="studentProfileRefresh" :back-label="selectedSchool ? 'Back to ' + selectedSchool.name : 'Back to Students'" :can-edit="canWriteStudents" :editing-busy="busy || frozen || schoolUncertain" :close="closeStudentPage" :edit="editStudentFromPage" />
     <component :is="adminPresentation ? 'dialog' : 'section'" v-if="formKind" ref="formRegion" tabindex="-1" class="directory-editor" :class="{ 'hosted-directory-modal': adminPresentation }" aria-labelledby="editor-title" @cancel="cancelEditor">
-      <component :is="adminPresentation ? 'h2' : 'h3'" id="editor-title">{{ formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? (studentReadOnly ? 'Student details' : 'Edit student') : 'Add student') }}</component>
+      <component :is="adminPresentation ? 'h2' : 'h3'" id="editor-title">{{ formKind === 'school-delete' ? 'Delete school' : formKind === 'school' ? (editing ? 'Edit school' : 'Add school') : (editing ? (studentReadOnly ? 'Student details' : 'Edit student') : 'Add student') }}</component>
       <button v-if="adminPresentation" type="button" class="directory-modal-close" aria-label="Close dialog" :disabled="busy || frozen || schoolUncertain" @click="closeForm"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
       <p v-if="adminPresentation && error" role="alert" class="directory-error">{{ error }}</p>
       <template v-if="formKind === 'student' && (studentReadOnly || !canWriteStudents)">
         <dl class="student-details"><div><dt>Name</dt><dd>{{ draft.full_name }}</dd></div><div><dt>School</dt><dd>{{ schoolName(draft.school_id) }}</dd></div><div><dt>Grade</dt><dd>{{ draft.grade_level }}</dd></div><div><dt>Age</dt><dd>{{ draft.age ?? 'Not recorded' }}</dd></div></dl>
         <div class="directory-actions student-view-actions"><button type="button" :disabled="busy" @click="closeForm">Close details</button><button v-if="canWriteStudents" type="button" class="directory-edit-student" :disabled="busy || frozen || schoolUncertain" @click="editViewedStudent">Edit student</button></div>
+      </template>
+      <template v-else-if="formKind === 'school-delete'">
+        <p>Delete <strong>{{ editing?.name }}</strong>?</p>
+        <p v-if="busy" role="status">Checking school links...</p>
+        <template v-if="deletionInfo">
+          <dl class="school-delete-counts"><div><dt>Students</dt><dd>{{ deletionInfo.students }}</dd></div><div><dt>Teachers</dt><dd>{{ deletionInfo.teachers }}</dd></div><div><dt>Experts</dt><dd>{{ deletionInfo.experts }}</dd></div></dl>
+          <p v-if="!deletionInfo.can_delete" role="alert" class="directory-error">This school has linked students, people or assignments. Remove or reassign those links before deleting it. No linked records will be deleted.</p>
+          <p v-else>This school has no linked records. Deleting it cannot be undone.</p>
+        </template>
+        <p v-if="schoolUncertain" role="alert">Deletion could not be confirmed. Check the school list before trying again.</p>
+        <div class="directory-actions"><button type="button" :disabled="busy" @click="closeForm">Cancel</button><button v-if="!schoolUncertain" type="button" class="school-delete-button" :disabled="busy || !deletionInfo?.can_delete || !canDeleteSchools" @click="deleteSchool">{{ busy ? 'Please wait...' : 'Delete school' }}</button></div>
       </template>
       <form v-else @submit.prevent="save">
         <fieldset :disabled="busy || frozen || conflict || schoolUncertain">
@@ -76,6 +87,7 @@
             <p v-if="isTeacher && selfGradeScopeKnown && !selfGradeLevels.length" class="directory-hint">No grades are assigned for this school. Contact your administrator.</p><p v-if="isTeacher" class="directory-hint">Parent links are managed by an administrator.</p><p v-else class="directory-hint">Choices match this school and grade.</p>
           </template>
         </fieldset>
+        <div v-if="formKind === 'school' && editing && canDeleteSchools" class="school-delete-entry"><button type="button" class="school-delete-button" :disabled="busy || frozen || schoolUncertain" @click="openSchoolDeletion(editing)">Delete school</button></div>
         <button v-if="optionCursor && !frozen" type="button" :disabled="busy" @click="loadOptions(true)">Load more eligible people</button>
         <p v-if="frozen" role="status">Saving could not be confirmed. Retry this same submission before starting another. Keep this page open.</p>
         <p v-if="conflict" role="status">The record changed. Reloading will replace your unsaved form with the latest record.</p>
@@ -120,7 +132,8 @@ const studentCards=computed(()=>[
 ].map(card=>({...card,loading:busy.value&&!studentsLoaded.value})))
 watch(() => ({ students: students.value.length, schools: schools.value.length, records: students.value, studentsLoaded: studentsLoaded.value, schoolsLoaded: schoolsLoaded.value, hasMore: Boolean(studentCursor.value || schoolCursor.value), busy: busy.value, error: error.value }), value => emit('snapshot', value), { immediate: true })
 const formKind=ref(''),editing=ref(null),formRegion=ref(null),frozen=ref(false),conflict=ref(false),schoolUncertain=ref(false)
-const studentReadOnly=ref(true)
+const studentReadOnly=ref(true),deletionInfo=ref(null)
+const canDeleteSchools=computed(()=>props.adminPresentation&&props.profile.role==='admin'&&props.profile.permissions.includes('schools.manage'))
 watch(formKind,async value=>{if(!props.adminPresentation)return;document.body.classList.toggle('hosted-directory-dialog-open',Boolean(value));if(value){await nextTick();if(formRegion.value&&!formRegion.value.open)formRegion.value.showModal()}},{flush:'post'})
 function cancelEditor(event){if(!props.adminPresentation)return;event.preventDefault();if(!busy.value&&!frozen.value&&!schoolUncertain.value)closeForm()}
 const draft=reactive({full_name:'',age:8,grade_level:1,school_id:'',teacher_id:'',parent_id:''})
@@ -144,6 +157,28 @@ function loadOptions(more=false){return run(()=>queryOptions(more))}
 function closeForm(){if(frozen.value)return;formKind.value='';editing.value=null;studentReadOnly.value=true;conflict.value=false;schoolUncertain.value=false;options.value=[];optionCursor.value=null;emit('navigation-block',false)}
 async function focusForm(){await nextTick();if(alive)formRegion.value?.focus()}
 function newSchool(){closeForm();Object.assign(draft,{full_name:''});formKind.value='school';message.value='';focusForm()}
+async function openSchoolDeletion(school){
+  if(!canDeleteSchools.value||busy.value)return
+  closeForm();editing.value={...school};deletionInfo.value=null;formKind.value='school-delete';message.value='';focusForm()
+  return run(async()=>{const result=await props.client.request('/schools/'+school.school_id+'/deletion-check');if(alive&&formKind.value==='school-delete'&&editing.value?.school_id===school.school_id)deletionInfo.value=result})
+}
+function deleteSchool(){
+  if(!canDeleteSchools.value||busy.value||!deletionInfo.value?.can_delete||schoolUncertain.value)return
+  const target={...deletionInfo.value};return run(async()=>{
+    emit('navigation-block',true)
+    try{
+      await props.client.request('/schools/'+target.school_id,{method:'DELETE',body:{expected_revision:target.revision,confirmation:'DELETE'}})
+      if(!alive)return
+      schools.value=schools.value.filter(school=>school.school_id!==target.school_id)
+      if(selectedSchool.value?.school_id===target.school_id)selectedSchool.value=null
+      if(filterSchool.value===target.school_id)filterSchool.value=''
+      closeForm();message.value='School deleted.'
+    }catch(failure){
+      if(alive){deletionInfo.value=null;schoolUncertain.value=!failure.status||failure.status>=500}
+      throw failure
+    }finally{if(alive)emit('navigation-block',schoolUncertain.value)}
+  })
+}
 function editSchool(school){closeForm();editing.value={...school};draft.full_name=school.name;formKind.value='school';message.value='';focusForm()}
 function newStudent({schoolId='',grade=1}={}){closeForm();studentReadOnly.value=false;submission=createStudentSubmission();Object.assign(draft,{full_name:'',age:8,grade_level:[1,2,3].includes(Number(grade))?Number(grade):1,school_id:String(schoolId),teacher_id:'',parent_id:''});formKind.value='student';message.value='';focusForm();if(schoolId)loadOptions()}
 function addStudentToSchool(grade){if(!selectedSchool.value||!canWriteStudents.value||busy.value||frozen.value||schoolUncertain.value)return;newStudent({schoolId:selectedSchool.value.school_id,grade})}
@@ -170,7 +205,7 @@ function save(){if(formKind.value==='student'&&studentReadOnly.value)return;retu
     }
   }catch(failure){if(alive){frozen.value=submission.pending;conflict.value=failure.code==='REVISION_CONFLICT';if(formKind.value==='school'&&!editing.value&&(failure.status===0||failure.status>=500))schoolUncertain.value=true}throw failure}
   finally{if(alive)emit('navigation-block',submission.pending||schoolUncertain.value)}
-  if(!alive)return;frozen.value=false;message.value=result.warnings?.includes('duplicate_name')?'Saved. A similar name exists in your accessible records. Review it before adding another.':'Saved.';if(formKind.value==='student'&&selectedSchool.value)schoolPeopleRefresh.value++;if(formKind.value==='student'&&viewedStudentId.value)studentProfileRefresh.value++;closeForm()
+  if(!alive)return;frozen.value=false;const savedMessage=formKind.value==='school'?'':'Saved.';message.value=result.warnings?.includes('duplicate_name')?'Saved. A similar name exists in your accessible records. Review it before adding another.':savedMessage;if(formKind.value==='student'&&selectedSchool.value)schoolPeopleRefresh.value++;if(formKind.value==='student'&&viewedStudentId.value)studentProfileRefresh.value++;closeForm()
   await querySchools();await queryStudents()
 })}
 function beforeUnload(event){if(submission.pending||schoolUncertain.value){event.preventDefault();event.returnValue=''}}
@@ -182,6 +217,10 @@ defineExpose({ refresh: refreshRecords, showTab(value) { tab.value=value;viewedS
 <style scoped>
 .directory-page-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .school-row-actions{display:flex;gap:8px;flex-wrap:wrap}
+.directory .school-delete-button{color:#a72535;border-color:#d9abb1}
+.directory .school-delete-button:hover{background:#fff3f4}
+.school-delete-entry{margin-top:20px;padding-top:20px;border-top:1px solid var(--border,#c5cfdb)}
+.school-delete-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 
 .directory{margin-top:32px;border-top:1px solid #d4dfd8;padding-top:24px;color:#17382d}.directory h2{font-size:24px;margin:0 0 20px}.directory h3{font-size:20px;margin:0 0 20px}.directory-nav,.directory-actions,.directory-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.directory-nav{margin-bottom:24px}.directory button{min-height:44px;padding:10px 16px;border:1px solid #9bab9f;border-radius:8px;color:#17382d;background:#fff;font:inherit;cursor:pointer}.directory button:hover{background:#edf4ee}.directory button[aria-pressed=true],.directory-actions button[type=submit]{background:#176347;color:#fff;border-color:#176347}.directory button:disabled{opacity:.65;cursor:default}.directory :is(button,input,select,[tabindex]):focus-visible{outline:3px solid #287b59;outline-offset:3px}.directory label{display:flex;flex-direction:column;gap:8px;font-weight:600;min-width:0}.directory input,.directory select{font:inherit;color:#17382d;background:#fff;border:1px solid #9bab9f;border-radius:8px;padding:10px 12px;min-height:48px;width:100%;box-sizing:border-box;caret-color:#176347}.directory-filters{display:grid;grid-template-columns:minmax(150px,2fr) minmax(140px,2fr) minmax(100px,1fr) auto;gap:16px;align-items:end}.directory-toolbar{justify-content:space-between;margin:24px 0 12px}.directory-toolbar p{margin:0}.directory-list{list-style:none;padding:0;margin:0 0 20px}.directory-list li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid #d4dfd8;overflow-wrap:anywhere}.directory-list strong{font-weight:600}.directory-list span{display:block;color:#466056;font-size:14px;margin-top:4px}.directory-list button{flex-shrink:0}.directory-editor{margin-top:32px;padding-top:24px;border-top:1px solid #9bab9f;scroll-margin-top:24px}.directory-editor fieldset{padding:0;border:0;margin:0;display:flex;flex-direction:column;gap:20px;min-width:0}.directory-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}.directory-actions{margin-top:24px}.directory-error{color:#922c24;background:#fff0ed;padding:14px;border-radius:8px}.directory-message{color:#176347}.directory-hint{font-size:14px;color:#466056;line-height:1.6}.directory-footnote{margin-top:32px}.directory dd{margin:4px 0 16px}.directory dt{font-weight:600}@media(max-width:760px){.directory-filters{grid-template-columns:1fr 1fr}}@media(max-width:460px){.directory-filters,.directory-fields{grid-template-columns:1fr}.directory-list li{align-items:flex-start;flex-direction:column}.directory-list button{width:100%}}
 </style>

@@ -22,7 +22,7 @@ export function Screen({ children, scroll = true }: { children: React.ReactNode;
   const c = useColors()
   return <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.page, { backgroundColor: c.bg }]}>
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
-      {scroll ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>{children}</ScrollView> : children}
+      {scroll ? <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={styles.content}>{children}</ScrollView> : children}
     </KeyboardAvoidingView>
   </SafeAreaView>
 }
@@ -42,8 +42,8 @@ export function Field({ label, search = false, ...props }: TextInputProps & { la
   const c = useColors(),[focused,setFocused]=useState(false)
   const input=<TextInput accessibilityLabel={label} placeholderTextColor={c.muted}
     autoCapitalize={search?'none':undefined} autoCorrect={search?false:undefined} returnKeyType={search?'search':undefined}
-    {...props} onFocus={event=>{if(search)setFocused(true);props.onFocus?.(event)}} onBlur={event=>{if(search)setFocused(false);props.onBlur?.(event)}}
-    style={[styles.input, { color: c.text, borderColor: c.border, backgroundColor: c.surface }, search&&{flex:1,minWidth:0,minHeight:50,borderWidth:0,paddingHorizontal:0,outlineWidth:0}, props.multiline && { minHeight: 110, textAlignVertical: 'top' }, props.style]} />
+    {...props} onFocus={event=>{setFocused(true);props.onFocus?.(event)}} onBlur={event=>{setFocused(false);props.onBlur?.(event)}}
+    style={[styles.input, { color: c.text, borderColor: focused ? c.primary : c.border, backgroundColor: c.surface }, search&&{flex:1,minWidth:0,minHeight:50,borderWidth:0,paddingHorizontal:0,outlineWidth:0}, props.multiline && { minHeight: 110, textAlignVertical: 'top' }, props.style]} />
   return <View style={{ gap: 8 }}><Text style={[styles.label, { color: c.text }]}>{label}</Text>
     {search?<View style={[styles.input,{borderColor:focused?c.primary:c.border,backgroundColor:c.surface,flexDirection:'row',alignItems:'center',gap:12,paddingVertical:0}]}>
       <MaterialIcons name="search" size={20} color={c.muted} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"/>{input}

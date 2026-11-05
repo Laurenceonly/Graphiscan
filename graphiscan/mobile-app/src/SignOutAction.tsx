@@ -1,3 +1,4 @@
+import { useReducedMotion } from 'react-native-reanimated'
 import React, { useRef, useState } from 'react'
 import { Modal, ScrollView, Text, View, useWindowDimensions } from 'react-native'
 import { Body, Button, styles, useColors } from './ui'
@@ -7,6 +8,7 @@ export default function SignOutAction({ onSignOut, onError, disabled = false, me
 }) {
   const c = useColors(), [open, setOpen] = useState(false), [busy, setBusy] = useState(false), inFlight = useRef(false)
   const { width, fontScale } = useWindowDimensions()
+  const reducedMotion=useReducedMotion()
   const stacked = width < 320 || fontScale > 1.4
   const actionColumnStyle = { flex: stacked ? undefined : 1, minWidth: 0 }
   const actionStyle = { flexGrow: stacked ? undefined : 1, minHeight: Math.max(52, Math.ceil(21 * fontScale + 26)) }
@@ -18,7 +20,7 @@ export default function SignOutAction({ onSignOut, onError, disabled = false, me
   }
   return <>
     <Button label={busy ? 'Signing out...' : 'Sign out'} secondary icon="logout" disabled={disabled || busy} onPress={() => setOpen(true)} />
-    <Modal visible={open} transparent animationType="none" onRequestClose={() => setOpen(false)}>
+    <Modal visible={open} transparent animationType={reducedMotion?"none":"fade"} onRequestClose={() => setOpen(false)}>
       <View style={{ flex: 1, justifyContent: 'center', padding: 24, backgroundColor: 'rgba(0,0,0,0.48)' }}>
         <View role="dialog" accessibilityViewIsModal accessibilityLabel="Sign out of GraphiScan?"
           style={{ width: '100%', maxWidth: 420, maxHeight: '90%', alignSelf: 'center', borderRadius: 16, backgroundColor: c.surface }}>

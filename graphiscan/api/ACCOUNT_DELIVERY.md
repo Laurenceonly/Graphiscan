@@ -1,5 +1,11 @@
 # Administrator-issued account delivery
 
+FINAL user clarification2026-11-06 supersedes previous generated-email notes: admin types the full Login email in an editable blank field (example teacher@graphiscan.com). No email is generated or sent; issuance uses manual delivery. Existing logins unchanged.
+
+Latest user clarification2026-11-06: direct handover now generates a read-only Login email as name.<eight-hex-suffix>@graphiscan.com. This supersedes the entered-email UI note below. No mailbox is provisioned, email delivery stays hidden and manual mode sends no mail. Existing logins are unchanged.
+
+2026-11-06 current admin UI: only direct handover is offered. Admin enters the user's email address as the login; no generated login ID or email-delivery selector is shown. Requests use delivery_method=manual. Optional server email support below is retained for future use; its earlier UI choices describe historical behavior.
+
 Implemented locally on 2026-11-03. Sender configuration, deployment and actual
 inbox delivery are not established by source changes or mocked tests.
 

@@ -36,7 +36,7 @@ async function main() {
   const proseOps = [...catalogue.matchAll(/`(GET|POST|PATCH|DELETE) (\/[^` ]+)`/g)].map(m=>m[1]+' '+m[2]);
   check(JSON.stringify(proseOps.sort()) === JSON.stringify(ops.map(x=>x.method+' '+x.route).sort()), 'Prose/OpenAPI endpoint drift');
   for (const {route, method, op} of ops) {
-    check(method !== 'DELETE' || route === '/accounts/{user_id}', 'Unreviewed resource deletion acquired an endpoint');
+    check(method !== 'DELETE' || ['/accounts/{user_id}','/schools/{school_id}'].includes(route), 'Unreviewed resource deletion acquired an endpoint');
     if (['/health','/session/login','/session/refresh'].includes(route)) check(op.security.length === 0, 'Public session/liveness declaration mismatch');
     else check((op.security || spec.security).some(s=>s.BearerAuth), `Missing auth declaration: ${route}`);
     const operation = method+' '+route;
@@ -202,6 +202,7 @@ async function main() {
       const validator=ajv.compile(schemas[name]);return {ok:validator(row),errors:validator.errors};
     }});
     await require('./check_role_assignments_sql.cjs')({db,root});
+    await require('./check_school_deletion_sql.cjs')({db,root});
   } finally { await db.close(); }
 }
 main().catch(error=>{console.error('Contract validation FAILED: '+error.message+

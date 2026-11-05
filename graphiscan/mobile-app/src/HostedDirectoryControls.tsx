@@ -15,11 +15,10 @@ interface Page<T> { data:T[]; page:{next_cursor:string|null} }
 export function useScopedPage<T>(request:Request,path:string) {
   const result=useRecords(async()=>{
     if(!path)return {path,page:null,error:''}
-    try{return {path,page:await request(path,{envelope:true}) as Page<T>,error:''}}
-    catch(failure:any){return {path,page:null,error:failure.message||'Unable to load records.'}}
+    return {path,page:await request(path,{envelope:true}) as Page<T>,error:''}
   },[request,path])
   const current=result.data?.path===path?result.data:null
-  return {data:current?.page??null,error:current?.error??'',loading:Boolean(path)&&(result.loading||!current),refresh:result.refresh}
+  return {data:current?.page??null,error:result.error,loading:Boolean(path)&&result.loading,refresh:result.refresh}
 }
 
 export function DirectorySelect({label,value,options,onChange,disabled=false,placeholder,allowEmpty=true}:{

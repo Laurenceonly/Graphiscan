@@ -1,3 +1,4 @@
+import { useReducedMotion } from 'react-native-reanimated'
 import React,{useEffect,useRef,useState} from 'react'
 import {Image,Modal,Platform,Pressable,ScrollView,Switch,View,useWindowDimensions} from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -33,18 +34,20 @@ export function HostedReview({request,id,review,onSaved}:{request:Request;id:str
 }
 export function HostedImage({request,id}:{request:Request;id:string}){
   const [uri,setUri]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState('')
-  useEffect(()=>{setUri('');setError('')},[id])
+  const generation=useRef(0)
+  useEffect(()=>{generation.current++;setUri('');setError('');setBusy(false);return()=>{generation.current++}},[id])
   async function image(save:boolean){
-    if(busy)return;setBusy(true);setError('')
-    try{const blob=await request('/screenings/'+encodeURIComponent(id)+'/image',{image:true});if(save)await exportImage(blob);else{
-      const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('Unable to display this image.'));reader.readAsDataURL(blob)});setUri(data)
-    }}catch(e){setError((e as Error).message)}finally{setBusy(false)}
+    if(busy)return;const current=++generation.current;setBusy(true);setError('')
+    try{const blob=await request('/screenings/'+encodeURIComponent(id)+'/image',{image:true});if(current!==generation.current)return;if(save)await exportImage(blob);else{
+      const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('Unable to display this image.'));reader.readAsDataURL(blob)});if(current===generation.current)setUri(data)
+    }}catch(e){if(current===generation.current)setError((e as Error).message)}finally{if(current===generation.current)setBusy(false)}
   }
-  return <View style={{gap:12}}><Button label={busy?'Loading image...':'View handwriting image'} secondary disabled={busy} onPress={()=>image(false)}/>{busy&&!uri&&<LoadingSkeleton kind="image"/>}{uri?<Image source={{uri}} accessibilityLabel="Authorized handwriting sample" resizeMode="contain" style={{width:'100%',height:300}}/>:null}<Button label="Save handwriting image" secondary disabled={busy} onPress={()=>image(true)}/><Notice error message={error}/></View>
+  return <View style={{gap:12}}><Button label={busy?'Loading image...':uri?'Hide handwriting image':'View handwriting image'} secondary disabled={busy} onPress={()=>uri?setUri(''):image(false)}/>{busy&&!uri&&<LoadingSkeleton kind="image"/>}{uri?<Image source={{uri}} accessibilityLabel="Authorized handwriting sample" resizeMode="contain" style={{width:'100%',height:300}}/>:null}<Button label="Save handwriting image" secondary disabled={busy} onPress={()=>image(true)}/><Notice error message={error}/></View>
 }
 export function HostedUpload({request,onComplete}:{request:Request;onComplete:(id:string)=>void}){
   const colors=useColors(),{width,fontScale}=useWindowDimensions()
   const [removeOpen,setRemoveOpen]=useState(false)
+  const reducedMotion=useReducedMotion()
   const stackedDialogActions=width<320||fontScale>1.4
   const [studentCursor,setStudentCursor]=useState<string|null>(null),[modelCursor,setModelCursor]=useState<string|null>(null)
   const students=useRecords(()=>request('/students?limit=100'+(studentCursor?'&cursor='+encodeURIComponent(studentCursor):''),{envelope:true}),[request,studentCursor])
@@ -94,16 +97,16 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     catch(e){setError((e as Error).message)}finally{setHasPending(!!pending.current);setBusy(false)}
   }
   return <Screen><Heading>Student</Heading>
-    {students.loading&&!students.data&&<LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error}/><Field search label="Find a student on this page" placeholder="Search this page by name" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
+    {students.loading&&!students.data&&<LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error}/>{Boolean(students.error)&&<Button label="Retry students" secondary disabled={busy||hasPending||students.loading} onPress={students.refresh}/>}<Field search label="Find a student on this page" placeholder="Search this page by name" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
     <View style={{gap:8}}>{(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><ChoiceRow key={row.student_id} label={row.full_name} detail={'Grade '+row.grade_level} selected={student?.student_id===row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}</View>
     {!students.loading&&!students.error&&!(students.data?.data??[]).some((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase()))&&<Body muted>{search.trim()?'No students match this search on the current page.':'No students are available for your account.'}</Body>}
     {students.data?.page?.next_cursor&&<Button label="Next students" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(students.data.page.next_cursor)}/>}
     {studentCursor&&<Button label="First students page" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(null)}/>}
-    <Heading>Screening model</Heading>{models.loading&&!models.data&&<LoadingSkeleton kind="choice" label="Loading models"/>}<Notice error message={models.error}/>
+    {student&&<Body muted>{"Selected student: "+student.full_name}</Body>}<Heading>Screening model</Heading>{models.loading&&!models.data&&<LoadingSkeleton kind="choice" label="Loading models"/>}<Notice error message={models.error}/>{Boolean(models.error)&&<Button label="Retry models" secondary disabled={busy||hasPending||models.loading} onPress={models.refresh}/>}
     <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={row.is_default?'Default model':undefined} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
-    <Heading>Handwriting image</Heading>
+    {modelCursor&&<Button label="First models page" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(null)}/>}<Heading>Handwriting image</Heading>
     {asset&&<View style={{position:'relative',borderRadius:12,overflow:'hidden',backgroundColor:colors.surface}}>
       <Image source={{uri:asset.uri}} accessibilityLabel="Selected handwriting image" resizeMode="contain" style={{width:'100%',height:280}}/>
       <Pressable accessibilityRole="button" accessibilityLabel="Remove image" accessibilityHint="Opens a confirmation dialog" accessibilityState={{disabled:busy||hasPending}} disabled={busy||hasPending}
@@ -116,7 +119,7 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
       <View style={{flex:1,minWidth:0}}><Button label={asset?'Replace image':'Choose image'} secondary style={{flexGrow:1,paddingHorizontal:8}} disabled={busy||hasPending} onPress={()=>pick(false)}/></View>
       <View style={{flex:1,minWidth:0}}><Button label="Use camera" secondary style={{flexGrow:1,paddingHorizontal:8}} disabled={busy||hasPending} onPress={()=>pick(true)}/></View>
     </View>
-    <Modal visible={removeOpen} transparent animationType="none" onRequestClose={()=>setRemoveOpen(false)}>
+    <Modal visible={removeOpen} transparent animationType={reducedMotion?"none":"fade"} onRequestClose={()=>setRemoveOpen(false)}>
       <View style={{flex:1,justifyContent:'center',padding:24,backgroundColor:'rgba(0,0,0,0.48)'}}>
         <View role="dialog" accessibilityViewIsModal accessibilityLabel="Remove this image?" style={{width:'100%',maxWidth:420,maxHeight:'90%',alignSelf:'center',borderRadius:16,backgroundColor:colors.surface}}>
           <ScrollView contentContainerStyle={{padding:24,gap:16}} keyboardShouldPersistTaps="handled">

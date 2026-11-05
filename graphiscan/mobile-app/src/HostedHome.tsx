@@ -14,7 +14,7 @@ export default function HostedHome(p:Props) {
   const roleName=teacher?'Teacher':parent?'Parent / Guardian':'Expert'
   const action=teacher?{title:'New screening',detail:'Choose a student and add handwriting.',icon:'edit' as const,onPress:p.onUpload}:parent?
     {title:'Reviewed reports',detail:'Read your child’s results and expert notes.',icon:'description' as const,onPress:p.onResults}:
-    {title:'Review screenings',detail:'Open the records assigned to you.',icon:'assignment-turned-in' as const,onPress:p.onResults}
+    {title:'Review screenings',detail:'Review records in your schools and grades.',icon:'assignment-turned-in' as const,onPress:p.onResults}
   const recent=[...p.screenings].sort((a,b)=>new Date(b.date_generated).getTime()-new Date(a.date_generated).getTime()).slice(0,3)
   return <Screen>
     <View style={s.welcome}><Text accessibilityRole="header" style={[s.name,{color:c.text}]}>{p.name}</Text><Text style={[s.role,{color:c.primary,backgroundColor:c.soft}]}>{roleName}</Text></View>
@@ -31,8 +31,8 @@ export default function HostedHome(p:Props) {
     </View>}
     <View style={workspaceStyles.section}>
       <SectionTitle title={parent?'Recent reports':p.role==='expert'?'Recent reviews':'Recent screenings'} action="View all" onPress={p.onResults}/>
-      {p.loading&&!p.hasLoaded?<LoadingSkeleton/>:!p.error&&recent.length?<View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>{recent.map((row,index)=>{const student=p.students.find(student=>String(student.student_id)===String(row.student_id));return <ScreeningRow key={row.result_id} record={row} studentName={student?.full_name} grade={student?.grade_level} onPress={()=>p.onRecord(row.result_id)} last={index===recent.length-1}/>})}</View>:
-        <View style={[s.empty,{backgroundColor:c.surface}]}><Text style={[s.emptyTitle,{color:c.text}]}>{p.error?'Records unavailable':parent?'No reports yet':p.role==='expert'?'No assigned reviews yet':'No screenings yet'}</Text><Body muted>{p.error?'Refresh to try loading your records again.':parent?'Released reports for your linked children will appear here.':p.role==='expert'?'Screenings assigned to you will appear here.':'Completed screenings will appear here for you to follow up.'}</Body></View>}
+      {p.loading&&!p.hasLoaded?<LoadingSkeleton/>:recent.length?<View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>{recent.map((row,index)=>{const student=p.students.find(student=>String(student.student_id)===String(row.student_id));return <ScreeningRow key={row.result_id} record={row} studentName={student?.full_name} grade={student?.grade_level} onPress={()=>p.onRecord(row.result_id)} last={index===recent.length-1}/>})}</View>:
+        <View style={[s.empty,{backgroundColor:c.surface}]}><Text style={[s.emptyTitle,{color:c.text}]}>{p.error?'Records unavailable':parent?'No reports yet':p.role==='expert'?'No screenings to review yet':'No screenings yet'}</Text><Body muted>{p.error?'Refresh to try loading your records again.':parent?'Released reports for your linked children will appear here.':p.role==='expert'?'Screenings in your assigned schools and grades will appear here.':'Completed screenings will appear here for you to follow up.'}</Body></View>}
     </View>
     <Pressable accessibilityRole="button" accessibilityLabel="Refresh" disabled={p.loading} onPress={p.onRefresh} style={s.refresh}><MaterialIcons name="refresh" size={18} color={c.primary} accessible={false}/><Text style={{color:c.primary,fontSize:14,fontWeight:'500'}}>{p.loading?'Refreshing…':'Refresh records'}</Text></Pressable>
   </Screen>

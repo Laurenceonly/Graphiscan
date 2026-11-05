@@ -14,6 +14,15 @@ def invalid_input():
 def validate_mutation(operation, body, key=None):
     if not isinstance(body, dict):
         raise invalid_input()
+    if operation == 'schools.delete_check':
+        if body:
+            raise invalid_input()
+        return {}
+    if operation == 'schools.delete':
+        if (set(body) != {'expected_revision', 'confirmation'} or body['confirmation'] != 'DELETE'
+                or type(body['expected_revision']) is not int or not 1 <= body['expected_revision'] <= 9223372036854775807):
+            raise invalid_input()
+        return dict(body)
     creating = operation.endswith('.create')
     school = operation.startswith('schools.')
     allowed = {'name'} if school else {'full_name', 'age', 'school_id', 'grade_level', 'teacher_id', 'parent_id'}
@@ -66,7 +75,8 @@ class DirectoryWriteService:
             record_id(target)
         if self.repository is None:
             raise BackendUnavailable()
-        row = self.repository.execute('''SELECT public.graphiscan_write_directory(
+        function = 'graphiscan_school_deletion' if operation in ('schools.delete', 'schools.delete_check') else 'graphiscan_write_directory'
+        row = self.repository.execute('''SELECT public.''' + function + '''(
             %s::uuid,%s::uuid,%s::text,%s::bigint,%s::jsonb,%s::text,%s::uuid) AS result''',
             (identity.user_id, identity.session_id, operation, target,
              json.dumps(body, separators=(',', ':'), ensure_ascii=False), key, request_id))
@@ -81,6 +91,7 @@ class DirectoryWriteService:
             'AGREEMENT_NOT_CONFIGURED': (503, 'The privacy agreement is unavailable.', 'agreement_unavailable'),
             'PRIVACY_ACCEPTANCE_REQUIRED': (403, 'Read and accept the current privacy agreement to continue.', 'accept_privacy'),
             'FORBIDDEN': (403, 'You do not have access to this operation.', None),
+            'SCHOOL_IN_USE': (409, 'This school has linked students, people or assignments. Remove or reassign those links before deleting it.', None),
             'NOT_FOUND': (404, 'The requested record was not found.', None),
             'REVISION_CONFLICT': (409, 'This record changed. Reload it before saving again.', None),
             'IDEMPOTENCY_CONFLICT': (409, 'This request key was already used. Keep the original payload when retrying.', None),

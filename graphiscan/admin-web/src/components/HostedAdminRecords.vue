@@ -1,5 +1,5 @@
 ﻿<template>
-  <section class="hosted-admin-records" :class="{ 'users-directory': accounts }" :aria-labelledby="kind + '-title'">
+  <section class="hosted-admin-records" :class="{ 'users-directory': accounts, 'audit-directory': !accounts }" :aria-labelledby="kind + '-title'">
     <AdminPageSkeleton v-if="allowed && busy && !loaded && !selected" :summary="accounts" filters :label="accounts ? 'Loading users' : 'Loading audit logs'" />
     <template v-else>
     <header class="page-header hosted-page-header admin-page-header"><h1 :id="kind + '-title'" tabindex="-1">{{ accounts ? 'Users' : 'Audit Logs' }}</h1><div class="account-page-actions"><button v-if="accounts && allowed" type="button" class="primary-action-btn" :disabled="busy || filterPending || saving || reconcileNeeded || loadingEditor" @click="openCreator">Add user</button></div></header>
@@ -17,16 +17,17 @@
       <AdminLoadingSkeleton v-if="busy && !loaded" :label="accounts ? 'Loading users...' : 'Loading audit logs...'" />
       <p v-else-if="busy && !accounts" role="status" class="hosted-record-message">Loading audit logs...</p>
       <p v-if="!accounts && allowed && loaded && !visibleRows.length && !busy && !filterPending" class="hosted-record-message">{{ accounts ? 'No loaded users match these filters.' : 'No activity matches these filters.' }}</p>
-      <div v-if="visibleRows.length || (accounts && allowed && loaded)" class="table-wrapper compact-table-scroll hosted-record-table" :aria-busy="busy || filterPending" role="region" :aria-label="accounts ? 'User accounts' : 'Audit activity'" tabindex="0">
+      <div v-if="visibleRows.length || (accounts && allowed && loaded)" ref="recordTable" class="table-wrapper compact-table-scroll hosted-record-table" :aria-busy="busy || filterPending" role="region" :aria-label="accounts ? 'User accounts' : 'Audit activity'" tabindex="0">
         <table v-if="accounts"><colgroup><col style="width:22%" /><col style="width:26%" /><col style="width:14%" /><col style="width:12%" /><col style="width:16%" /><col style="width:10%" /></colgroup><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead><tbody><tr v-if="!visibleRows.length" class="users-empty-row"><td colspan="6" class="users-table-empty">No loaded users match these filters.</td></tr><tr v-for="row in visibleRows" :key="row.user_id"><td data-label="Name"><strong>{{ row.full_name }}</strong><small v-if="row.user_id === profile.user_id" class="table-subtext">Current account</small></td><td data-label="Email">{{ row.email || 'Not available' }}</td><td data-label="Role">{{ roleName(row.role) }}</td><td data-label="Status"><span class="status-badge" :class="row.account_status">{{ capitalize(row.account_status) }}</span></td><td data-label="Registered">{{ date(row.created_at) }}</td><td data-label="Actions"><div class="account-row-actions"><button class="soft-action-btn account-edit" type="button" :disabled="busy || filterPending || loadingEditor || !canManage(row)" @click="openEditor(row)">Edit</button></div></td></tr></tbody></table>
         <table v-else><thead><tr><th>Person</th><th>Role</th><th>Action</th><th>Date / Time</th></tr></thead><tbody><tr v-for="row in visibleRows" :key="row.log_id"><td data-label="Person"><strong>{{ row.full_name || 'Former or unknown account' }}</strong></td><td data-label="Role">{{ row.role ? roleName(row.role) : 'Unknown' }}</td><td data-label="Action" :title="row.action">{{ auditActionLabel(row.action) }}</td><td data-label="Date / Time">{{ date(row.created_at) }}</td></tr></tbody></table>
+        <div v-if="!accounts && cursor" ref="auditSentinel" aria-hidden="true" style="height:1px" />
       </div>
-      <button v-if="cursor" type="button" class="soft-action-btn hosted-load-more" :disabled="busy || filterPending" @click="load(true)">Load more</button>
+      <button v-if="accounts && cursor" type="button" class="soft-action-btn hosted-load-more" :disabled="busy || filterPending" @click="load(true)">Load more</button>
       <p v-if="notice" class="hosted-record-message" role="status">{{ notice }}</p>
       <section v-if="handover" class="account-handover" aria-labelledby="account-handover-title">
         <h2 id="account-handover-title">Login details for direct handover</h2>
         <p>Give these details privately to the user. <template v-if="handover.temporary">They must change the temporary password on first sign-in. </template>These details disappear when you leave this page.</p>
-        <label>Login ID<output class="account-login-id">{{ handover.email }}</output></label>
+        <label>Login email<output class="account-login-id">{{ handover.email }}</output></label>
         <label>{{ handover.temporary ? 'Temporary password' : 'Password' }}<input :value="handover.password" :type="showHandoverPassword ? 'text' : 'password'" readonly autocomplete="off" /></label>
         <div class="account-delivery-actions"><button type="button" class="soft-action-btn" :aria-pressed="showHandoverPassword" @click="showHandoverPassword = !showHandoverPassword">{{ showHandoverPassword ? 'Hide password' : 'Show password' }}</button><button type="button" class="soft-action-btn" @click="clearHandover">Done with these details</button></div>
       </section>
@@ -36,9 +37,8 @@
         <header><div><h2 id="account-editor-title">{{ creating ? 'Add user' : 'Edit user' }}</h2><p>{{ creating ? temporaryAccount ? 'Mobile users change their temporary password on first sign-in.' : 'Admin portal accounts use a permanent password.' : 'Role, status and access changes sign this user out.' }}</p></div><button type="button" class="editor-close" aria-label="Close account editor" :disabled="saving || reconcileNeeded" @click="closeEditor"><X :size="18" :stroke-width="1.8" aria-hidden="true" /></button></header>
         <label>Full name<input v-model="draft.full_name" type="text" maxlength="200" autocomplete="off" required :disabled="saving || reconcileNeeded" /></label>
         <template v-if="creating">
-          <label>Give the user their login details<select v-model="draft.delivery_method" :disabled="saving || reconcileNeeded" @change="changeDelivery"><option value="manual">Give details directly (no email)</option><option value="email">Email login details</option></select></label>
-          <div class="account-field-group"><label>{{ draft.delivery_method === 'email' ? 'User email address' : 'Login ID' }}<input v-model="draft.email" type="email" maxlength="254" autocomplete="off" required :readonly="draft.delivery_method === 'manual'" :disabled="saving || reconcileNeeded" aria-describedby="account-delivery-help" /></label>
-          <p id="account-delivery-help">{{ draft.delivery_method === 'email' ? 'Use their existing Gmail or other inbox. GraphiScan emails their password and access link.' : 'Give this generated login ID and password directly to the user. No email is sent.' }}</p></div>
+          <div class="account-field-group"><label>Login email<input v-model="draft.email" type="email" maxlength="254" autocomplete="off" placeholder="teacher@graphiscan.com" required :disabled="saving || reconcileNeeded" aria-describedby="account-delivery-help" /></label>
+          <p id="account-delivery-help">Enter the login email the user will sign in with. Give this login email and password directly to the user. No email is sent.</p></div>
         </template>
         <div class="account-role-fields" :class="{'account-role-fields-pair':!creating}"><label>Role<select v-model="draft.role" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-if="!creating && !editableRoles.includes(draft.role)" :value="draft.role" disabled hidden>{{ roleName(draft.role) }}</option><option v-for="item in editableRoles" :key="item" :value="item">{{ roleName(item) }}</option></select></label><label v-if="!creating">Status<select v-model="draft.account_status" :disabled="saving || reconcileNeeded || selected.user_id === profile.user_id"><option v-for="item in statuses" :key="item" :value="item">{{ capitalize(item) }}</option></select></label></div>
         <template v-if="creating">
@@ -95,10 +95,9 @@ const editor=ref(null),selected=ref(null),saving=ref(false),editorError=ref(''),
 const creating=ref(false),schools=ref([]),schoolsBusy=ref(false),schoolsError=ref('')
 const loadingEditor=ref(false),actionTarget=ref(null),actionKind=ref(''),actionStatus=ref(''),actionBlocked=ref(false)
 const handover=ref(null),showHandoverPassword=ref(false)
-const draft=reactive({full_name:'',role:'',account_status:'',email:'',delivery_method:'manual',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
+const draft=reactive({full_name:'',role:'',account_status:'',email:'',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
 const temporaryAccount=computed(()=>['teacher','expert','parent'].includes(draft.role))
 function clearHandover(){handover.value=null;showHandoverPassword.value=false}
-function changeDelivery(){draft.email=draft.delivery_method==='manual'?'gs-'+crypto.randomUUID().replaceAll('-','').slice(0,12)+'@accounts.graphiscan.invalid':''}
 let creationKey=null
 const editableRoles=computed(()=>props.profile.role==='admin'?userRoles:userRoles.filter(item=>item!=='admin'))
 // Preserve the API's self-access protection; another administrator manages legacy links.
@@ -153,6 +152,7 @@ async function load(more=false){
   try{
     const response=await props.client.request('/'+(accounts.value?'accounts':'audit-logs')+'?'+query,{envelope:true})
     if(!alive||current!==version)return
+    if(!accounts.value&&more&&response.page.next_cursor&&response.page.next_cursor===cursor.value)throw new Error('Unable to load the next audit page. Try again.')
     rows.value=more?[...rows.value,...response.data]:response.data
     cursor.value=response.page.next_cursor;loaded.value=true;return true
   }catch(failure){
@@ -193,8 +193,7 @@ async function actionCompleted(message){const assignmentsChanged=actionKind.valu
 async function openCreator(){
   clearHandover()
   creating.value=true;selected.value={};creationKey=crypto.randomUUID();editorError.value='';reconcileNeeded.value=false
-  Object.assign(draft,{full_name:'',role:'teacher',account_status:'active',email:'',delivery_method:'manual',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
-  changeDelivery()
+  Object.assign(draft,{full_name:'',role:'teacher',account_status:'active',email:'',temporary_password:'',school_id:'',school_ids:[],permission_grants:[]})
   schools.value=[];schoolsError.value='';schoolsBusy.value=true
   await nextTick();editor.value?.showModal();editor.value?.querySelector('input')?.focus()
   try{const response=await props.client.request('/schools?limit=100',{envelope:true});if(alive){schools.value=response.data;schoolsError.value=response.page?.next_cursor?'Only the first 100 available schools are shown. Use a school from this list or assign it later.':''}}
@@ -216,7 +215,7 @@ async function saveAccount(){
   }
   if(!hasChanges.value)return
   saving.value=true;editorError.value=''
-  const row=selected.value,body=creating.value?{email:draft.email.trim().toLowerCase(),delivery_method:draft.delivery_method,role:draft.role,temporary_password:draft.temporary_password,school_ids:draft.role === 'admin' ? [] : draft.school_id?[draft.school_id]:[]}:{expected_revision:row.revision}
+  const row=selected.value,body=creating.value?{email:draft.email.trim().toLowerCase(),delivery_method:'manual',role:draft.role,temporary_password:draft.temporary_password,school_ids:draft.role === 'admin' ? [] : draft.school_id?[draft.school_id]:[]}:{expected_revision:row.revision}
   const fullName=draft.full_name.trim().replace(/\s+/g,' ')
   if(creating.value||fullName!==row.full_name)body.full_name=fullName
   if(!creating.value&&draft.role!==row.role)body.role=draft.role
@@ -245,6 +244,19 @@ const blocked=computed(()=>saving.value||reconcileNeeded.value||loadingEditor.va
 watch(blocked,value=>emit('navigation-block',value),{immediate:true})
 onBeforeRouteLeave(()=>!blocked.value)
 function beforeUnload(event){if(blocked.value){event.preventDefault();event.returnValue=''}}
+const recordTable=ref(null),auditSentinel=ref(null)
+let auditObserver=null
+watch(()=>[props.active,accounts.value,allowed.value,cursor.value,busy.value,error.value],async()=>{
+  auditObserver?.disconnect();auditObserver=null
+  if(accounts.value||!props.active||!allowed.value||!cursor.value||busy.value||error.value)return
+  await nextTick()
+  if(!alive||!props.active||!recordTable.value||!auditSentinel.value||busy.value||error.value)return
+  auditObserver=new IntersectionObserver(entries=>{
+    if(entries.some(entry=>entry.isIntersecting)&&alive&&props.active&&allowed.value&&cursor.value&&!busy.value&&!error.value)load(true)
+  },{root:recordTable.value,rootMargin:'0px 0px 120px 0px'})
+  auditObserver.observe(auditSentinel.value)
+},{flush:'post'})
+onBeforeUnmount(()=>auditObserver?.disconnect())
 onMounted(()=>{window.addEventListener('beforeunload',beforeUnload);if(allowed.value)load(false)})
 onBeforeUnmount(()=>{alive=false;version++;cancelFilterTimer();clearHandover();draft.temporary_password='';window.removeEventListener('beforeunload',beforeUnload);if(editor.value?.open)editor.value.close()})
 </script>

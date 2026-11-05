@@ -15,9 +15,19 @@
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/graphiscan-logo.png"
       },
-      "predictiveBackGestureEnabled": true
+      "predictiveBackGestureEnabled": true,
+      "icon": "./assets/graphiscan-logo.png"
     },
-    "plugins": [["expo-image-picker", { "photosPermission": "Select a handwriting sample for screening.", "cameraPermission": "Photograph a handwriting sample for screening.", "microphonePermission": false }]],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Select a handwriting sample for screening.",
+          "cameraPermission": "Photograph a handwriting sample for screening.",
+          "microphonePermission": false
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/graphiscan-logo.png"
     }
