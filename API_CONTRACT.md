@@ -1,3 +1,7 @@
+2026-11-06 activation update:027 independently verified installed, all seven metadata flags true and lookup source matches. Matching API deployment and actual hosted teacher-parent workflow remain pending; older027-unapplied notes are historical.
+
+2026-11-06 prepared teacher parent linking supersedes prior admin-only parent-link notes for v1: migration027 permits an authorized teacher to set/change/clear parent_id only on their own school/grade-scoped students through existing POST/PATCH student operations. GET school assignment-options adds teacher-only parent_email plus required grade_level for one exact active-parent lookup; no cursor or parent directory, only user_id/full_name/role. Parent accounts remain admin-issued and parent result release remains current link plus Validated.027 is NOT applied hosted; matching API deployment and real acceptance are pending. See graphiscan/api/TEACHER_PARENT_LINKING.md.
+
 # GraphiScan shared API contract
 
 Current declaration review (2026-10-22): OpenAPI contains38 operations,36 marked

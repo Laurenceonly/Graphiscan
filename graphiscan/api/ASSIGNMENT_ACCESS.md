@@ -1,3 +1,7 @@
+2026-11-06 activation update:027 is installed and independently metadata-verified. The matching API/client changes are still local/unpublished, with no real teacher-parent workflow acceptance yet. See TEACHER_PARENT_LINKING.md.
+
+2026-11-06 prepared v1 extension: user authorizes teachers to link/change/remove existing parents on students they own in current school/grade scope. Discovery uses exact login email rather than a parent directory; newly issued parents need no previous child link. Migration027 and matching API are not activated hosted. Teacher creation of parent accounts remains unavailable. Current details and activation: TEACHER_PARENT_LINKING.md. This supersedes older admin-only parent-link statements for the prepared feature.
+
 Current handoff2026-10-22: migrations020/021 are applied and the last hosted
 read-only preflight passed38 checks. PR#5 assignment API/admin and PR#6 shared
 page/card styling are merged. Public bundle index-BMML1qyx.js contains the shared

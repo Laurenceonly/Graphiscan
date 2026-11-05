@@ -52,8 +52,9 @@ export function createHostedClient(origin, { fetchImpl = globalThis.fetch, now =
     const pending = (async () => {
       try { await retain(await raw('/session/refresh', { method: 'POST', body: { refresh_token: token } }), expected) }
       catch (error) {
-        // A temporary outage must not erase an opted-in tab's resumable session.
-        if (expected === generation && (!sessionStore || [401,403].includes(error.status) || error.code==='INVALID_SESSION')) clear()
+        // Preserve both mobile memory sessions and opted-in web sessions during
+        // temporary outages. A failed read is not evidence of revoked access.
+        if (expected === generation && ([401,403].includes(error.status) || error.code==='INVALID_SESSION')) clear()
         throw error
       }
     })()

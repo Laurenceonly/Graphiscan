@@ -6,6 +6,7 @@ import { Body, Button, Notice, Screen, styles, useColors } from './ui'
 import { AppBrand } from './WorkspaceUI'
 import LoadingSkeleton from './LoadingSkeleton'
 import SignOutAction from './SignOutAction'
+import AgreementContent from './AgreementContent'
 
 type Agreement = { title: string; content: string; version: string }
 type Props = { client: HostedClient; action: string; refresh: () => Promise<void>; logout: () => Promise<void>; passwordChanged: () => void }
@@ -75,8 +76,7 @@ export default function AccountSetup({ client, action, refresh, logout, password
     {privacy && <>
       {loading && <LoadingSkeleton kind="agreement"/>}
       {agreement && <View style={[s.card, { backgroundColor: colors.surface }]}>
-        {agreement.title !== 'Data Privacy Agreement' && <Text accessibilityRole="header" style={[s.agreementTitle, { color: colors.text }]}>{agreement.title}</Text>}
-        <Body muted>Version {agreement.version}</Body><Body>{agreement.content}</Body>
+        <AgreementContent content={agreement.content}/>
         <View style={[s.consent, { borderTopColor: colors.border }]}>
           <Text style={[s.consentText, { color: colors.text }]}>I have read and agree to this version of the Data Privacy Agreement.</Text>
           <Switch accessibilityLabel="I agree to this version of the Data Privacy Agreement" value={accepted} onValueChange={setAccepted} disabled={busy} trackColor={{ true: colors.primary }} />
@@ -96,6 +96,5 @@ const s = StyleSheet.create({
   card: { gap: 20 }, passwordField: { gap: 8 },
   passwordFrame: { flexDirection:'row',alignItems:'center',minHeight:52,borderWidth:1,borderRadius:10 }, passwordInput: { flex:1,minWidth:0,minHeight:50,paddingHorizontal:14,paddingVertical:12,fontSize:16,outlineWidth:0 },
   visibility: { minHeight: 50, minWidth:48, alignItems:'center', justifyContent: 'center' },
-  agreementTitle: { fontSize: 18, lineHeight: 26, fontWeight: '600' },
   consent: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 20, borderTopWidth: 1 }, consentText: { flex: 1, minWidth: 0, fontSize: 14, lineHeight: 21 },
 })

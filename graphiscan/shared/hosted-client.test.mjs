@@ -110,6 +110,35 @@ test('concurrent expiring reads share one refresh',async()=>{
   assert.equal(refreshes,1)
 })
 
+test('memory-only mobile session survives transient refresh failures and recovers without login',async()=>{
+  for(const failureStatus of [0,503]){
+    let time=0,unavailable=true,refreshes=0,logins=0
+    const client=createHostedClient('https://synthetic.invalid',{now:()=>time,fetchImpl:async(url)=>{
+      if(url.endsWith('/login')){logins++;return response(tokens())}
+      if(url.endsWith('/refresh')){
+        refreshes++
+        if(unavailable){if(!failureStatus)throw new Error('offline');return response(null,failureStatus)}
+        return response(tokens('recovered'))
+      }
+      return response({ok:true})
+    }})
+    await client.login('fixture@example.invalid','synthetic');time=3590000
+    await assert.rejects(client.request('/students'),error=>error.status===failureStatus)
+    unavailable=false
+    assert.deepEqual(await client.request('/students'),{ok:true})
+    assert.equal(logins,1);assert.equal(refreshes,2)
+  }
+})
+
+test('memory-only session still clears after refresh revocation',async()=>{
+  let time=0
+  const client=createHostedClient('https://synthetic.invalid',{now:()=>time,fetchImpl:async(url)=>
+    url.endsWith('/login')?response(tokens()):response(null,401,'AUTHENTICATION_REQUIRED')})
+  await client.login('fixture@example.invalid','synthetic');time=3590000
+  await assert.rejects(client.request('/students'),error=>error.status===401)
+  await assert.rejects(client.request('/students'),/Sign in to continue/)
+})
+
 test('a late login cannot resurrect state after logout',async()=>{
   let deliver,cleaned=false
   const client=createHostedClient('https://synthetic.invalid',{fetchImpl:async(url)=>{
