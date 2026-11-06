@@ -1,3 +1,5 @@
+2026-11-06 LIVE APK DOWNLOAD: implementation 108adf0 pushed to main; Vercel landing/admin deployments succeeded. Live https://graphiscan.site/download/ displays the blue link to the verified signed Android APK. All four live pages loaded the intended font in browser checks. Emulator installation/launch succeeded; authenticated app workflows and physical-device acceptance remain pending. See latest CHANGELOG.
+
 2026-11-06 APK RELEASE: Signed Graphiscan 1.0.0 APK is published at https://github.com/Laurenceonly/Graphiscan/releases/download/android-v1.0.0/Graphiscan.apk (92,745,658 bytes, SHA-256 A90E9AA20CB51807C81BD3FB965AA3DC5C4FB3F81E7C6A80E4F1E504851C6E4C). Signature v2 and GitHub digest verified, installed and launched on Android emulator; no authenticated flow or physical phone acceptance. The GitHub release tag identifies the previous published commit; APK includes later local source changes. Private signing material remains ignored and must be preserved. Landing download/font fixes are locally verified and await publication. See latest CHANGELOG.
 
 ## 2026-11-06 APK BUILD HANDOFF - READ FIRST
