@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'react-native-reanimated'
-import { ActivityIndicator, FlatList, Keyboard, Pressable, Text, View, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, FlatList, Keyboard, Platform, Pressable, Text, View, useWindowDimensions } from 'react-native'
+import * as FileSystem from 'expo-file-system/legacy'
+import {createNativeUploadFetch} from './core/native-upload'
 import { NavigationContainer, DefaultTheme, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator, type NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createBottomTabNavigator, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
@@ -143,7 +145,7 @@ function Main(){
 }
 
 function HostedRoot(){
-  const client=useRef<HostedClient|null>(null);if(!client.current)client.current=createHostedClient(origin,{sessionStore:mobileSessionStore(origin)})
+  const client=useRef<HostedClient|null>(null);if(!client.current)client.current=createHostedClient(origin,{sessionStore:mobileSessionStore(origin),fetchImpl:Platform.OS==='android'?createNativeUploadFetch(globalThis.fetch,FileSystem.createUploadTask,FileSystem.FileSystemUploadType.MULTIPART):globalThis.fetch})
   const api=client.current,[profile,setProfile]=useState<Profile|null>(null),[signInNotice,setSignInNotice]=useState(''),colors=useColors()
   const [restoring,setRestoring]=useState(true),[restoreError,setRestoreError]=useState(''),restoreGeneration=useRef(0)
   async function logout(){restoreGeneration.current++;setRestoring(false);setRestoreError('');setProfile(null);setSignInNotice('');try{await api.logout()}catch{setSignInNotice('You are signed out on this device. The server could not confirm sign-out.')}}
