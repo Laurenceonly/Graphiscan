@@ -20,12 +20,13 @@ import LoadingSkeleton from './LoadingSkeleton'
 import SignOutAction from './SignOutAction'
 import HostedStudents from './HostedStudents'
 import HostedStudentEditor from './HostedStudentEditor'
+import HostedStudentDetails from './HostedStudentDetails'
 import { ProfilePhotoProvider, useProfilePhoto } from './ProfilePhoto'
 import type { School } from './core/hosted-directory'
 import { mobileSessionStore } from './mobile-session-store'
-import { AppBrand, Avatar, RecordValue, ScreeningRow, StudentRow, workspaceStyles } from './WorkspaceUI'
+import { AppBrand, Avatar, RecordValue, ScreeningRow, workspaceStyles } from './WorkspaceUI'
 
-type Routes = { Main: undefined; Screening: { id: string }; History: { id: string }; Report: { id: string }; StudentEditor: {id?:string} }
+type Routes = { Main: undefined; Screening: { id: string }; History: { id: string }; Report: { id: string }; StudentEditor: {id?:string}; StudentDetails: {id:string} }
 type TabRoutes = { Home: undefined; Results: undefined; Students: undefined; Upload: undefined; Profile: undefined }
 interface Profile { user_id: string; full_name: string; role: string; account_status: string; school_ids: string[]; onboarding: { next_action: string } }
 interface HostedSession { profile: Profile; request: HostedClient['request']; refresh: () => Promise<void>; logout: () => Promise<void> }
@@ -69,7 +70,11 @@ function Results(){return <RecordList/>}
 function History({route}: {route:{params:{id:string}}}){return <RecordList historyId={route.params.id}/>}
 function Students(){
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
-  return <HostedStudents request={request} teacher={profile.role==='teacher'} onHistory={id=>navigation.navigate('History',{id})} onAdd={()=>navigation.navigate('StudentEditor',{})} onEdit={id=>navigation.navigate('StudentEditor',{id})}/>
+  return <HostedStudents request={request} teacher={profile.role==='teacher'} onStudent={id=>navigation.navigate('StudentDetails',{id})} onAdd={()=>navigation.navigate('StudentEditor',{})}/>
+}
+function StudentDetails({route}:{route:{params:{id:string}}}){
+  const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
+  return <HostedStudentDetails request={request} id={route.params.id} teacher={profile.role==='teacher'} onHistory={()=>navigation.navigate('History',{id:route.params.id})} onEdit={()=>navigation.navigate('StudentEditor',{id:route.params.id})}/>
 }
 function StudentEditor({route}:{route:{params:{id?:string}}}){
   const {request,profile,logout}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
@@ -173,7 +178,8 @@ function HostedRoot(){
   return <NavigationContainer theme={{...base,colors:{...base.colors,primary:colors.primary,background:colors.bg,card:colors.surface,text:colors.text,border:colors.border}}}><StatusBar style="dark"/>
     {restoring||restoreError?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><Screen><AppBrand/>{restoring?<View style={{gap:16,paddingVertical:32}}><ActivityIndicator color={colors.primary} accessibilityLabel="Restoring your session"/><Body muted>Opening your workspace…</Body></View>:<><Notice error message={restoreError}/><Button label="Try again" onPress={restoreSession}/><SignOutAction onSignOut={logout} onError={setRestoreError}/></>}</Screen></SafeAreaView>:!profile?<HostedLogin login={login} notice={signInNotice}/>:!ready?<SafeAreaView edges={['top']} style={{flex:1,backgroundColor:colors.bg}}><AccountSetup key={profile.user_id+profile.onboarding.next_action} client={api} action={profile.onboarding.next_action} refresh={refresh} logout={logout} passwordChanged={()=>{setProfile(null);setSignInNotice('Password updated. Sign in with your new password.')}}/></SafeAreaView>:<ProfilePhotoProvider key={profile.user_id} userId={profile.user_id}><Context.Provider value={{profile,request,refresh,logout}}><Stack.Navigator key={profile.user_id} screenOptions={{animation:reducedMotion?'none':'fade_from_bottom',contentStyle:{backgroundColor:colors.bg},headerShadowVisible:false,headerTitleStyle:{fontSize:18,fontWeight:'600'}}}>
       <Stack.Screen name="Main" component={Main} options={{headerShown:false}}/><Stack.Screen name="Screening" component={Detail} options={{title:'Screening result'}}/>
-      <Stack.Screen name="History" component={History} options={{title:'Student history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>
+      <Stack.Screen name="StudentDetails" component={StudentDetails} options={{title:profile.role==='parent'?'Child details':'Student details'}}/>
+      <Stack.Screen name="History" component={History} options={{title:'Screening history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>
       {profile.role==='teacher'&&<Stack.Screen name="StudentEditor" component={StudentEditor} options={({route})=>({title:route.params.id?'Edit student':'Add student'})}/>}
     </Stack.Navigator></Context.Provider></ProfilePhotoProvider>}
   </NavigationContainer>

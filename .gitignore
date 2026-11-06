@@ -23,6 +23,7 @@ graphiscan/config.py
 **/dist/
 **/dist-android/
 **/dist-ssr/
+graphiscan/mobile-app/android/
 **/build/
 **/.vercel/
 **/.gradle/

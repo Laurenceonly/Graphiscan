@@ -1,3 +1,5 @@
+2026-11-06 prepared student detail metadata:028 adds optional school_name and nullable parent_name to already-authorized student list/detail JSON. No endpoint, write, role/scope or parent-release change; current Python read passthrough needs no restart.028 is not installed hosted. Expo uses a details-first screen with an explicit screening-history action. See graphiscan/api/STUDENT_DETAILS.md.
+
 2026-11-06 publication: implementation5841b3b is pushed to origin/main;027 is verified installed and current admin bundle contains the parent lookup. Hosted API health200; authenticated exact-email lookup and real parent-link acceptance remain unverified during the Render rollout.
 
 2026-11-06 activation update:027 independently verified installed, all seven metadata flags true and lookup source matches. Matching API deployment and actual hosted teacher-parent workflow remain pending; older027-unapplied notes are historical.
