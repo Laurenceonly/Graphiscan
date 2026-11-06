@@ -1,3 +1,5 @@
+2026-11-06 CURRENT: Android 1.0.1/code 2 is published and live at graphiscan.site/download (source 3c7f4dd, link b011d10). Same signing certificate as 1.0.0; native multipart transport mitigation, 24 mobile tests/typecheck/build/signature/digest verified. Actual successful upload on the affected phone remains unverified. APK output/android-v1.0.1/Graphiscan.apk. Admin first-read loading guard build/fictional browser checks pass; publication in progress. Preserve signing material and do not rerun migrations.
+
 Simple stack, request flow and CNN/model explanation: [SYSTEM_FLOW.md](SYSTEM_FLOW.md). Saved at the user's request for the evening handoff.
 
 ## 2026-11-06 EVENING RESUME - CURRENT CHECKPOINT

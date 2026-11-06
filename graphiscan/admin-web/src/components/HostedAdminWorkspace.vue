@@ -20,7 +20,7 @@
     <p v-if="message" role="status">{{ message }}</p>
 
     <div v-show="section === 'dashboard'" class="dashboard-page modern-admin-dashboard">
-      <AdminPageSkeleton v-if="(directory.busy && (!directory.studentsLoaded || !directory.schoolsLoaded)) || (screening.busy && !screening.loaded) || initialRecordsLoading" dashboard summary label="Loading dashboard" />
+      <AdminPageSkeleton v-if="dashboardLoading" dashboard summary label="Loading dashboard" />
       <template v-else>
       <section class="dashboard-toolbar admin-page-header">
         <div><h1 ref="pageTitle" tabindex="-1">Dashboard</h1></div>
@@ -135,6 +135,10 @@ const initialRecordsLoading=computed(()=>!initialRecordReads.value.accounts || !
 function recordSnapshot(kind,state){if(!state.allowed || state.loaded || (state.error && !state.busy))initialRecordReads.value[kind]=true}
 const directory=ref({ students:0, schools:0, studentsLoaded:false, schoolsLoaded:false, busy:true, error:'' })
 const screening=ref({ rows:[], loaded:false, busy:true, error:'', allowed:false })
+// An unresolved first read is not an empty result, even between busy snapshots.
+const dashboardLoading=computed(()=>initialRecordsLoading.value ||
+  (directory.value.busy && (!directory.value.studentsLoaded || !directory.value.schoolsLoaded)) ||
+  (['admin','researcher'].includes(props.profile.role) && props.profile.permissions?.includes('assignments.manage') && !screening.value.loaded && !screening.value.error))
 const navigation=[{label:'Overview',items:[{key:'dashboard',label:'Dashboard',icon:LayoutDashboard}]},{label:'Management',items:[{key:'users',label:'Users',icon:Users},{key:'students',label:'Students',icon:GraduationCap},{key:'schools',label:'Schools',icon:School}]},{label:'Screening',items:[{key:'results',label:'Results',icon:FileText},{key:'progress',label:'Progress',icon:TrendingUp}]},{label:'System',items:[{key:'audit',label:'Audit Logs',icon:History},{key:'settings',label:'Settings',icon:Settings}]}]
 const refreshing=computed(()=>props.busy || directory.value.busy || screening.value.busy)
 const cards=computed(()=>[
