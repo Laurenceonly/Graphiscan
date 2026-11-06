@@ -1,3 +1,13 @@
+## 2026-11-06 - Simple technical flow guide
+
+- Added root SYSTEM_FLOW.md at the user's request: frontend/backend/database/storage stack, connection diagram, role workflow, CNN explanation and the three current binary architectures (MobileNetV2, EfficientNetB0, ResNet50). Explains server-side inference, the 0.75 decision rule, expert review, build/deployment flow and acceptance limits. Linked it from KNOWLEDGE.md and RESUME.md.
+- Verification: checked current hosted composition, mobile API origin, model catalogue/runtime, upload rule and recorded activation/release evidence. Documentation-only; no new model execution, hosting change or iOS build.
+
+## 2026-11-06 - Evening handoff saved
+
+- User is leaving and requests saving all work. Confirmed main matches origin/main and the working tree was clean after108adf0/9df8de6. Saved current live APK/site status, exact successful Windows build settings, private-key preservation requirement and remaining physical-device/authenticated acceptance in RESUME.md/KNOWLEDGE.md.
+- Recorded iPhone options as discussion only: separate signed iOS build, paid Apple Developer account, TestFlight or registered-device distribution. No iOS build, purchase or distribution selection performed. This entry is documentation-only; earlier verified release evidence remains unchanged.
+
 ## 2026-11-06 - APK website publication verified
 
 - Pushed implementation commit 108adf0 to main; Vercel reported successful landing and admin deployments. Live https://graphiscan.site/download/ displays the blue APK button linked to the published GitHub release. Browser checks observed Manrope loaded on home, About, Data use and Download; the live button points to the release asset. APK signature, digest and emulator install/launch evidence are recorded below. Authenticated app use and physical-phone installation remain unverified.

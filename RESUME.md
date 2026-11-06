@@ -1,3 +1,16 @@
+Simple stack, request flow and CNN/model explanation: [SYSTEM_FLOW.md](SYSTEM_FLOW.md). Saved at the user's request for the evening handoff.
+
+## 2026-11-06 EVENING RESUME - CURRENT CHECKPOINT
+
+User is leaving and may return this evening. Android release and website work are complete and pushed (implementation 108adf0, verification 9df8de6). Older build-in-progress notes below are historical and superseded.
+
+- Live download: https://graphiscan.site/download/; direct asset: https://github.com/Laurenceonly/Graphiscan/releases/download/android-v1.0.0/Graphiscan.apk. Local copy: output/Graphiscan.apk. Signed Graphiscan 1.0.0, 92,745,658 bytes, Android 7+, package site.graphiscan.mobile, four architectures. Signature and public asset digest verified; emulator install and launch succeeded. Actual account workflows and physical-phone acceptance remain open.
+- Website blue download button and font-loading/failure fallback were checked on all four pages, locally at 390/1280 widths and on the live domain. Commit/push and successful Vercel deployment were observed.
+- Preserve original ignored .local-tools/android-signing material. Never regenerate or publish the key/password. Windows native path failures were resolved using temporary C:/g/graphiscan/mobile-app. That copy references the original release.properties by absolute path. Successful command: gradlew.bat assembleRelease --console=plain --max-workers=4 '-Pexpo.android.cmakeObjectPathMax=220', with app defaultConfig externalNativeBuild.cmake arguments '-DCMAKE_OBJECT_PATH_MAX=256'. JAVA_HOME is Android Studio/jbr, ANDROID_HOME is the local Android SDK, EXPO_PUBLIC_API_MODE=hosted. Avoid rebuilding the long original path without addressing this. Future source edits must be synchronized into the temporary build copy before building.
+- iPhone discussion only: a separate signed iOS build is needed. Options are TestFlight (beta review/90-day build expiry) or ad hoc distribution to registered devices. Expo cloud builds can be managed from Windows; these installation routes require paid Apple Developer membership. No iOS setup/build, membership purchase or distribution choice was authorized or performed. No iPhone button should be enabled until a real install route exists.
+- Do not rerun migrations/reset SQL. Migration028 was already verified installed in the preceding session. Release tag android-v1.0.0 points to the earlier published commit; its notes disclose that the APK includes newer mobile source now committed in108adf0.
+- Next when user resumes: follow their priority; physical Android installation/login is an available acceptance step, or clarify iOS account/distribution choice if they request iPhone work. Do not restart the completed Android build merely to resume.
+
 ## 2026-11-06 LIVE APK DOWNLOAD
 
 Signed Android APK is live at https://graphiscan.site/download/ and https://github.com/Laurenceonly/Graphiscan/releases/download/android-v1.0.0/Graphiscan.apk. Implementation 108adf0 pushed; both Vercel deployments succeeded. Live checks confirm blue button and font loading on all four pages. APK signature/digest and emulator launch verified; physical-device and authenticated flows remain untested. Preserve ignored signing key. The release tag still points to the preceding published commit; the release notes disclose that the APK contains later source changes.
