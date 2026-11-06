@@ -1,3 +1,5 @@
+2026-11-06 publication: implementation5841b3b is pushed and the live admin bundle includes parent lookup.027 is independently verified installed. Hosted API health returns200; authenticated lookup/link acceptance must verify the matching Render rollout and is not established by health alone. No migration rerun is needed.
+
 2026-11-06 activation checkpoint:027 is now installed and independently read-only verified (all seven preflight flags true; lookup source matches). Do not rerun it to resume. Matching API/client deployment and real hosted/native parent-link acceptance remain pending. This supersedes unapplied statements below.
 
 2026-11-06 correction: use the updated027 file, which normalizes both sides of its exact source guard for LF/CRLF SQL editor formatting. The previous failed attempt left the hosted writer unchanged and lookup absent in read-only metadata. Copy the full corrected file again before retrying; the guard still rejects unexpected semantic changes.
