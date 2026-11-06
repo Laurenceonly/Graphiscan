@@ -1,3 +1,7 @@
+## 2026-11-06 - APK website publication verified
+
+- Pushed implementation commit 108adf0 to main; Vercel reported successful landing and admin deployments. Live https://graphiscan.site/download/ displays the blue APK button linked to the published GitHub release. Browser checks observed Manrope loaded on home, About, Data use and Download; the live button points to the release asset. APK signature, digest and emulator install/launch evidence are recorded below. Authenticated app use and physical-phone installation remain unverified.
+
 ## 2026-11-06 - Signed Android APK and website download
 
 - Built Graphiscan 1.0.0 as a signed Android APK (Android 7+, package site.graphiscan.mobile) using a temporary short Windows build path and the preserved private release key. The 92,745,658-byte file is published as the android-v1.0.0 GitHub release asset. The release tag points to the preceding published commit; the asset includes later local mobile changes. Preserve the ignored signing material for future updates.

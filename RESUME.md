@@ -1,3 +1,7 @@
+## 2026-11-06 LIVE APK DOWNLOAD
+
+Signed Android APK is live at https://graphiscan.site/download/ and https://github.com/Laurenceonly/Graphiscan/releases/download/android-v1.0.0/Graphiscan.apk. Implementation 108adf0 pushed; both Vercel deployments succeeded. Live checks confirm blue button and font loading on all four pages. APK signature/digest and emulator launch verified; physical-device and authenticated flows remain untested. Preserve ignored signing key. The release tag still points to the preceding published commit; the release notes disclose that the APK contains later source changes.
+
 ## 2026-11-06 APK BUILT AND UPLOADED
 
 Graphiscan 1.0.0 signed APK is available at https://github.com/Laurenceonly/Graphiscan/releases/download/android-v1.0.0/Graphiscan.apk. SHA-256 A90E9AA20CB51807C81BD3FB965AA3DC5C4FB3F81E7C6A80E4F1E504851C6E4C matches GitHub; Android emulator install and launch succeeded. Build used temporary C:/g/graphiscan/mobile-app with short app CMake path setting, original ignored signing key, hosted API mode and all four architectures; no authenticated or physical-device acceptance. Do not lose the signing key. Release tag references earlier published commit, while asset includes newer local source. Landing download/font changes tested locally; publish and verify site, commit/push authorized project changes, then update this note.
