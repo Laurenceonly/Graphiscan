@@ -1,3 +1,10 @@
+## 2026-11-06 - Parent-link and mobile changes published
+
+- Implementation commit5841b3b successfully pushed to origin/main under explicit user authorization. All33 reviewed source/test/migration/documentation paths included; staged private-path and credential-pattern checks pass. Configuration/secrets, uploads, local helper scripts/captures, builds and model artifacts remain excluded.
+- Public admin HTTP200 and current bundle /assets/index-5Y-bV0IH.js independently contain Parent login email and parent_email lookup while retaining manual Login email. GitHub commit status reports successful Vercel graphiscan and graphiscan-admin deployments. Hosted API health HTTP200. Render's source configuration auto-deploys main commits, but no Render-specific GitHub check or public commit-specific API evidence is available; authenticated new-lookup availability remains a separate acceptance check rather than being inferred from health.
+-027 was already independently installed/verified; no migration or record mutation during publication. User can reload current Expo source and test teacher parent lookup/link once the matching API rollout is active. Actual hosted parent-link, native session/photo/keyboard/Back, inference and full role acceptance remain open. No release APK. This documentation-only follow-up records the completed push and actual deployment evidence.
+
+
 ## 2026-11-06 - Publish tested parent-link and mobile changes (authorized)
 
 - User explicitly requests publishing all current changes. Includes teacher parent lookup/linking in Expo and retained Vue teacher forms, strict API lookup, installed027 with corrected LF/CRLF exact guard and installation preflight, mobile privacy/profile/navigation/device-photo cleanup, and SecureStore-backed refresh-only session restoration with transient-refresh recovery. Prior entries record all actual verification and remaining native/hosted limits.
