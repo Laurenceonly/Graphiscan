@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "GraphiScan",
+    "name": "Graphiscan",
     "slug": "graphiscan",
     "scheme": "graphiscan",
     "version": "1.0.0",
@@ -11,6 +11,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "site.graphiscan.mobile",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/graphiscan-logo.png"
@@ -27,7 +29,9 @@
           "microphonePermission": false
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-status-bar"
     ],
     "web": {
       "favicon": "./assets/graphiscan-logo.png"

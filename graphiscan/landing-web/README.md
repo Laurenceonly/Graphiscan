@@ -90,7 +90,7 @@ with the release. QR generation is deferred until a public website URL is known.
 Published 2026-10-27 at https://graphiscan.vercel.app in the KnightLabs Vercel
 project `graphiscan`, connected to the existing GitHub repository/main. Root is
 `graphiscan/landing-web`, framework Vite, build `npm run build`, output `dist`.
-Production has the public admin link and site URL; APK remains Coming soon.
+The signed Android 1.0.0 APK is hosted as a GitHub release asset. The site defaults to that URL and may override it with VITE_APK_URL.
 
 Create a separate Vercel project with Root Directory `graphiscan/landing-web`,
 framework Vite, build `npm run build`, output `dist`. Add the public environment

@@ -204,6 +204,7 @@ async function main() {
     await require('./check_role_assignments_sql.cjs')({db,root});
     await require('./check_school_deletion_sql.cjs')({db,root});
     await require('./check_teacher_parent_linking_sql.cjs')({db,root,U});
+    await require('./check_student_display_names_sql.cjs')({db,root,U,validateRow:(name,row)=>{const validator=ajv.compile(schemas[name]);return {ok:validator(row),errors:validator.errors}}});
   } finally { await db.close(); }
 }
 main().catch(error=>{console.error('Contract validation FAILED: '+error.message+

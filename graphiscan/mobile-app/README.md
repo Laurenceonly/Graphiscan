@@ -1,3 +1,5 @@
+2026-11-06 local student details: tapping a student/child now opens name, school, grade/age and linked-parent context, followed by View screening history. Teacher-only Edit remains explicit. Full display names need prepared migration028; it is not yet installed hosted. Current API passthrough needs no restart. Source is local/unpublished; see ../api/STUDENT_DETAILS.md.
+
 2026-11-06 publication: mobile source is included in implementation5841b3b on origin/main.027 is verified installed and the admin web bundle is updated. Reload Expo to use current local source; verify parent lookup against the matching hosted API rollout. Actual native session/photo and real hosted parent-link acceptance remain pending; no APK release.
 
 2026-11-06 teacher parent-link activation:027 is installed and independently metadata-verified. Matching hosted API deployment is still pending; local Expo source alone cannot enable the exact-email lookup on an old API.

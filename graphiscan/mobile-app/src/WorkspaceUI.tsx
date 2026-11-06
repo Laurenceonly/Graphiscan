@@ -48,16 +48,13 @@ export function ScreeningRow({ record, studentName, grade, onPress, last = false
   </Pressable>
 }
 
-export function StudentRow({ student, onPress, onEdit }: { student: any; onPress: () => void; onEdit?:()=>void }) {
+export function StudentRow({ student, onPress }: { student: any; onPress: () => void }) {
   const c = useColors()
-  return <View style={[s.actionRow,{padding:0,borderBottomColor:c.border,borderBottomWidth:1,backgroundColor:c.surface}]}>
-    <Pressable accessibilityRole="button" accessibilityLabel={'View history for '+student.full_name} onPress={onPress} android_ripple={{color:c.soft}}
-      style={({pressed})=>[s.actionRow,{flex:1,minWidth:0,backgroundColor:pressed?c.soft:c.surface}]}>
-      <Avatar name={student.full_name}/><View style={s.rowCopy}><Text accessibilityRole="header" style={[s.rowTitle,{color:c.text}]}>{student.full_name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>Grade {student.grade_level}</Text></View>
-      <MaterialIcons name="chevron-right" size={22} color={c.muted} accessible={false}/>
-    </Pressable>
-    {onEdit&&<Pressable accessibilityRole="button" accessibilityLabel={'Edit '+student.full_name} onPress={onEdit} style={{minHeight:48,minWidth:48,paddingRight:16,justifyContent:'center'}}><Text style={{color:c.primary,fontSize:14,fontWeight:'500'}}>Edit</Text></Pressable>}
-  </View>
+  return <Pressable accessibilityRole="button" accessibilityLabel={'View details for '+student.full_name} onPress={onPress} android_ripple={{color:c.soft}}
+    style={({pressed})=>[s.actionRow,{borderBottomColor:c.border,borderBottomWidth:1,backgroundColor:pressed?c.soft:c.surface}]}>
+    <Avatar name={student.full_name}/><View style={s.rowCopy}><Text accessibilityRole="header" style={[s.rowTitle,{color:c.text}]}>{student.full_name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>Grade {student.grade_level}</Text></View>
+    <MaterialIcons name="chevron-right" size={22} color={c.muted} accessible={false}/>
+  </Pressable>
 }
 
 export function RecordValue({ label, value }: { label: string; value: string }) {

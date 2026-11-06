@@ -7,7 +7,7 @@ import { DirectorySelect, SchoolSelect, grades, useScopedPage, type Request } fr
 import { studentQuery, type School, type Student, type StudentFilters } from './core/hosted-directory'
 
 const allFilters:StudentFilters={search:'',school:'',grade:''}
-export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:{request:Request;teacher:boolean;onHistory:(id:string)=>void;onEdit:(id:string)=>void;onAdd:()=>void}) {
+export default function HostedStudents({request,teacher,onStudent,onAdd}:{request:Request;teacher:boolean;onStudent:(id:string)=>void;onAdd:()=>void}) {
   const {height:windowHeight}=useWindowDimensions(),[listHeight,setListHeight]=useState(0)
   const c=useColors(),[showFilters,setShowFilters]=useState(false),[search,setSearch]=useState(''),[school,setSchool]=useState<School|null>(null)
   const [grade,setGrade]=useState(''),[filters,setFilters]=useState<StudentFilters>({...allFilters}),[schoolLabel,setSchoolLabel]=useState(''),[cursor,setCursor]=useState<string|null>(null),[error,setError]=useState('')
@@ -41,7 +41,7 @@ export default function HostedStudents({request,teacher,onHistory,onEdit,onAdd}:
       {Boolean(students.error)&&<Button label="Reload students" secondary disabled={students.loading} onPress={students.refresh}/>}
     </View>}
     ListEmptyComponent={students.loading?<LoadingSkeleton kind="student" count={3} fillHeight={listHeight||windowHeight}/>:!students.error?<Body muted>No students are available for your account and these filters.</Body>:undefined}
-    renderItem={({item})=><StudentRow student={item} onPress={()=>onHistory(item.student_id)} onEdit={teacher?()=>onEdit(item.student_id):undefined}/>}
+    renderItem={({item})=><StudentRow student={item} onPress={()=>onStudent(item.student_id)}/>}
     ListFooterComponent={<View style={{gap:12,paddingTop:20}}>
       {students.data?.page.next_cursor&&<Button label="Next students page" disabled={students.loading} onPress={()=>setCursor(students.data!.page.next_cursor)}/>}
       {cursor&&<Button label="First students page" secondary disabled={students.loading} onPress={first}/>}

@@ -2,6 +2,7 @@ export interface School { school_id: string; name: string }
 export interface Student {
   student_id: string; full_name: string; age: number | null; school_id: string;
   grade_level: number; teacher_id: string | null; parent_id: string | null; revision: number;
+  school_name?: string | null; parent_name?: string | null;
 }
 export interface AssignmentOption { user_id: string; full_name: string; role: string; grade_levels?: number[] }
 export interface StudentForm { name: string; age: string; school: string; grade: string; parent: string }

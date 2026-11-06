@@ -1573,7 +1573,7 @@
         "tags": [
           "students"
         ],
-        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors.",
+        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors. Migration028 adds school_name and nullable parent_name to the already-authorized student projection; it changes no ownership, school/grade, session/onboarding or parent result-release rules.",
         "parameters": [
           {
             "name": "limit",
@@ -1795,7 +1795,7 @@
         "tags": [
           "students"
         ],
-        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors.",
+        "description": "Implemented read-only directory. Server verifies current session/onboarding and repeats scope checks in one database statement. School grants permit the school directory; student administrative reads require assignments.manage within school scope. Teachers see currently assigned students, parents linked children, experts context for currently assigned screenings. No screening classifications or images are returned. Missing/inaccessible student details share 404. Lists use descending created_at/ID keysets with signed actor/session/filter/limit-bound cursors valid for 30 minutes; restarting the API invalidates cursors. Migration028 adds school_name and nullable parent_name to the already-authorized student projection; it changes no ownership, school/grade, session/onboarding or parent result-release rules.",
         "parameters": [
           {
             "name": "student_id",
@@ -4438,6 +4438,18 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "school_name": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "description": "Current school name from the already-authorized student read (migration028)."
+          },
+          "parent_name": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "description": "Name of the currently linked parent; null when no parent name is available (migration028). No account directory access."
           }
         },
         "required": [

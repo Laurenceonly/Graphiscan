@@ -1,3 +1,44 @@
+## 2026-11-06 - Signed Android APK and website download
+
+- Built Graphiscan 1.0.0 as a signed Android APK (Android 7+, package site.graphiscan.mobile) using a temporary short Windows build path and the preserved private release key. The 92,745,658-byte file is published as the android-v1.0.0 GitHub release asset. The release tag points to the preceding published commit; the asset includes later local mobile changes. Preserve the ignored signing material for future updates.
+- Verification: Gradle assembleRelease succeeded; APK Signature Scheme v2 verified; SHA-256 A90E9AA20CB51807C81BD3FB965AA3DC5C4FB3F81E7C6A80E4F1E504851C6E4C matches GitHub's asset digest; public download returned HTTP 200. Installed and launched on an Android emulator, with its activity and process observed. Authenticated workflows and real device installation remain unverified.
+- Website: configured the actual APK URL and metadata, made its download button blue, fixed font readiness and locked fallback across home, About, Data use and Download, and corrected stale About copy. Production build passed; browser checks at 390/1280 widths confirmed font loading, no horizontal overflow and the blue link. Blocking the font confirmed readable fallback on all four pages. Publication is pending until separately verified.
+
+## 2026-11-06 - Account-switch APK handoff
+
+- Saved exact running build, toolchain, private signing location, logo/name and requested paragraph change in RESUME.md/KNOWLEDGE.md. Build still downloading runtime AARs and processing native tasks; no finished APK, install verification or landing publication. Preserve signing key and inspect running process before resuming.
+
+## 2026-11-06 - APK toolchain recovery and agreement display adjustment (in progress)
+
+- Direct official Google download recovered the stalled zero-byte NDK installation; NDK27.1.12297006 is installed. Gradle restarted with detailed local logging and20-second connection/socket timeouts; dependency downloads are progressing. No APK produced or published yet.
+- Generated a private release signing key in ignored .local-tools/android-signing and wired the ignored native release build to it. Preserve this material for compatible future updates; no credentials are included in source or logs.
+- User requested removing the screenshot's version-history explanation. AgreementContent.tsx now omits only that exact paragraph from display. Server notice content/version and acceptance enforcement are unchanged. Mobile TypeScript passes after this change; native verification remains pending.
+
+## 2026-11-06 - Graphiscan APK build in progress
+
+- User requested a downloadable APK named Graphiscan using the existing logo. Changed Expo display name in mobile-app/app.json and generated native app_name; existing blue logo visually verified in generated launcher icon.
+- Mobile TypeScript and all20 tests pass. Local Gradle assembleRelease is running; native plugin compilation has progressed, with slow first-build dependency downloads. No finished APK, signing verification, installation or landing-page publication yet. Existing generated release configuration uses the debug signing key and must be replaced before public distribution.
+- Landing download already accepts VITE_APK_URL and version/size/date metadata. Keep unavailable until a verified artifact exists. No public download enabled in this checkpoint.
+
+## 2026-11-06 - Native student details and stable screening search
+
+- The user's emulator initially showed the old Student history route despite current local Metro source. A fresh Expo link exposed `Cannot find native module 'ExpoCrypto'`. The installed Expo Go was SDK58 version58.0.5; an official matching APK was repair-installed with app data retained. Reopening `exp://127.0.0.1:8081` loaded the signed-in teacher workspace. This is an observed local emulator repair, not a source/package upgrade or standalone APK release.
+- The native teacher Student details view was observed loading the actual linked school and parent names after migration028. The user confirmed the new view works. At the user's request, the outer Edit action was removed from each student list row; teacher editing remains inside Student details. The row is now one full-width details target. No server ownership or permission change.
+- On Screen handwriting, the student-loading skeleton previously rendered above the search field and shifted it when loading completed. The search field now renders immediately below the Student heading, before changing results. Native loaded-state capture confirms the resulting order. Mobile TypeScript and all20 tests pass; the transient skeleton motion itself was not independently captured. These mobile source changes remain local/unpublished; no upload/inference acceptance is implied.
+
+## 2026-11-06 - Student display names installed and verified
+
+- User reports successful owner application of028_student_display_names.sql. Independent read-only hosted metadata check returns all five028 preflight flags true and exactly one match for the new school/parent projection. The check reads function metadata only, with no student/account records or writes. The original projection remains a substring of the expanded projection, so its literal match count of one does not indicate an incomplete migration. Do not rerun028 to resume.
+- Existing Python directory reads pass the new fields through, so the new teacher Student details view can display the linked school and parent names when local Expo refreshes. Actual authenticated teacher use on the emulator remains to be checked by the user. The new mobile source is still local/unpublished; no APK or hosted mobile publication is claimed.
+
+## 2026-11-06 - Student details before screening history (local)
+
+- User requested identity/school/parent context before results. Expo HostedStudents now navigates to the new HostedStudentDetails stack route when a student/child row is tapped. The screen shows current name, school, grade/age, linked parent's name or No parent linked, followed by View screening history and teacher-only Edit student. History is not fetched until explicitly opened. Existing direct Edit, result/report/history routes and server authority remain. WorkspaceUI now names row actions View details for the student.
+- Prepared028_student_display_names.sql adds school_name and parent_name to the existing authorized student list/detail projection, resolving only each visible student's actual school and parent-role profile. No new endpoint, account directory, role/ownership widening, parent-link mutation, permission grant, model or release-rule change. Optional contract/type fields preserve compatibility with existing mutation receipts. The current DirectoryService passes fields through; no API restart/deploy is needed to expose names after owner installation. Older Flask teacher progress already returns student/linked-parent context; archival routes are unchanged.
+-028 exact guard normalizes original/replacement literals and installed source for LF/CRLF. New metadata preflight has five flags. Independent read-only hosted check confirms exactly one old projection match, existing pinned definer/scope/ACLs intact and new projection absent. No student/account records read or changed by that check.028 remains NOT applied hosted; new source is local/unpublished, with prior publication intact.
+- Verification: TypeScript/20 mobile tests,11 directory API tests and Android/web exports pass.654 contract checks/all isolated SQL suites pass, including32 new projection/scope/ACL/current-link/rename/session/privacy/mixed-line-ending/repeat/rejection checks.42 fictional browser checks across teacher/expert/parent at320/390 pass, including no automatic history read, role edit controls, error retry, cached-data clearing after404 and parent-removal refresh. Screenshots inspected; no page errors or real writes. Native/live detail acceptance remains pending. Updated API_CONTRACT, OpenAPI and STUDENT_DETAILS runbook.
+
+
 ## 2026-11-06 - Parent-link and mobile changes published
 
 - Implementation commit5841b3b successfully pushed to origin/main under explicit user authorization. All33 reviewed source/test/migration/documentation paths included; staged private-path and credential-pattern checks pass. Configuration/secrets, uploads, local helper scripts/captures, builds and model artifacts remain excluded.
