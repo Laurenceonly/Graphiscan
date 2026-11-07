@@ -1,3 +1,8 @@
+## 2026-11-07 - Refresh system guide release checkpoint
+
+- Updated SYSTEM_FLOW.md to identify Android 1.0.1 as the current published download, using the recorded release evidence below. Kept the earlier 1.0.0 emulator check distinct from 1.0.1 signature, checksum and website-link verification.
+- Verification: compared the guide with the existing published-release entries and reviewed the documentation diff. No new build, live workflow or physical-phone acceptance check performed; authenticated native upload acceptance remains pending.
+
 ## 2026-11-06 - Admin dashboard first-read loading guard
 
 - HostedAdminWorkspace.vue now keeps its dashboard skeleton visible until an authorized initial screening read has either loaded or failed, including gaps between busy snapshots. An unresolved read cannot select the no-results layout. Confirmed empty, error and no-access states, existing layout/navigation and server permissions remain unchanged. The exact timing of the user's live report was not independently reproduced.
