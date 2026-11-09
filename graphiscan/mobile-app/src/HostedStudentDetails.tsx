@@ -16,13 +16,13 @@ export default function HostedStudentDetails({ request, id, teacher, onHistory, 
     <Notice error message={record.error}/>
     {Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={record.refresh}/>}
     {student&&<>
-      <Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.full_name}</Text>
+      <View style={{gap:4}}>
+        <Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.full_name}</Text>
+        <Body muted>Grade {student.grade_level}</Body>
+      </View>
       <View style={{gap:20}}>
         <RecordValue label="School" value={student.school_name||'School name unavailable'}/>
-        <View style={{flexDirection:'row',flexWrap:'wrap',gap:24}}>
-          <RecordValue label="Grade" value={'Grade '+student.grade_level}/>
-          <RecordValue label="Age" value={student.age===null?'Not recorded':String(student.age)}/>
-        </View>
+        <RecordValue label="Age" value={student.age===null?'Not recorded':String(student.age)}/>
       </View>
       <View style={{borderTopWidth:1,borderTopColor:colors.border,paddingTop:20,gap:12}}>
         <RecordValue label="Parent / Guardian" value={student.parent_id?(student.parent_name||'Parent linked'):'No parent linked'}/>

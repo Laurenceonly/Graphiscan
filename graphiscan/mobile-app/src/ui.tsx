@@ -30,10 +30,11 @@ export function Body({ children, muted = false }: { children: React.ReactNode; m
   const c = useColors(); return <Text style={[styles.body, { color: muted ? c.muted : c.text }]}>{children}</Text>
 }
 export function Heading({ children }: { children: React.ReactNode }) { const c = useColors(); return <Text accessibilityRole="header" style={[styles.heading, { color: c.text }]}>{children}</Text> }
-export function Button({ label, onPress, disabled = false, secondary = false, icon, style }: { label: string; onPress: () => void; disabled?: boolean; secondary?: boolean; icon?: React.ComponentProps<typeof MaterialIcons>['name']; style?: StyleProp<ViewStyle> }) {
+export function Button({ label, onPress, disabled = false, secondary = false, icon, style, tone, selected }: { label: string; onPress: () => void; disabled?: boolean; secondary?: boolean; icon?: React.ComponentProps<typeof MaterialIcons>['name']; style?: StyleProp<ViewStyle>; tone?: 'success' | 'danger'; selected?: boolean }) {
   const c = useColors()
-  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => [styles.button, { backgroundColor: secondary ? c.surface : c.primary, borderColor: c.border, borderWidth: secondary ? 1 : 0, opacity: disabled ? .55 : pressed ? .8 : 1 }, style]}>
+  const fill = tone === 'success' ? c.normal : tone === 'danger' ? c.error : c.primary
+  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled, selected }} disabled={disabled} onPress={onPress}
+    style={({ pressed }) => [styles.button, { backgroundColor: secondary ? c.surface : fill, borderColor: c.border, borderWidth: secondary ? 1 : 0, opacity: disabled ? .55 : pressed ? .8 : 1 }, style]}>
     {icon && <MaterialIcons name={icon} size={22} color={secondary ? c.primary : c.onPrimary} />}
     <Text style={[styles.label, { color: secondary ? c.primary : c.onPrimary, flexShrink:1, textAlign:'center' }]}>{label}</Text>
   </Pressable>

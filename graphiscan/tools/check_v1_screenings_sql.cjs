@@ -11,6 +11,22 @@ module.exports=async({db,root,U,validateRow})=>{
   check(bundle==='-- Atomic bundle of 013 + 014. Apply ONLY this bundle once after 012.\nBEGIN;\n'+expected+'\nCOMMIT;\n','Atomic migration bundle drift');
   await db.exec(bundle);
   const sig='public.graphiscan_read_screenings(uuid,uuid,text,jsonb,timestamptz,bigint,integer,bigint,boolean)';
+  const nameMigration=fs.readFileSync(path.join(root,'graphiscan/db/postgres/029_review_expert_name.sql'),'utf8');
+  const originalReader=(await q('SELECT pg_get_functiondef($1::regprocedure) body',[sig])).rows[0].body;
+  for(const oldEnd of ['\n','\r\n'])for(const newEnd of ['\n','\r\n']){
+    await db.exec(originalReader.replace(/\r?\n/g,oldEnd));await db.exec(nameMigration.replace(/\r?\n/g,newEnd));
+    check((await q("SELECT strpos(prosrc,'-- review expert name029')>0 ok FROM pg_proc WHERE oid=$1::regprocedure",[sig])).rows[0].ok,'Reviewer migration LF/CRLF failed');
+  }
+  const namedReader=(await q('SELECT pg_get_functiondef($1::regprocedure) body',[sig])).rows[0].body;
+  await db.exec(nameMigration);check((await q('SELECT pg_get_functiondef($1::regprocedure) body',[sig])).rows[0].body===namedReader,'Reviewer migration rerun changed reader');
+  // The harness reaches012 before017 creates this later production role.
+  await db.exec('CREATE ROLE graphiscan_admin_writer NOLOGIN');
+  const nameFlags=(await q(fs.readFileSync(path.join(root,'graphiscan/db/postgres/029_review_expert_name_preflight.sql'),'utf8'))).rows[0];
+  await db.exec('DROP ROLE graphiscan_admin_writer');
+  for(const [flag,value]of Object.entries(nameFlags))check(value===true,'Reviewer preflight '+flag);
+  await db.exec(originalReader.replace("'expert_id',expert_id,'remarks'","'changed_expert_id',expert_id,'remarks'"));
+  let nameGuard=false;try{await db.exec(nameMigration)}catch(error){nameGuard=error.message.includes('unexpected screening reader body');await db.exec('ROLLBACK')}
+  check(nameGuard,'Reviewer migration accepted unknown reader body');await db.exec(namedReader);
   for(const role of ['anon','authenticated','service_role','graphiscan_password_writer'])
     check(!(await q('SELECT has_function_privilege($1,$2,\'EXECUTE\') ok',[role,sig])).rows[0].ok,'Unexpected execution '+role);
   check((await q("SELECT has_function_privilege('graphiscan_api_reader',$1,'EXECUTE') ok",[sig])).rows[0].ok,'Missing reader capability');
@@ -56,6 +72,11 @@ module.exports=async({db,root,U,validateRow})=>{
     [ids[role],sessions[role],resource,JSON.stringify(options.filters??{}),options.time??null,options.after??null,options.limit??25,options.target??null,options.oldest??false])).rows[0].result;
   await db.exec('SET LOCAL ROLE graphiscan_api_reader');
   let r=await read('teacher');check(r.rows.length===2,'Teacher crossed current link');
+  check(r.rows.find(row=>row.result_id===results[1]).review.expert_name==='Fictional expert','Actual reviewer name missing');
+  check(r.rows.find(row=>row.result_id===results[0]).review.expert_name===null,'Pending review invented reviewer name');
+  check((await read('parent','report',{target:reports[1]})).rows[0].review.expert_name==='Fictional expert','Released report missing reviewer name');
+  check((await read('parent','report',{target:reports[0]})).rows.length===0,'Pending reviewer field bypassed release');
+  check((await read('teacher','report',{target:reports[2]})).rows.length===0,'Reviewer field widened ownership');
   for(const row of r.rows){const valid=validateRow('Screening',row);check(valid.ok,'SQL screening/schema mismatch: '+JSON.stringify(valid.errors));}
   check(r.rows[0].result_id===results[1],'Equal timestamp numeric ordering wrong');
   check(!JSON.stringify(r).includes('never-return-this'),'Private storage path leaked');
@@ -80,6 +101,11 @@ module.exports=async({db,root,U,validateRow})=>{
   r=await read('teacher','history',{target:students[0],oldest:true,limit:1});check(r.rows[0].result_id===results[0] && r.rows.length===2,'Oldest keyset order wrong');
   r=await read('teacher','history',{target:students[0],oldest:true,limit:1,time:r.rows[0].date_generated,after:results[0]});check(r.rows.length===1 && r.rows[0].result_id===results[1],'Oldest continuation wrong');
   await db.exec('RESET ROLE');
+  await q('INSERT INTO screening_expert_assignments(result_id,assigned_expert_id,assigned_by) VALUES ($1,$2,$3)',[results[1],ids.other,ids.admin]);
+  check((await read('teacher','report',{target:reports[1]})).rows[0].review.expert_name==='Fictional expert','Assignment replaced actual reviewer name');
+  await q("UPDATE user_profiles SET full_name='Renamed fictional expert' WHERE user_id=$1",[ids.expert]);
+  check((await read('teacher','report',{target:reports[1]})).rows[0].review.expert_name==='Renamed fictional expert','Reviewer display name did not follow profile rename');
+  await q("UPDATE user_profiles SET full_name='Fictional expert' WHERE user_id=$1",[ids.expert]);
   await require('./check_v1_screening_writes_sql.cjs')({db,U,ids,sessions,results,schools});
   await require('./check_v1_screening_uploads_sql.cjs')({db,U,ids,sessions,students,model,validateRow});
   r=await read('parent','report',{target:reports[1]});check(r.rows[0].school_context.school_name==='Fictional school' && !JSON.stringify(r).includes('never-return-this'),'School snapshot extra fields leaked');
