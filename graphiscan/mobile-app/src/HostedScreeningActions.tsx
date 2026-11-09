@@ -25,7 +25,7 @@ export function HostedReview({request,id,review,onSaved}:{request:Request;id:str
     try{await submission.submit({request},id,{status,remarks,expert_recommendation:recommendation.trim()||null,follow_up_needed:followUp,expected_revision:review.revision});setMessage('Review saved.');onSaved()}
     catch(e){setError((e as Error).message)}finally{setPending(submission.pending);setBusy(false)}
   }
-  return <View style={{gap:16}}><Heading>Submit expert review</Heading><View style={styles.wrap}>{['Validated','Flagged'].map(value=><Button key={value} label={value} secondary={status!==value} disabled={busy||pending} onPress={()=>setStatus(value)}/>)}</View>
+  return <View style={{gap:16}}><Heading>Submit expert review</Heading><View style={styles.wrap}>{['Validated','Flagged'].map(value=><Button key={value} label={value} secondary={status!==value} selected={status===value} tone={value==='Validated'?'success':'danger'} disabled={busy||pending} onPress={()=>setStatus(value)}/>)}</View>
     <Field label="Review remarks" multiline value={remarks} onChangeText={setRemarks} editable={!busy&&!pending}/><Field label="Expert recommendation (optional)" multiline value={recommendation} onChangeText={setRecommendation} editable={!busy&&!pending}/>
     <View style={styles.row}><Body>Follow-up needed</Body><Switch accessibilityLabel="Follow-up needed" value={followUp} onValueChange={setFollowUp} disabled={busy||pending}/></View>
     <Notice error message={error}/><Notice message={message}/><Button label={busy?'Saving review...':pending?'Retry the same review':'Save review'} disabled={busy||!remarks.trim()} onPress={save}/>
@@ -42,7 +42,7 @@ export function HostedImage({request,id}:{request:Request;id:string}){
       const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('Unable to display this image.'));reader.readAsDataURL(blob)});if(current===generation.current)setUri(data)
     }}catch(e){if(current===generation.current)setError((e as Error).message)}finally{if(current===generation.current)setBusy(false)}
   }
-  return <View style={{gap:12}}><Button label={busy?'Loading image...':uri?'Hide handwriting image':'View handwriting image'} secondary disabled={busy} onPress={()=>uri?setUri(''):image(false)}/>{busy&&!uri&&<LoadingSkeleton kind="image"/>}{uri?<Image source={{uri}} accessibilityLabel="Authorized handwriting sample" resizeMode="contain" style={{width:'100%',height:300}}/>:null}<Button label="Save handwriting image" secondary disabled={busy} onPress={()=>image(true)}/><Notice error message={error}/></View>
+  return <View style={{gap:12}}><Button label={busy?'Loading image...':uri?'Hide handwriting image':'View handwriting image'} secondary disabled={busy} onPress={()=>uri?setUri(''):image(false)}/>{busy&&!uri&&<LoadingSkeleton kind="image"/>}{uri?<><Image source={{uri}} accessibilityLabel="Authorized handwriting sample" resizeMode="contain" style={{width:'100%',height:300}}/><Button label="Save handwriting image" secondary disabled={busy} onPress={()=>image(true)}/></>:null}<Notice error message={error}/></View>
 }
 export function HostedUpload({request,onComplete}:{request:Request;onComplete:(id:string)=>void}){
   const colors=useColors(),{width,fontScale}=useWindowDimensions()

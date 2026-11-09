@@ -4822,6 +4822,11 @@
             "format": "uuid",
             "nullable": true
           },
+          "expert_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Current display name of the saved review author; optional until migration029 is installed. Never the current assignee's name."
+          },
           "expert_id": {
             "type": "string",
             "format": "uuid",

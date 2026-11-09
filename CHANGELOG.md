@@ -1,3 +1,87 @@
+## 2026-11-09 - Android1.0.2 release and publication (in progress)
+
+- User authorizes pushing all changes, rebuilding the APK and updating the landing download. App1.0.2/code3; signed cached-path build succeeded in7m18s. Verified package/version, APK Signature Scheme v2 and exact original signing certificate match. Bundle contains hosted origin and current Result/Reviewed by/review-status/grade UI. APK output/android-v1.0.2/Graphiscan.apk:92,752,358 bytes; SHA-256 F0A2799AD6596952D8DA5129A1D3F812EA39BBAB857265FCF5D47B04B4D6654E.
+- TypeScript/24 mobile/29 shared/8 screening API tests,654 contract checks/all isolated SQL suites and Android/web exports pass.69 fictional three-role browser checks at320/390 pass;31 teacher follow-up checks and screenshots confirm final grade/search/status layout. First browser fixture used search instead of contract q; corrected fixture passes. Initial parallel typecheck scanned export output being replaced: tsconfig now explicitly includes TS source and excludes generated build directories, with rerun passing. Signing verification helper updated for build-tools37's V2 Signer output format; matching original cert then confirmed.
+- Landing config selects verified1.0.2 URL/version/92.8MB/November9; production build passes. Migration029 already independently metadata-verified installed, no rerun. Source push, GitHub release upload, emulator installation and live landing verification are being completed; no publication/physical-phone upload acceptance inferred from the build.
+
+## 2026-11-09 - Restore visible quick filters and extend teacher lists (local)
+
+- User rejected the short-lived shared dropdown/Apply Filters design as inconvenient. Removed ListFilters.tsx and its Button disclosure prop; restored immediate visible status choices on expert Reviews. That discarded trial is not the final UI.
+- Added shared QuickFilters.tsx. Teacher Results and expert Reviews use All/Pending/Flagged/Validated, server-filtered before pagination with cursor reset. Teacher Students now has always-visible All grades/Grade1/Grade2/Grade3 choices that update the existing scoped directory query immediately; name and school fields remain visible with Search/Clear. Parent Children retains its prior advanced-filter form. No change to role permissions, model or report release.
+- An optional page-scope question received no answer during continued work; applied the visible style to both teacher list screens as stated in commentary. Verification: mobile TypeScript, all24 existing mobile tests, raw-JSX-text scan and diff checks pass. Prior native expert quick-filter populated/empty checks remain applicable to the restored pattern, but the new shared component and teacher grade layout were not newly exercised natively. No review/record mutation, APK rebuild or publication.
+
+## 2026-11-09 - Expert Reviews filters and cross-role UI consistency audit (local)
+
+- HostedApp.tsx adds expert Reviews All/Pending/Flagged/Validated filters through existing validation_status API query, with cursor reset and query-bound records on changes. History/teacher/parent list behavior remains. Expert Students tab and HostedHome Students shortcut removed; Home/Reviews/Profile remain, and an explicit View student details action is available within expert result/report. Server scope unchanged.
+- Verification: mobile TypeScript, raw-JSX-text scan and diff checks pass. Expert emulator showed three tabs/no Students shortcut, All and Pending populated, and Flagged/Validated correct empty states. Only reads/local selection occurred; no review save or real record mutation. Multi-page filter race/error/large-font acceptance remains untested. No APK/publication.
+- Added mobile-app/UI_CONSISTENCY_AUDIT.md with all current hosted teacher/expert/parent screen inventory, button/filter/icon mapping, source-based rubric and prioritized findings (six P2/two P3). Native evidence limited to recorded teacher/expert checks; parent/onboarding reviewed in source only. Main follow-ups: status colors, consistent action names, role destination icons, filter variants/accessibility, pending follow-up wording. Audit did not implement these additional recommendations.
+
+## 2026-11-09 - Explicit Result label below model name (local/native checked)
+
+- User supersedes the beside-heading placement: HostedApp.tsx now shows Model output, friendly model name, then Result label with classification badge beneath. Shared result/report presentation only; model scores, labels and review behavior remain unchanged.
+- Verification: mobile TypeScript, raw-JSX-text scan and git diff --check pass. Native expert Android result capture confirms Result above the Normal badge below MobileNetV2. No review save, record mutation, APK rebuild or publication.
+
+## 2026-11-09 - Model classification beside output heading (local/native checked)
+
+- HostedApp.tsx now aligns the recorded classification badge beside Model output, with the friendly model name underneath. Shared result/report layout wraps if needed. Scores, classifications and review behavior are unchanged.
+- Verification: TypeScript, raw-JSX-text scan and git diff --check pass. Expert Android emulator result capture confirms Normal beside Model output and MobileNetV2 beneath it. No review save, record mutation, APK rebuild or publication.
+
+## 2026-11-09 - Expert review selection colors (local/native checked)
+
+- Shared mobile Button accepts opt-in success/danger tone and selected accessibility state. HostedReview selects green for Validated and red for Flagged; unselected controls retain existing outlined styling. Existing buttons without tone remain blue. Review values, defaults, save/retry behavior and recorded status chips are unchanged.
+- Verification: TypeScript, raw-JSX-text scan and git diff --check pass. On the signed-in expert Android emulator, visually verified selected green Validated and selected red Flagged with readable white labels and neutral alternate button. Only local selection changed; no review save, record mutation, APK rebuild or publication. Model name/no-version and preview-only image save source also present on observed result.
+- Impeccable context loaded; existing design-sidecar drift was reported and left unchanged. No unrelated design repair.
+
+## 2026-11-09 - Migration029 installed and metadata-verified
+
+- Owner reports successful029 installation. Independent read-only hosted metadata check confirms all four preflight flags true plus one exact reviewer-name projection match: installed marker, pinned definer/search path, saved-author binding and reader-role restrictions. No account/student/screening rows were queried or changed by this verification.
+- Supersedes029-pending notes below. Existing API passthrough requires no restart; refresh the local report to read the name. No migration rerun needed. Actual reviewed-name native display remains unverified; mobile source remains local with no rebuilt APK or publication.
+
+## 2026-11-09 - Prepare expert review author name (local;029 pending)
+
+- HostedApp.tsx report Expert review now includes Reviewed by from review.expert_name, with Not yet reviewed for no author and Name unavailable for older responses with an author ID. Saved review remains report-only. No current-account or current-assignee substitution.
+- Prepared029_review_expert_name.sql and read-only four-flag preflight. Adds only the current profile full_name of the saved expert_id within the already-scoped screening reader projection. Preserves reviewer IDs, record scope, parent release gates, session guards and ACLs; no new endpoint or table grants. Python passthrough and legacy Flask validation-author name join inspected. OpenAPI/API_CONTRACT and api/REVIEW_EXPERT_NAME.md document optional compatibility and owner installation.
+- Verification: mobile TypeScript passes; all654 contract checks/all isolated SQL suites pass, including62 screening-read checks (17 added for name attribution, null author, ownership/release, reassignment/rename, line-ending combinations, rerun, unexpected-body rejection and metadata ACL checks). Raw JSX scan/diff checks pass. First run exposed a test-only missing later admin-writer role; isolated role setup corrected before the passing rerun.
+-029 is NOT applied hosted. Owner must install it after028 and check all four flags; then refresh the report. No hosted review/record writes, native reviewed-name acceptance, APK rebuild or publication.
+
+## 2026-11-09 - Native student details and Profile checked
+
+- Fully reloaded the local Expo Go project on the running Android emulator and observed persisted-session restoration followed by the ready workspace. On first Profile navigation through the Home avatar, the assigned school was already visible in a capture approximately 500 ms after the tap, with no school placeholder or text-error overlay.
+- Opened Students and Student details; native capture confirms Grade directly below the student name, followed by School and Age. No edit, sign-out, image download or record mutation performed.
+- Native checks cover the existing teacher session only, not fresh password login, parent/expert roles, scope changes or school-load failures. Desktop computer-use capture returned the editor behind the emulator twice; direct Android adb capture/input was used for verification. No APK rebuild or publication.
+
+## 2026-11-09 - Load profile schools when workspace opens (local)
+
+- Added mobile ProfileSchools.tsx provider and connected it in HostedApp.tsx above the navigator. Authorized school pagination starts when the signed-in, onboarded workspace mounts; initial completion uses the workspace opening state. Profile consumes the retained account/scope-bound result rather than fetching on tab focus.
+- User, role or school-scope changes invalidate visible cached schools; unmount/scope changes ignore late responses. Parent linked-school projection and teacher/expert assignment filtering remain unchanged. Errors permit workspace access and explicit Retry schools; no persistent cache or server permission changes.
+- Verification: mobile TypeScript, all 24 existing mobile tests, raw-JSX-text scan and git diff --check pass. Existing tests do not exercise the new provider lifecycle. Native sign-in/tab/error/scope behavior remains unverified; no APK rebuild or publication.
+
+## 2026-11-09 - Place student grade beneath name (local)
+
+- HostedStudentDetails.tsx groups the student name and muted Grade text in a vertical header. Removed the separate Grade field; School and Age remain below. No request, editing or access behavior changes.
+- Verification: mobile TypeScript, raw-JSX-text scan and git diff --check pass. No native visual check, APK rebuild or publication performed.
+
+## 2026-11-09 - Show image save action with preview only (local)
+
+- HostedScreeningActions.tsx now renders Save handwriting image alongside the successfully loaded preview only. Initially, during initial loading, or after Hide handwriting image, the save action is absent. Shared result/report image behavior follows the same presentation; authorized download requests are unchanged.
+- Verification: mobile TypeScript, raw-JSX-text source scan and git diff --check pass. No native visual acceptance, image download, APK rebuild or publication performed.
+
+## 2026-11-09 - Reconnect Expo and simplify model output (local)
+
+- Restored emulator tcp:8081 reverse forwarding and opened the local Expo project. Observed GraphiScan home and Screening result successfully loaded without the reported text error overlay. No account or screening writes performed; no APK rebuild/publication.
+- At the user's request, HostedApp.tsx now shows the friendly model name directly beneath Model output and omits the long internal version identifier from result/report presentation. Stored provenance and model behavior are unchanged.
+- Verification: mobile TypeScript, source raw-JSX-text scan and git diff --check pass. Native result screen was inspected before the model-name adjustment; updated layout acceptance remains pending.
+
+## 2026-11-09 - Fix native result screen raw text error (local)
+
+- Removed a literal JSX space between the retry button conditional and result content in graphiscan/mobile-app/src/HostedApp.tsx. Screen forwards children to a native ScrollView, where that space becomes an invalid text child. Report-only saved expert review presentation remains intact.
+- Verification: TypeScript AST scan of all mobile src TSX files found zero remaining raw JSX text children outside Text/Body/Heading. Mobile TypeScript and git diff --check pass; no native runtime reproduction or APK rebuild/publication.
+
+## 2026-11-09 - Expert review details belong in the report (local)
+
+- Updated graphiscan/mobile-app/src/HostedApp.tsx so the saved Expert review section (status, remarks, recommendation, follow-up and review date) appears only on Screening report. Screening result retains model output, image, Open report and the expert-only review submission form.
+- Source inspection confirmed the shared result/report component, hosted read routes and legacy Flask report ownership/release checks. No API, model, release policy or permission changes. Verification: mobile TypeScript check and git diff --check pass; no native visual check, APK rebuild or publication performed.
+
 ## 2026-11-07 - Refresh system guide release checkpoint
 
 - Updated SYSTEM_FLOW.md to identify Android 1.0.1 as the current published download, using the recorded release evidence below. Kept the earlier 1.0.0 emulator check distinct from 1.0.1 signature, checksum and website-link verification.
