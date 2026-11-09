@@ -1,6 +1,6 @@
 # GraphiScan: simple system and model flow
 
-Updated: 7 November 2026.
+Updated: 9 November 2026.
 
 GraphiScan lets a teacher submit a student's handwriting image, runs a screening model on the server, and lets an authorized expert review the result. A linked parent can view a result after it is validated.
 
@@ -111,7 +111,7 @@ iPhone installation needs a separate signed iOS build and distribution setup. Te
 
 ## 7. What is verified so far?
 
-- The signed Android 1.0.1 APK is available through [the live download page](https://graphiscan.site/download/). The recorded release checks verified its signature, matching original signer and uploaded checksum, plus the live website's 1.0.1 download link. Emulator installation and launch were checked for the earlier 1.0.0 release.
+- The signed Android 1.0.2 APK is available through [the live download page](https://graphiscan.site/download/). The recorded release checks verified its signature, matching original signer and uploaded checksum, plus the live website's 1.0.2 download link. Emulator update installation and the launch command succeeded for 1.0.2; authenticated standalone and physical-phone use remain unverified.
 - The website's blue download button and font loading were checked on all four live pages. Local checks also covered phone/desktop widths and font-download failure.
 - Earlier records include a user-supplied successful hosted MobileNetV2 screening. This session did not repeat authenticated screening, expert review or parent release tests.
 - The APK release still needs physical-phone and full authenticated workflow acceptance. Diagrammed/source-implemented behavior is not a claim that every step was exercised during the release check.

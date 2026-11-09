@@ -22,8 +22,8 @@ name; this is not a frozen historical name snapshot. Missing authors remain null
 The existing Python ScreeningReadService passes the additional field through;
 no API restart is required. OpenAPI declares it optional for compatibility with
 responses before029. Existing legacy Flask reports already resolve expert_name
-from the validation author and are unchanged. The app source remains local;
-the published APK requires rebuilding before it can show this field.
+from the validation author and are unchanged. The app source is published;
+the published Android1.0.2 APK includes this field.
 
 Offline checks run through `node graphiscan/tools/check_api_contract.cjs` and
 mobile `npm.cmd run typecheck`. They do not apply029 to the hosted project or

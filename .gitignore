@@ -69,3 +69,6 @@ Thumbs.db
 *.local
 graphiscan/model/deployment.local.json
 graphiscan/model/*.local.json
+
+# Generated Android release verification artifacts
+/output/android-*/
