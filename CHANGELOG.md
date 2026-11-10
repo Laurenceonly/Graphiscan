@@ -2,6 +2,7 @@
 
 - Published signed Android 1.0.3/code4 APK in GitHub release android-v1.0.3 from main. GitHub reports 92,772,110 bytes and SHA-256 143D2113D66143F4400BE189E046B72085951B16ED36DF8CE821303C28995840, matching the local verified original-signer APK. Release commit 0319c00 contains screening labels and existing-catalogue accuracy display; fine-tuned models are not deployed.
 - Landing default version/download link updated to 1.0.3; production build passed. Deployment and real authenticated installed-app acceptance remain to be verified.
+- Follow-up verification: GitHub release asset digest matches local, public APK returns HTTP 200, Vercel reports success for both projects, and live download JavaScript contains 1.0.3 and its release link. Render health returns 200 and the new final-report route returns 401 without authentication, indicating the route is present and protected. Supabase 031's three read-only preflight flags passed independently. Actual signed-in role workflows, APK installation and hosted selected fine-tuned models remain unverified.
 
 ## 2026-11-10 - Clarify screening model percentages (local)
 
