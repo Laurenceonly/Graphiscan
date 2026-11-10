@@ -1,3 +1,8 @@
+## 2026-11-10 - Android 1.0.3 release
+
+- Published signed Android 1.0.3/code4 APK in GitHub release android-v1.0.3 from main. GitHub reports 92,772,110 bytes and SHA-256 143D2113D66143F4400BE189E046B72085951B16ED36DF8CE821303C28995840, matching the local verified original-signer APK. Release commit 0319c00 contains screening labels and existing-catalogue accuracy display; fine-tuned models are not deployed.
+- Landing default version/download link updated to 1.0.3; production build passed. Deployment and real authenticated installed-app acceptance remain to be verified.
+
 ## 2026-11-10 - Clarify screening model percentages (local)
 
 - Screening result and report now show the High Potential score and show Model accuracy beside the exact recorded model version when available in the current catalogue. User found the complementary Normal score confusing with the 75% rule, so it is omitted. A 75% rule explanation appears only when the screening records that exact decision rule. Model scores and test accuracy remain separate and are not a diagnosis; unavailable or historical model metadata is not substituted with another version.
