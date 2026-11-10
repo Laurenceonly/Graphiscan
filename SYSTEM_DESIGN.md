@@ -1,5 +1,14 @@
 # GraphiScan target system design
 
+Current scope correction (2026-11-09): user removes the three-class target.
+Retain binary Normal / High Potential for ResNet, EfficientNet and MobileNet.
+Earlier three-class target statements below are superseded. Final screening-cycle
+summary and expert conclusion is implemented locally in the hosted API/Expo with
+migration030 (installed and independently metadata/source-verified). Reviewed Initial alone can finalize when
+latest Follow-up needed=No; follow-ups optional per user clarification. Existing
+scope/release gates retained; immutable history snapshots and current-fingerprint
+checks reopen monitoring after new/changed evidence. See graphiscan/api/FINAL_SCREENING_REPORTS.md.
+
 Presentation decision reconfirmed2026-10-22: design admin for desktop browsers,
 retaining a responsive narrow-window fallback. Expo is a native Android app;
 Expo web previews/exports are development aids and do not establish mobile release.
@@ -97,9 +106,9 @@ Public information can be shown without an account. It must not expose student r
 
 ### 4. Screening and model choice (panel items 1, 2, 5)
 
-1. The teacher selects an assigned student and captures or chooses a clear handwriting image. The app shows the current **default model** and offers the other validated ResNet, EfficientNet, and MobileNet models for manual selection. The default is selected from a common three-class evaluation using the agreed accuracy method; old binary accuracy is not compared with new three-class accuracy.
+1. The teacher selects an assigned student and captures or chooses a clear handwriting image. The app shows the current **default model** and offers the other evaluated ResNet, EfficientNet, and MobileNet models for manual selection. Select the default using the common evaluation matching the deployed binary preprocessing and decision rule.
 2. The API validates the user/student relationship and the image. Failed or unsupported uploads receive a clear retry message and do not become official screenings.
-3. The API stores the image in private storage, applies that model's documented preprocessing, runs inference, and saves the model key/version, task type, three class scores, predicted label, and confidence. Display `Normal`, `Low Potential`, or `High Potential` prominently. A score is a **model output**, not a clinical probability or diagnosis.
+3. The API stores the image in private storage, applies that model's documented preprocessing, runs inference, and saves the model key/version, task type, binary scores, predicted label, and confidence. Display `Normal` or `High Potential` prominently. A score is a **model output**, not a clinical probability or diagnosis.
 4. The student's **first completed official assessment is the one and only `Initial Screening`**. Every later assessment is a **follow-up for progress monitoring**, stored as `Follow-up Screening` to match the defense minutes. No later assessment is called a new Initial Screening. The API chooses the type transactionally for one student so simultaneous uploads cannot create two Initial records. The user does not choose the type. Demo or failed attempts do not count.
 5. The result/report begins as **Pending expert review**. The teacher can see the provisional model output with that status; the parent cannot see an unvalidated classification.
 6. The AI gives **no recommendations or interventions**. Any professional recommendation is written by and attributed to the expert after review.

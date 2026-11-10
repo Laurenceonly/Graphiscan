@@ -2,11 +2,11 @@ import React from 'react'
 import { View } from 'react-native'
 import { Body, Button, styles } from './ui'
 
-export default function QuickFilters({ label, value, options, onChange }: {
-  label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void;
+export default function QuickFilters({ label, value, options, onChange, hideLabel=false }: {
+  label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void; hideLabel?:boolean;
 }) {
   return <View style={{ gap: 8 }}>
-    <Body muted>{label}</Body>
+    {!hideLabel&&<Body muted>{label}</Body>}
     <View style={styles.wrap}>{options.map(option => <Button key={option.value} label={option.label} secondary={value !== option.value} selected={value === option.value} onPress={() => onChange(option.value)}/>)}</View>
   </View>
 }

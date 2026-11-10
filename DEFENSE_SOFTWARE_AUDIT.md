@@ -1,6 +1,53 @@
 # Defense software acceptance audit
 
-Latest initial-review result (2026-11-03): [UI_FLOW_CHECK.md](UI_FLOW_CHECK.md)
+## Current reassessment - 2026-11-09
+
+This section supersedes conflicting November 3 status below. Reviewed the defense
+minutes, current predictor, hosted upload selector, onboarding guards, screening
+read/write SQL, model evidence and newest release/verification records. This was
+a source and recorded-evidence audit; no new live workflow or device tests ran.
+Paper, diagrams and slide edits are excluded from this reassessment.
+
+**Verdict: the main system features requested in the minutes are implemented;
+complete installed-app/hosted acceptance is still unverified.**
+
+| Minutes requirement | Current system status | Remaining evidence |
+| --- | --- | --- |
+| Three models, highest evaluated accuracy default, manual selection | Implemented. Hosted selector reads selectable registry models and selects is_default. Recorded catalogue check covered all three; MobileNetV2 leads the matching 0.75 runtime evaluation at 85.2941% on 136 images. | Actual installed-app hosted submissions with all three choices and returned identities. Historical training CSV uses a different pipeline/ranking. |
+| Remove unsupported AI recommendations | Current predictor returns no advice; reports attribute recommendations to expert review. | Full role/report walkthrough; historical-data reconciliation only if older records are retained/imported. |
+| Expert validation and justified recommendations | Assigned-expert review, remarks/recommendation and follow-up fields implemented. Parent SQL release requires a linked student and Validated review. | Complete hosted teacher -> assignment -> expert -> parent flow, including denied/revoked access. |
+| Readable text and highlighted classifications | Implemented and supported by recorded browser and selected native checks. | Physical-device/font-scale/long-text acceptance. Current runtime outputs Normal or High Potential only. |
+| Elementary students organized by school/grade | Implemented for the separately agreed Grades 1-3 scope; directories, filters and student details exist. | Complete populated cross-role scope/filter/pagination acceptance on installed APK. |
+| Admin-issued accounts; first-password change; privacy agreement gate | Implemented with server gates and mobile setup screens; earlier hosted password/privacy checks recorded. Final account delivery is manually entered login email and direct temporary-password handover. | Fresh deployed issued-user onboarding on installed APK. Latest reviewed requirements still leave approved real-participant privacy wording/audience unresolved. Email delivery is no longer required by the agreed direction. |
+| Initial then Follow-up screenings | Implemented in transactional completion and stored report types, with student locking and recorded isolated SQL coverage. | Actual successive hosted uploads/history, uncertain retries and concurrency acceptance. |
+| Shared actor interactions | Implemented across teacher, admin, expert and parent. | One complete hosted installed-app walkthrough; diagram revision excluded. |
+| Nonfunctional behavior | Automated contract/SQL/client and fictional browser checks recorded. | Measured deployed response time/recovery and physical-device usability against stated targets. |
+
+Android 1.0.2 is published: newest CHANGELOG records matching signer/digest,
+emulator update-install/launch and live download verification. Earlier statements
+that no APK exists or the domain is unconfigured are historical. Latest release
+evidence includes 24 mobile tests, 29 shared tests, 8 screening API tests, 654
+contract checks/all isolated SQL suites and fictional cross-role browser checks;
+these do not establish one complete live role workflow.
+
+Two scope distinctions:
+
+- Low Potential appears as an example in the minutes, not an explicit demand for
+  three classes. User explicitly removed the earlier three-class plan on November
+  9. Retain Normal / High Potential across all three models; three-class work is
+  not a completion gap. Earlier references below are historical and superseded.
+- A final screening-cycle summary/conclusion is required by the user in this
+  session. Implemented locally after this audit;030 is installed and independently
+  metadata/source-verified. API/mobile publication remains. User clarified follow-ups are optional; a reviewed
+  Initial with latest Follow-up needed=No can conclude. Existing per-screening
+  reports remain distinct. Not explicitly required by the transcribed minutes.
+
+Next acceptance priority: a controlled installed-APK Initial -> expert review ->
+parent release -> Follow-up walkthrough, all three model submissions, onboarding
+and denial/retry checks, followed by device/performance evidence. No account,
+student, review, consent, schema or deployment changes were made by this audit.
+
+Latest initial-review result (2026-11-03): [docs/archive/root-notes/UI_FLOW_CHECK.md](docs/archive/root-notes/UI_FLOW_CHECK.md)
 records77 fictional browser flow checks,216 public-page checks,74 admin checks,
 successful Results/history read recovery,17 typography checks and36 public
 admin-link-removal checks. Landing build and Android/web asset export passed.

@@ -1,8 +1,16 @@
 # GraphiScan consolidated work checklist
 
+## Scope correction - 2026-11-09
+
+User removes the three-class plan; earlier references below are superseded.
+Keep binary Normal / High Potential across all three model families. Final
+screening summary/conclusion is implemented locally;030 is installed/metadata-verified, publication
+and hosted/native acceptance remain. Follow-ups optional: reviewed Initial plus
+latest Follow-up needed=No can finalize. See api/FINAL_SCREENING_REPORTS.md under graphiscan.
+
 ## Software-only priority - 2026-11-03
 
-Latest initial review: see [UI_FLOW_CHECK.md](UI_FLOW_CHECK.md). Local browser
+Latest initial review: see [docs/archive/root-notes/UI_FLOW_CHECK.md](docs/archive/root-notes/UI_FLOW_CHECK.md). Local browser
 flow/layout checks are complete within their recorded fixtures/viewports, including
 Initial/Follow-up, review/parent release/Flagged visibility and failed-read recovery.
 Public Admin portal links are removed in source; layout/build checks pass.
@@ -242,9 +250,9 @@ Runtime foundation (2026-10-19): `/api/v1/health`, `/me`, and a shared guard now
 
 ## 6. Models and screening (panel 1, 2, 5, 11)
 
-- [ ] Train/evaluate ResNet, EfficientNet, and MobileNet on a common documented three-class split; record accuracy, per-class precision/recall, confusion matrices, preprocessing, and dataset/writer-separation limitations.
+- [ ] Complete installed-app acceptance of all three existing binary models using the documented matching evaluation and runtime; retain evaluation/split limitations.
 - [ ] Integrate all three evaluated models, use the highest-accuracy model as default, and provide manual teacher model selection.
-- [ ] Implement consistent Normal / Low Potential / High Potential inference, storage, and display after three-class validation. Current inference is binary; preserve old binary history without relabeling it.
+- [ ] Publish/accept the locally implemented final summary and expert conclusion (030 installed/metadata-verified; API/Expo still local); Initial-only supported, follow-ups optional. No new APK yet.
 - [ ] Store model key/version, task type, class scores, classification, screening type/date, and review status with each result. Describe scores as model outputs, not clinical probability.
 - [ ] Validate uploads and student access; failed/demo uploads must not create official assessments.
 - [ ] Guarantee exactly one Initial Screening per student, including concurrent submissions; automatically classify all later completed assessments as Follow-up Screening. Hosted completion locks the student and retains the unique Initial invariant; isolated competing-reservation tests pass and migrations through021 are applied. Live multi-connection verification remains pending; do not rerun old migrations to resume. Legacy count-based labeling is still partial.

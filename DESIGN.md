@@ -164,6 +164,24 @@ components:
 
 # Design System: GraphiScan Android
 
+Mobile refinement2026-11-09: teacher Students has an always-visible name search
+with a grade-only filter icon/dropdown (All grades, Grade1/2/3), plus the native
+header Add student icon. Student circles use a plain person outline; grade and
+school share one metadata line beneath the name. Screen handwriting reuses that
+row with radio selection. Student details uses a compact identity/Edit header,
+divided information rows with vertically centered icons, and navigation rows for
+history/final report. Routine refresh buttons give way to pull gestures and
+error-only retries. Final report readers show no identity or provisional content
+until the expert saves a current report; saved content has Expert conclusion and
+Recommendation. Earlier conflicting button/filter/report descriptions are historical.
+
+Expert review refinement2026-11-09: expert Home says Recent screenings, since rows
+may be Pending. Results/Reviews have status choices without the Review status
+heading. Saved reviews open read-only with explicit Edit review/Cancel editing;
+successful saves return to Reviews, while failure/recovery retains the form.
+Result/report has no student-details action. Final-report reader pending state is
+one neutral expert-not-yet-provided message, with no student identity/provisional content.
+
 User direction2026-11-03 supersedes earlier cool-paper/dark-mode notes: all mobile
 page backgrounds, navigation surfaces and safe areas are white. The application
 uses the light palette in either OS scheme with dark status-bar content. Onboarding

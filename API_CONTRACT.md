@@ -276,6 +276,8 @@ admin-only backend has model inference disabled.
 | `GET /screenings` | Role-filtered list; allowed filters `student_id`, `school_id`, `grade_level`, `validation_status`, `model_id`, `task_type`, date range; parent projection always Validated |
 | `GET /screenings/{result_id}` | Authorized detail with model/version, dated report and current expert state |
 | `GET /students/{student_id}/history` | Authorized dated assessments; parent release filtering before pagination/counts; no automatic improvement claim |
+| `GET /students/{student_id}/final-report` | Migration030: current whole-history final report or Monitoring state; complete current scope and parent Validated-only release rechecked |
+| `POST /students/{student_id}/final-report` | Migration030: assigned expert finalizes immutable summary/conclusion/next steps over reviewed Initial and Follow-up history; fingerprint, revision and idempotency required |
 | `PATCH /screenings/{result_id}/expert-assignment` | Deprecated per-screening metadata (does not authorize access after025); explicit assignment-management authority, active eligible `assigned_expert_id` or null to unassign, screening `expected_revision`; audit reassignment |
 | `PATCH /screenings/{result_id}/review` | Expert with a current admin-assigned school/grade scope after migration025: `status` Validated/Flagged, nonblank `remarks`, optional `expert_recommendation`, boolean `follow_up_needed`, `expected_revision` |
 | `GET /reports/{report_id}` | Authorized report JSON; parent link + current Validated decision required |

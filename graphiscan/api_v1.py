@@ -494,6 +494,27 @@ def install_api_v1(app, backend: AccessBackend | None = None):
     def screening_history(student_id):
         return read_screenings('history',student_id)
 
+    def final_report_service():
+        from flask import current_app
+        service=getattr(current_app.extensions['graphiscan_v1_backend'],'final_report_service',None)
+        if service is None:raise BackendUnavailable()
+        return service
+
+    @api.get('/students/<student_id>/final-report')
+    @require_access(roles={'admin','researcher','teacher','parent','expert'})
+    def get_final_report(student_id):
+        if request.args:raise ApiError(422,'INVALID_QUERY','This report does not accept list filters.')
+        return jsonify(**final_report_service().read(g.v1_identity,student_id),request_id=g.v1_request_id)
+
+    @api.post('/students/<student_id>/final-report')
+    @require_access(roles={'expert'})
+    def finalize_report(student_id):
+        request.max_content_length=131072
+        if request.args or not request.is_json:
+            raise ApiError(400,'INVALID_REQUEST','Supply a JSON object without query parameters.')
+        return jsonify(**final_report_service().finalize(g.v1_identity,student_id,request.get_json(silent=True),
+            request.headers.get('Idempotency-Key'),g.v1_request_id),request_id=g.v1_request_id)
+
     @api.get('/reports/<report_id>')
     @require_access(roles={'admin','researcher','teacher','parent','expert'})
     def get_report(report_id):

@@ -29,11 +29,11 @@ export default function TeacherParentLink({ request, school, grade, value, disab
   }
   return <View style={{gap:12}}>
     <RecordValue label="Parent / Guardian" value={value?(selected?.user_id===value?selected.full_name:'Current linked parent'):'Not linked'}/>
-    <Body muted>Find an existing parent using the login email provided by your administrator.</Body>
+    <Body muted>Optional: Link the student to an existing parent account using the parent’s login email. You can add this later.</Body>
     <Field label="Parent login email" placeholder="parent@graphiscan.com" value={email} editable={!disabled&&!busy} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} returnKeyType="search" onSubmitEditing={find}
       onChangeText={text=>{generation.current++;setEmail(text);setMatch(null);setSearched(false);setError('')}}/>
     <Button label={busy?'Finding parent…':'Find parent'} secondary disabled={disabled||busy||!school||!email.trim()} onPress={find}/>
-    {!school&&<Body muted>Choose a school before finding a parent.</Body>}
+    {!school&&<Body muted>First, choose the student’s school above.</Body>}
     {match&&match.user_id!==value&&<View style={{gap:8}}><Body>{match.full_name}</Body><Button label="Select parent" disabled={disabled} onPress={()=>{setSelected(match);onChange(match.user_id)}}/></View>}
     {searched&&!match&&<Body muted>No eligible parent account was found for that email. Check it with your administrator.</Body>}
     {value&&<Button label="Remove parent link" secondary disabled={disabled||busy} onPress={()=>{onChange('');setSelected(null);setMatch(null);setSearched(false)}}/>}

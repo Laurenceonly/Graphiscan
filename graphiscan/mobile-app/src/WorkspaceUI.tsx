@@ -20,6 +20,11 @@ export function Avatar({ name, size = 40, uri }: { name: string; size?: number; 
   return <View style={[s.avatar,{width:size,height:size,borderRadius:size/2,backgroundColor:c.soft,overflow:'hidden'}]}>{uri ? <Image key={uri} source={{uri}} accessibilityLabel="Profile photo" resizeMode="cover" style={{width:size,height:size}}/> : <Text style={{color:c.primary,fontSize:size*.36,fontWeight:'600'}}>{initials || 'G'}</Text>}</View>
 }
 
+export function StudentAvatar({size=40}:{size?:number}){
+  const c=useColors()
+  return <View accessible={false} style={[s.avatar,{width:size,height:size,borderRadius:size/2,backgroundColor:c.soft}]}><MaterialIcons name="person-outline" size={size*.65} color={c.primary} accessible={false}/></View>
+}
+
 export function SectionTitle({ title, action, onPress }: { title: string; action?: string; onPress?: () => void }) {
   const c = useColors()
   return <View style={s.sectionTitle}>
@@ -42,18 +47,37 @@ export function ScreeningRow({ record, studentName, grade, onPress, last = false
   const c = useColors(), name=studentName || 'Student '+record.student_id
   return <Pressable accessibilityRole="button" accessibilityLabel={'Open screening '+record.result_id} onPress={onPress} android_ripple={{color:c.soft}}
     style={({pressed})=>[s.screeningRow,{borderBottomColor:c.border,borderBottomWidth:last?0:1,backgroundColor:pressed?c.soft:c.surface}]}>
-    <View style={s.recordTop}><Avatar name={name} size={36}/><View style={s.rowCopy}><Text style={[s.rowTitle,{color:c.text}]}>{name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>{grade?'Grade '+grade+' · ':''}{screeningType(record.report?.report_type)}</Text></View><MaterialIcons name="chevron-right" size={20} color={c.muted} accessible={false}/></View>
-    <View style={s.recordStates}><Status value={record.classification} prefix="Model"/><Status value={record.review?.status} prefix="Review"/></View>
+    <View style={s.recordTop}><StudentAvatar size={36}/><View style={s.rowCopy}><Text style={[s.rowTitle,{color:c.text}]}>{name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>{grade?'Grade '+grade+' · ':''}{screeningType(record.report?.report_type)}</Text></View><MaterialIcons name="chevron-right" size={20} color={c.muted} accessible={false}/></View>
+    <ScreeningStatuses classification={record.classification} reviewStatus={record.review?.status}/>
     <Text style={[s.recordDate,{color:c.muted}]}>{dateLabel(record.date_generated)}</Text>
   </Pressable>
 }
 
-export function StudentRow({ student, onPress }: { student: any; onPress: () => void }) {
-  const c = useColors()
-  return <Pressable accessibilityRole="button" accessibilityLabel={'View details for '+student.full_name} onPress={onPress} android_ripple={{color:c.soft}}
-    style={({pressed})=>[s.actionRow,{borderBottomColor:c.border,borderBottomWidth:1,backgroundColor:pressed?c.soft:c.surface}]}>
-    <Avatar name={student.full_name}/><View style={s.rowCopy}><Text accessibilityRole="header" style={[s.rowTitle,{color:c.text}]}>{student.full_name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>Grade {student.grade_level}</Text></View>
-    <MaterialIcons name="chevron-right" size={22} color={c.muted} accessible={false}/>
+export function HistoryRow({record,onPress,last=false}:{record:any;onPress:()=>void;last?:boolean}){
+  const c=useColors(),type=screeningType(record.report?.report_type),date=dateLabel(record.date_generated)
+  return <View style={{flexDirection:'row',alignItems:'stretch'}}>
+    <View accessible={false} style={{width:24,alignItems:'center'}}><View style={{width:10,height:10,borderRadius:5,backgroundColor:c.primary,marginTop:22}}/>{!last&&<View style={{width:1,flex:1,backgroundColor:c.border,marginTop:4}}/>}</View>
+    <Pressable accessibilityRole="button" accessibilityLabel={'Open '+type+', '+date} onPress={onPress} android_ripple={{color:c.soft}} style={({pressed})=>({flex:1,minWidth:0,paddingTop:16,paddingBottom:20,paddingLeft:8,backgroundColor:pressed?c.soft:c.surface,gap:10})}>
+      <View style={{flexDirection:'row',alignItems:'center',gap:12}}><View style={{flex:1,minWidth:0,gap:4}}><Text style={[s.rowTitle,{color:c.text}]}>{type}</Text><Text style={[s.rowDetail,{color:c.muted}]}>{date}</Text></View><MaterialIcons name="chevron-right" size={22} color={c.muted} accessible={false}/></View>
+      <ScreeningStatuses classification={record.classification} reviewStatus={record.review?.status}/>
+    </Pressable>
+  </View>
+}
+
+export function ScreeningStatuses({classification,reviewStatus}:{classification?:string;reviewStatus?:string}) {
+  const c=useColors()
+  return <View style={s.recordStates}>
+    <View style={{flexDirection:'row',alignItems:'center',gap:4}}><Text style={[s.rowDetail,{color:c.muted}]}>Model result:</Text><Status value={classification}/></View>
+    <View style={{flexDirection:'row',alignItems:'center',gap:4}}><Text style={[s.rowDetail,{color:c.muted}]}>Expert review:</Text><Status value={reviewStatus}/></View>
+  </View>
+}
+
+export function StudentRow({ student, onPress, selected, disabled=false }: { student: any; onPress: () => void; selected?:boolean;disabled?:boolean }) {
+  const c = useColors(),selectable=selected!==undefined
+  return <Pressable accessibilityRole={selectable?'radio':'button'} accessibilityLabel={(selectable?'Select student ':'View details for ')+student.full_name} accessibilityState={selectable?{checked:selected,disabled}:{disabled}} disabled={disabled} onPress={onPress} android_ripple={{color:c.soft}}
+    style={({pressed})=>[s.actionRow,{borderBottomColor:c.border,borderBottomWidth:1,backgroundColor:selected||pressed?c.soft:c.surface,opacity:disabled?.55:1}]}>
+    <StudentAvatar/><View style={s.rowCopy}><Text accessibilityRole="header" style={[s.rowTitle,{color:c.text}]}>{student.full_name}</Text><Text style={[s.rowDetail,{color:c.muted}]}>Grade {student.grade_level}{' · '}{student.school_name||'School name unavailable'}</Text></View>
+    <MaterialIcons name={selectable?(selected?'radio-button-checked':'radio-button-unchecked'):'chevron-right'} size={selectable?24:22} color={selected?c.primary:c.muted} accessible={false}/>
   </Pressable>
 }
 
@@ -64,7 +88,7 @@ export function RecordValue({ label, value }: { label: string; value: string }) 
 
 export function ChoiceRow({ label, detail, selected, disabled, onPress }: { label:string;detail?:string;selected:boolean;disabled:boolean;onPress:()=>void }) {
   const c=useColors()
-  return <Pressable accessibilityRole="radio" accessibilityLabel={label} accessibilityState={{checked:selected,disabled}} disabled={disabled} onPress={onPress}
+  return <Pressable accessibilityRole="radio" accessibilityLabel={detail?label+', '+detail:label} accessibilityState={{checked:selected,disabled}} disabled={disabled} onPress={onPress}
     style={({pressed})=>[s.actionRow,{borderRadius:12,backgroundColor:selected||pressed?c.soft:c.surface,opacity:disabled ? .55 : 1}]}>
     <View style={s.rowCopy}><Text style={[s.rowTitle,{color:c.text}]}>{label}</Text>{detail&&<Text style={[s.rowDetail,{color:c.muted}]}>{detail}</Text>}</View>
     <MaterialIcons name={selected?'radio-button-checked':'radio-button-unchecked'} size={24} color={selected?c.primary:c.muted} accessible={false}/>

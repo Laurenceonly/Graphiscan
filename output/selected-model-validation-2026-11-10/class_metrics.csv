@@ -1,0 +1,7 @@
+model,selected_version,validation_accuracy_percent,class,precision_percent,recall_percent,f1_percent
+MobileNetV2,Original,88.06,Normal,84.42,94.2,89.04
+MobileNetV2,Original,88.06,High Potential,92.98,81.54,86.89
+EfficientNetB0,Fine-tuned,83.58,Normal,77.01,97.1,85.9
+EfficientNetB0,Fine-tuned,83.58,High Potential,95.74,69.23,80.36
+ResNet50,Fine-tuned,85.82,Normal,82.05,92.75,87.07
+ResNet50,Fine-tuned,85.82,High Potential,91.07,78.46,84.3

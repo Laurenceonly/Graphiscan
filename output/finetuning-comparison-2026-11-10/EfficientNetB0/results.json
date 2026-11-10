@@ -1,0 +1,101 @@
+{
+  "model": "EfficientNetB0",
+  "source_model_sha256": "0c7951d1114ce2838ca78374cc7e8f8821b008d6c3d1afea2909882986fd9fcd",
+  "artifact_sha256": "1f445a5f8c152b500503e3750fc89de2486389a9418e4eedcae4de67076ad7f9",
+  "seed": 42,
+  "learning_rate": 1e-05,
+  "epochs_run": 3,
+  "threshold": 0.75,
+  "validation_before": {
+    "matrix_order": [
+      "normal",
+      "high_potential"
+    ],
+    "confusion_matrix": [
+      [
+        68,
+        1
+      ],
+      [
+        27,
+        38
+      ]
+    ],
+    "n": 134,
+    "accuracy": 0.7910447761194029,
+    "high_potential_precision": 0.9743589743589743,
+    "high_potential_recall": 0.5846153846153846,
+    "high_potential_f1": 0.7307692307692307,
+    "per_class": {
+      "Normal": {
+        "precision": 0.7157894736842105,
+        "recall": 0.9855072463768116,
+        "f1": 0.8292682926829269
+      },
+      "High Potential": {
+        "precision": 0.9743589743589743,
+        "recall": 0.5846153846153846,
+        "f1": 0.7307692307692307
+      }
+    },
+    "dataset_sha256": "c58f619cf65a9945a40c109573f3ee8565081986801b1fa0d2adc9aaf894053b"
+  },
+  "validation_after": {
+    "matrix_order": [
+      "normal",
+      "high_potential"
+    ],
+    "confusion_matrix": [
+      [
+        67,
+        2
+      ],
+      [
+        20,
+        45
+      ]
+    ],
+    "n": 134,
+    "accuracy": 0.835820895522388,
+    "high_potential_precision": 0.9574468085106383,
+    "high_potential_recall": 0.6923076923076923,
+    "high_potential_f1": 0.8035714285714286,
+    "per_class": {
+      "Normal": {
+        "precision": 0.7701149425287356,
+        "recall": 0.9710144927536232,
+        "f1": 0.8589743589743589
+      },
+      "High Potential": {
+        "precision": 0.9574468085106383,
+        "recall": 0.6923076923076923,
+        "f1": 0.8035714285714286
+      }
+    },
+    "dataset_sha256": "c58f619cf65a9945a40c109573f3ee8565081986801b1fa0d2adc9aaf894053b"
+  },
+  "history": {
+    "accuracy": [
+      0.7990430593490601,
+      0.8038277626037598,
+      0.819776713848114
+    ],
+    "loss": [
+      0.32983162999153137,
+      0.34160247445106506,
+      0.3136204183101654
+    ],
+    "val_accuracy": [
+      0.8208954930305481,
+      0.8208954930305481,
+      0.8283582329750061
+    ],
+    "val_loss": [
+      0.5509108901023865,
+      0.5455590486526489,
+      0.5740455985069275
+    ]
+  },
+  "test_set_used": false,
+  "limitation": "Existing validation split reused; writer independence unverified."
+}

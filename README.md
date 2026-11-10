@@ -8,22 +8,19 @@ Teachers can manage student records and submit handwriting samples for screening
 
 ## Built with
 
-- **Application:** Flask API, Vue 3 interfaces built with Vite, and an in-progress React Native/Expo app.
-- **Machine learning:** TensorFlow/Keras and image preprocessing in Python.
-- **Data:** The legacy prototype uses MySQL. The Supabase Auth/PostgreSQL v1 schema is installed through migration019; full legacy-data migration and application cutover remain in progress.
-- **Mobile:** React Native/Expo is the agreed native direction; the existing Vue/Capacitor client remains until role and device parity are verified.
+- **Application:** Python/Flask API, Vue 3 admin web interface, and React Native/Expo mobile app.
+- **Machine learning:** TensorFlow/Keras for model preparation and LiteRT for the hosted model runtime.
+- **Data:** Supabase Auth, PostgreSQL and private Storage for the hosted system. A legacy MySQL/Flask/Vue prototype also remains in the repository.
 
 ## Current status
 
-The [admin pilot](https://graphiscan-admin.vercel.app/login) is published on Vercel
-with a lightweight Flask API on Render Free and existing Supabase Auth/PostgreSQL/
-private Storage. Hosted admin login/dashboard is user-confirmed. Account-action
-source is implemented and migrations through019 passed restricted read-only
-verification; complete hosted action and role workflows still need verification.
-Model inference is disabled on this admin-only API. Free model hosting,
-three-class evaluation, Expo APK/device checks, legacy-data/image cutover and
-manuscript/privacy approval remain open. See [current requirements and next
-steps](CURRENT_REQUIREMENTS.md) and [hosting details](graphiscan/api/HOSTING.md).
+The Android 1.0.2 APK and admin website were published on 9 November 2026.
+Subsequent mobile and final-report changes are local and have not been published
+in a new APK. The user reports that migration 031 passed its three preflight
+checks; parent-account acceptance still needs an end-to-end check. The system's
+current model labels are Normal and High Potential. For current details and
+verification limits, see [KNOWLEDGE.md](KNOWLEDGE.md), [CHANGELOG.md](CHANGELOG.md),
+and [the simple system flow](SYSTEM_FLOW.md).
 
 ## Responsible use
 
