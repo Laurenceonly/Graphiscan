@@ -1,3 +1,14 @@
+## Resume checkpoint - 2026-11-10 (latest)
+
+Continue from the current uncommitted workspace. Do not reset or overwrite local changes. The existing Android APK/landing download is still 1.0.3; there is no 1.0.4 artifact yet.
+
+- Production Render `graphiscan-admin-api` is live on commit `8609065`. Dashboard build logs confirmed all three private LiteRT models staged (`tensorflow_imported=false`) and repeated `/api/v1/health` checks returned 200.
+- User reports running `graphiscan/db/postgres/publish_lite_binary_models.sql` in Supabase project `graphiscan-test`, `main (PRODUCTION)`; SQL Editor displayed success. Exact registry rows/default and authenticated inference have not been independently verified. Next: run a read-only registry query in that same project before claiming activation.
+- Mobile source metadata is 1.0.4/code5. Expert and Teacher review queues share a new single-row filter order: All, Validated, Flagged, Pending. Parent status filtering remains absent by design; mobile student/grade and history ordering controls were reviewed and no defect was found. The web Expert Results page retains All, Pending, Validated, Flagged.
+- Android JavaScript bundling completed, but `assembleRelease` failed in Expo Modules Core because Ninja repeatedly considered `build.ninja` dirty and stopped after 100 retries. No new APK was produced or published. Landing remains on 1.0.3. Continue APK packaging with a working Linux/CI or corrected Windows CMake build, then verify versionCode5 and the existing signing certificate before publication. Do not call the source filter change installed/released yet.
+- Image validation message diagnosis: hosted API accepts one actual JPEG/PNG, input <=10 MB, <=16 megapixels, and normalized PNG <=10 MB. Valid high-resolution phone photos can fail the pixel or normalized-size limit; the same generic message also covers corrupt/multiframe/unsupported content. No user image was inspected. If the issue recurs, ask only for the file's extension, dimensions, and size.
+- Filter UI source is in `graphiscan/mobile-app/src/HostedApp.tsx` and `QuickFilters.tsx`; app metadata in `graphiscan/mobile-app/app.json`. No tests were run for this change; the Android JS bundle step completed during the failed release build. Temporary `node_modules` CMake workarounds were reverted. Two existing untracked model tools remain untouched: `graphiscan/tools/check_selected_lite_linux.py` and `graphiscan/tools/stage_selected_bundle.py`.
+
 ## Resume checkpoint - 2026-11-09
 
 User is pausing. Preserve the substantial uncommitted local work; do not reset,

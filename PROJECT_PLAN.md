@@ -675,3 +675,11 @@ behavior and historical-data/image cutover remain separate open checks.
 2026-11-04 admin local review: student workspace subpage/history, table/detail dividers, Initial/Follow-up titles, reviewer display and Schools table are implemented and browser/build checked (126+73+45 checks; both Vue builds). Manual screening expert-assignment UI removed at user request; automatic school/grade expert routing is NOT implemented. Pending user policy: shared grade-expert review queue vs one automatic assignee; current server per-record ownership gates remain. No deployment, real writes or new routing migration.
 
 2026-11-04 Progress local slice: categorical initial-to-follow-up screening timeline and complete authorized oldest-first history paging implemented; View progress naming and natural table scrolling corrected. Final66 fictional browser checks/build/layout scan pass, including natural table height. No confidence/clinical improvement trend, model/backend change, real write or deployment claimed.
+## 2026-11-10 - Render LiteRT bundle deployment checkpoint
+
+- Production Render service `graphiscan-admin-api` now runs commit `8609065`; dashboard shows Deploy succeeded / Live. Build staged all three private LiteRT model files, and repeated Render health checks returned 200.
+- User reports running the catalogue publication SQL on Supabase `graphiscan-test`, `main (PRODUCTION)`; SQL Editor displayed success. The exact registry rows/default and authenticated inference still require verification before claiming hosted acceptance. Mobile source loads selectable/default models from `/models`, so this catalogue-only change does not require a new APK. See CHANGELOG and KNOWLEDGE.
+
+## 2026-11-10 - Mobile review filter change
+
+- Mobile review queues now use a single horizontal status row: All, Validated, Flagged, Pending. Source metadata is 1.0.4/code5. Android JavaScript bundle completed, but Expo Modules Core's native CMake/Ninja step prevented APK packaging; 1.0.3 remains the landing-page release. Retry the native package build before publishing any new APK. See CHANGELOG and KNOWLEDGE.

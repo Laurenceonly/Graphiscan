@@ -69,7 +69,7 @@ function RecordList({ historyId }: { historyId?: string }) {
     onLayout={event=>setListHeight(event.nativeEvent.layout.height)}
     refreshing={record.loading&&record.data!==null} onRefresh={start}
     ListHeaderComponent={historyId||statusFiltersVisible||profile.role==='parent'||record.error?<View style={{gap:16,paddingBottom:20}}>
-      {statusFiltersVisible&&<QuickFilters label="Review status" hideLabel value={reviewFilter} options={['All','Pending','Flagged','Validated'].map(value=>({value,label:value}))} onChange={value=>{setCursor(null);setReviewFilter(value)}}/>}
+      {statusFiltersVisible&&<QuickFilters label="Review status" hideLabel value={reviewFilter} options={['All','Validated','Flagged','Pending'].map(value=>({value,label:value}))} onChange={value=>{setCursor(null);setReviewFilter(value)}}/>}
       {profile.role==='parent'&&<Body muted>Only currently reviewed reports for your linked children are shown.</Body>}
       {historyId&&<><View style={{gap:4}}>{historyStudent.loading&&!historyStudent.data?<LoadingSkeleton kind="heading" label="Loading student details"/>:historyStudent.data?<><Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{historyStudent.data.full_name}</Text><Body muted>Grade {historyStudent.data.grade_level}</Body></>:null}</View><View style={styles.row}><Heading>Screenings</Heading><Button label={order==='newest'?'Oldest first':'Newest first'} secondary icon="swap-vert" style={{paddingHorizontal:12}} onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/></View></>}
       <Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={start}/>}</View>:undefined}

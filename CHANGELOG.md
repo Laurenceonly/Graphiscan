@@ -1,3 +1,36 @@
+## 2026-11-10 - Android 1.0.4 build
+
+- Built signed Android 1.0.4/code 5 with the local single-row review filters. Gradle succeeded; APK metadata, v2 signature and matching original signer verified. APK is 92,772,158 bytes, SHA-256 DA64E0D658CE8E5B244CB1BEB65B2CE7D1593DE2C3AAE856C891F8F3229F4CFC. Publication and authenticated native acceptance remain pending.
+- Read-only direct model registry query failed with insufficient privileges; no application records were read. The hosted catalogue and authenticated inference still require verification.
+
+## 2026-11-10 - Mobile review filters and APK build status
+
+- Mobile Reviews status filters now read All, Validated, Flagged, Pending in one horizontal row. The shared control is used by both teacher and expert result queues; changing status continues to clear the cursor and request server-filtered results. The parent report list intentionally has no review-status filter. Teacher student search/grade, scoped student-directory filters and history ordering controls have distinct behavior and no issue found in source review.
+- The web Expert Results page still uses a different order (All, Pending, Validated, Flagged); this is outside the APK change and remains a cross-client consistency difference.
+- Bumped mobile source metadata to 1.0.4/code5. Android release bundling completed, but native packaging failed in Expo Modules Core because Ninja repeatedly marked `build.ninja` dirty and stopped after 100 retries. No 1.0.4 APK was produced or published; the landing page continues to point to 1.0.3. New row is source-only until a successful native build.
+
+## 2026-11-10 - Supabase model catalogue cutover reported successful
+
+- User reports running `publish_lite_binary_models.sql` in Supabase project `graphiscan-test`, `main (PRODUCTION)`. The open SQL Editor shows “Success. No rows returned” for the transaction. A separate read-only registry query and authenticated app inference have not been run, so exact published rows/default and end-to-end inference remain to verify.
+- The existing Android 1.0.3 APK is unchanged and the landing page still points to that release. The mobile screening chooser in source fetches `/models` and uses server-provided selectable/default rows, so this catalogue-only change does not itself require a new APK. No APK rebuild or publication performed.
+
+## 2026-11-10 - Render model bundle deployment
+
+- Opened the supplied Render deployment in the existing Chrome session and manually deployed commit `8609065` to the Production `graphiscan-admin-api` service. Render reports Deploy succeeded / Live; build staged all three private LiteRT models with TensorFlow not imported, and repeated Render `/api/v1/health` checks returned 200. The service root's 404 is expected for this API-only service; no startup error appeared in the deployment logs.
+- The catalogue SQL was not applied in this step. The live catalogue/default and authenticated model inference remain unverified; the three staged models are not yet confirmed selectable by the app.
+
+## 2026-11-10 - Frontend, backend, database, and Android release audit
+
+- Local verification: mobile TypeScript and 24 tests pass; landing, admin, and user-app production builds pass; backend unittest suite passes 306 tests with one skipped. API contract checks pass 683 checks and isolated PostgreSQL checks pass, including 182 workflow checks and 24 model-cutover checks. No live database writes were made.
+- Public verification: Render `/api/v1/health` returns 200 and anonymous `/api/v1/models` returns 401. GitHub latest release is `android-v1.0.3` with the 92,772,110-byte `Graphiscan.apk`; the live landing JavaScript points to that release. Current source has no mobile changes after the APK source commit, so no new APK is indicated.
+- Three candidate LiteRT models and their private bundle are prepared; the six content-addressed chunks already exist and were hash-verified. The hosted catalogue has not been independently read with authentication, and current Render model hashes/revision were not verified. Existing activation notes record a prior three-model-ready Render deployment. Confirm the latest Render build loaded this bundle before applying the prepared catalogue SQL; no production catalogue switch or deployment was performed in this audit.
+
+## 2026-11-10 - Restore model tooling and stage catalogue cutover
+
+- Confirmed the existing Python 3.11.9 installation from the Start Menu shortcut. The original `.venv` launcher could not be refreshed because Windows denied replacing its executable, so created an ignored `.local-tools/python311-venv` and linked the existing installed packages. Python version and uploader dependency imports pass in the replacement environment; the original `.venv` remains unchanged.
+- Ran the hash-verifying private bundle uploader: all four artifacts and six chunks verified, with all six chunks reused from the existing private bucket (121,266,151 bytes). No API, schema, or live catalogue change.
+- Prepared the three-model catalogue publication and rollback SQL from verified Linux evidence. The isolated PostgreSQL cutover checker passed 24 checks with zero hosted connections or production writes. Applying the catalogue switch and hosted inference acceptance remain pending.
+
 ## 2026-11-10 - Android 1.0.3 release
 
 - Published signed Android 1.0.3/code4 APK in GitHub release android-v1.0.3 from main. GitHub reports 92,772,110 bytes and SHA-256 143D2113D66143F4400BE189E046B72085951B16ED36DF8CE821303C28995840, matching the local verified original-signer APK. Release commit 0319c00 contains screening labels and existing-catalogue accuracy display; fine-tuned models are not deployed.
@@ -2498,3 +2531,8 @@ This historical estimate was subsequently superseded as an implementation priori
 
 - Read-only comparison confirms both active admins accepted the current professional notice. Replacement has zero grants; original has global accounts.manage/audit.read and school1 assignments.manage, with no school memberships on either account. Admin role alone does not confer those capabilities; no record loss established.
 - Prepared ignored .local-tools/restore-replacement-admin-access.sql for owner-run execution: exact replacement login/active admin validation, exactly one other active admin and exact3 verified source grants, locked/idempotent insert with existing scope and maintenance audit. Preserves all old accounts, records, credentials, consent and extra existing target grants; no permissions.manage/global assignment expansion. No hosted write performed.8 isolated actual-grants-schema PGlite checks pass for exact copy/scope, unchanged profiles, audit, repeat no-op and unexpected-source rejection. User owner execution, Refresh/sign-in and populated workspace verification remain pending; retirement still waits for replacement acceptance.
+## 2026-11-10 - APK and review filter recheck
+
+- Rechecked the existing 1.0.3 landing download: the public APK responds HTTP 200 with 92,772,110 bytes; the Render health endpoint responds 200. Landing production build, mobile TypeScript and all 24 mobile tests pass.
+- Reviewed the local expert/teacher status control and request: All, Validated, Flagged, Pending are in a horizontally scrolling row; selecting a status resets pagination and sends `validation_status`. Screening-read SQL includes that filter. This is source inspection, not authenticated end-to-end or native layout acceptance.
+- No 1.0.4 APK exists after the previously recorded Ninja failure; the landing page remains on 1.0.3 and does not contain the local filter change. Live catalogue contents and authenticated screening/review flows remain unverified in this check.
