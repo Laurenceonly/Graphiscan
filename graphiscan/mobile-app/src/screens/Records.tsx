@@ -20,7 +20,7 @@ export function HomeScreen() {
   }, [user!.role, api])
   const counts = record.data ? resultCounts(record.data.results) : null
   const firstName = user!.fullname.split(' ')[0]
-  return <Screen><Text style={[styles.title, { color: colors.text }]}>Welcome, {firstName}</Text>
+  return <Screen onRefresh={record.refresh} refreshing={record.loading&&Boolean(record.data)}><Text style={[styles.title, { color: colors.text }]}>Welcome, {firstName}</Text>
     <Body muted>{user!.role === 'teacher' ? 'Manage students, upload handwriting samples, and review screening progress.' : user!.role === 'expert' ? 'Review screening records and provide your professional validation.' : 'View reviewed screening reports and progress for your linked children.'}</Body>
     {record.loading && !record.data && <LoadingSkeleton />}<Notice error message={record.error} />
     {counts && <View style={[styles.section, { borderColor: colors.border, borderBottomWidth: 1 }]}>
@@ -31,7 +31,7 @@ export function HomeScreen() {
     <Heading>{user!.role === 'teacher' ? 'Teacher tools' : user!.role === 'expert' ? 'Expert tools' : 'Parent tools'}</Heading>
     {user!.role === 'teacher' && <Button label="Add student" icon="person-add" onPress={() => navigation.navigate('AddStudent')} />}
     <Body>Use the navigation below to open {user!.role === 'teacher' ? 'students, uploads and results' : 'results and your profile'}.</Body>
-    <Button label="Refresh dashboard" icon="refresh" secondary disabled={record.loading} onPress={record.refresh} />
+    {Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={record.refresh}/>}
     <Body muted>Screening results support expert review. They do not establish a diagnosis.</Body>
   </Screen>
 }

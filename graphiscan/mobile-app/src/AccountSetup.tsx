@@ -34,6 +34,10 @@ export default function AccountSetup({ client, action, refresh, logout, password
   const [busy, setBusy] = useState(false), [loading, setLoading] = useState(false), [error, setError] = useState(''), [attempt, setAttempt] = useState(0)
   const mismatch = Boolean(confirm && password !== confirm)
   const validPassword = password.length >= 8 && password.length <= 128 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9\s]/.test(password) && password !== current
+  const predictable = /(password|passw0rd|qwerty|12345|123456|abcdef|(.)\2{3})/i.test(password)
+  const strength = !password ? 0 : !validPassword || predictable ? 1 : password.length < 14 ? 2 : 3
+  const strengthLabel = ['', 'Weak', 'Fair', 'Strong'][strength]
+  const strengthColor = [colors.border, colors.error, colors.high, colors.normal][strength]
   useEffect(() => {
     let alive = true
     setAgreement(null); setAccepted(false); setError(''); setLoading(privacy)
@@ -69,6 +73,11 @@ export default function AccountSetup({ client, action, refresh, logout, password
     {passwordStep && <View style={[s.card, { backgroundColor: colors.surface }]}>
       <PasswordField label="Current password" value={current} onChange={setCurrent} disabled={busy} current />
       <PasswordField label="New password" value={password} onChange={setPassword} disabled={busy} />
+      {Boolean(password)&&<View style={{gap:6}} accessibilityLabel={'Estimated password strength: '+strengthLabel}>
+        <Text style={[styles.hint,{color:strengthColor}]}>Estimated strength: {strengthLabel}</Text>
+        <View accessible={false} style={{flexDirection:'row',gap:4}}>{[1,2,3].map(level=><View key={level} style={{flex:1,height:4,borderRadius:2,backgroundColor:level<=strength?strengthColor:colors.border}}/>)}</View>
+        <Text style={[styles.hint,{color:colors.muted}]}>Use a longer, unique password that is hard to guess.</Text>
+      </View>}
       <PasswordField label="Confirm new password" value={confirm} onChange={setConfirm} disabled={busy} />
       <Body muted>Use 8–128 characters with uppercase and lowercase letters, a number and a symbol. Choose a different password.</Body>
       {mismatch && <Notice error message="The new passwords do not match." />}

@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'react-native-reanimated'
 import { ActivityIndicator, FlatList, Keyboard, Platform, Pressable, Text, View, useWindowDimensions } from 'react-native'
 import * as FileSystem from 'expo-file-system/legacy'
 import {createNativeUploadFetch} from './core/native-upload'
-import { NavigationContainer, DefaultTheme, useNavigation } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme, useNavigation, type NavigatorScreenParams } from '@react-navigation/native'
 import { createNativeStackNavigator, type NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createBottomTabNavigator, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -24,12 +24,13 @@ import HostedStudents from './HostedStudents'
 import QuickFilters from './QuickFilters'
 import HostedStudentEditor from './HostedStudentEditor'
 import HostedStudentDetails from './HostedStudentDetails'
+import HostedFinalReport from './HostedFinalReport'
 import { ProfilePhotoProvider, useProfilePhoto } from './ProfilePhoto'
 import { ProfileSchoolsProvider, useProfileSchools } from './ProfileSchools'
 import { mobileSessionStore } from './mobile-session-store'
-import { AppBrand, Avatar, RecordValue, ScreeningRow, workspaceStyles } from './WorkspaceUI'
+import { AppBrand, Avatar, HistoryRow, RecordValue, ScreeningRow, workspaceStyles } from './WorkspaceUI'
 
-type Routes = { Main: undefined; Screening: { id: string }; History: { id: string }; Report: { id: string }; StudentEditor: {id?:string}; StudentDetails: {id:string} }
+type Routes = { Main: NavigatorScreenParams<TabRoutes>|undefined; Screening: { id: string }; History: { id: string }; Report: { id: string }; FinalReport: {id:string}; StudentEditor: {id?:string}; StudentDetails: {id:string} }
 type TabRoutes = { Home: undefined; Results: undefined; Students: undefined; Upload: undefined; Profile: undefined }
 interface Profile { user_id: string; full_name: string; role: string; account_status: string; school_ids: string[]; onboarding: { next_action: string } }
 interface HostedSession { profile: Profile; request: HostedClient['request']; refresh: () => Promise<void>; logout: () => Promise<void> }
@@ -53,8 +54,10 @@ function Home() {
 }
 function RecordList({ historyId }: { historyId?: string }) {
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
+  const colors=useColors()
   const {height:windowHeight}=useWindowDimensions(),[listHeight,setListHeight]=useState(0)
   const students=useRecords(()=>request('/students?limit=100',{envelope:true}),[request])
+  const historyStudent=useRecords(()=>historyId?request('/students/'+encodeURIComponent(historyId)):Promise.resolve(null),[request,historyId])
   const [cursor,setCursor]=useState<string|null>(null),[order,setOrder]=useState('newest')
   const [reviewFilter,setReviewFilter]=useState('All')
   const statusFiltersVisible=['teacher','expert'].includes(profile.role)&&!historyId
@@ -66,46 +69,58 @@ function RecordList({ historyId }: { historyId?: string }) {
     onLayout={event=>setListHeight(event.nativeEvent.layout.height)}
     refreshing={record.loading&&record.data!==null} onRefresh={start}
     ListHeaderComponent={historyId||statusFiltersVisible||profile.role==='parent'||record.error?<View style={{gap:16,paddingBottom:20}}>
-      {statusFiltersVisible&&<QuickFilters label="Review status" value={reviewFilter} options={['All','Pending','Flagged','Validated'].map(value=>({value,label:value}))} onChange={value=>{setCursor(null);setReviewFilter(value)}}/>}
+      {statusFiltersVisible&&<QuickFilters label="Review status" hideLabel value={reviewFilter} options={['All','Pending','Flagged','Validated'].map(value=>({value,label:value}))} onChange={value=>{setCursor(null);setReviewFilter(value)}}/>}
       {profile.role==='parent'&&<Body muted>Only currently reviewed reports for your linked children are shown.</Body>}
-      {historyId&&<Button label={order==='newest'?'Show oldest first':'Show newest first'} secondary onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/>}<Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={start}/>}</View>:undefined}
-    ListEmptyComponent={record.loading?<LoadingSkeleton fillHeight={listHeight||windowHeight}/>:!record.error?<Body>{statusFilter?'No '+statusFilter.toLowerCase()+' screenings are available in your assigned scope.':'No screening records are available for your account.'}</Body>:undefined}
-    renderItem={({item,index}:any)=>{const student=students.data?.data.find((student:any)=>student.student_id===item.student_id);return <ScreeningRow record={item} studentName={student?.full_name} grade={student?.grade_level} last={index===(record.data?.data.length??0)-1} onPress={()=>navigation.navigate('Screening',{id:item.result_id})}/>}}
-    ListFooterComponent={<View style={{gap:12,paddingTop:20}}>{record.data?.page?.next_cursor&&<Button label="Next page" disabled={record.loading} onPress={()=>setCursor(record.data.page.next_cursor)}/>}{cursor&&<Button label="Return to first page" secondary disabled={record.loading} onPress={start}/>}</View>}/></Screen>
+      {historyId&&<><View style={{gap:4}}>{historyStudent.loading&&!historyStudent.data?<LoadingSkeleton kind="heading" label="Loading student details"/>:historyStudent.data?<><Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{historyStudent.data.full_name}</Text><Body muted>Grade {historyStudent.data.grade_level}</Body></>:null}</View><View style={styles.row}><Heading>Screenings</Heading><Button label={order==='newest'?'Oldest first':'Newest first'} secondary icon="swap-vert" style={{paddingHorizontal:12}} onPress={()=>{setCursor(null);setOrder(order==='newest'?'oldest':'newest')}}/></View></>}
+      <Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={start}/>}</View>:undefined}
+    ListEmptyComponent={record.loading?<LoadingSkeleton fillHeight={listHeight||windowHeight}/>:!record.error?<Body>{historyId?'No screening records are available for this student.':statusFilter?'No '+statusFilter.toLowerCase()+' screenings are available in your assigned scope.':'No screening records are available for your account.'}</Body>:undefined}
+    renderItem={({item,index}:any)=>{const last=index===(record.data?.data.length??0)-1,onPress=()=>navigation.navigate('Screening',{id:item.result_id});if(historyId)return <HistoryRow record={item} last={last} onPress={onPress}/>;const student=students.data?.data.find((student:any)=>student.student_id===item.student_id);return <ScreeningRow record={item} studentName={student?.full_name} grade={student?.grade_level} last={last} onPress={onPress}/>}}
+    ListFooterComponent={<View style={{gap:12,paddingTop:20}}>{record.data?.page?.next_cursor&&<Button label="Next page" disabled={record.loading} onPress={()=>setCursor(record.data.page.next_cursor)}/>}{cursor&&<Button label="Return to first page" secondary disabled={record.loading} onPress={start}/>}{historyId&&<Button label="Final summary and conclusion" secondary onPress={()=>navigation.navigate('FinalReport',{id:historyId})}/>}</View>}/></Screen>
 }
 function Results(){return <RecordList/>}
 function History({route}: {route:{params:{id:string}}}){return <RecordList historyId={route.params.id}/>}
+function FinalReport({route}:{route:{params:{id:string}}}){
+  const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
+  return <HostedFinalReport key={route.params.id} request={request} id={route.params.id} expert={profile.role==='expert'} parent={profile.role==='parent'} onScreening={id=>navigation.navigate('Screening',{id})}/>
+}
 function Students(){
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
-  return <HostedStudents request={request} teacher={profile.role==='teacher'} onStudent={id=>navigation.navigate('StudentDetails',{id})} onAdd={()=>navigation.navigate('StudentEditor',{})}/>
+  const colors=useColors()
+  useLayoutEffect(()=>{if(profile.role==='teacher')navigation.setOptions({headerRight:()=> <View style={{flexDirection:'row',alignItems:'center',marginRight:8}}>
+    <Pressable accessibilityRole="button" accessibilityLabel="Add student" onPress={()=>{Keyboard.dismiss();navigation.navigate('StudentEditor',{})}} style={workspaceStyles.headerButton}><MaterialIcons name="person-add-alt" size={24} color={colors.primary}/></Pressable>
+  </View>})},[navigation,profile.role,colors.primary])
+  return <HostedStudents request={request} teacher={profile.role==='teacher'} onStudent={id=>navigation.navigate('StudentDetails',{id})}/>
 }
 function StudentDetails({route}:{route:{params:{id:string}}}){
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
-  return <HostedStudentDetails request={request} id={route.params.id} teacher={profile.role==='teacher'} onHistory={()=>navigation.navigate('History',{id:route.params.id})} onEdit={()=>navigation.navigate('StudentEditor',{id:route.params.id})}/>
+  return <HostedStudentDetails request={request} id={route.params.id} teacher={profile.role==='teacher'} onHistory={()=>navigation.navigate('History',{id:route.params.id})} onFinalReport={()=>navigation.navigate('FinalReport',{id:route.params.id})} onEdit={()=>navigation.navigate('StudentEditor',{id:route.params.id})}/>
 }
 function StudentEditor({route}:{route:{params:{id?:string}}}){
   const {request,profile,logout}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>()
-  return <HostedStudentEditor request={request} teacherId={profile.user_id} id={route.params.id} onHistory={id=>navigation.replace('History',{id})} onCancel={()=>navigation.goBack()} logout={logout}/>
+  return <HostedStudentEditor request={request} teacherId={profile.user_id} id={route.params.id} onStudent={id=>navigation.replace('StudentDetails',{id})} onCancel={()=>navigation.goBack()} logout={logout}/>
 }
 function Detail({route,report=false}:{route:{params:{id:string}};report?:boolean}){
   const {request,profile}=useHosted(),navigation=useNavigation<NativeStackNavigationProp<Routes>>(),colors=useColors()
+  const [editingReview,setEditingReview]=useState(false)
+  useEffect(()=>setEditingReview(false),[route.params.id,report])
   const record=useRecords(()=>request((report?'/reports/':'/screenings/')+encodeURIComponent(route.params.id)),[request,route.params.id,report]),row=record.data
   const student=useRecords(()=>row?.student_id?request('/students/'+encodeURIComponent(row.student_id)):Promise.resolve(null),[request,row?.student_id])
-  return <Screen>{record.loading&&!row&&<LoadingSkeleton kind="detail"/>}<Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={record.refresh}/>}{row&&<>
+  return <Screen onRefresh={record.refresh} refreshing={record.loading&&Boolean(row)}>{record.loading&&!row&&<LoadingSkeleton kind="detail"/>}<Notice error message={record.error}/>{Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading} onPress={record.refresh}/>}{row&&<>
     <View style={{gap:8}}>{student.loading&&!student.data?<LoadingSkeleton kind="heading" label="Loading student details"/>:<Text accessibilityRole="header" style={[styles.title,{color:colors.text}]}>{student.data?.full_name||'Student '+row.student_id}</Text>}<Body muted>{student.data?.grade_level?'Grade '+student.data.grade_level+' / ':''}{screeningType(report?row.report_type:row.report?.report_type)}</Body><Body muted>{dateLabel(row.date_generated)}</Body></View>
-    <View style={[styles.panel,{borderWidth:0,paddingHorizontal:0,borderRadius:0,borderTopWidth:1,borderTopColor:colors.border,backgroundColor:colors.surface}]}><View style={{gap:4}}><Heading>Model output</Heading><Body muted>{modelLabel(row.model?.model_key)}</Body></View>
-    <View style={{gap:8}}><Body muted>Result</Body><Status value={row.classification}/></View>
+    <View style={[styles.panel,{borderWidth:0,paddingHorizontal:0,borderRadius:0,borderTopWidth:1,borderTopColor:colors.border,backgroundColor:colors.surface}]}><View style={{gap:4}}><Heading>Model result</Heading><Body muted>{modelLabel(row.model?.model_key)}</Body></View>
+    <View style={{flexDirection:'row',alignItems:'center',flexWrap:'wrap',gap:8}}><Body muted>Result</Body><Status value={row.classification}/></View>
     <RecordValue label="Reported-class model score" value={hostedPercent(row.predicted_class_score)}/><RecordValue label="High Potential model score" value={hostedPercent(row.class_scores?.high_potential)}/>
     <Body muted>Model scores are not a clinical probability or diagnosis.</Body>
     {row.provenance==='legacy_unverified'&&<Body muted>Historical model provenance has not been verified.</Body>}
-    </View>{report&&<View style={[styles.panel,{borderWidth:0,paddingHorizontal:0,borderRadius:0,borderTopWidth:1,borderTopColor:colors.border,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap'}]}><Heading>Expert review</Heading><Status value={row.review.status}/></View><RecordValue label="Reviewed by" value={row.review.expert_name||(row.review.expert_id?'Name unavailable':'Not yet reviewed')}/><RecordValue label="Remarks" value={row.review.remarks||'Not recorded'}/><RecordValue label="Expert recommendation" value={row.review.expert_recommendation||'Not recorded'}/><RecordValue label="Follow-up needed" value={row.review.follow_up_needed===true?'Yes':row.review.follow_up_needed===false?'No':'Not recorded'}/>
+    </View>{report&&<View style={[styles.panel,{borderWidth:0,paddingHorizontal:0,borderRadius:0,borderTopWidth:1,borderTopColor:colors.border,backgroundColor:colors.surface}]}><View style={[styles.row,{flexWrap:'wrap',justifyContent:'flex-start'}]}><Heading>Expert review</Heading><Status value={row.review.status}/></View><RecordValue label="Reviewed by" value={row.review.expert_name||(row.review.expert_id?'Name unavailable':'Not yet reviewed')}/><RecordValue label="Remarks" value={row.review.remarks||'Not recorded'}/><RecordValue label="Expert recommendation" value={row.review.expert_recommendation||'Not recorded'}/><RecordValue label="Follow-up needed" value={row.review.follow_up_needed===true?'Yes':row.review.follow_up_needed===false?'No':'Not recorded'}/>
     {row.review.validation_date&&<Body muted>Reviewed {dateLabel(row.review.validation_date)}</Body>}
     </View>}<HostedImage request={request} id={row.result_id}/>
-    {!report&&profile.role==='expert'&&<HostedReview request={request} id={row.result_id} review={row.review} onSaved={record.refresh}/>}
+    {!report&&profile.role==='expert'&&(row.review.status==='Pending'||editingReview)&&<HostedReview request={request} id={row.result_id} review={row.review} onSaved={()=>{setEditingReview(false);navigation.popTo('Main',{screen:'Results'})}} onReload={record.refresh} onCancel={editingReview?()=>setEditingReview(false):undefined}/>}
+    {!report&&profile.role==='expert'&&row.review.status!=='Pending'&&!editingReview&&<Button label="Edit review" secondary onPress={()=>setEditingReview(true)}/>}
+    {profile.role==='expert'&&row.review.status!=='Pending'&&row.review.follow_up_needed===false&&<Button label="Finalize screening" onPress={()=>navigation.navigate('FinalReport',{id:row.student_id})}/>}
     {!report&&row.report?.report_id&&<Button label="Open report" secondary onPress={()=>navigation.navigate('Report',{id:row.report.report_id})}/>}
-    {profile.role==='expert'&&<Button label="View student details" secondary onPress={()=>navigation.navigate('StudentDetails',{id:row.student_id})}/>}
     <Button label="View student history" secondary onPress={()=>navigation.navigate('History',{id:row.student_id})}/></>}
-    <Button label="Refresh record" secondary disabled={record.loading} onPress={record.refresh}/></Screen>
+    </Screen>
 }
 function Report({route}:{route:{params:{id:string}}}){return <Detail route={route} report/>}
 function Profile(){
@@ -180,6 +195,7 @@ function HostedRoot(){
       <Stack.Screen name="Main" component={Main} options={{headerShown:false}}/><Stack.Screen name="Screening" component={Detail} options={{title:'Screening result'}}/>
       <Stack.Screen name="StudentDetails" component={StudentDetails} options={{title:profile.role==='parent'?'Child details':'Student details'}}/>
       <Stack.Screen name="History" component={History} options={{title:'Screening history'}}/><Stack.Screen name="Report" component={Report} options={{title:'Screening report'}}/>
+      <Stack.Screen name="FinalReport" component={FinalReport} options={{title:'Final summary and conclusion'}}/>
       {profile.role==='teacher'&&<Stack.Screen name="StudentEditor" component={StudentEditor} options={({route})=>({title:route.params.id?'Edit student':'Add student'})}/>}
     </Stack.Navigator></ProfileSchoolsProvider></Context.Provider></ProfilePhotoProvider>}
   </NavigationContainer>

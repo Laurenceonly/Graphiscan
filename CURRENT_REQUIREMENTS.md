@@ -1,3 +1,21 @@
+## Current scope correction - 2026-11-09
+
+User explicitly removes the three-class plan. Keep the existing binary Normal /
+High Potential output across ResNet, EfficientNet and MobileNet; three models do
+not mean three classes. Earlier three-class targets below are superseded and are
+not release gaps. The minutes mention High/Low Potential only as highlighting
+examples; they do not explicitly require three classes. Earlier repository plans
+and experimental files were the source of that target, not proof of user approval.
+
+The final screening-cycle summary and expert conclusion is implemented locally
+after the audit. The user clarified that follow-ups are optional: expert can save
+No follow-up on a reviewed Initial and finalize immediately, or conclude after
+follow-ups. All existing screenings must be reviewed; latest follow-up flag is No.
+Summary, conclusion, next steps and author/history snapshot are saved separately.
+Migration030 is installed and independently metadata/source-verified; do not rerun it. API/mobile source not published and
+APK1.0.2 unchanged. See graphiscan/api/FINAL_SCREENING_REPORTS.md and CHANGELOG for
+actual local tests and remaining activation/native/hosted acceptance.
+
 Historical handoff2026-10-22 (superseded by the2026-10-24 review below): migrations020/021 are applied and the last hosted
 read-only preflight passed38 checks. PR#5 assignment API/admin and PR#6 shared
 page/card styling are merged. Public bundle index-BMML1qyx.js contains the shared
@@ -230,7 +248,7 @@ Steps describe planned work, not completed behavior or new account mutations.
 - Requirements/governance: `AGENTS.md`, `GraphiScan_Defense_Minutes.md`,
   `SYSTEM_DESIGN.md`, `PROJECT_PLAN.md`, `WORK_CHECKLIST.md`, `API_CONTRACT.md`.
 - Evidence/overview: `KNOWLEDGE.md`, `CHANGELOG.md`, `RESUME.md`, `README.md`.
-- Presentation/privacy: `PRESENTATION_READINESS.md`, `PRESENTATION_REHEARSAL.md`,
+- Presentation/privacy: `docs/archive/root-notes/PRESENTATION_READINESS.md`, `docs/archive/root-notes/PRESENTATION_REHEARSAL.md`,
   `PRIVACY_REVIEW_BRIEF.md`.
 - Database: `db/MIGRATION_NOTES.md`, `db/BACKUP_RESTORE.md` under `graphiscan/`.
 - API under `graphiscan/api/`: `README.md`, `ADMIN_RELEASE.md`, `ADMIN_WRITES.md`,

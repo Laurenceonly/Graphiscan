@@ -38,7 +38,7 @@ export function ResultScreen({ route }: { route: { params: { id: string } } }) {
     try {
       await api.request('/expert/results/' + encodeURIComponent(route.params.id) + '/validate', { method: 'POST', body: { validation_status: review, remarks: remarks.trim(), expert_recommendation: recommendation.trim(), follow_up_needed: followUp } })
       setMessage('Review saved.'); record.refresh()
-    } catch (e) { setError((e as Error).message + ' Refresh the record before resubmitting if the connection was interrupted.') }
+    } catch (e) { setError((e as Error).message + ' Pull down to reload the record before resubmitting if the connection was interrupted.') }
     finally { setBusy(false) }
   }
   async function saveImage() {
@@ -48,7 +48,7 @@ export function ResultScreen({ route }: { route: { params: { id: string } } }) {
     catch (e) { setImageError((e as Error).message) }
     finally { setImageBusy(false) }
   }
-  return <Screen>{record.loading && !result && <LoadingSkeleton kind="detail"/>}<Notice error message={record.error} />
+  return <Screen onRefresh={busy?undefined:record.refresh} refreshing={record.loading&&Boolean(result)}>{record.loading && !result && <LoadingSkeleton kind="detail"/>}<Notice error message={record.error} />
     {result && <><Heading>{result.student_name}</Heading><Body muted>{dateLabel(result.date_generated)} · {result.grade_level || 'Grade not recorded'}</Body>
       <Body>{screeningType(result.report_type)}</Body><Status value={result.classification} /><Body>Reported-class model score: {legacyPercent(result.confidence_score)}</Body>
       <Body>High Potential model score: {legacyPercent(result.dysgraphia_probability)}</Body>
@@ -67,6 +67,6 @@ export function ResultScreen({ route }: { route: { params: { id: string } } }) {
         <Notice error message={error} /><Notice message={message} /><Button label={busy ? 'Saving review…' : 'Save validation'} disabled={busy} onPress={saveReview} />
       </View>}
     </>}
-    <Button label="Refresh record" secondary disabled={record.loading || busy} onPress={record.refresh} />
+    {Boolean(record.error)&&<Button label="Try again" secondary disabled={record.loading||busy} onPress={record.refresh}/>}
   </Screen>
 }

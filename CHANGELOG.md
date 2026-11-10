@@ -1,3 +1,231 @@
+## 2026-11-10 - Selected model test and release checks (local)
+
+- Evaluated the selected original MobileNetV2 and fine-tuned EfficientNetB0/ResNet50 at 0.75 on the existing 136-image test set using runtime-style preparation; verified selected artifact hashes and test digest. MobileNetV2: 116/136 (85.29%), High Potential 51/66, 5 false positives. EfficientNetB0: 107/136 (78.68%), 42/66, 5 false positives. ResNet50: 118/136 (86.76%), 50/66, 2 false positives. These are previously used test images, not independent clinical validation; results differ from the 134-image validation selection. App models/catalogue unchanged.
+- Model test graphs and data saved in output/selected-model-test-2026-11-10 and ZIP. Mobile TypeScript/24 tests, 29 shared tests, nine final-report Python tests, full 683-check contract/SQL suite (including 86 final-report checks), raw JSX and diff checks pass locally. Authenticated native role acceptance and publication remain pending.
+- Android Expo export completed. Local FP32 Lite conversions of selected EfficientNetB0 and ResNet50 matched Keras classifications on all 136 previously used test images (maximum score errors 8.83e-6 and 4.51e-6 respectively) on Windows builtin CPU. Linux/hosted LiteRT parity, memory, registry and deployment remain unverified; current app models unchanged.
+
+## 2026-11-10 - Prepare privacy notice revision
+
+- At the user's request, prepared privacy-notice-v2-role-based-draft.txt in plain language organized by teacher, expert, parent and administrator roles. It describes the current intended final-report access, existing account acknowledgement and student-permission distinction. Unknown controller, retention and request arrangements are stated as unconfirmed rather than invented. Draft only; not shown by the app or published.
+- Prepared graphiscan/api/PRIVACY_NOTICE_REVIEW_DRAFT.md with clearer notice versus participation-permission language, account-use rules, and intended linked-parent final-report access including Flagged screenings. Identified unconfirmed controller/contact, legal bases, retention/request, participation and hosting/disclosure details as placeholders for owner and privacy-adviser review.
+- Draft only: no live notice publication, agreement acceptance, app behavior or database changes. Deployed wording and final-report behavior must be verified before publication.
+
+## 2026-11-10 - Review remaining root documentation
+
+- Reviewed root Markdown documents for overlap and stale status. Updated README.md to describe the current stack and distinguish published Android 1.0.2 from later local changes; fixed two remaining links to archived notes. Planning/checklist/handoff files overlap but contain unique historical context and have not been removed. No runtime change.
+
+## 2026-11-10 - Tidy root documentation
+
+- Moved five historical presentation, release, UI-review, and landing-design notes into docs/archive/root-notes and updated root-document references. Kept current guidance, defense minutes, privacy inputs, and existing project work. No code or project data removed.
+- Verified archive files and root references locally; no runtime or deployment change.
+
+## 2026-11-10 - Selected model validation package
+
+- User asked to remove old material from the focused package. Removed the two archived MobileNet training plots from this package and rebuilt its ZIP; original source evidence remains preserved. The package explains why there is no new MobileNet training curve.
+- User selected original MobileNetV2 and fine-tuned EfficientNetB0/ResNet50 for comparison. Generated accuracy/performance charts, class metrics, confusion matrices and training curves in output/selected-model-validation-2026-11-10 and a checked ZIP. Verified the same 134-image validation digest and 0.75 decision threshold; figures are 88.06%, 83.58%, 85.82% validation accuracy, not independent test results. Selected models were chosen using validation; writer separation remains unverified.
+- Historical MobileNet training curves are included as archived 0.50-threshold plots, not a new training run; the other curves are 0.75 fine-tuning runs. Existing app catalogue and models unchanged; no deployment or release.
+
+## 2026-11-10 - Fine-tune other binary models (local)
+
+- Fine-tuned separate copies of existing EfficientNetB0 and ResNet50 using the MobileNetV2 experiment's three-epoch, 1e-5, last-20-layers/batch-normalization-frozen method. Before/after used existing 134-image validation set, 0.75 threshold and runtime-style image preparation; test set and app catalogue untouched.
+- EfficientNetB0: 106/134 to 112/134 accuracy, High Potential recall 38/65 to 45/65, false positives 1 to 2. ResNet50: 101/134 to 115/134 accuracy, recall 32/65 to 51/65, false positives 0 to 5. Validation results are not independent test results; validation was used for training selection, writer separation unverified.
+- Inspected training figures and checked ZIP integrity. Combined three-model results, methods and graphs: output/finetuning-comparison-2026-11-10. No deployment or record changes.
+
+## 2026-11-10 - MobileNetV2 fine-tuning experiment (local)
+
+- Fine-tuned a separate copy of the existing MobileNetV2 for three epochs at learning rate 0.00001, unfreezing the final 20 backbone layers except batch normalization. Evaluated before/after on the same 134 validation images at 0.75, using current image preparation; did not use the test set in this experiment or modify app/catalogue models.
+- Before: 118/134 accuracy and 53/65 High Potential recall. After: 117/134 and 50/65; false positives fell from four to two while false negatives rose from 12 to 15. Not an overall screening improvement; preserve current model. Training graph visually checked; results and matrices in output/mobilenet-finetune-2026-11-10. Validation split previously used and writer independence unverified.
+
+## 2026-11-10 - Fresh binary model experiment (completed locally)
+
+- User chose to retain Normal vs High Potential and requested a fresh three-model comparison with graphs and class-specific tables matching the paper. Added tools/train_binary_experiment.py and isolated TensorFlow/plotting environment; runs with existing train/validation/test image split, ImageNet initialization, maximum five epochs and 0.75 test threshold. Writes only to ignored .local-tools/training-experiments; no app artifacts, catalogue, dataset split, or hosted data replaced. The test split was used before and writer separation remains unverified.
+- Initial sandbox attempt stopped before training because pretrained weights could not download. Approved CPU run completed all three models, five epochs each. At 0.75 on the previously used 136-image test set: MobileNetV2 108/136 (79.41%; High Potential recall 40/66), EfficientNetB0 81/136 (59.56%; recall 11/66), ResNet50 112/136 (82.35%; recall 44/66). Current deployed models unchanged.
+- Saved training/validation accuracy and loss, confusion matrices, test comparisons, class-specific CSV and methods summary in output/model-comparison-2026-11-10 and ZIP. Training accuracy curves use Keras's 0.50 threshold and are explicitly labeled; test graphs use 0.75. Inspected representative figures and verified arithmetic and archive. Same prior test images and unverified writer separation limit conclusions; no independent validation or clinical claim.
+
+## 2026-11-10 - Review supplied paper against current system
+
+- Read the supplied 76-page PDF text and visually inspected model-result figures/tables. Dataset split counts match local folders. Identified old 0.50-threshold results presented as current system results, conflicting ResNet accuracy in Table 11, model-name/architecture and diagnostic-claim inconsistencies, and outdated technology/security descriptions. No paper or system files were changed by the review. Some dataset and security claims require source or deployment verification.
+
+## 2026-11-10 - Inspect binary dataset split
+
+- Counted the existing train (627), validation (134), and test (136) images by class; checked SHA-256 content hashes and found no exact cross-split matches. The supplied split script assigns individual images by class (70/15/15), not by writer; identity separation and transformed duplicates remain unverified. No image content or filenames disclosed, no training or model change.
+- Investigated a separate training experiment: local Windows virtualenv targets a missing Python executable, and the available Linux distribution has no python3 on its PATH. No training run was started.
+
+## 2026-11-10 - Investigate model accuracy differences
+
+- Compared the historical training CSV, training evaluation code, current predictor, saved hosted-path evaluation and LiteRT parity evidence. Independently hashed the three local original artifacts; hashes match recorded evaluations, including the legacy ResNet artifact. The two 72.79% results both equal 99/136 but have different confusion matrices. Historical ResNet 86.03% used the old training evaluation; hosted-path measurement uses 0.75 and different preprocessing. Exact cause of the remaining difference at the common 0.50 threshold remains unresolved.
+- Source and saved aggregate evidence inspected; no inference rerun, live catalogue check, model, threshold, or record changes. Vue upload source inspected but prior Capacitor display/version was not independently reconstructed.
+
+## 2026-11-10 - Model test accuracy in screening (local)
+
+- The mobile Screen handwriting model choices now show the selected catalogue evaluation's test accuracy, or Not recorded when unavailable, with a short explanation that test-set accuracy is not an individual result's accuracy. The default-model label and model choice behavior remain; screen-reader labels include the displayed detail. No model, API, or database change.
+- Mobile TypeScript, existing core tests and raw JSX checks run; Expo visual and live catalogue acceptance remain pending.
+
+## 2026-11-10 - Allow parents to read complete final reports
+
+- Prepared 031_parent_final_report.sql: a linked parent's current finalized report can contain Validated and Flagged screenings, with full-history freshness and existing session, privacy and parent-link checks. Individual screening/report release remains unchanged; internal history capability is not granted to application roles. Updated mobile final report preview and hid inaccessible Flagged individual-screening buttons for parents.
+- Disposable PostgreSQL suite passes 86 final-report checks, including linked/foreign parents, session and privacy gates, Flagged content, individual access and stale reports; full contract/SQL suite, mobile TypeScript and raw JSX checks pass. No live records changed, API publication or APK build. Parent native acceptance remains pending.
+- User reports installing 031. Independent read-only verification could not run because the local Python environment points to a missing Python executable; hosted installation is not independently verified.
+- User subsequently reports all three 031 preflight results are true. This is user-reported verification; a parent account's end-to-end access remains untested.
+
+## 2026-11-10 - Student saved action (local)
+
+- Changed the mobile student save confirmation to open student details instead of an empty screening history, while retaining Back to Students. Applies to the shared create/edit confirmation; no record or API behavior changed.
+- Mobile TypeScript and raw JSX checks run; navigation has not been visually checked in Expo.
+
+## 2026-11-10 - Clarify student and parent linking (local)
+
+- Simplified the school and parent-link instructions in HostedStudentEditor.tsx and TeacherParentLink.tsx. They explain that the administrator assigns the teacher's schools, the teacher selects the student's school, linking an existing parent is optional and can be done later, and a school must be selected first. Existing school, parent lookup, and save behavior remain unchanged.
+- Raw JSX checked; Expo visual acceptance remains pending. No API, database, or record changes.
+
+## 2026-11-10 - Password strength indicator (local)
+
+- Added an estimated Weak/Fair/Strong indicator to the mobile temporary-password replacement screen in AccountSetup.tsx, with a longer, unique password hint. It uses local length, existing requirements and basic predictable-pattern checks; it is an estimate, not a breach or comprehensive guessability check. Existing password acceptance and server enforcement are unchanged.
+- Mobile TypeScript and raw JSX checks run; native visual acceptance remains pending. No API, database, or password changes.
+
+## 2026-11-10 - Clarify final report screening labels (local)
+
+- In HostedFinalReport.tsx, renamed the screening badge from Model to Model result and placed Expert review beside it, wrapping on narrow screens. Status values and report behavior are unchanged.
+- Applied Model result consistently to shared mobile screening and history badges and the result detail heading for all roles; model names, selection, and score descriptions remain specific to their purpose.
+- Separated Model result and Expert review labels from their colored value badges in shared screening rows, history, and final report. Each label sits beside its value, and the two pairs wrap when necessary.
+- Placed the screening detail's Result label beside its classification badge as well.
+- Aligned the screening report's expert review status directly beside its heading instead of spreading them across the row.
+- Source review confirms these shared mobile components are used by teacher, expert, and parent views where records are available. Final-report writing guidance is expert-only; other roles see a saved report or its pending message. Cross-role native visual acceptance remains pending.
+- Raw JSX checked; visual acceptance in Expo remains pending. No API, migration, or record changes.
+
+## 2026-11-10 - Simplify final report guidance (local)
+
+- Replaced the expert's generic monitoring heading and explanatory copy in HostedFinalReport.tsx with direct guidance for writing the report or completing the remaining step. Existing readiness rules and unrecognized server reasons are preserved; no API, migration, or record changes.
+- Shortened the follow-up guidance to one sentence explaining that the latest review's Follow-up needed answer must be set to No when no more follow-ups are needed. Other readiness requirements still apply.
+- Mobile TypeScript and raw JSX checks run for the copy change; native visual acceptance remains pending.
+
+## 2026-11-10 - Clarify screening history layout (local)
+
+- Reworked the mobile history in HostedApp.tsx and WorkspaceUI.tsx into a timeline: student identity appears once, and each screening leads with its type and date. Kept sorting, pagination, status indicators, navigation, and the final report action.
+- Raw JSX and diff checks pass; TypeScript checked separately. Expo reload was initiated, but the updated history layout has not yet been visually verified on the emulator. No API, permissions, migration, or record changes.
+
+## 2026-11-10 - Resume local Expo preview
+
+- User requested startup. Existing local API5002 and Expo Metro8081 responded;
+  started the existing Android emulator visibly, restored reverse8081/5002 and
+  opened the local Expo project. Native screenshot confirmed the existing expert
+  workspace. No credential entry, record mutation, migration or publication.
+
+## 2026-11-09 - Pause and resume handoff
+
+- User requests resuming later. Updated RESUME.md with local/unpublished feature
+  state, installed030, current expert review/final report/mobile directions,
+  local LiteRT preview setup and actual verification limits. Preserved all
+  uncommitted work; no build, migration, live record write or publication.
+
+## 2026-11-09 - Simplify expert result review presentation (local)
+
+- Removed the Expert review: Validated/Flagged badge from the expert screening result at the user's request. The explicit Edit review action, saved status, report details and review-list statuses remain. Source/raw-JSX checked; no API, record or publication change.
+
+## 2026-11-09 - Read-only saved reviews and return to Reviews (local)
+
+- User requests no immediate editing of already reviewed screenings. HostedApp.tsx now opens Validated/Flagged results read-only, with explicit Edit review to show the form and Cancel editing to close it; Pending screenings still open the review form. Cancel is disabled while saving or an uncertain submission is pending. This is presentation/interaction gating, not a permanent backend review lock; existing authorized revisions, ownership and audit remain.
+- Removed View student details from the shared screening result/report detail. Successful expert saves pop back to Main's Reviews tab, including when the result was opened from Home; list focus reloads saved status. Split HostedReview onSaved from onReload so Reload current record and uncertain-retry recovery do not navigate as if a save succeeded. Failures retain the form, original key/body and explicit retry. No-follow-up helper now explains reopening the saved screening to finalize it after returning to the list.
+- Verification: TypeScript/raw-JSX/diff checks pass.15 fictional browser assertions pass for Home/Reviews entry, absent student-details action, successful save return/list status, failure/reload staying on form, exact retry, read-only reopen and explicit Edit/Cancel. First test run checked list content before asynchronous refresh; corrected to wait for the saved status. No live review, account or student write; no API/migration/model/permission change, APK or publication. Native authenticated save acceptance remains user testing.
+
+## 2026-11-09 - Hide expert Reviews filter heading (local)
+
+- User extends the removed Review status heading to expert Reviews. Both teacher Results and expert Reviews now hide that heading while retaining All/Pending/Flagged/Validated buttons and server filtering. Source/raw-text checked; no record, API or publication change.
+
+## 2026-11-09 - Expert Home recent screenings label (local)
+
+- User notes expert Home includes assigned screenings that have not yet been reviewed. Renamed Recent reviews to Recent screenings in HostedHome.tsx; recorded review status remains visible per row, and list/query/scope/order/navigation are unchanged. Parent Recent reports retains its label. Source/raw-JSX checked; no API, record or publication change.
+
+## 2026-11-09 - Pending final report message (local)
+
+- User refines the blank reader state to a single neutral sentence: The expert has not yet provided a final report. HostedFinalReport.tsx displays it when an authorized nonexpert reader has no current saved final report; no student name/grade or provisional report content is added. Expert authoring and saved-report rendering remain. Source/raw-JSX checked; no backend, record, migration or publication change.
+
+## 2026-11-09 - Final report withheld until saved; refresh cleanup and detail polish (local)
+
+- User requests no report content before an expert supplies it, then explicitly removes even the student name/grade until finalized. HostedFinalReport.tsx now withholds the identity heading until a saved current final_report exists; teacher/parent presentation also withholds Monitoring prose, status, screening history and placeholder observations. Expert authoring/readiness controls remain available in the expert workspace. Pending-review placeholder observations are not presented as expert text. Current saved reports still show the two actual conclusion/recommendation sections.
+- Removed routine Refresh records/record/final report/dashboard buttons in hosted and retained legacy Expo screens. Shared Screen supports pull-to-refresh; Home/result/report/final report use it while existing directory/list gestures remain. Error-only Try again controls and explicit uncertain-write recovery remain; no automatic write retries added. Final-report pull-to-refresh is disabled during save/uncertain submission.
+- Student details now has a compact icon/name/grade header with explicit teacher Edit, divided School/Age/Parent information rows, and Screening history/Final report navigation rows. User flags icon alignment; all information-row icons now center vertically against their label/value blocks. Screen handwriting uses the same StudentRow as the directory, including person outline, name and grade · school, with radio selection and busy/pending disabling retained. No extra Student heading on that form; teacher Results Review status heading is hidden while choices remain.
+- Final mobile TypeScript/24 existing tests/raw-JSX/diff checks pass for this batch; final identity-gating TypeScript rerun passes separately. Native capture confirms teacher final report hides monitoring content before the identity-heading correction; latest identity gate inspected in source. Detail alignment and screening chooser are source/typechecked, not newly accepted in a controlled native capture. User was navigating concurrently; the agent does not claim screenshots from other pages validate those layouts. No new records, migration, API/permission/model change, APK or publication.
+
+## 2026-11-09 - Local model-runtime mismatch corrected
+
+- Missing model choices traced to local configuration selecting the original VersionedBinaryRuntime while the published catalogue uses distinct LiteRT versions. Both ignored manifests validate three pinned artifacts; Storage configuration is present. Added ignored run_v1_screening_local.py to select the existing matching LiteRT manifest and cached runtime for this process, then restarted only the verified local preview API on5002. No .env edit, model/threshold/registry mutation or hosted restart.
+- Generated8x8 white PNG MobileNetV2 inference through the matching LiteRT CPU runtime succeeds with valid binary output; no student image or database write. This proves local runtime execution, not new model accuracy, all-three inference or authenticated catalogue/upload success. API starts configured; authenticated visibility/reopening Screen handwriting remains user acceptance. Native captures during concurrent navigation did not independently show the model selector. Keep this separate from current production availability.
+
+## 2026-11-09 - Remove teacher Results filter heading (local)
+
+- User requests removing Review status wording from Results. QuickFilters gains opt-in hideLabel, used on teacher Results only; All/Pending/Flagged/Validated choices and expert Reviews retain their behavior. Source/diff reviewed; no API, record, migration or publication change.
+
+## 2026-11-09 - Remove redundant Student heading from screening form (local)
+
+- Removed only the Student section heading from HostedScreeningActions.tsx Screen handwriting. Student search/selection, paging, model/image controls and submission behavior remain. Local source refresh only; no API, record, migration, APK or publication change.
+- Verification: reviewed the one-line JSX change and ran the raw-text scan/diff check. No new test suite or native acceptance claimed.
+
+## 2026-11-09 - Simple student silhouette icon (local)
+
+- User requests replacing student initials circles, then clarifies no face. Shared StudentAvatar now uses a simple Material person-outline silhouette in the existing circle, replacing initials for student directory and screening rows. The brief child-care face-icon trial was rejected and replaced; it is not the final design. Account profile initials/photos retain their existing component. No gender inference, new field, request or migration.
+- Final TypeScript passes after the person-outline substitution; prior raw-JSX/diff checks pass. Native Expo receives the source refresh. No new test suite, application record mutation, APK or publication. Grade/school metadata and the visible search/grade dropdown remain.
+
+## 2026-11-09 - Visible student search, grade dropdown and school metadata (local)
+
+- User clarifies the final teacher Students layout: name search stays visible; a separate filter icon opens All grades/Grade1/Grade2/Grade3. Added StudentGradeFilter.tsx anchored dropdown with selected check, outside-tap/Android Back dismissal and52-unit targets. Grade changes use the existing server grade_level query and reset paging immediately; name search uses a300ms debounce/keyboard Search. School selector removed from teacher search; parent Children keeps its prior filters. Teacher header retains Add student icon.
+- User also requests school beside grade beneath each student name. Shared WorkspaceUI.tsx StudentRow now renders Grade N · school_name on that metadata line, with natural wrapping and an explicit unavailable-name fallback. Uses existing installed028 projection; no new request, migration or ownership change. Native row screenshot confirms placement; no private record values copied into this log.
+- Final mobile TypeScript/raw-JSX/diff checks pass. Earlier typecheck caught the new dropdown's modern RN View-ref type; corrected to React.ComponentRef<typeof View>, then passed. Native search/default-grade and school metadata captures inspected; dropdown opening checked separately. No new automated test suite, record writes, APK or publication.
+
+## 2026-11-09 - Teacher Students filter-icon direction (local)
+
+- User supersedes the always-visible search-row direction with a filter icon. Teacher Students header now has accessible Filter students/Hide filters and Add student icons with48-unit targets. The filter icon toggles the compact student-name/school row and equal-width Search/Clear actions; Search closes the controls after applying. Grade buttons remain removed. Parent Children layout and Results/expert quick filters retain their existing behavior.
+- Updated HostedApp.tsx and HostedStudents.tsx; TypeScript passes. Raw-JSX scan passes when run from repository root (initial invocation used the mobile working directory and could not resolve its scan path). Native expanded header/form capture inspected and collapse checked; no account/student/review write, migration, API/model/permission change, APK or publication.
+
+## 2026-11-09 - Teacher Students alignment and grade-filter removal (local)
+
+- User flagged Students button/field alignment, then explicitly requested removing grade buttons and bringing student/school search together. Removed teacher grade controls and teacher grade query/filter summaries, including stale state retained through Fast Refresh. Parent grade filtering remains. Moved Add student into the teacher Students native header; Search/Clear now share an equal-width row aligned with the fields. A short-lived equal-width grade-button trial was removed and shared QuickFilters restored.
+- Placed student-name input and school selector side by side in one aligned teacher filter row, with equal-width Search/Clear below. Uses concise Name/All schools placeholders; parent layout unchanged. The optional clarification received no reply during independent work, so used the bounded same-row interpretation. SchoolSelect adds an optional allLabel with its existing default preserved elsewhere.
+- TypeScript/raw-JSX/diff checks pass. Native screenshot inspected for the intermediate aligned grade/button layout; final inline layout capture reviewed separately. No API, scope, database or model change and no record mutation. Local Expo source only; no APK/publication.
+
+## 2026-11-09 - Make local Expo emulator visible
+
+- User could not see the prepared Expo app. Confirmed local API5002/Metro8081 reachable and emulator connected, but its launch used -no-window. Previous native sign-in observation did not establish a visible user window. Closed that idle/sign-in emulator and reopened the same AVD visibly; verified a nonzero window handle/title. No device-data wipe, credential entry, migration or record write.
+- After Android boot completed, restored reverse5002/8081, woke the display and reopened the current Expo project. Local API and Metro remain running; no source behavior changes or new test suite. User still performs authenticated final-report acceptance.
+
+## 2026-11-09 - Simplify final report to two fields; Expo local API preview
+
+- User approves replacing the three-field form with Expert conclusion (combined observations/summary/conclusion) and Recommendation. Updated HostedFinalReport.tsx editing, preview, saved display and draft-reset/discard copy. Distinct older summary/conclusion text is preserved together; identical text appears once. Keeps installed030/API compatible by mirroring the combined conclusion to its required summary field and mapping Recommendation to next_steps. No migration, backend contract, role/release or model change.
+- Verification: mobile TypeScript and raw-JSX text scan pass.24 fictional browser assertions at320/390 pass for exactly two required fields, preview/edit retention, unchanged uncertain-save retry, compatible payload, deduplicated saved text, headings and no overflow. Screenshot inspected. No real final-report writes. Restored Expo's automatic tsconfig rewrite to the existing source include/exclude settings.
+- Started the current local API at127.0.0.1:5002 using existing private configuration (no values logged); anonymous final-report route401 confirms availability, not authenticated save. Started main Expo source on8081 with process-only EXPO_PUBLIC_HOSTED_API_ORIGIN=http://127.0.0.1:5002 and Android reverse5002; no environment file was changed. Expo CLI reports opening GraphiScan_Pixel_6 and Android bundling succeeds. User will sign in/test; hosted publication/APK rebuild remain undone. Phone Expo connection may require a different local address; emulator is the prepared target.
+- Native capture initially showed the previously observed missing ExpoCrypto startup error. Cleanly force-stopping/reopening Expo Go with reverse8081 restored the actual GraphiScan sign-in screen, visually confirmed in a fresh Android screenshot. No reinstall, credential entry or record write. Authenticated two-field finalization is left for the user's Expo test.
+
+## 2026-11-09 - Local final-report preview opened
+
+- User requests seeing the feature locally before publication. Opened a visible desktop browser at localhost:8083 using the isolated, ignored Expo fixture after the in-app browser host was unavailable. Set the fixture to one reviewed Initial Screening with Follow-up needed=No; fresh browser snapshot confirms the initial-only history and editable summary/conclusion/next-steps form.
+- Fictional in-memory preview only; no real student/account/consent/report writes, no API publication or rebuilt APK. Installed030 remains independently verified; do not rerun it. No new test suite was run in this preview handoff.
+
+## 2026-11-09 - Migration030 installed and independently verified
+
+- User reports successful030 installation. Read-only tools/check_v1_final_reports.py --connect confirms all six metadata flags and exact installed/source body matches for all three new functions. This specifically verifies the corrected optional-follow-up rule: reviewed Initial alone may finalize when latest Follow-up needed=No. Do not rerun030; no further migration is needed for this feature.
+- No application rows were read or changed by verification. Final local TypeScript/24 mobile tests/raw-JSX scan/diff checks and nine Python final-report API tests pass after the optional-follow-up correction;683 contract checks/all isolated SQL suites including71 final-report checks also pass. Earlier export/browser runs remain accurately bounded in the preceding entry.
+- Matching API and Expo source remain local/unpublished; APK1.0.2 has no final-report screen. API publication and APK rebuild/distribution plus actual hosted/native acceptance remain. No production final report was created by the agent.
+
+## 2026-11-09 - Final screening summary and conclusion (local;030 not installed)
+
+- Implemented the user's final-report flow in the hosted API and Expo app. Expert saves Follow-up needed = No, then opens Finalize screening to write/preview/finalize Overall summary, Expert conclusion and Recommended next steps. Also accessible from student/child details and history. User corrected the initial implementation: follow-ups are OPTIONAL. A reviewed Initial alone can conclude; all existing screenings must be reviewed and the latest review must say no follow-up. No automatic finalization from the review switch.
+- Prepared030_final_screening_reports.sql and six-flag metadata preflight, NOT installed hosted. New RLS-protected append-only snapshots have no direct application table/sequence grants; separated fixed-path reader/writer functions reuse existing directory/history gates and current025 school/grade expert responsibility. Complete history includes all pages; parent final access requires every included screening Validated. Transactional fingerprint/revision/idempotency/locks/audit protect finalization; new completed screenings or changed student/review/assignment revisions reopen monitoring and hide stale conclusions. No model/label/threshold or legacy-route change.
+- Mobile retains exact uncertain-save payload/key, guards departure/drafts, reconciles matching current-read proof, invalidates stale previews and returns to the top after saving. Updated OpenAPI/API_CONTRACT and api/FINAL_SCREENING_REPORTS.md activation/limitations. Admin API reads retain existing scope; dedicated admin web presentation and PDF export are outside this slice.
+- Verification: final contract683 checks and all isolated SQL suites pass, including71 final-report checks (Initial-only conclusion, optional follow-ups, latest-follow-up-needed rejection, >100-record history, author/snapshot, parent/foreign-role/grade/privacy/session denial, unchanged retry, changed-body/stale-history rejection, immutability and six metadata flags). Nine new Python API tests and eight existing screening-read tests pass using approved installed Python; the first invocation needed the application working directory. Mobile TypeScript/24 existing tests and raw-JSX scan pass before final copy changes; Android/web exports succeeded before the optional-follow-up correction, with final TypeScript/raw-text checks recorded on completion.41 fictional browser checks at320/390 pass for preview/edit/save/lost-response retry/read-only roles/reopen/denial; no page errors or real writes. Browser final-summary capture inspected. Native isolated Expo preview rendered behind an emulator System UI ANR dialog; native visual acceptance is NOT claimed. No physical-device or real multi-connection/hosted final-report acceptance.
+- Local source only: no030 installation, production record/consent writes, API publication, APK rebuild or release. Existing APK1.0.2 remains unchanged. Process-death recovery of unsent drafts/pending keys is not implemented.
+
+## 2026-11-09 - User removes three-class scope; requires final summary
+
+- User explicitly removes the three-class plan. Existing binary Normal/High Potential remains the intended output for all three model families; earlier three-class targets are superseded, not unfinished release requirements. The earlier target was found in repository requirements/design/plan and experimental model documentation; the minutes only give classification-highlighting examples and do not explicitly request three classes. No originating user authorization was established by this audit.
+- User confirms the final screening-cycle summary and conclusion is needed. Recorded as required new work, not implemented; detailed workflow design pending. Updated CURRENT_REQUIREMENTS, PROJECT_PLAN, KNOWLEDGE, SYSTEM_DESIGN, WORK_CHECKLIST and DEFENSE_SOFTWARE_AUDIT.
+- Verification: searched source planning/evidence documents and reviewed documentation diff. No runtime/model/threshold changes, tests, record writes, migration, build or publication.
+
+## 2026-11-09 - Defense minutes system reassessment
+
+- Updated DEFENSE_SOFTWARE_AUDIT.md against the transcribed minutes, current source and latest recorded release evidence, excluding paper/diagram/slide revisions. Main requested system features are implemented; full hosted installed-APK role/model/onboarding/retry/access and physical-device/performance acceptance remains unverified. Corrected historical no-APK and email-delivery direction in the current audit section.
+- Distinguished the separately planned three-class target from the minutes' example labels. Recorded the user's requested final screening-cycle summary/conclusion as planned, with implementation deferred until after this audit; existing reports remain per-screening.
+- Verification: inspected predictor, hosted model selector, onboarding gates, screening read/write SQL, model evidence and release/check records. No new tests, live account/student/review writes, migrations, builds or publication performed.
+
 ## 2026-11-09 - Android1.0.2 published and live
 
 - Implementation2ad5bd7679cb75e9c63509962262ac4503b31c24 pushed to origin/main. Public GitHub release android-v1.0.2 targets that exact source commit; Graphiscan.apk is92,752,358 bytes and GitHub SHA256 matches local F0A2799AD6596952D8DA5129A1D3F812EA39BBAB857265FCF5D47B04B4D6654E. APK v2 signature and original signer verified; emulator install -r and launch command succeeded. No authenticated standalone/physical-phone acceptance claimed.
@@ -297,7 +525,7 @@
 
 ## 2026-11-05 - User-authorized publication checkpoint
 
-- User requested pushing the accumulated admin, account, audit, role-assignment and responsive UI work after reviewing the school toolbar. Includes migrations022-025, already independently metadata-verified installed, and their tests/runbooks. Final admin build and school toolbar desktop/phone/color checks pass; user web build passes. Prior comprehensive verification and remaining real hosted/native acceptance limits are in ADMIN_RELEASE_CHECK.md.
+- User requested pushing the accumulated admin, account, audit, role-assignment and responsive UI work after reviewing the school toolbar. Includes migrations022-025, already independently metadata-verified installed, and their tests/runbooks. Final admin build and school toolbar desktop/phone/color checks pass; user web build passes. Prior comprehensive verification and remaining real hosted/native acceptance limits are in docs/archive/root-notes/ADMIN_RELEASE_CHECK.md.
 - Reviewed publication paths; credentials/configuration, student uploads/model artifacts, local helper scripts, browser captures and generated builds remain excluded. Publication requested to origin/main; remote outcome recorded in the response after push.
 
 ## 2026-11-05 - Place Add school beside search
@@ -315,7 +543,7 @@
 - Aligned all primary Add actions beside page headings using the shared viewport stylesheet; removed empty two-button space. Matched single Edit sizing, corrected remaining visible text encoding, tightened short/landscape layouts, retained list-only Progress scrolling and added reduced-motion-aware native-dialog fades.
 - Results now displays recoverable read errors while details are open, retries the failed read without replaying writes, and offers View/Hide private image with object-URL cleanup. Audit exact displayed action phrases resolve to recorded server codes. Assignment saves invalidate cached school staff; staff lists use current grade assignments rather than historical screening metadata.
 - User resolved responsibility: admin assigns expert school/grade scopes; all current/future students, history, results, images and reviews in that scope are accessible. Prepared025_expert_grade_responsibility.sql changes existing hosted function predicates atomically, preserves current role/session/grade checks and ACLs, and retains actual review authorship. Reassignment revokes sessions; stale per-screening metadata cannot retain access. Parent linked-student/Validated release and teacher ownership remain. Native review UI follows server-authorized scope. Legacy MySQL behavior is separate.025 is NOT applied hosted;001-024 were independently metadata-verified earlier.
-- Fixed the legacy parent-access test fixture by supplying its missing reports table; production parent access rules unchanged. Verification:293 Python tests pass with one Windows symlink skip;644 contract checks and all isolated SQL suites pass, including32 expert-scope and54 role-assignment checks. Shared client27/mobile18 tests, mobile typecheck and both Vue builds pass. Browser checks use fictional intercepted APIs:107 responsive/modal,126 school/student,40 assignment,29 account,15 Results recovery,30 session,70 motion and79 cross-role workflow checks pass. Add alignment checked12 combinations; layout/type detector reports no findings. Earlier35 font/circle checks also pass. See ADMIN_RELEASE_CHECK.md for limits.
+- Fixed the legacy parent-access test fixture by supplying its missing reports table; production parent access rules unchanged. Verification:293 Python tests pass with one Windows symlink skip;644 contract checks and all isolated SQL suites pass, including32 expert-scope and54 role-assignment checks. Shared client27/mobile18 tests, mobile typecheck and both Vue builds pass. Browser checks use fictional intercepted APIs:107 responsive/modal,126 school/student,40 assignment,29 account,15 Results recovery,30 session,70 motion and79 cross-role workflow checks pass. Add alignment checked12 combinations; layout/type detector reports no findings. Earlier35 font/circle checks also pass. See docs/archive/root-notes/ADMIN_RELEASE_CHECK.md for limits.
 - Local preview remains available on Users with aligned Add controls and browser reload support. No real account/student/provider/storage writes, hosted025 application, actual model inference, native-device acceptance, commit or push performed. Owner-run025 and controlled hosted/device acceptance remain required.
 
 ﻿## 2026-11-05 - Complete numbered migration catalog audit
@@ -608,7 +836,7 @@
 
 ## 2026-11-03 - Finish initial browser UI/flow review and remove public admin links
 
-- Completed the initial local browser review documented in UI_FLOW_CHECK.md:77 stateful fictional role-flow checks/41 captures;216 public-page checks at8 viewports;74 admin checks covering8 sections at7 viewports plus dialogs/history/settings/delay/retry/drawer/logout; visible Results/history retry successfully recovered both failed reads. No application page errors in the successful matrix runs; simulated network failures were intentional.
+- Completed the initial local browser review documented in docs/archive/root-notes/UI_FLOW_CHECK.md:77 stateful fictional role-flow checks/41 captures;216 public-page checks at8 viewports;74 admin checks covering8 sections at7 viewports plus dialogs/history/settings/delay/retry/drawer/logout; visible Results/history retry successfully recovered both failed reads. No application page errors in the successful matrix runs; simulated network failures were intentional.
 - Visually reviewed phone/tablet/desktop samples. Corrected stretched short Download introduction/release copy with scoped left alignment while preserving longer supporting copy's earlier justification.17 focused spacing checks passed. Mid-drawer screenshots were corrected by waiting for exit completion, not by changing the established motion.
 - User requested removing Admin portal from the landing website now that admin has its own subdomain. Removed the anchors from Home/About/Data use/Download, runtime URL injection, unused admin URL configuration/example and obsolete external-admin curtain handling. Updated landing README: VITE_ADMIN_URL is no longer consumed.36 focused footer/link/overflow checks passed at320/768/1440; all3 supporting-route navigation/Back/curtain recovery checks passed after cleanup, and the final strict build passed. Admin roles/previews and the actual admin app remain available.
 - Strict landing build passed after the HTML/config/style changes. Mobile Android/web export passed (1270/969 bundled modules; Hermes assets, not APK). Both exported bundles contain the intended public Render origin and no localhost fixture origin. No deployed environment, DNS, real account/consent/review/upload/email or model behavior changed.
@@ -1900,7 +2128,7 @@ This historical estimate was subsequently superseded as an implementation priori
 
 - **User evidence:** User replied done after the instruction to sign in and confirm the existing admin dashboard loaded. Recorded as user-confirmed existing-stack login/dashboard, not independent browser evidence.
 - **Browser check:** Computer-use/browser inventory returned no available browsers/tabs. No new login, credential request or UI action occurred. Continue manual screen rehearsal rather than ask for connector/browser changes under the presentation deadline.
-- **Prepared:** `PRESENTATION_REHEARSAL.md` records a screen checklist and five-minute speaking order that distinguishes the current binary Vue/MySQL prototype from standalone hosted onboarding evidence and remaining rebuild work. Student/result browser detail and role-flow rehearsal remain pending; no write action is required for this check.
+- **Prepared:** `docs/archive/root-notes/PRESENTATION_REHEARSAL.md` records a screen checklist and five-minute speaking order that distinguishes the current binary Vue/MySQL prototype from standalone hosted onboarding evidence and remaining rebuild work. Student/result browser detail and role-flow rehearsal remain pending; no write action is required for this check.
 - **Verification:** Documentation only; no source/DB/credential changes or repeated tests. Existing services remain running. Prior fresh evidence remains both Vue builds, 26 read-only API checks, three local HTTP 200s and user-run hosted Auth/password/privacy 11/12/9 passing checks.
 
 ## 2026-10-20 - Refresh existing-stack presentation baseline and start local demo
@@ -1922,7 +2150,7 @@ This historical estimate was subsequently superseded as an implementation priori
 
 - **User target:** Wants a progress percentage and to present approximately 2-3 PM today (Asia/Manila). Clock check was approximately 7:43 AM, leaving about 6-7 hours.
 - **Assessment:** Rough planning estimate is 25-35% of the full revised scope (about 30%); explicitly an engineering estimate, not a measured completion percentage. Existing prototype/demo maturity is separate and requires a fresh rehearsal before a readiness percentage can be claimed. No final-release completion is implied by test totals.
-- **Prepared:** `PRESENTATION_READINESS.md` records verified milestones, remaining major work and a proposed focus on the existing prototype plus hosted-progress evidence. Asked which scope the presentation expects; the suggested afternoon plan is not yet an agreed scope reduction.
+- **Prepared:** `docs/archive/root-notes/PRESENTATION_READINESS.md` records verified milestones, remaining major work and a proposed focus on the existing prototype plus hosted-progress evidence. Asked which scope the presentation expects; the suggested afternoon plan is not yet an agreed scope reduction.
 - **Verification/next:** Read-only note review and limited local-listener inventory (no sampled entries returned; not definitive service-health evidence). No runtime/DB/credential changes or repeated tests. Next priorities depend on presentation expectations: rehearse the selected existing flows, fix demo failures and prepare truthful progress material rather than promise the complete hosted/native rebuild within the window.
 
 ## 2026-10-20 - Verify hosted temporary-notice publication after repeat seed report

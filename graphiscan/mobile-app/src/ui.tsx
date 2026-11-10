@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 export function useColors() {
@@ -18,11 +18,11 @@ export const styles = StyleSheet.create({
   metricLabel: { fontSize: 13, lineHeight: 20, minHeight: 40 },
   panel: { borderWidth: 1, borderRadius: 12, padding: 20, gap: 16 },
 })
-export function Screen({ children, scroll = true }: { children: React.ReactNode; scroll?: boolean }) {
+export function Screen({ children, scroll = true, scrollRef, onRefresh, refreshing=false }: { children: React.ReactNode; scroll?: boolean; scrollRef?: React.Ref<React.ComponentRef<typeof ScrollView>>; onRefresh?:()=>void;refreshing?:boolean }) {
   const c = useColors()
   return <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.page, { backgroundColor: c.bg }]}>
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
-      {scroll ? <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={styles.content}>{children}</ScrollView> : children}
+      {scroll ? <ScrollView ref={scrollRef} refreshControl={onRefresh?<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={c.primary} colors={[c.primary]}/>:undefined} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={styles.content}>{children}</ScrollView> : children}
     </KeyboardAvoidingView>
   </SafeAreaView>
 }

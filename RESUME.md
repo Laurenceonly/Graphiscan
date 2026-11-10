@@ -1,3 +1,36 @@
+## Resume checkpoint - 2026-11-09
+
+User is pausing. Preserve the substantial uncommitted local work; do not reset,
+rerun migrations, publish or rebuild unless requested. Published Android remains
+1.0.2; all UI/API changes below are local and unpublished. Migration030 is
+installed and independently verified; no further migration is needed for the
+final report. See the newest CHANGELOG and KNOWLEDGE entries for details.
+
+- Final report: expert's latest reviewed screening may conclude with no follow-up,
+  including after Initial alone. Expert conclusion and Recommendation are the two
+  visible fields. Before a current final report exists, nonexpert readers see only
+  a neutral pending message; no invented conclusion or student name is displayed.
+- Expert results: saved reviews open read-only, with explicit Edit review/Cancel;
+  successful review saves return to Reviews, failures/recovery remain on form.
+  No View student details action or Expert review: Validated badge on result.
+  Expert Home says Recent screenings; status-filter headings are hidden.
+- Teacher Students: visible name search, grade filter dropdown, student silhouette,
+  grade and school. Screen handwriting reuses the student row. Details information
+  icons are centered. Routine refresh buttons removed; pull-to-refresh and
+  error-only retries remain. Three-class work explicitly removed from scope.
+- Local Expo Metro8081 and loopback API5002 were running when last checked; actual
+  persistence across sessions is not guaranteed. The ignored
+  .local-tools/run_v1_screening_local.py selects the existing pinned LiteRT
+  runtime matching the hosted catalogue, without editing environment files. A
+  generated-image MobileNetV2 smoke passed; authenticated catalogue/all-model
+  and real upload acceptance remain open. Android emulator reverse8081/5002 may
+  need restoring. Do not expose configuration or student data in logs.
+- Verification recorded: TypeScript/24 mobile tests and raw-JSX checks,683
+  contract checks/all isolated SQL suites including71 final-report checks,9 new
+  final-report API tests, and15 fictional expert navigation/edit/retry assertions.
+  Latest badge-only change had a raw-JSX check. Native authenticated expert-save,
+  full role workflow and physical-device acceptance remain open.
+
 2026-11-09 PUBLISHED1.0.2: source2ad5bd7 pushed; public android-v1.0.2 release targets the exact source commit. Signed APK92,752,358 bytes; GitHub/local SHA256 F0A2799AD6596952D8DA5129A1D3F812EA39BBAB857265FCF5D47B04B4D6654E match; v2/original signer verified, emulator update-install/launch command succeeded. Both Vercel projects successful; live download button/version1.0.2/92.8MB/November9 independently verified in browser. Supersedes in-progress/local-unpublished release notes. No physical-phone/authenticated standalone acceptance or migration rerun.029 installed.
 
 2026-11-09 RELEASE1.0.2 PREPARED / PUBLICATION IN PROGRESS: signed1.0.2/code3 APK build/package/v2/original signer/bundle checks pass;92,752,358 bytes SHA256 F0A2799AD6596952D8DA5129A1D3F812EA39BBAB857265FCF5D47B04B4D6654E. TypeScript/24mobile/29shared/8API/654contract/all SQL/export and69 cross-role fictional browser checks pass. Teacher follow-up31 checks/captures pass. Landing production build uses1.0.2; push/upload/live verification in progress, not yet claimed.029 installed; no rerun or real record writes.
@@ -132,7 +165,7 @@ Read this first; older pending-reset notes below are historical and superseded.
 
 2026-11-05 migration025 installed: owner ran it twice; the second run raised the old-body guard. Read-only verification confirms all four scope preflight checks true, all001-025 objects present and all52 latest function bodies match source; current admin-writer grants exact. First run succeeded, second run did not undo it. Migration025 now safely skips already-installed predicates;34 isolated expert-scope checks include two repeated runs preserving function bodies and ACLs. No agent hosted writes or live workflow acceptance. This supersedes earlier025-unapplied notes.
 
-2026-11-05 latest pre-push checkpoint: user resolved expert responsibility: admin school/grade assignments authorize all current/future students and screenings in that scope; reassignment removes access. Implemented in prepared migration025, NOT applied hosted.001-024 remain metadata-verified installed. Admin/mobile scope UI updated; historical review authorship retained. Full local checks pass; see ADMIN_RELEASE_CHECK.md. No push, hosted writes, actual inference or native-device acceptance claimed. This supersedes earlier pending-routing and per-screening-only notes.
+2026-11-05 latest pre-push checkpoint: user resolved expert responsibility: admin school/grade assignments authorize all current/future students and screenings in that scope; reassignment removes access. Implemented in prepared migration025, NOT applied hosted.001-024 remain metadata-verified installed. Admin/mobile scope UI updated; historical review authorship retained. Full local checks pass; see docs/archive/root-notes/ADMIN_RELEASE_CHECK.md. No push, hosted writes, actual inference or native-device acceptance claimed. This supersedes earlier pending-routing and per-screening-only notes.
 
 ﻿2026-11-05 latest migration audit supersedes earlier022-pending notes: all numbered001-024 expected catalog objects are present and all52 latest function bodies match source (including023 dynamic rewrites).022 now independently verified applied. Current admin-writer function grants match the seven-function allowlist; old017 preflight's extra-function flag is explained by023. No missing numbered migration found, no database writes performed. See CHANGELOG and .local-tools/migration-audit-report.json. Live workflow acceptance remains separate.
 2026-11-05 migration checkpoint superseding earlier unapplied024 notes:024 independently metadata-verified and updated local API started5002, health200 (session87133).023 grade functions/ACLs/RLS reverified installed.022 is NOT active: both functions differ and lack mobile-only password policy; reset still forces all roles. Owner must apply022 for agreed policy. No real login/audit writes performed by checks.
@@ -323,7 +356,7 @@ checkpoint; older notes below describe earlier states and preferences.
 - Test scripts/captures live in ignored .local-tools/ and output/playwright/;
   output/mobile-ui-review-20261103/ is ignored. Task-only static server5187 stopped.
   Never commit configuration, credentials, real records, uploads or model binaries.
-- Read latest CHANGELOG.md, PROJECT_PLAN.md, KNOWLEDGE.md, UI_FLOW_CHECK.md and
+- Read latest CHANGELOG.md, PROJECT_PLAN.md, KNOWLEDGE.md, docs/archive/root-notes/UI_FLOW_CHECK.md and
   DEFENSE_SOFTWARE_AUDIT.md before continuing. Defense is November11; software only
   for now, manuscript/deck deferred. APK/device and controlled hosted role acceptance
   remain release gates.
@@ -1489,7 +1522,7 @@ Initial/Follow-up history and supported model evidence. Preserve broader agreed
 API/native/model/document work; page-load rehearsal is not core implementation.
 
 Presentation steering: user targets approximately **2-3 PM today, Asia/Manila**.
-At the 7:43 AM check about 6-7 hours remained. See `PRESENTATION_READINESS.md`.
+At the 7:43 AM check about 6-7 hours remained. See `docs/archive/root-notes/PRESENTATION_READINESS.md`.
 Full-rebuild planning estimate is roughly 25-35% (about 30%), not measured
 completion. Asked whether the presentation expects an existing prototype/progress
 demo or the full revised release. Proposed priority is fresh demo rehearsal and
@@ -1503,14 +1536,14 @@ shared and no password changed. Do not repeat the completed onboarding checks.
 
 1. Read current `AGENTS.md`, knowledge/changelog, contract and `graphiscan/api/PASSWORD_CHANGE.md`. Local implementation/testing is complete; do not repeat Auth fixture creation or migrations 001-005.
 2. User authorized a temporary **fictional-account** test notice, revisable later. **007 is user-reported applied and notice publication is independently read-only verified.** Do not rerun migration/seed or repair the repeat-run error without new evidence; the saved state is correct.
-3. **Hosted user-run privacy acceptance/round-trip now passed.** Fresh existing-stack presentation baseline: both Vue production builds and all 26 read-only local API checks passed. Local Flask (127.0.0.1:5000, debug/reloader off), admin Vite (5173) and user Vite (5174) were started and intentionally remain running; frontend roots returned 200. Next is real browser sign-in/rehearsal with existing MySQL app accounts, not the fictional Supabase account. See `PRESENTATION_READINESS.md`. Real-use wording/approval/retention inputs, generic login/logout, refresh/concurrency/recovery and client integration remain separate work.
+3. **Hosted user-run privacy acceptance/round-trip now passed.** Fresh existing-stack presentation baseline: both Vue production builds and all 26 read-only local API checks passed. Local Flask (127.0.0.1:5000, debug/reloader off), admin Vite (5173) and user Vite (5174) were started and intentionally remain running; frontend roots returned 200. Next is real browser sign-in/rehearsal with existing MySQL app accounts, not the fictional Supabase account. See `docs/archive/root-notes/PRESENTATION_READINESS.md`. Real-use wording/approval/retention inputs, generic login/logout, refresh/concurrency/recovery and client integration remain separate work.
 4. Resource endpoints, private storage and migration remain later work. Preserve active Vue/MySQL behavior until verified cutover.
 
 Next focus is the existing demonstration app and rehearsal. Temporary fictional onboarding has passing user-run hosted evidence; real-use privacy wording remains unresolved. No agent-hosted mutation or credential disclosure occurred. Do not repeat 001-007, either seed, writer/reader/password setup or passing onboarding checkers.
 
 Dashboard update: user confirmed the existing admin sign-in/dashboard loaded.
 Browser connector inventory returned no available tabs, so authenticated UI
-inspection is not independently verified. Use `PRESENTATION_REHEARSAL.md` for
+inspection is not independently verified. Use `docs/archive/root-notes/PRESENTATION_REHEARSAL.md` for
 manual Users/Students/Results/Progress/Settings/Audit checks and speaking order.
 No extra login/browser setup is needed; local demo services remain running.
 

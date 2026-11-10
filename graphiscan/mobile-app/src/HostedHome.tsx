@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { Body, Notice, Screen, useColors } from './ui'
+import { Body, Button, Notice, Screen, useColors } from './ui'
 import LoadingSkeleton from './LoadingSkeleton'
 import { ActionRow, ScreeningRow, SectionTitle, workspaceStyles } from './WorkspaceUI'
 
@@ -16,7 +16,7 @@ export default function HostedHome(p:Props) {
     {title:'Reviewed reports',detail:'Read your child’s results and expert notes.',icon:'description' as const,onPress:p.onResults}:
     {title:'Review screenings',detail:'Review records in your schools and grades.',icon:'assignment-turned-in' as const,onPress:p.onResults}
   const recent=[...p.screenings].sort((a,b)=>new Date(b.date_generated).getTime()-new Date(a.date_generated).getTime()).slice(0,3)
-  return <Screen>
+  return <Screen onRefresh={p.onRefresh} refreshing={p.loading&&p.hasLoaded}>
     <View style={s.welcome}><Text accessibilityRole="header" style={[s.name,{color:c.text}]}>{p.name}</Text><Text style={[s.role,{color:c.primary,backgroundColor:c.soft}]}>{roleName}</Text></View>
     <Pressable accessibilityRole="button" accessibilityLabel={action.title} onPress={action.onPress} android_ripple={{color:'#ffffff22'}}
       style={({pressed})=>[s.primaryAction,{backgroundColor:pressed?c.brandPressed:c.brand}]}>
@@ -30,11 +30,11 @@ export default function HostedHome(p:Props) {
       {teacher&&<ActionRow title="Screening results" detail={p.loading?'Loading records…':p.error?'Records unavailable':p.screenings.length+' '+(p.screenings.length===1?'screening':'screenings')+' loaded'} icon="assignment" onPress={p.onResults} last/>}
     </View>)}
     <View style={workspaceStyles.section}>
-      <SectionTitle title={parent?'Recent reports':p.role==='expert'?'Recent reviews':'Recent screenings'} action="View all" onPress={p.onResults}/>
+      <SectionTitle title={parent?'Recent reports':'Recent screenings'} action="View all" onPress={p.onResults}/>
       {p.loading&&!p.hasLoaded?<LoadingSkeleton/>:recent.length?<View style={[workspaceStyles.group,{backgroundColor:c.surface}]}>{recent.map((row,index)=>{const student=p.students.find(student=>String(student.student_id)===String(row.student_id));return <ScreeningRow key={row.result_id} record={row} studentName={student?.full_name} grade={student?.grade_level} onPress={()=>p.onRecord(row.result_id)} last={index===recent.length-1}/>})}</View>:
-        <View style={[s.empty,{backgroundColor:c.surface}]}><Text style={[s.emptyTitle,{color:c.text}]}>{p.error?'Records unavailable':parent?'No reports yet':p.role==='expert'?'No screenings to review yet':'No screenings yet'}</Text><Body muted>{p.error?'Refresh to try loading your records again.':parent?'Released reports for your linked children will appear here.':p.role==='expert'?'Screenings in your assigned schools and grades will appear here.':'Completed screenings will appear here for you to follow up.'}</Body></View>}
+        <View style={[s.empty,{backgroundColor:c.surface}]}><Text style={[s.emptyTitle,{color:c.text}]}>{p.error?'Records unavailable':parent?'No reports yet':p.role==='expert'?'No screenings to review yet':'No screenings yet'}</Text><Body muted>{p.error?'Try loading your records again.':parent?'Released reports for your linked children will appear here.':p.role==='expert'?'Screenings in your assigned schools and grades will appear here.':'Completed screenings will appear here for you to follow up.'}</Body></View>}
     </View>
-    <Pressable accessibilityRole="button" accessibilityLabel="Refresh" disabled={p.loading} onPress={p.onRefresh} style={s.refresh}><MaterialIcons name="refresh" size={18} color={c.primary} accessible={false}/><Text style={{color:c.primary,fontSize:14,fontWeight:'500'}}>{p.loading?'Refreshing…':'Refresh records'}</Text></Pressable>
+    {Boolean(p.error)&&<Button label="Try again" secondary disabled={p.loading} onPress={p.onRefresh}/>}
   </Screen>
 }
 const s=StyleSheet.create({
@@ -43,5 +43,4 @@ const s=StyleSheet.create({
   primaryAction:{flexDirection:'row',alignItems:'center',gap:14,minHeight:112,padding:18,borderRadius:16},primaryCopy:{flex:1,minWidth:0,gap:6},
   primaryTitle:{fontSize:20,lineHeight:27,fontWeight:'600',letterSpacing:-.3},primaryDetail:{fontSize:14,lineHeight:21},
   empty:{gap:8,paddingVertical:16},emptyTitle:{fontSize:16,lineHeight:23,fontWeight:'600'},
-  refresh:{minHeight:48,flexDirection:'row',gap:8,alignItems:'center',justifyContent:'center'},
 })

@@ -1,0 +1,45 @@
+GraphiScan Data Privacy Notice and Account Rules
+
+1. About GraphiScan
+
+GraphiScan is a BSIT capstone project developed at Davao del Norte State College, Institute of Computing. It supports handwriting screening, expert review and follow-up for learners in Grades 1 to 3. This notice explains how the service handles information and the rules for using an account.
+
+2. Information we handle
+
+Depending on the account and activity, GraphiScan handles account and role information, school and student details, teacher and parent or guardian links, handwriting images, screening results, expert reviews and recommendations, report history, and relevant account and activity records.
+
+This information supports account administration, screening, expert review, reports, follow-up and accountability. A user's acknowledgement of this notice does not by itself authorize use of student data for unrelated research, model training or publicity.
+
+3. Access by role
+
+Teachers can manage the records of students assigned to them and submit handwriting for screening within their permitted school and grade scope.
+
+Experts can review screenings within their assigned school and grade scope. They can record observations, recommendations and whether a follow-up is needed, and can write a final summary and conclusion when the required reviews are complete.
+
+Parents and guardians can access information released for their linked children. Individual screening reports are available when the review is Validated. A current final summary and conclusion can include the child's complete reviewed screening history, including Flagged screenings.
+
+Administrators manage accounts, schools, assignments and records within their granted permissions. Access depends on the current role, assignment, account status and relationship to the record.
+
+4. Storage and retention
+
+GraphiScan uses Supabase authentication, PostgreSQL and private Storage to support the service. The API checks access before returning protected records. Relevant account and administrative actions may be recorded for accountability.
+
+Retention periods and the detailed process for removing student records and handwriting images have not yet been confirmed for this notice. Ask the GraphiScan administrator for the current process. Disabling or deleting an account does not necessarily remove linked records or audit history.
+
+5. Screening and student participation
+
+Model labels and scores are screening outputs for expert review. They are not a diagnosis or a clinical probability and must not be the sole basis for a consequential decision about a learner. Expert observations and recommendations are attributed to the expert.
+
+Before submitting a student's information or handwriting, obtain the required school authorization and parent or guardian permission. Accepting this account notice does not by itself provide permission for a child's participation.
+
+6. Your account and privacy questions
+
+Use your own account, keep your password private, and access or share records only when authorized. Submit only information needed for the permitted task. Report suspected unauthorized access to the administrator who issued your account.
+
+For privacy questions or requests concerning your information, contact the GraphiScan administrator who issued your account. The administrator can refer the request to the project team. The organization responsible for the service, its privacy contact, and the detailed request procedure must be confirmed before this notice is used with real participant data.
+
+7. Acknowledgement
+
+Read this notice and the account rules before continuing. By choosing to continue, you acknowledge that you have read them and agree to follow the account rules. GraphiScan records the accepted notice version and the server-recorded time. You can sign out if you do not wish to continue. A new notice version may require a new acknowledgement.
+
+This acknowledgement is not blanket consent for every processing purpose and does not replace any required student participation permission.

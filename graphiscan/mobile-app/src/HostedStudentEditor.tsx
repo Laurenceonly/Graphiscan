@@ -13,9 +13,9 @@ import { useRecords } from './use-records'
 import TeacherParentLink from './TeacherParentLink'
 
 const blank:StudentForm={name:'',age:'',school:'',grade:'1',parent:''}
-type Props={request:Request;teacherId:string;id?:string;onHistory:(id:string)=>void;onCancel:()=>void;logout:()=>Promise<void>}
+type Props={request:Request;teacherId:string;id?:string;onStudent:(id:string)=>void;onCancel:()=>void;logout:()=>Promise<void>}
 
-export default function HostedStudentEditor({request,teacherId,id,onHistory,onCancel,logout}:Props) {
+export default function HostedStudentEditor({request,teacherId,id,onStudent,onCancel,logout}:Props) {
   const navigation=useNavigation(), submission=useRef(createStudentSubmission(()=>Crypto.randomUUID())).current
   const [form,setForm]=useState<StudentForm>({...blank}),[school,setSchool]=useState<School|null>(null)
   const [optionCursor,setOptionCursor]=useState<string|null>(null),[busy,setBusy]=useState(false),[pending,setPending]=useState(false)
@@ -68,7 +68,7 @@ export default function HostedStudentEditor({request,teacherId,id,onHistory,onCa
   if(id&&record.data&&record.data.teacher_id!==teacherId)return <Screen><Notice error message="This student is not currently assigned to your account."/><Button label="Back to Students" secondary onPress={onCancel}/></Screen>
   if(receipt)return <Screen><Heading>Student saved</Heading><RecordValue label="Student" value={receipt.student.full_name}/><RecordValue label="Grade" value={String(receipt.student.grade_level)}/>
     {receipt.duplicate&&<Body>A similar name exists in your accessible records. Review the records before adding another student.</Body>}
-    <Button label="View student history" onPress={()=>onHistory(receipt.student.student_id)}/><Button label="Back to Students" secondary onPress={onCancel}/></Screen>
+    <Button label="View student details" onPress={()=>onStudent(receipt.student.student_id)}/><Button label="Back to Students" secondary onPress={onCancel}/></Screen>
   return <Screen>
     <View style={{gap:20}}>
       <Field label="Student full name" value={form.name} onChangeText={value=>update('name',value)} maxLength={200} autoCapitalize="words" autoCorrect={false} editable={!locked}/>
@@ -78,7 +78,7 @@ export default function HostedStudentEditor({request,teacherId,id,onHistory,onCa
       <SchoolSelect request={request} value={school} disabled={locked||Boolean(id)} onChange={value=>{
         setSchool(value);setOptionCursor(null);setForm(current=>({...current,school:value?.school_id??'',parent:''}));setError('')
       }}/>
-      <Body muted>{id?'School changes are managed by an administrator. You remain the assigned teacher.':'You will be the assigned teacher. Creation requires current membership in the selected school.'}</Body>
+      <Body muted>{id?'An administrator can change the school. You are this student’s assigned teacher.':'Your administrator assigns your schools. Select the student’s school from those available to you; you will be their teacher.'}</Body>
     </View>
     <View style={{gap:12}}>
       <TeacherParentLink request={request} school={form.school} grade={form.grade} value={form.parent} disabled={locked||assignedGrades?.length===0} onChange={value=>update('parent',value)}/>

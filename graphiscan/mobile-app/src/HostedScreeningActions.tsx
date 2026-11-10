@@ -11,11 +11,11 @@ import {Body,Button,Field,Heading,Notice,Screen,styles,useColors} from './ui'
 import LoadingSkeleton from './LoadingSkeleton'
 import {useRecords} from './use-records'
 import {exportImage} from './export-image'
-import {ChoiceRow} from './WorkspaceUI'
-import {modelLabel} from './core/hosted-presentation'
+import {ChoiceRow,StudentRow} from './WorkspaceUI'
+import {hostedPercent,modelLabel} from './core/hosted-presentation'
 
 type Request=HostedClient['request']
-export function HostedReview({request,id,review,onSaved}:{request:Request;id:string;review:any;onSaved:()=>void}){
+export function HostedReview({request,id,review,onSaved,onReload,onCancel}:{request:Request;id:string;review:any;onSaved:()=>void;onReload:()=>void;onCancel?:()=>void}){
   const submission=useRef(createReviewSubmission(()=>Crypto.randomUUID())).current
   const [status,setStatus]=useState('Validated'),[remarks,setRemarks]=useState(''),[recommendation,setRecommendation]=useState(''),[followUp,setFollowUp]=useState(false)
   const [busy,setBusy]=useState(false),[pending,setPending]=useState(false),[error,setError]=useState(''),[message,setMessage]=useState('')
@@ -28,8 +28,10 @@ export function HostedReview({request,id,review,onSaved}:{request:Request;id:str
   return <View style={{gap:16}}><Heading>Submit expert review</Heading><View style={styles.wrap}>{['Validated','Flagged'].map(value=><Button key={value} label={value} secondary={status!==value} selected={status===value} tone={value==='Validated'?'success':'danger'} disabled={busy||pending} onPress={()=>setStatus(value)}/>)}</View>
     <Field label="Review remarks" multiline value={remarks} onChangeText={setRemarks} editable={!busy&&!pending}/><Field label="Expert recommendation (optional)" multiline value={recommendation} onChangeText={setRecommendation} editable={!busy&&!pending}/>
     <View style={styles.row}><Body>Follow-up needed</Body><Switch accessibilityLabel="Follow-up needed" value={followUp} onValueChange={setFollowUp} disabled={busy||pending}/></View>
+    {!followUp&&<Body muted>After saving, reopen this screening to finalize its summary and conclusion.</Body>}
     <Notice error message={error}/><Notice message={message}/><Button label={busy?'Saving review...':pending?'Retry the same review':'Save review'} disabled={busy||!remarks.trim()} onPress={save}/>
-    {pending&&<><Body muted>Keep this page open. Check the current record before starting another review.</Body><Button label="Reload current record" secondary disabled={busy} onPress={onSaved}/><Button label="I checked the record; start another review" secondary disabled={busy} onPress={()=>{submission.discard();setPending(false);setError('');onSaved()}}/></>}
+    {onCancel&&<Button label="Cancel editing" secondary disabled={busy||pending} onPress={onCancel}/>}
+    {pending&&<><Body muted>Keep this page open. Check the current record before starting another review.</Body><Button label="Reload current record" secondary disabled={busy} onPress={onReload}/><Button label="I checked the record; start another review" secondary disabled={busy} onPress={()=>{submission.discard();setPending(false);setError('');onReload()}}/></>}
   </View>
 }
 export function HostedImage({request,id}:{request:Request;id:string}){
@@ -96,15 +98,16 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     try{const state=await request('/screening-requests/'+encodeURIComponent(pending.current.key));if(state.state==='completed'){pending.current=null;setAsset(null);onComplete(state.result_id)}else if(state.state==='failed'){setFailed(true);setMessage('This submission did not complete. You can start another upload.')}else setMessage('The submission is still processing. Check again shortly.')}
     catch(e){setError((e as Error).message)}finally{setHasPending(!!pending.current);setBusy(false)}
   }
-  return <Screen><Heading>Student</Heading>
+  return <Screen>
     <Field search label="Find a student on this page" placeholder="Search this page by name" value={search} onChangeText={setSearch} editable={!busy&&!hasPending}/>
     {students.loading&&!students.data&&<LoadingSkeleton kind="student" count={3}/>}<Notice error message={students.error}/>{Boolean(students.error)&&<Button label="Retry students" secondary disabled={busy||hasPending||students.loading} onPress={students.refresh}/>}
-    <View style={{gap:8}}>{(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><ChoiceRow key={row.student_id} label={row.full_name} detail={'Grade '+row.grade_level} selected={student?.student_id===row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}</View>
+    <View>{(students.data?.data??[]).filter((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase())).map((row:any)=><StudentRow key={row.student_id} student={row} selected={student?.student_id===row.student_id} disabled={busy||hasPending} onPress={()=>setStudent(row)}/>)}</View>
     {!students.loading&&!students.error&&!(students.data?.data??[]).some((row:any)=>row.full_name.toLowerCase().includes(search.trim().toLowerCase()))&&<Body muted>{search.trim()?'No students match this search on the current page.':'No students are available for your account.'}</Body>}
     {students.data?.page?.next_cursor&&<Button label="Next students" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(students.data.page.next_cursor)}/>}
     {studentCursor&&<Button label="First students page" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(null)}/>}
     {student&&<Body muted>{"Selected student: "+student.full_name}</Body>}<Heading>Screening model</Heading>{models.loading&&!models.data&&<LoadingSkeleton kind="choice" label="Loading models"/>}<Notice error message={models.error}/>{Boolean(models.error)&&<Button label="Retry models" secondary disabled={busy||hasPending||models.loading} onPress={models.refresh}/>}
-    <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={row.is_default?'Default model':undefined} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
+    <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={'Test accuracy: '+hostedPercent(row.evaluation?.test_accuracy)+(row.is_default?' · Default model':'')} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
+    {(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body muted>Test accuracy is measured on a test set; it does not predict the accuracy of an individual result.</Body>}
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
     {modelCursor&&<Button label="First models page" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(null)}/>}<Heading>Handwriting image</Heading>

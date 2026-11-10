@@ -4000,6 +4000,181 @@
         ],
         "x-record-scope": "Current session and school-scoped server grant; deletion rechecks all live school references."
       }
+    },
+    "/students/{student_id}/final-report": {
+      "get": {
+        "tags": [
+          "screening"
+        ],
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            }
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "responses": {
+          "200": {
+            "description": "Current authorized final report state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FinalReportState"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "operationId": "getFinalScreeningReport",
+        "summary": "Read the current whole-history conclusion or monitoring state",
+        "x-roles": [
+          "admin",
+          "researcher",
+          "teacher",
+          "parent",
+          "expert"
+        ],
+        "description": "Requires migration030. Complete current scope is checked before projecting history. Parents require a current finalized report and every included screening Validated."
+      },
+      "post": {
+        "tags": [
+          "screening"
+        ],
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{16,128}$"
+            }
+          }
+        ],
+        "x-implementation-status": "foundation",
+        "responses": {
+          "200": {
+            "description": "Current authorized final report state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "request_id"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FinalReportState"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "409": {
+            "description": "History/revision/idempotency conflict, or history not ready."
+          },
+          "422": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        },
+        "operationId": "finalizeScreeningReport",
+        "summary": "Finalize an expert conclusion over the complete reviewed history",
+        "x-roles": [
+          "expert"
+        ],
+        "description": "Requires migration030. Assigned expert must see the complete Initial and Follow-up history. Immutable snapshot, history fingerprint, expected revision, idempotency and transactional audit. New screenings or review/directory/assignment revisions reopen monitoring.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalReportWrite"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7153,6 +7328,216 @@
             }
           }
         ]
+      },
+      "FinalReportWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "summary",
+          "conclusion",
+          "next_steps",
+          "expected_revision",
+          "history_fingerprint"
+        ],
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "conclusion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "next_steps": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854776000
+          },
+          "history_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "FinalScreeningReport": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "final_report_id",
+          "revision",
+          "expert_id",
+          "expert_name",
+          "summary",
+          "conclusion",
+          "next_steps",
+          "finalized_at",
+          "screenings"
+        ],
+        "properties": {
+          "final_report_id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expert_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expert_name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "conclusion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "next_steps": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "pattern": "\\S"
+          },
+          "finalized_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "screenings": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Screening"
+            }
+          }
+        }
+      },
+      "FinalReportState": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "student",
+          "state",
+          "revision",
+          "history_fingerprint",
+          "can_finalize",
+          "reason",
+          "final_report",
+          "screenings"
+        ],
+        "properties": {
+          "student": {
+            "$ref": "#/components/schemas/Student"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "Monitoring",
+              "Finalized"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "history_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "can_finalize": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "final_report": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "final_report_id",
+              "revision",
+              "expert_id",
+              "expert_name",
+              "summary",
+              "conclusion",
+              "next_steps",
+              "finalized_at",
+              "screenings"
+            ],
+            "properties": {
+              "final_report_id": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]*$"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "expert_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "expert_name": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000,
+                "pattern": "\\S"
+              },
+              "conclusion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000,
+                "pattern": "\\S"
+              },
+              "next_steps": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10000,
+                "pattern": "\\S"
+              },
+              "finalized_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "screenings": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/components/schemas/Screening"
+                }
+              }
+            },
+            "nullable": true
+          },
+          "screenings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Screening"
+            }
+          }
+        }
       }
     }
   },

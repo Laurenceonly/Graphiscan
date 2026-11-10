@@ -1,43 +1,45 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Text, View, useWindowDimensions } from 'react-native'
 import { Body, Button, Field, Notice, Screen, styles, useColors } from './ui'
 import { StudentRow } from './WorkspaceUI'
-import QuickFilters from './QuickFilters'
 import LoadingSkeleton from './LoadingSkeleton'
+import StudentGradeFilter from './StudentGradeFilter'
 import { DirectorySelect, SchoolSelect, grades, useScopedPage, type Request } from './HostedDirectoryControls'
 import { studentQuery, type School, type Student, type StudentFilters } from './core/hosted-directory'
 
 const allFilters:StudentFilters={search:'',school:'',grade:''}
-export default function HostedStudents({request,teacher,onStudent,onAdd}:{request:Request;teacher:boolean;onStudent:(id:string)=>void;onAdd:()=>void}) {
+export default function HostedStudents({request,teacher,onStudent}:{request:Request;teacher:boolean;onStudent:(id:string)=>void}) {
   const {height:windowHeight}=useWindowDimensions(),[listHeight,setListHeight]=useState(0)
   const c=useColors(),[showFilters,setShowFilters]=useState(false),[search,setSearch]=useState(''),[school,setSchool]=useState<School|null>(null)
   const [grade,setGrade]=useState(''),[filters,setFilters]=useState<StudentFilters>({...allFilters}),[schoolLabel,setSchoolLabel]=useState(''),[cursor,setCursor]=useState<string|null>(null),[error,setError]=useState('')
-  const students=useScopedPage<Student>(request,studentQuery(filters,cursor))
+  const students=useScopedPage<Student>(request,studentQuery(teacher?{...filters,school:''}:filters,cursor))
+  useEffect(()=>{if(!teacher)return;const timer=setTimeout(()=>{setFilters(current=>({...current,search,school:''}));setCursor(null);setError('')},300);return()=>clearTimeout(timer)},[teacher,search])
   function apply(){
-    const next={search,school:school?.school_id??'',grade}
+    const next={search,school:teacher?'':school?.school_id??'',grade}
     try{studentQuery(next);setError('');setFilters(next);setSchoolLabel(school?.name??'');setCursor(null);if(JSON.stringify(next)===JSON.stringify(filters)&&!cursor)students.refresh();setShowFilters(false)}catch(failure:any){setError(failure.message)}
   }
   function clear(){setSearch('');setSchool(null);setSchoolLabel('');setGrade('');setFilters({...allFilters});setCursor(null);setError('');if(!filters.search&&!filters.school&&!filters.grade&&!cursor)students.refresh()}
   function first(){setCursor(null);if(!cursor)students.refresh()}
-  function selectGrade(value:string){setGrade(value);setFilters(current=>({...current,grade:value}));setCursor(null);setError('')}
+  function selectGrade(value:string){setGrade(value);setFilters(current=>({...current,grade:value,school:''}));setCursor(null);setError('')}
   return <Screen scroll={false}><FlatList data={students.data?.data??[]} keyExtractor={row=>row.student_id} contentContainerStyle={[styles.content,{gap:0}]}
     onLayout={event=>setListHeight(event.nativeEvent.layout.height)}
     refreshing={students.loading&&students.data!==null} onRefresh={first}
     ListHeaderComponent={<View style={{gap:16,paddingBottom:20}}>
-      <View style={[styles.row,{flexWrap:'wrap'}]}>
-        {!teacher&&<Button label={showFilters?'Hide filters':'Filters'} secondary icon="filter-list" onPress={()=>setShowFilters(!showFilters)}/>}
-        {teacher&&<Button label="Add student" icon="add" onPress={onAdd}/>}
-      </View>
-      {teacher&&<QuickFilters label="Grade" value={filters.grade} options={[{value:'',label:'All grades'},...grades]} onChange={selectGrade}/>}
-      {(teacher||showFilters)&&<View style={{gap:16}}>
+      {!teacher&&<View style={styles.row}><Button label={showFilters?'Hide filters':'Filters'} secondary icon="filter-list" onPress={()=>setShowFilters(!showFilters)}/></View>}
+      {teacher&&<View style={{flexDirection:'row',alignItems:'flex-end',gap:12}}>
+        <View style={{flex:1,minWidth:0}}><Field search label="Search students" placeholder="Search by student name" value={search} onChangeText={setSearch} maxLength={120} returnKeyType="search" onSubmitEditing={apply}/></View>
+        <StudentGradeFilter value={filters.grade} onChange={selectGrade}/>
+      </View>}
+      {!teacher&&showFilters&&<View style={{gap:16}}>
         <Field search label="Search students" placeholder="Search by student name" value={search} onChangeText={setSearch} maxLength={120} returnKeyType="search" onSubmitEditing={apply}/>
         <SchoolSelect request={request} value={school} onChange={setSchool} all/>
-        {!teacher&&<DirectorySelect label="Grade" value={grade} options={grades} placeholder="All grades" onChange={setGrade}/>}
+        <DirectorySelect label="Grade" value={grade} options={grades} placeholder="All grades" onChange={setGrade}/>
         <Notice error message={error}/>
-        <View style={styles.wrap}><Button label={teacher?'Search':'Apply filters'} icon={teacher?'search':undefined} onPress={apply}/><Button label="Clear filters" secondary onPress={clear}/></View>
+        <View style={styles.wrap}><Button label="Apply filters" onPress={apply}/><Button label="Clear filters" secondary onPress={clear}/></View>
       </View>}
-      {Boolean(filters.search||filters.school||filters.grade)&&<View style={{gap:8}}>
-        <Text style={[styles.hint,{color:c.muted}]}>{[filters.search?'Search: '+filters.search.trim():null,filters.school?schoolLabel||'Selected school':null,filters.grade?'Grade '+filters.grade:null].filter(Boolean).join(' / ')}</Text>
+      {Boolean(filters.search||(!teacher&&filters.school)||filters.grade)&&<View style={{gap:8}}>
+        <Text style={[styles.hint,{color:c.muted}]}>{[filters.search?'Search: '+filters.search.trim():null,!teacher&&filters.school?schoolLabel||'Selected school':null,filters.grade?'Grade '+filters.grade:null].filter(Boolean).join(' / ')}</Text>
+        {teacher&&<Button label="Clear search and grade" secondary onPress={clear}/>}
         {!teacher&&!showFilters&&<Button label="Clear filters" secondary onPress={clear}/>}
       </View>}
       <Notice error message={students.error}/>

@@ -37,6 +37,7 @@ graphiscan/mobile-app/android/
 /.local-backups/
 /.playwright-cli/
 /output/playwright/
+/output/final-report-export/
 /output/mobile-ui-review-20261103/
 /.impeccable/config.local.json
 /.impeccable/questions/
