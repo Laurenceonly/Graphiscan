@@ -1,3 +1,7 @@
+## 2026-11-10 - Android 1.0.4 published
+
+- Published GitHub release android-v1.0.4 from source commit 1b17e49. GitHub reports the same SHA-256 and 92,772,158-byte size as the locally verified APK. Landing source updated to 1.0.4 and production build passed; landing deployment and native authenticated acceptance remain to verify. The live model registry direct query was denied by the configured database role; no catalogue or application data changed.
+
 ## 2026-11-10 - Android 1.0.4 build
 
 - Built signed Android 1.0.4/code 5 with the local single-row review filters. Gradle succeeded; APK metadata, v2 signature and matching original signer verified. APK is 92,772,158 bytes, SHA-256 DA64E0D658CE8E5B244CB1BEB65B2CE7D1593DE2C3AAE856C891F8F3229F4CFC. Publication and authenticated native acceptance remain pending.
