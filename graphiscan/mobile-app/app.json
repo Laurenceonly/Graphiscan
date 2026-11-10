@@ -3,7 +3,7 @@
     "name": "Graphiscan",
     "slug": "graphiscan",
     "scheme": "graphiscan",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "icon": "./assets/graphiscan-logo.png",
     "userInterfaceStyle": "light",
     "backgroundColor": "#FFFFFF",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "site.graphiscan.mobile",
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/graphiscan-logo.png"
