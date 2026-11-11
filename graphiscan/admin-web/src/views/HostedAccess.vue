@@ -13,7 +13,7 @@
     </template>
     <template #brand><img class="admin-brand-logo" :src="brandLogo" alt="" width="56" height="56" /><span>Graphi<span class="admin-brand-accent">Scan</span></span></template>
     <template #sign-in="{ fields, busy, error, message, submit }">
-      <AdminSignInForm :fields="fields" :busy="busy" :error="error" :message="message" @submit="submit" />
+      <AdminSignInForm :fields="fields" :busy="busy || checkingBuild" :error="error" :message="message" @submit="signInWithCurrentBuild(submit)" />
     </template>
     <template #welcome><AdminLoginPanel /></template>
     <template #refresh-action></template>
@@ -34,11 +34,27 @@ import HostedAdminWorkspace from '../components/HostedAdminWorkspace.vue'
 import AdminLoginPanel from '../components/AdminLoginPanel.vue'
 import AdminSignInForm from '../components/AdminSignInForm.vue'
 import brandLogo from '../assets/graphiscan-logo.png'
+import { hasNewAdminBuild } from '../utils/current-build.mjs'
 const origin=(import.meta.env.VITE_HOSTED_API_ORIGIN || import.meta.env.VITE_API_ORIGIN || 'http://localhost:5000').replace(/\/$/,'')
 const route = useRoute()
 const router = useRouter()
 const workspaceReady = ref(false)
 const accessRoot = ref(null)
+const checkingBuild = ref(false)
+async function signInWithCurrentBuild(submit) {
+  if (checkingBuild.value) return
+  checkingBuild.value = true
+  const outdated = await hasNewAdminBuild({
+    fetchPage: window.fetch.bind(window),
+    currentScript: document.querySelector('script[type="module"][src]')?.src,
+    parseScript: html => new DOMParser().parseFromString(html, 'text/html').querySelector('script[type="module"][src]')?.getAttribute('src')
+  })
+  if (outdated) {
+    window.location.reload()
+    return
+  }
+  try { await submit() } finally { checkingBuild.value = false }
+}
 watch(workspaceReady, () => fadeAdminSurface(accessRoot.value, { full: true }), { flush: 'post' })
 onBeforeUnmount(() => cancelAdminFade(accessRoot.value))
 function syncAccessRoute(ready = workspaceReady.value) {
