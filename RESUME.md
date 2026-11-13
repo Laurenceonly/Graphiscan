@@ -1,4 +1,10 @@
-## Resume checkpoint - 2026-11-10 (latest)
+2026-11-13 ANDROID 1.0.5 LIVE: Signed original-key APK published from c06e9f2; GitHub asset hash/size match local. Landing fbbdc8f live bundle confirms 1.0.5 link. Includes large-photo preparation and model explanatory sentence removal. TypeScript/24 tests, Gradle/signature and landing build pass. Native photo upload, physical device and resize accuracy impact untested. See CHANGELOG.
+
+## Resume checkpoint - 2026-11-10 (latest release)
+
+Android 1.0.4 is published and the live landing page points to it. Signed APK matches the original signer and GitHub digest. The filter row is included; native authenticated acceptance remains pending. Direct live model registry read was denied by the configured role; verify catalogue and authenticated inference with an authorized session. See CHANGELOG.
+
+## Resume checkpoint - 2026-11-10 (superseded by latest release)
 
 Continue from the current uncommitted workspace. Do not reset or overwrite local changes. The existing Android APK/landing download is still 1.0.3; there is no 1.0.4 artifact yet.
 

@@ -1,3 +1,74 @@
+## 2026-11-13 - Android 1.0.5 published and landing verified
+
+- Published source c06e9f2 and signed GitHub release android-v1.0.5; uploaded asset size and SHA256 match the locally verified APK (92,779,202 bytes; 0CEDE6B2BFDB3D5C5A18391C6A4B23AE6BBE304DE3A032CB607AA6B1317F3C5E). Landing commit fbbdc8f pushed. Live https://graphiscan.site/download/ returns HTTP200 and its served JavaScript contains version 1.0.5 and android-v1.0.5 download URL.
+- Includes full-image large-photo resizing/PNG preparation and removal of the model explanatory sentence. Gradle, APK version/code6, original signer/v2 signature, mobile TypeScript/24 tests and landing build pass. Actual native photo upload, physical-device installation and resize accuracy impact remain untested. No server/model/database change.
+## 2026-11-13 - Android 1.0.5 release build
+
+- Built signed Android 1.0.5/code6 from c06e9f2, including large-photo PNG preparation and model explanation removal. Mobile TypeScript and 24 existing tests, landing production build, Gradle, APK metadata, v2 signature and original signer match pass. APK: output/android-v1.0.5/Graphiscan.apk, 92,779,202 bytes, SHA256 0CEDE6B2BFDB3D5C5A18391C6A4B23AE6BBE304DE3A032CB607AA6B1317F3C5E.
+- Source pushed; GitHub APK publication and landing update in progress. Physical-device camera/gallery, authenticated uploads and accuracy impact of resizing remain untested. No model, database or server change.
+## 2026-11-13 - Prepare large screening photos on device
+
+- Hosted mobile camera/gallery selection in `graphiscan/mobile-app/src/HostedScreeningActions.tsx` now uses the SDK-matched `expo-image-manipulator` to resize images with a side over 1400 pixels, or original files over 10 MiB, preserving the entire image as PNG before submission. This aims to avoid the existing 16 MP input and 10 MiB normalized PNG limits; smaller inputs follow the previous path. Backend limits, model files, and server preprocessing are unchanged. Updated mobile package manifest/lockfile. Resize can change model inputs and has not been evaluated for accuracy or with actual camera/gallery uploads. The reported failure was not reproduced with a specific image and other causes remain possible.
+- Verification: mobile TypeScript check and 24 existing tests pass. Native camera/gallery, web image preparation, hosted screening and production memory behavior remain untested. Local source only: no new APK or publication; existing APK lacks the added native module.
+
+## 2026-11-13 - Remove screening model explanation
+
+- Removed the test-accuracy explanatory sentence from `graphiscan/mobile-app/src/HostedScreeningActions.tsx`; model labels, percentages, default selection and screening behavior are unchanged. Local Expo source only; no APK built or published. Verification: mobile TypeScript check (see result recorded in this session); native visual verification pending.
+
+## 2026-11-13 - Align paper guidance with deployed default
+
+- Updated `PAPER_SYSTEM_ALIGNMENT.md` and `GRAPHISCAN_PAPER_REVISION_CHECKLIST.md` with the verified ResNet50 default, both validation and previously used test comparisons, class tradeoffs, data limitations, and draft manuscript replacement text. Explained 86.76% from 118/136 versus the app's 86.77% rounding of its stored value. Reviewed against recorded deployment and evaluation results; no editable manuscript is in the workspace, so the paper itself has not been changed or rendered.
+
+## 2026-11-13 - Default to highest displayed test accuracy
+
+- Set the selected fine-tuned ResNet50 as the production binary default, per the user's screenshot and direction: its 86.77% test accuracy is highest among the three displayed models. Guarded transaction is in `graphiscan/db/postgres/set_resnet_selected_default.sql`; the isolated catalogue checker passed 22 checks. Supabase production reported success and a read-only query confirmed ResNet50 default and all three selectable; no student records read or changed. An already-open screen may retain its selection until reopened. Native refresh and hosted inference were not independently tested. The prior selected cutover and rollback scripts assume MobileNetV2 is default and must be reviewed before reuse.
+
+## 2026-11-13 - Selected model deployment and catalogue activated
+
+- Published selected private bundle descriptor as GitHub commit `f87bafb`; Render events show the commit Live on production `graphiscan-admin-api`. Applied the prepared guarded selected-model catalogue transaction in Supabase `graphiscan-test`, main PRODUCTION; SQL Editor reported success. A subsequent read-only query confirmed exactly three selectable entries: MobileNetV2 `3abdc7ee4b2b` (default, test accuracy 85.294%), fine-tuned EfficientNetB0 `a5db94f148d4` (78.676%), and fine-tuned ResNet50 `55e0844c9896` (86.765%). Prior version rows remain for history. No student records queried or changed.
+- Prior isolated selected cutover and rollback checks passed 20 checks. Authenticated app model chooser and actual hosted inference remain untested; Live deployment and registry rows do not prove end-to-end inference. Validation-selection figures differ from the registered test accuracies. Local git checkout remains behind the browser-created GitHub commit; preserve unrelated local changes when synchronizing.
+
+## 2026-11-13 - Prepare selected model deployment
+
+- Prepared a selected LiteRT descriptor, evidence and reversible catalogue SQL for original MobileNetV2 and fine-tuned EfficientNetB0/ResNet50. `graphiscan/tools/prepare_selected_publication.py` checks bundle chunks, runtime pins and recorded Linux parity; `graphiscan/tools/check_selected_publication.mjs` passed 20 isolated PostgreSQL checks including rollback, identity conflicts and fictional history. Matching selected test accuracies are 85.29%, 78.68% and 86.76%; validation figures are separate.
+- The private bundle uploader verified all six chunks were already present; no new chunks uploaded. Live registry read failed with insufficient privilege; browser provider unavailable. No Render deployment, production catalogue update or authenticated inference was performed. The prepared descriptor is separate from the active descriptor. A coordinated deployment and catalogue switch, authorized registry verification, and authenticated inference remain necessary.
+
+## 2026-11-12 - Clarify selected model validation results in paper guidance
+
+- Updated PAPER_SYSTEM_ALIGNMENT.md and GRAPHISCAN_PAPER_REVISION_CHECKLIST.md to make the user's chosen validation comparison the primary model-selection evidence: original MobileNetV2 88.06%, fine-tuned EfficientNetB0 83.58%, and fine-tuned ResNet50 85.82%, with the matching class metrics and validation confusion matrices. Clarified that MobileNetV2 ranks first by validation accuracy and class-wise F1.
+- Kept the separate selected-version test results and the historical 0.50 comparison distinct, with their sample sizes, thresholds and limitations. The fine-tuned versions remain experimental in the recorded app status; no deployment or model behavior was changed.
+- Verification: checked the updated values against the 2026-11-10 selected validation package, class_metrics.csv, the user's selection note in CHANGELOG.md, and the separate selected test package. The editable manuscript is not in the workspace, so only the two Markdown guidance documents were changed; no manuscript or DOCX render was produced.
+
+## 2026-11-11 - Local Expo emulator connection
+
+- Reopened `GraphiScan_Pixel_6` and started the existing Expo Android preview on port 8081. The emulator initially captured a black display; a cold boot with software graphics restored it. Its default DNS proxy could reach IP addresses but could not resolve the hosted API. Relaunching the emulator with `-dns-server 8.8.8.8` restored hostname resolution. Expo Go bundled the app and an authenticated expert Home screen loaded from the hosted API. This verifies this local emulator session only; no source, hosted configuration, or application records were changed.
+
+## 2026-11-11 - Intermittent older admin dashboard investigation
+
+- Added a pre-sign-in build check in `graphiscan/admin-web/src/views/HostedAccess.vue` and `src/utils/current-build.mjs`: if the currently served login page points to a different module, reload before submitting credentials; failed checks allow normal sign-in. An already-open older build cannot run this new check until it is refreshed once. Build and 24 Node tests (including two build-check cases and existing hosted-client tests) pass. Commit `0bef268` was pushed; live admin HTML serves a new bundle containing the check. The cause remains unconfirmed and real browser sign-in was not tested.
+- User reports an older-looking dashboard after login that changes to the new interface on refresh. The screenshot matches the hosted dashboard, not evidence of the separate legacy login. The current source removes the routine dashboard Refresh button and groups summary cards; the public admin entry and stylesheet were checked and the stylesheet contains the newer grouped-card rules. The live HTML requests revalidation. The cause and affected browser/tab have not been reproduced; no live deployment was changed.
+
+## 2026-11-11 - Paper revision checklist
+
+- Created `GRAPHISCAN_PAPER_REVISION_CHECKLIST.md`, a section-by-section checklist based on the supplied paper review, current system evidence and defense minutes. Page references and unverified evidence are identified; the manuscript itself was not edited. Reviewed the checklist against the existing alignment guide; Word rendering was not performed.
+
+## 2026-11-11 - Defense minutes paper alignment
+
+- Cross-checked `PAPER_SYSTEM_ALIGNMENT.md` against the 16 transcribed defense recommendations; added a manuscript and presentation action tracker and revised proposed objectives to explicitly name the three models and expert validation. The minutes' reported actions are not independent proof of manuscript completion. The editable manuscript and final diagrams remain to be checked; no manuscript or system changes were made.
+
+## 2026-11-10 - Paper and system alignment review
+
+- Reviewed extracted text from the supplied 76-page GraphiScan PDF against the predictor, current requirements and recorded model, workflow and release evidence. Added `PAPER_SYSTEM_ALIGNMENT.md` with page-specific revisions, proposed objectives, diagram and role guidance, model comparison distinctions, and evidence still needed. Embedded figures, citations and complete authenticated workflows were not independently verified; the manuscript and system were not changed.
+
+## 2026-11-10 - Admin refresh investigation
+
+- User reports the admin site intermittently shows an older screen and can return to login on refresh. Public admin entry serves a bundle containing the tab-session restoration and legacy-route markers; source retains both hosted and legacy routes. Admin production build and 22 shared hosted-client tests pass, including restore, transient failure and revocation cases. These checks do not reproduce the reported live behavior or identify its cause. Exact affected route and an authenticated browser reproduction remain pending. No admin behavior or deployment changed.
+- Live selected-model catalogue and inference still require an authorized session; the configured database role cannot read the registry directly. No model or data changes.
+
+## 2026-11-10 - Android 1.0.4 landing verified
+
+- Live landing download page and JavaScript return successfully and contain the 1.0.4 version and release URL. GitHub's uploaded asset digest matches the locally verified signed APK. Physical-device installation, authenticated review flow, live catalogue and inference remain unverified.
+
 ## 2026-11-10 - Android 1.0.4 published
 
 - Published GitHub release android-v1.0.4 from source commit 1b17e49. GitHub reports the same SHA-256 and 92,772,158-byte size as the locally verified APK. Landing source updated to 1.0.4 and production build passed; landing deployment and native authenticated acceptance remain to verify. The live model registry direct query was denied by the configured database role; no catalogue or application data changed.
