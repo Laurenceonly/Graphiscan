@@ -3,6 +3,7 @@ import React,{useEffect,useRef,useState} from 'react'
 import {Image,Modal,Platform,Pressable,ScrollView,Switch,View,useWindowDimensions} from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Crypto from 'expo-crypto'
 import type {HostedClient} from '../../shared/hosted-client.mjs'
@@ -61,17 +62,26 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
   useEffect(()=>{if(!model){const next=models.data?.data.find((row:any)=>row.is_default&&row.is_selectable);if(next)setModel(next)}},[models.data,model])
   async function pick(camera:boolean){
     if(busy||hasPending||pending.current)return
-    setError('');setMessage('')
+    setError('');setMessage('');setBusy(true)
     try{
       const permission=camera?await ImagePicker.requestCameraPermissionsAsync():await ImagePicker.requestMediaLibraryPermissionsAsync()
       if(!permission.granted)throw new Error('Allow image access in device settings.')
       const result=camera?await ImagePicker.launchCameraAsync({mediaTypes:['images'],quality:1}):await ImagePicker.launchImageLibraryAsync({mediaTypes:['images'],quality:1})
       if(result.canceled)return
-      const image=result.assets[0]
-      if(image.fileSize&&image.fileSize>10*1024*1024)throw new Error('Choose an image smaller than 10 MB.')
+      let image=result.assets[0]
       if(image.mimeType&&!['image/jpeg','image/png'].includes(image.mimeType))throw new Error('Choose a JPG or PNG image.')
+      if(!image.width||!image.height)throw new Error('The image dimensions could not be read. Choose another image.')
+      // Keep the full image and reduce only large inputs. The server converts to
+      // RGB PNG; bounding both dimensions keeps that normalized image below 10 MB.
+      if(Math.max(image.width,image.height)>1400||(image.fileSize??0)>10*1024*1024){
+        const resize=image.width>=image.height?{width:Math.min(image.width,1400)}:{height:Math.min(image.height,1400)}
+        const prepared=await ImageManipulator.manipulateAsync(image.uri,[{resize}],{format:ImageManipulator.SaveFormat.PNG})
+        const webFile=Platform.OS==='web'?await(await fetch(prepared.uri)).blob():undefined
+        image={...image,uri:prepared.uri,width:prepared.width,height:prepared.height,mimeType:'image/png',fileName:'handwriting.png',fileSize:webFile?.size,file:Platform.OS==='web'&&webFile instanceof File?webFile:undefined}
+      }
+      if(image.fileSize&&image.fileSize>10*1024*1024)throw new Error('This image is still too large. Choose another image.')
       setAsset(image)
-    }catch(e){setError((e as Error).message)}
+    }catch(e){setError((e as Error).message)}finally{setBusy(false)}
   }
   function removeImage(){
     if(busy||hasPending||pending.current)return
@@ -107,7 +117,6 @@ export function HostedUpload({request,onComplete}:{request:Request;onComplete:(i
     {studentCursor&&<Button label="First students page" secondary disabled={busy||hasPending} onPress={()=>setStudentCursor(null)}/>}
     {student&&<Body muted>{"Selected student: "+student.full_name}</Body>}<Heading>Screening model</Heading>{models.loading&&!models.data&&<LoadingSkeleton kind="choice" label="Loading models"/>}<Notice error message={models.error}/>{Boolean(models.error)&&<Button label="Retry models" secondary disabled={busy||hasPending||models.loading} onPress={models.refresh}/>}
     <View style={{gap:8}}>{(models.data?.data??[]).filter((row:any)=>row.is_selectable).map((row:any)=><ChoiceRow key={row.model_id} label={modelLabel(row.model_key)} detail={'Test accuracy: '+hostedPercent(row.evaluation?.test_accuracy)+(row.is_default?' · Default model':'')} selected={model?.model_id===row.model_id} disabled={busy||hasPending} onPress={()=>setModel(row)}/>)}</View>
-    {(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body muted>Test accuracy is measured on a test set; it does not predict the accuracy of an individual result.</Body>}
     {!models.loading&&!models.error&&!(models.data?.data??[]).some((row:any)=>row.is_selectable)&&<Body>No screening model is currently available. Contact your administrator.</Body>}
     {models.data?.page?.next_cursor&&<Button label="More models" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(models.data.page.next_cursor)}/>}
     {modelCursor&&<Button label="First models page" secondary disabled={busy||hasPending} onPress={()=>setModelCursor(null)}/>}<Heading>Handwriting image</Heading>
