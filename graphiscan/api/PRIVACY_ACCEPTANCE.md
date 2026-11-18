@@ -29,7 +29,7 @@ The user authorized a temporary notice for fictional-account testing on
 2026-10-20, with later revisions expected. This is test-use authorization, not
 institutional approval for collecting real student records. The user-facing
 canonical text is [test-notice-v1.txt](test-notice-v1.txt); the earlier
-[review brief](../../PRIVACY_REVIEW_BRIEF.md) remains an internal input list.
+review brief remains an internal input list maintained separately.
 
 ## Implemented locally
 

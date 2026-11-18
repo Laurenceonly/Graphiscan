@@ -40,7 +40,7 @@ Status: **target v1 baseline with implemented sessions, onboarding and directory
 
 The [OpenAPI 3.0.3 draft](graphiscan/api/openapi.json), [proposed integration cases](graphiscan/api/access-cases.json), and [validation/schema notes](graphiscan/api/README.md) accompany this document. Optional trusted Auth/PostgreSQL adapters require explicit server configuration. 003-005 extend the earlier drafts and passed isolated PostgreSQL tests; the user reported their execution in a disposable hosted project. Actual TLS/reader-grant preflight passed. Provider Auth/concurrency and credential/session writes remain unverified or unimplemented as applicable; the working MySQL application has not been migrated.
 
-Sources of project requirements: [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md), [PROJECT_PLAN.md](PROJECT_PLAN.md), [defense minutes](GraphiScan_Defense_Minutes.md). Source comparison: `graphiscan/app.py`, `graphiscan/predict.py`, both client API helpers, and `graphiscan/db/postgres/001_identity.sql` / `002_screening.sql`.
+Sources of project requirements include internal system design, planning, and defense notes maintained separately. Source comparison: `graphiscan/app.py`, `graphiscan/predict.py`, both client API helpers, and `graphiscan/db/postgres/001_identity.sql` / `002_screening.sql`.
 
 ## 1. Common wire rules
 
