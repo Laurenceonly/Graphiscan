@@ -1,0 +1,118 @@
+{
+  "threshold": 0.75,
+  "split": "previously used test set",
+  "limitation": "Not independent; prior comparisons used these images and writer separation is unverified.",
+  "models": {
+    "MobileNetV2": {
+      "artifact_sha256": "ecad77ab7de3a40618a14a00851c5c5565721b7f21f97bd0702ba57270ad9820",
+      "evaluation": {
+        "matrix_order": [
+          "normal",
+          "high_potential"
+        ],
+        "confusion_matrix": [
+          [
+            65,
+            5
+          ],
+          [
+            15,
+            51
+          ]
+        ],
+        "n": 136,
+        "accuracy": 0.8529411764705882,
+        "high_potential_precision": 0.9107142857142857,
+        "high_potential_recall": 0.7727272727272727,
+        "high_potential_f1": 0.8360655737704918,
+        "per_class": {
+          "Normal": {
+            "precision": 0.8125,
+            "recall": 0.9285714285714286,
+            "f1": 0.8666666666666666
+          },
+          "High Potential": {
+            "precision": 0.9107142857142857,
+            "recall": 0.7727272727272727,
+            "f1": 0.8360655737704916
+          }
+        },
+        "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549"
+      }
+    },
+    "EfficientNetB0": {
+      "artifact_sha256": "1f445a5f8c152b500503e3750fc89de2486389a9418e4eedcae4de67076ad7f9",
+      "evaluation": {
+        "matrix_order": [
+          "normal",
+          "high_potential"
+        ],
+        "confusion_matrix": [
+          [
+            65,
+            5
+          ],
+          [
+            24,
+            42
+          ]
+        ],
+        "n": 136,
+        "accuracy": 0.7867647058823529,
+        "high_potential_precision": 0.8936170212765957,
+        "high_potential_recall": 0.6363636363636364,
+        "high_potential_f1": 0.7433628318584071,
+        "per_class": {
+          "Normal": {
+            "precision": 0.7303370786516854,
+            "recall": 0.9285714285714286,
+            "f1": 0.8176100628930818
+          },
+          "High Potential": {
+            "precision": 0.8936170212765957,
+            "recall": 0.6363636363636364,
+            "f1": 0.7433628318584069
+          }
+        },
+        "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549"
+      }
+    },
+    "ResNet50": {
+      "artifact_sha256": "850b8cdc93d13b962ca4cd4f787b5f49f7fff5c18bbc36d69386d503d16c0906",
+      "evaluation": {
+        "matrix_order": [
+          "normal",
+          "high_potential"
+        ],
+        "confusion_matrix": [
+          [
+            68,
+            2
+          ],
+          [
+            16,
+            50
+          ]
+        ],
+        "n": 136,
+        "accuracy": 0.8676470588235294,
+        "high_potential_precision": 0.9615384615384616,
+        "high_potential_recall": 0.7575757575757576,
+        "high_potential_f1": 0.847457627118644,
+        "per_class": {
+          "Normal": {
+            "precision": 0.8095238095238095,
+            "recall": 0.9714285714285714,
+            "f1": 0.8831168831168832
+          },
+          "High Potential": {
+            "precision": 0.9615384615384616,
+            "recall": 0.7575757575757576,
+            "f1": 0.8474576271186441
+          }
+        },
+        "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549"
+      }
+    }
+  }
+}

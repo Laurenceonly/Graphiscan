@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "model/deployment.litert.local.json",
+      "sha256": "7d038a26ba124736a57376e9586c0bda6b3d0c7b01046c01a534bab40a870cb3",
+      "size": 2043,
+      "parts": [
+        {
+          "sha256": "7d038a26ba124736a57376e9586c0bda6b3d0c7b01046c01a534bab40a870cb3",
+          "size": 2043
+        }
+      ]
+    },
+    {
+      "path": "model/versions/efficientnetb0-a5db94f148d47f52975e865098949c7b0af8df292c63b7461dbeb58d622113bd.tflite",
+      "sha256": "a5db94f148d47f52975e865098949c7b0af8df292c63b7461dbeb58d622113bd",
+      "size": 16698656,
+      "parts": [
+        {
+          "sha256": "a5db94f148d47f52975e865098949c7b0af8df292c63b7461dbeb58d622113bd",
+          "size": 16698656
+        }
+      ]
+    },
+    {
+      "path": "model/versions/mobilenetv2-3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9.tflite",
+      "sha256": "3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9",
+      "size": 9540652,
+      "parts": [
+        {
+          "sha256": "3abdc7ee4b2b6317631e1d29b652362515c163ff51d67fe84fedbbb4387c31f9",
+          "size": 9540652
+        }
+      ]
+    },
+    {
+      "path": "model/versions/resnet50-55e0844c9896c4288db808c573d3c3397d826b9c0493e6b909763bd2462f139b.tflite",
+      "sha256": "55e0844c9896c4288db808c573d3c3397d826b9c0493e6b909763bd2462f139b",
+      "size": 95027432,
+      "parts": [
+        {
+          "sha256": "6a0f04489ce62992043e04aa93b1a0f4bd4bad0c3e7625388e59e7fbadc037e2",
+          "size": 33554432
+        },
+        {
+          "sha256": "1c656ac9685f11bfefd4c7bc56528696eb365c84b3451f49c709dfcc06b2efd2",
+          "size": 33554432
+        },
+        {
+          "sha256": "ab3d4b608ced219474580827d3f4c02607aec180d3b2c4cb50683593855fe809",
+          "size": 27918568
+        }
+      ]
+    }
+  ]
+}

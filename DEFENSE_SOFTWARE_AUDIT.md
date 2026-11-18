@@ -1,5 +1,81 @@
 # Defense software acceptance audit
 
+## Current PDF supplied - 2026-11-15
+
+User supplied the current 75-page `GraphiScan (1).pdf` after the source audit.
+See [current PDF review](DEFENSE_CURRENT_PDF_REVIEW.md) for all 16 minutes entries
+and exact PDF pages. This supersedes the paper-unavailable status below: four
+italicized RRL themes, shared-actor use cases, expert-validation objective and
+stated nonfunctional requirements are now observed. Grades 1-3 is stated, but
+school/grade grouping is incomplete. User confirms Agile is the methodology;
+retain the Agile figure. Inconsistent WBS, missing
+account-onboarding/Follow-up descriptions, diagram balancing and model table/
+figure errors still need correction. PDF reviewed, not edited; live acceptance
+remains unverified. Earlier 76-page-paper findings require the current review.
+
+## Current reassessment - 2026-11-15
+
+**Verdict: most requested software capabilities are implemented, but completion of
+all 16 defense recommendations is not established.** The minutes' Action/s Taken
+column records the team's claims; it does not independently prove completion.
+This section supersedes older status below, including the old model default,
+release status and three-class plan.
+
+Method: reread all 16 minutes entries, inspected current predictor, hosted model
+chooser/review form, onboarding UI/server guard, student filters/schema and
+transactional screening completion; compared these with the latest CHANGELOG and
+paper review/checklist. No new live requests, inference, device tests, database
+queries or manuscript rendering were performed. Deployment statements below are
+previously recorded verification, not fresh November 15 observations.
+
+Numbers follow the existing audit's normalized order, not the minutes' row order.
+
+| # | Requested change | Assessment and remaining work |
+| --- | --- | --- |
+| 1 | Use all three models; highest accuracy default; manual selection | Implemented in hosted source. November 13 registry verification records all three selectable and ResNet50 default: displayed test accuracies ResNet50 86.77%, MobileNetV2 85.29%, EfficientNetB0 78.68%. MobileNetV2 leads the separate validation comparison. Run an authenticated hosted screening with each choice and verify returned model identity. |
+| 2 | Remove AI recommendations unless supported | Predictor produces no recommendation; current review UI collects expert-authored advice. Paper review still identified automated-recommendation claims to remove. System portion supported; manuscript completion unverified. |
+| 3 | Objectives focus on analysis, justified recommendations and expert validation | Expert review and human recommendation fields exist. Revised objectives are proposed in the alignment guide; no revised manuscript establishes that the requested wording was adopted. |
+| 4 | Name models and purpose in objectives | Proposed replacement names MobileNetV2, EfficientNetB0 and ResNet50. Previously reviewed paper had ResNet50V2/single-best-model inconsistencies. Final manuscript unverified. |
+| 5 | Readability, highlighted classifications, smoother slide transitions | Current status component gives Normal/High Potential distinct presentation; prior UI checks recorded. Physical-device readability and the final slide deck/transitions remain unverified. Low Potential is an example in the minutes, not an explicit three-class requirement. |
+| 6 | Strengthen Background of the Study | Prior paper review identified unsupported problem/gap claims. Revision guidance exists; final background and citations unverified. |
+| 7 | RRL in three or four themes with italic headings | Requested organization is recorded in the paper checklist. No final revised RRL verified. |
+| 8 | Use cases shared by two or more actors | Related multi-role software flows exist. Final shared-actor use-case diagram and complete live workflow remain unverified. |
+| 9 | Elementary participants grouped by school/grade | School/grade schema and student filters exist; database restricts grades to the separately agreed Grades 1-3 scope. Manuscript scope wording and populated cross-role installed-app acceptance remain unverified. |
+| 10 | Admin-issued accounts, first-password change, privacy agreement before access | Issuance implementation and server onboarding gates exist; mobile presents password change and explicit agreement acceptance. Prior standalone hosted checks recorded. Fresh issued-user installed-app onboarding and approved real-participant notice remain open; November 10 revised notice is only a draft. |
+| 11 | First Initial, later Follow-up | Implemented in transactional completion with student-row locking and stored report type. Prior isolated SQL checks recorded. Successive authenticated hosted uploads/history and retry/concurrency acceptance remain open. |
+| 12 | Methodology image | User confirms Agile on November 15, superseding the earlier Hybrid replacement task in this assessment. Current PDF Agile figure/text match that direction; WBS/timeline consistency still needs correction. |
+| 13 | WBS matches methodology; unnecessary components removed | Prior review found inconsistent PADIM/phase descriptions. Final aligned WBS and methodology unverified. |
+| 14 | Revise/reorganize Use Case Diagram | Paper guide lists required role/access corrections. Final diagram unverified. |
+| 15 | DFD matches CFD | Prior review identified flow/store-label issues. Redrawn, balanced diagrams unverified. |
+| 16 | State nonfunctional requirements | Paper contains targets requiring clearer testable wording; final revision unverified. Automated checks exist, but they do not prove deployed response-time or device-usability targets were met. |
+
+Evidence anchors:
+
+- `graphiscan/mobile-app/src/HostedScreeningActions.tsx`: selectable/default model
+  handling and explicitly expert-authored recommendation input.
+- `graphiscan/predict.py`: binary Normal/High Potential rule at 0.75 and empty
+  analysis summary; `graphiscan/app.py`: legacy result/API paths retain expert
+  recommendation projections, not newly generated model advice.
+- `graphiscan/api_v1.py`: server password/privacy denial gates;
+  `graphiscan/mobile-app/src/AccountSetup.tsx` and `HostedApp.tsx`: setup screens
+  and workspace readiness gate.
+- `graphiscan/db/postgres/002_screening.sql` and
+  `graphiscan/mobile-app/src/HostedStudents.tsx`: Grades 1-3, school/grade indexing
+  and filtering; `013_014_screening_writes.sql`: locked completion and report type.
+- `CHANGELOG.md`, November 13: verified selected-model registry/default and signed
+  Android 1.0.5 publication. APK publication is complete; real-device workflow
+  acceptance and accuracy effects of new large-photo resizing remain open.
+- `PAPER_SYSTEM_ALIGNMENT.md` and `GRAPHISCAN_PAPER_REVISION_CHECKLIST.md`:
+  previously supplied 76-page paper findings and outstanding manuscript actions.
+  The editable manuscript and final deck are not in the workspace inventory.
+
+Next evidence needed: (1) current revised paper/figures/deck checked against every
+minutes row; (2) controlled installed-app onboarding and teacher -> expert ->
+linked-parent walkthrough with Initial/Follow-up and denied access; (3) all three
+hosted model choices; (4) measured nonfunctional results. The final whole-history
+expert conclusion is additional agreed work, not an explicit minutes requirement;
+its implementation/publication evidence is newer than the November 9 section.
+
 ## Current reassessment - 2026-11-09
 
 This section supersedes conflicting November 3 status below. Reviewed the defense

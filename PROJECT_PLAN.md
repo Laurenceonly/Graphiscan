@@ -1,3 +1,40 @@
+2026-11-17 POST-DEFENSE: User reports passing the defense. UI/UX improvements
+are the next priority; detailed scope remains to be defined, no redesign started.
+Storage cleanup completed: generated build/download caches removed, logical folder
+size reduced from 23.853 to 16.968 GiB; 24 mobile tests pass. Sources, dependencies,
+models, datasets, manuscripts, signing keys, backups and Linux validation disk kept.
+Second cleanup: removed the already-broken root Python environment after saving
+its package inventory, plus nine hash-identical temporary model copies. Folder
+now 14.598 GiB (9.255 GiB cumulative logical reduction). Working training venv
+and registered/stopped Linux validation environment retained; root Python setup
+must be recreated before local API use. Subsequent user-authorized removal of
+GraphiScanValidation completed: WSL lists no distributions, disk/folder absent.
+Folder now 7.086 GiB (16.767 GiB cumulative logical reduction); 23 retained model
+hashes verified unchanged. Linux validation setup must be rebuilt if needed.
+Later approved C-only laptop cleanup removed generated dependencies/build files
+from both temporary short-path APK copies and npm/pip download caches. C: gained
+16.225 GiB measured free space (61.748 GiB free); D: unchanged. Main mobile24
+tests pass/model hashes unchanged. Restore dependencies in a short-path copy
+before its next APK build; source/native configuration/signing keys retained.
+See CHANGELOG.md and KNOWLEDGE.md.
+
+Methodology clarification November 15: user confirms Agile. Retain Agile figure
+and narrative; align WBS/phase descriptions/Gantt. Hybrid replacement task is
+superseded by this direction; no manuscript edit or adviser approval inferred.
+
+Current-PDF follow-up: supplied 75-page GraphiScan (1).pdf reviewed; RRL themes,
+shared use cases and stated nonfunctional requirements confirmed. Methodology/WBS,
+account/Follow-up descriptions, diagram balancing and model table/figure errors
+remain. See DEFENSE_CURRENT_PDF_REVIEW.md; manuscript not edited, no live tests.
+
+2026-11-15 DEFENSE REASSESSMENT: Most requested software capabilities have source
+and prior verification evidence; all 16 minutes actions cannot be marked complete.
+ResNet50 default/all three selectable and Android1.0.5 publication supersede older
+release notes below. Revised manuscript/diagrams/deck, complete live installed-app
+role/onboarding/all-model acceptance and measured nonfunctional results remain
+unverified. See current section of DEFENSE_SOFTWARE_AUDIT.md. Documentation/source
+review only; no new runtime or live tests, account/data/deployment changes.
+
 2026-11-09 TWO-FIELD FINAL REPORT: Expert conclusion + Recommendation replaces three visible fields; installed030 remains compatible, no new migration. TypeScript/raw-JSX/24 fictional browser assertions pass. Main Expo8081/local API5002 prepared for emulator testing via process-only local origin/reverse5002. User native/authenticated testing, publication and APK rebuild remain; see CHANGELOG.
 
 2026-11-09 MIGRATION030 INSTALLED: Owner success independently confirmed by read-only metadata: six preflight flags and all three exact function source matches pass. Includes optional-follow-up/Initial-only conclusion. Do not rerun030. Final TypeScript/24 mobile tests/raw-JSX and9 API tests pass;683 contract/all SQL incl71 final checks pass. Source still local: API publication/APK rebuild/distribution and actual hosted/native final-report acceptance remain. No application records read/written by metadata verification.
@@ -650,7 +687,7 @@ schema/admin evidence is recorded in the newest CHANGELOG and KNOWLEDGE entries.
 | 9 | System + manuscript | State elementary participants and grouping by school and grade in Scope and Limitations. The context specifies Grades 1â€“3. | **Open:** Target PostgreSQL schools and grade constraints are drafted but not applied. Current student records have grade but no school. Add school data and grouping in API/admin/mobile. |
 | 10 | System + manuscript | State that the GraphiScan team (administrator or authorized researchers) creates and provides a temporary account for each user. The user changes that temporary password on first login, then reads and accepts the Data Privacy Agreement before accessing features. | **Partial:** Public registration is now refused in source. Target PostgreSQL identity/consent tables are drafted in `graphiscan/db/postgres/001_identity.sql` but not applied. Issuing temporary credentials, forced first-login change, and agreement gates are absent. Approved agreement wording is needed. |
 | 11 | System + manuscript | Explain Initial versus Follow-up screening in workflow and reports. | **Partial:** Both upload paths label first/later reports; recorded labels now reach React result/history screens via all nine role reads. Isolated read/scope tests and React builds pass; live/device checks remain. Target PostgreSQL schema limits one Initial per student; serialize concurrent screening assignment during API migration. |
-| 12 | Manuscript | Replace the methodology image with the Integrated Hybrid Project Management Approach model. | No code change implied. |
+| 12 | Manuscript | Retain Agile per user clarification November 15; earlier Hybrid image replacement is superseded. Align figure/text/WBS/timeline. | Current PDF uses Agile; WBS consistency corrections remain. No code change implied. |
 | 13 | Manuscript | Remove unnecessary WBS components and align it with that methodology model. | No code change implied. |
 | 14 | Manuscript diagram | Revise and reorganize the Use Case Diagram. | Compare its actors and actions with the final application. |
 | 15 | Manuscript diagrams | Align the DFD with the CFD. | Compare both with the final data flows after API/storage migration. |

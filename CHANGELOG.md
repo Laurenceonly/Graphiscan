@@ -1,3 +1,265 @@
+## 2026-11-18 - Repository handoff checkpoint
+
+- User requested committing and pushing all pending repository work before an extended absence. Included manuscript reviews, revision guidance, generated model figures/tables and both manuscript ZIP packages, selected-model publication/rollback/default SQL, bundle/evaluation metadata, validation/staging tools, project notes and the pending mobile TypeScript configuration change. Existing ignore rules continue to exclude credentials, student uploads, datasets, private model binaries, signing keys and local backups/tools.
+- Verification this session: credential-pattern scan of new text files and tracked diffs found no matches; reviewed ZIP entry lists and file sizes; `git diff --check` passed; disposable selected-model SQL suite passed all 22 checks with no hosted connections or production writes. Mobile `npm run typecheck` and all 24 existing tests passed. No new APK, model training, database cutover or manual hosted deployment performed.
+- Resume with `RESUME.md`, `KNOWLEDGE.md` and `PROJECT_PLAN.md`. Earlier environment-cleanup and manuscript acceptance limitations still apply; ignored local assets are not backed up by a Git push.
+
+## 2026-11-17 - User-approved Chrome cache cleanup
+
+- Cleared only the 18 Cache/Code Cache folders under Chrome's existing profiles after explicit user approval. Chrome background processes remained running; deletion was configured to skip locked targets, and all 18 targets were removed without a reported error. Did not terminate Chrome or target cookies, history, passwords, bookmarks, website storage, service-worker data or AI models.
+- Removed 4.281 GiB logical cache files; immediate measured C: free-space increase 4.367 GiB, with 66.265 GiB free afterward (concurrent system activity can affect the measurement). Before/after file-size and modification-time inventories of all non-cache Chrome files were identical; contents were not opened. Ignored script/report: `.local-tools/clear-chrome-caches.py` and `.json`. Caches can regenerate during browsing. No application source, model or D: change; no additional project tests required for this external cache-only action.
+
+## 2026-11-17 - User-approved C-drive cache cleanup
+
+- User requested laptop-wide cleanup, then limited changes to C: and approved a concrete 29.280 GiB logical cleanup plan. Removed 14 explicit generated/cache folders: node_modules, Android app/build/build/.gradle/app/.cxx and web/Android exports where present in temporary build copies `C:/g/graphiscan/mobile-app` and `C:/a/g/m`, plus user npm `_cacache` and pip `Cache`. No D: mutations, app uninstallations, Recycle Bin emptying or personal-file/Windows-folder deletion.
+- Read-only whole-drive audit preceded the C-only clarification; D: had already been inventoried but was not changed. Audit is incomplete where access was denied (561 entries on C:). Elevated preflight found no Node/Java/build process referencing either temporary build root. Targets and ancestors were checked against explicit C: boundaries and reparse points; the `C:/a/.local-tools` link was preserved. Source, package manifests and native build configuration in both temporary copies remain. The generated APK matched a retained release, so no unique APK backup was necessary.
+- All 14 targets verified removed, no deletion errors. Immediate measured C: free space increased 45.523 -> 61.748 GiB (+16.225 GiB); this differs from logical file-size totals and is the measured storage benefit. Ignored plan/results: `.local-tools/c-drive-cleanup-report.json`; read-only full scan: `.local-tools/laptop-all-drives-audit.json`.
+- Verification: all 24 existing mobile tests pass in the main workspace; 23 saved runtime/archived/experimental model hashes match the prior inventory. Main source/dependencies, datasets, signing directory, backups, manuscript package and latest APK remain; no tracked deletions. No new APK build, inference or hosted change. Reinstall dependencies with the retained lockfile in either short-path copy before building again; native outputs regenerate. npm/pip downloads will refill their caches as needed.
+
+## 2026-11-17 - Remove Linux validation environment
+
+- At the user's explicit request, unregistered the stopped GraphiScanValidation WSL2 distribution using `wsl --unregister GraphiScanValidation`. Command succeeded; subsequent WSL listing reports no installed distributions, and `.local-tools/wsl-validation` including its 8,065,646,592-byte disk is absent. Linux validation/container setup must be rebuilt for future Linux-specific checks; Windows WSL itself was not uninstalled.
+- Folder logical size now 7.086 GiB, down from 14.598 GiB before this step and 23.853 GiB before all cleanup (16.767 GiB total reduction). No tracked file deletion. Rehashed 23 retained runtime, archived and training-experiment model artifacts against the earlier inventory: all unchanged; original/binary dataset directories remain present. Working training Python executed this verification. No model inference, API startup or hosted smoke test was performed. Root Python environment still needs recreating as already recorded; no hosted changes.
+
+## 2026-11-17 - Second storage cleanup and environment check
+
+- Confirmed root `.venv` cannot start because its Python 3.11 base executable is absent. Saved a 64-package inventory in ignored `.local-tools/removed-broken-venv-packages-20261117.txt`, then removed this broken environment. Working training environment remains (Python 3.12.14 confirmed); it has not been validated as an API replacement. Recreate the root environment before using its old setup commands.
+- Hashed model artifacts and removed nine identical temporary `.tflite` copies (363,794,956 bytes) from `.local-tools/selected-model-stage`, `litert-release` and `lite-model-experiment`. Rehashed every retained runtime/training counterpart after deletion; all match. Preserved active models, unique experiment artifacts and other model paths even where duplicates exist. Ignored restoration map: `.local-tools/cleanup-duplicate-restoration-map-20261117.json`.
+- Recursive logical file-size measurement: 16.968 -> 14.598 GiB, 2.371 GiB additional reduction; cumulative cleanup 9.255 GiB from original 23.853 GiB. A Windows directory-not-empty interruption during root environment deletion was resolved by rerunning the same bounded cleanup script. Final-pass JSON excludes files removed by the interrupted pass. Verified all selected targets absent, canonical model hashes intact, key asset directories preserved and no tracked deletions. No source/runtime change or additional build/test run; the preceding 24 passing mobile tests remain the latest test result.
+- Elevated read-only `wsl --list --verbose` confirms GraphiScanValidation is registered, stopped, WSL2. Its 7.512 GiB disk remains untouched pending the user's keep/remove preference. Database backups, signed release APKs, datasets, manuscript packages, installed JS dependencies and the working training environment are retained.
+
+## 2026-11-17 - Post-defense storage cleanup
+
+- User reports passing the defense and identifies UI/UX improvements as the next priority; specific redesign scope is not yet defined and no UI change was made in this session.
+- Removed generated Android build and CMake intermediates inside mobile-app dependencies, `.local-tools/cmake-staging`, pip download cache, downloaded Linux wheels, the NDK ZIP installer and Expo Go APK installer. Kept installed JavaScript dependencies, all source/uncommitted work, configuration, signing keys, datasets, models/experimental results, manuscript packages, release APKs and database backups. No tracked deletion; `.gitignore` unchanged.
+- Before/after recursive file-size scans: 23.853 -> 16.968 GiB, a 6.884 GiB reduction in logical file sizes (actual reclaimed disk allocation may differ). Targets were checked to stay inside the workspace and contain no tracked files or reparse points. Windows denied a compiled library deletion on the initial pass; an approved elevated rerun completed the remaining targets. Ignored cleanup script and final-pass report are under `.local-tools/cleanup-generated-20261117.*`; the report covers the final pass only.
+- Verification: all 24 existing mobile tests passed; Git status retained the prior modified/untracked source files with no tracked deletions. No new APK build or runtime acceptance test. Native build intermediates regenerate on the next Android build; removed installers/wheels require downloading again if needed. Preserved the 7.512 GiB Linux validation virtual disk and both Python environments; virtual disk removal needs separate environment checks. Default local `python` launcher points at a missing Python 3.11 executable; Python setup was not repaired.
+
+## 2026-11-16 - Correct live database manuscript section
+
+- Updated Google Doc database mappings/descriptions and selected field tables: conceptual ERD caption and role views, Supabase field names/types, UUID teacher/expert references, nullable age/score/review date, storage path, classification, individual-report timestamp/type/status and relationship wording. Added supporting tables and final_screening_reports columns in the dictionary introduction; explicitly labels the dictionary as selected fields rather than a full physical schema. Confirmed Saved to Drive and inspected student/teacher fields; searches find no remaining INT/DATETIME/VARCHAR/BLOB or obsolete probability/contact/license fields in editable text. ERD image remains conceptual; expanded tables still have page splits and require final layout/export review. No live database changes or new PDF export.
+
+## 2026-11-16 - Review manuscript database alignment
+
+- Compared supplied PDF Tables 2-9 with PostgreSQL migrations and live Supabase Schema Visualizer metadata for user_profiles, students, expert_validations, screening_reports, user_school_grades and final_screening_reports. Found conceptual/physical mismatches in account tables, IDs/types, nullability, score fields, storage paths and report structures. Saved table-by-table findings and replacement explanation in output/GraphiScan_Model_Manuscript_Package/05_DATABASE_REVIEW/Database_Alignment_Review.md and rebuilt ZIP. Constraints and off-viewport tables were checked from source, not queried live. No application rows read, live SQL/schema mutation, manuscript edits or ERD redesign performed.
+
+## 2026-11-16 - Consolidate model manuscript package
+
+- Created output/GraphiScan_Model_Manuscript_Package and ZIP with 23 files: Figures 14-22, optional confusion matrices, two complete model-table CSVs, counts/dataset/validation tables, copyable figure paragraphs/captions, results summary, source JSON/history, placement/review notes and a linked local HTML preview. Preserved MobileNet archived-curve provenance qualification and training/test threshold distinctions. Checked ZIP integrity/file count and table accuracy/class rows; inspected formula rendering and previously reviewed graph images. Package matches the supplied PDF's model figure sequence; images have not been inserted into Google Docs and final export/layout still needs post-insertion review. No new training or model test.
+
+## 2026-11-16 - Complete manuscript figure inventory
+
+- Checked the supplied PDF's intended Figures 18-22 and added a combined archived MobileNetV2 training/validation accuracy and loss image to output/manuscript-model-figures and its rebuilt ZIP. The archived model SHA-256 matches the selected test artifact; plot/model filenames, timestamps and training script support a common workflow, but no saved history or graph-to-checkpoint hash proves the link. The historical training accuracy uses threshold 0.50; selected test figures use 0.75. README maps all five requested figures, adds an optional confusion-matrix figure and records provenance/limitations. Visually inspected the new image and ZIP contents. Live document images/captions still await replacement and post-insertion review; no new training or testing was performed.
+
+## 2026-11-16 - Prepare selected-model manuscript figures
+
+- Created output/manuscript-model-figures and ZIP with two selected fine-tuning accuracy/loss plots, selected-version 136-image test accuracy and class-metric comparisons, test confusion matrices, source CSV and caption/placement notes. Plots use stored JSON and were visually inspected; ZIP contents checked. Prior live model tables and paragraphs were compared with the same metrics in preceding entries. Original MobileNetV2's exact training history is not verified, so no substitute was presented as its training curve. Existing Google Doc images/captions remain to be replaced and reconciled by the user; no new training, testing or document editing occurred in this step. Test reuse and unverified writer separation remain limitations.
+
+## 2026-11-16 - Add accuracy to model comparison table
+
+- Added selected-version test accuracies beside all three model names in the earlier class-metrics table in the live Google Doc; Table 11 already has an overall accuracy column. Visually checked the added values and searched the document text for 20 old accuracy and class-metric values, with no matches. Confirmed Saved to Drive. Search does not inspect figures: existing graphs remain pending replacement or verification, and the supplied PDF was not updated.
+
+## 2026-11-16 - Check model methodology and both tables
+
+- Visually checked the earlier class-metric comparison and Table 11 against the selected test CSV; both show the matching values. Reviewed training and runtime source for augmentation and image preparation. Revised live Google Doc dataset provenance, inference preparation, precision/recall and unmeasured efficiency wording; confirmed Saved to Drive. Original dataset provenance and labeling remain unverified, and the user is preparing replacement figures. The earlier comparison table splits across pages; figures and captions must still be reconciled with selected runs and test/validation splits. No new model testing or PDF export performed.
+
+## 2026-11-16 - Revise live model results
+
+- Updated live Google Doc model explanations, selected-version test metrics, confusion-count interpretations, summary and limitations. Replaced old class metrics in both model tables and overall accuracy in Table 11; clarified its headings and class-row order, 136-image test split and 0.75 threshold. Added selected model versions, prior test reuse, unverified writer separation, separate validation results and expert-review limitations. Visually checked Table 11 values against the recorded CSV and confirmed Saved to Drive; searched several old numbers with no text matches. Existing figures remain to be replaced/verified by the user and may show old results; Table 11 caption and table currently fall on separate pages. PDF export was not edited, and full-document review remains open.
+
+## 2026-11-16 - Clarify model-results draft table
+
+- Rechecked the supplied 73-page Graphiscan (5).pdf model discussion and Table 11 against the saved selected-version test and validation CSVs. Corrected MODEL_RESULTS_REVISED_DRAFT.md to label repeated values as overall test accuracy rather than an average, and aligned its introduction with the repeated rows. The PDF and live Google Doc were not edited; replacing the old results and verifying figure provenance remain open. No model or runtime behavior changed.
+
+## 2026-11-16 - Continue Chapter 2 manuscript revisions
+
+- Reviewed the model-results section of the supplied `Graphiscan (5).pdf` (73 pages) against selected-model test and validation CSVs. Prepared `MODEL_RESULTS_REVISED_DRAFT.md` with version-specific test metrics, class counts, limitations and separate validation figures; noted figure provenance and reconciliation tasks. Live document edits were not made because the computer-use connection was unavailable. The user is preparing figures separately.
+
+- User chose a replacement Agile figure emphasizing iteration while retaining the seven WBS/Gantt work categories. Updated the live figure introduction to distinguish the iterative cycle from those categories; verified rendered wording and Saved to Drive. The user will generate and insert the replacement figure; the original remains, so the new explanation anticipates that replacement.
+
+- User will generate the figures; assistant handles manuscript wording. In the live Google Doc, replaced the WBS's continuous-update claim with descriptions of deployment and planned maintenance. Verified the replacement and Saved to Drive. Existing WBS and Gantt images remain to be replaced by the user; their embedded labels and dates have not changed.
+
+- Prepared and visually reviewed `.local-tools/wbs-corrected.png`, retaining the seven-column task structure and fixing Maintenance 7.1–7.5 and Deployment 6.4. Google Docs image replacement was not completed because the file picker could not be targeted; original figure remains. Corrected the Gantt prose to include Deployment and verified Saved to Drive. Existing Gantt image still uses the old title and starts deployment 16 December 2026; dates need reconciliation with the agreed 2027 schedule. No exact replacement dates inferred.
+
+- In the live Google Doc, separated the Validated definition from User Interface; corrected the implementation description to include the administrator web and Android mobile applications; improved the Agile figure introduction; qualified the objectives and maintenance claims; and replaced the WBS PADIM reference and six-phase statement with the agreed seven Agile phases. Verified replacements and Saved to Drive. The existing WBS image still labels its final column Design and has numbering errors; it must be corrected to Maintenance and reconciled with the text. Further Chapter 2 review remains open.
+
+## 2026-11-16 - Begin live Google Docs manuscript revisions
+
+- Updated seven Definition of Terms entries in Google Docs: classification,
+  feedback, feature extraction, output, detection, intervention and GraphiScan.
+  Aligned them with binary preliminary screening and expert-authored review;
+  verified each replacement and Saved to Drive. Further terms including review
+  statuses and Initial/Follow-up terminology remain to be considered.
+
+- Per user direction, replaced explanatory words in GraphiScan comparison cells
+  with check marks for screening and expert feedback, and blank cells for
+  handwriting recognition and separately measured handwriting features. Verified
+  table and Saved to Drive. The row labels remain ambiguous and other systems'
+  ticks are not source-verified; screening versus diagnosis and expert authorship
+  are explained in the surrounding prose. This supersedes the earlier worded cells.
+
+- Corrected four GraphiScan cells in the live related-works comparison table:
+  handwriting recognition No, dysgraphia Screening, handwriting features Not
+  separately measured, and feedback/recommendations By experts. Visually verified
+  entries and Saved to Drive. Other systems' feature claims, broad real-time and
+  usability labels, and table header pagination remain open for review.
+
+- Continued live Google Doc literature/related works: clarified one deep-learning
+  sentence (retaining [32]/[33]) and replaced three GraphiScan comparison passages
+  claiming diagnosis, transcription, automated recommendations or superiority with
+  preliminary screening, role-based access and expert review. Verified exact
+  replacements and saved cloud indicator; cited sources and Table 1 feature ticks
+  remain unverified, and further related-works claims remain for review.
+
+- Began literature review correction: replaced the blanket claim that AI analysis
+  is quicker and unbiased with qualified language about handwriting analysis,
+  performance and possible bias. Kept citations [30] and [31]; their underlying
+  sources were not independently checked. Verified the replacement and Saved to
+  Drive. Remaining literature review and citations still require review.
+
+- Replaced the live manuscript's asserted performance and scalability problems
+  with qualified image, network and server factors and a need for concurrent-use
+  testing. Verified replacement and Saved to Drive; no performance test run.
+
+- Clarified in the live manuscript that handwriting model performance may vary
+  with training data and that the Grades 1-3 target does not establish dataset
+  participant grades. Verified the replacement and Saved to Drive. Dataset
+  participant characteristics and performance limitations remain to be verified.
+
+- Corrected live manuscript limitations to state internet is required for
+  screening and hosted records, identify mobile and administrator roles, and
+  clarify that screening does not replace professional assessment. Verified three
+  exact replacements and Saved to Drive. Remaining scope/dataset distinctions and
+  other limitations require review; no application changes.
+
+- Began Scope and Limitations in the live Google Doc: clarified Grades 1-3,
+  school/grade organization, authorized teacher submissions, binary image
+  screening, expert-authored review and user interfaces. Verified two replacements
+  and Saved to Drive. Remaining limitations, internet wording and dataset/target
+  distinctions still need review; no runtime or permission changes.
+
+- Per user direction, changed the Significance stakeholder from SPED coordinators
+  and support staff to Experts, describing authorized review, findings,
+  recommendations and screening history. Verified rendered text and Saved to Drive.
+
+- Revised the remaining administrator, parent and SPED Significance paragraphs
+  in Google Docs to qualify benefits, distinguish system administration from school
+  coordination, and attribute recommendations to experts. Confirmed each exact
+  replacement, rendered text and Saved to Drive. Scope and limitations is next;
+  no application or role permissions changed.
+
+- Began Significance revisions in the live Google Doc: replaced the teacher
+  paragraph's definitive-diagnosis claim with preliminary screening and expert-
+  authored recommendations, and replaced guaranteed student identification and
+  intervention claims with qualified potential benefits. Verified both exact
+  replacements, visible paragraphs and Saved to Drive. Administrator, parent and
+  SPED stakeholder wording remains to be reviewed and revised as appropriate.
+
+- Revised the four specific objectives in the live Google Doc: binary screening
+  labels, MobileNetV2/EfficientNetB0/ResNet50 evaluation and selectable models,
+  image-level score, and expert review with review-based recommendations. Removed
+  the unverified computational-efficiency claim and sole-model deployment wording.
+  Verified each exact replacement, the rendered numbered list and Saved to Drive;
+  no model behavior or runtime testing changed. Significance is next.
+
+- Revised the live Google Doc general objective to describe preliminary
+  handwriting screening, image classification, expert review and recommendations,
+  and screening-record management instead of claiming diagnosis. Verified one
+  exact replacement, rendered paragraph and Saved to Drive. Specific objectives
+  remain for the next revision; no application behavior changed.
+
+- Clarified in the live Google Doc Background that letter formation, spacing,
+  alignment and stroke consistency are characteristics discussed in literature,
+  while GraphiScan classifies the submitted image without separately measuring
+  them. Retained citations [22] and [23]; their source support was not independently
+  verified. Verified one replacement, visible text and Saved to Drive. General
+  objective still describes diagnosis and is the next planned revision.
+
+- At the user's request to change all inconsistent title wording, replaced five
+  case-insensitive occurrences of "Using Deep Learning Techniques" and one
+  "Utilizing Deep Learning Techniques" with "Using Convolutional Neural Networks"
+  in the live Google Doc. Each exact old phrase returned zero matches after its
+  replacement; visually confirmed changed Objectives/Significance/Gantt wording
+  and saved cloud indicator. A broader search still finds three "deep learning
+  techniques" occurrences in general discussion; these were not automatically
+  replaced because this task concerns the approved project title. Embedded image
+  text and every changed paragraph's final pagination were not independently audited.
+
+- Background score clarification: replaced the single percentage-as-dysgraphia-
+  presence sentence with two sentences identifying the percentage as a model score
+  for the submitted handwriting image and explaining that it supports preliminary
+  screening rather than a child's dysgraphia probability. Checked predictor score
+  conversion and API field references; no runtime behavior changed or tests run.
+  Verified one exact replacement, rendered wording and saved cloud indicator in
+  Google Docs. Remaining Background title inconsistency, feature-measurement claims
+  and other section checks remain open.
+
+- Next Background correction: replaced the single blanket no-automated-systems
+  sentence with "Limited access to automated handwriting-screening tools can make
+  early identification of possible writing difficulties more difficult", retaining
+  citation [16] and the sentence ending. Verified exact old-text search changed
+  from one match to zero, revised paragraph rendered in place and saved cloud icon.
+  Citation support was not independently checked. Score interpretation and remaining
+  Background review are still pending.
+
+- Opened the user's editable GraphiScan Google Doc through Windows computer use.
+  Visually confirmed the cover uses the agreed CNN title. In Background, replaced
+  the single clause "While the efficacy of these technologies is unquestionable"
+  with "Although these studies report promising results". Verified the new clause
+  in place, zero remaining matches for the old clause, retained adjacent citations,
+  and the saved cloud indicator. This is one wording correction, not completion of
+  the Background review. Remaining section checks and revision-log reconciliation
+  are open; no application, model, deployment or runtime tests changed.
+
+## 2026-11-16 - Adopt supplied manuscript revision log
+
+- Read all seven pages of the user's `GraphiScan_Manuscript_Revision_Log (1).pdf`
+  and adopted it as the current section-based review guide. Added
+  MANUSCRIPT_REVISION_LOG_GUIDANCE.md and updated RESUME.md and the older revision
+  checklist to preserve explicit retention decisions and distinguish reported
+  edits from verified manuscript changes. Flagged historical model metrics for
+  provenance reconciliation with newer evaluation evidence. Verification: full
+  PDF text extraction and review; no manuscript edit, runtime test or live change.
+
+## 2026-11-16 - Compare latest manuscript PDF
+
+- Compared the user's `GraphiScan (2).pdf` with `GraphiScan (1).pdf` in Downloads. Both have 75 pages. Complete pypdf extraction is identical after whitespace normalization; page-level text differs only on PDF pages 12-16 because text moves between pages. PDFium rendering at 0.5 scale also differs only on pages 12-16. No substantive wording revision was found; existing manuscript revision tasks remain open. No PDF, application or deployment was changed. This comparison does not verify external references or acceptance workflows.
+
+## 2026-11-15 - Reassess all defense minutes commitments
+
+- Saved the user's complete 25-item top-to-bottom manuscript revision sequence in
+  GRAPHISCAN_TOP_TO_BOTTOM_REVISION_LIST.md and linked it from RESUME.md for later
+  work. Preserves current 75-page PDF references and confirmed Agile direction.
+  Checklist is planned work; no manuscript edits begun. Verified saved text and
+  document diff whitespace; no runtime tests or live changes needed.
+
+- Methodology correction: user explicitly confirms Agile. Updated current PDF
+  review, software audit, paper alignment/checklist and project plan to retain
+  Agile and supersede the earlier Hybrid-image replacement task. Remaining WBS,
+  phase-count/name and Gantt consistency work still applies. Verified updated
+  document wording; no PDF, application or deployment change, and no independent
+  adviser approval or runtime test claimed.
+
+- Follow-up: user supplied current 75-page GraphiScan (1).pdf. Extracted complete
+  text and rendered/visually inspected relevant methodology, WBS, RRL, use-case,
+  CFD/DFD and results pages. Added DEFENSE_CURRENT_PDF_REVIEW.md covering all 16
+  requests; updated audit, paper guides and plan. Confirmed four italicized RRL
+  themes, shared use cases and stated nonfunctional requirements. Identified
+  remaining methodology/WBS/onboarding/Follow-up/diagram gaps, wrong MobileNet
+  Normal precision (84.42%, not 88.42%) and excluded fine-tuning graph presented
+  as original MobileNet training. Current review supersedes older 76-page-paper
+  assumptions. No manuscript edit, external reference verification or live tests.
+
+- Rechecked all 16 recommendations against current screening, review, onboarding,
+  school/grade and Initial/Follow-up source, plus latest release/model records and
+  prior paper findings. Updated DEFENSE_SOFTWARE_AUDIT.md with a current row-by-row
+  assessment and PROJECT_PLAN.md with remaining acceptance work. Older MobileNet
+  default/no-APK/three-class-plan statements are superseded by current evidence.
+- Most software capabilities are implemented; final manuscript, diagrams and deck
+  revisions are unverified. Full installed-app hosted role/onboarding/all-model
+  workflows and measured nonfunctional results remain open. Review only: no new
+  live verification, tests, private record access or runtime/deployment changes.
+
 ## 2026-11-13 - Android 1.0.5 published and landing verified
 
 - Published source c06e9f2 and signed GitHub release android-v1.0.5; uploaded asset size and SHA256 match the locally verified APK (92,779,202 bytes; 0CEDE6B2BFDB3D5C5A18391C6A4B23AE6BBE304DE3A032CB607AA6B1317F3C5E). Landing commit fbbdc8f pushed. Live https://graphiscan.site/download/ returns HTTP200 and its served JavaScript contains version 1.0.5 and android-v1.0.5 download URL.

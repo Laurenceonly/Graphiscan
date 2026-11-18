@@ -1,0 +1,4 @@
+﻿Model,Normal correctly predicted,Normal predicted High Potential,High Potential predicted Normal,High Potential correctly predicted,Total correct,Total test images
+MobileNetV2,65,5,15,51,116,136
+EfficientNetB0,65,5,24,42,107,136
+ResNet50,68,2,16,50,118,136

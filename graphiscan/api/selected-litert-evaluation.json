@@ -1,0 +1,75 @@
+{
+  "models": [
+    {
+      "model": "EfficientNetB0",
+      "platform": "Linux",
+      "kernel": "CPU delegate",
+      "source_sha256": "1f445a5f8c152b500503e3750fc89de2486389a9418e4eedcae4de67076ad7f9",
+      "lite_sha256": "a5db94f148d47f52975e865098949c7b0af8df292c63b7461dbeb58d622113bd",
+      "test_count": 136,
+      "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549",
+      "threshold": 0.75,
+      "max_error": 8.404254913330078e-06,
+      "disagreements": 0,
+      "reference_matrix": [
+        [
+          65,
+          5
+        ],
+        [
+          24,
+          42
+        ]
+      ],
+      "lite_matrix": [
+        [
+          65,
+          5
+        ],
+        [
+          24,
+          42
+        ]
+      ],
+      "independent_validation": false,
+      "live_state_changed": false,
+      "passed": true
+    },
+    {
+      "model": "ResNet50",
+      "platform": "Linux",
+      "kernel": "builtin",
+      "source_sha256": "850b8cdc93d13b962ca4cd4f787b5f49f7fff5c18bbc36d69386d503d16c0906",
+      "lite_sha256": "55e0844c9896c4288db808c573d3c3397d826b9c0493e6b909763bd2462f139b",
+      "test_count": 136,
+      "dataset_sha256": "29c3bb42a09a733eacc43489dcb9214d2b526aa1866e61114a93db943b744549",
+      "threshold": 0.75,
+      "max_error": 5.0961971282958984e-06,
+      "disagreements": 0,
+      "reference_matrix": [
+        [
+          68,
+          2
+        ],
+        [
+          16,
+          50
+        ]
+      ],
+      "lite_matrix": [
+        [
+          68,
+          2
+        ],
+        [
+          16,
+          50
+        ]
+      ],
+      "independent_validation": false,
+      "live_state_changed": false,
+      "passed": true
+    }
+  ],
+  "independent_validation": false
+}
