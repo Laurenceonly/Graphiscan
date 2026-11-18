@@ -168,8 +168,7 @@ headers without logging or retaining them. Native builds keep calling the public
 HTTPS origin directly; production browser-origin settings stay unchanged.
 Use the localhost address consistently and refresh after restarting Metro.
 On a desktop viewport wider than600px, this development-only preview centers a
-420px app canvas. Native builds fill the device. Root `DESIGN.md` documents this
-Expo design system; it does not replace the Vue admin's design.
+420px app canvas. Native builds fill the device.
 
 
 On2026-10-22, TypeScript checking and Android JavaScript/Hermes export passed.

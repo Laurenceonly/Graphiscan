@@ -36,10 +36,12 @@ graphiscan/mobile-app/android/
 /output/playwright/
 /output/final-report-export/
 /output/mobile-ui-review-20261103/
-/.impeccable/config.local.json
-/.impeccable/questions/
-/.impeccable/review/
-/.impeccable/mocks/
+
+# Local Codex and Impeccable files
+/.codex/
+/.impeccable/
+/DESIGN.md
+/PRODUCT.md
 
 # Private uploads, datasets, and generated ML artifacts
 graphiscan/static/uploads/
@@ -90,7 +92,6 @@ graphiscan/model/*.local.json
 /output/GraphiScan_Model_Manuscript_Package.zip
 /output/manuscript-model-figures/
 /output/manuscript-model-figures.zip
-/.impeccable/surfaces/
 /scrollcraft/
 /graphiscan/mobile-app/UI_CONSISTENCY_AUDIT.md
 /graphiscan/api/PRIVACY_AGREEMENT_DRAFT.md
