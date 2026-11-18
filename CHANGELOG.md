@@ -1,3 +1,8 @@
+## 2026-11-18 - Organize repository documentation
+
+- Rewrote the root README with a component map, dated Android 1.0.5 and model status, documentation links, setup pointers and data-handling guidance. Moved six manuscript and defense working documents into `docs/manuscript/`, added an index and updated current handoff/plan references. Older changelog entries retain their historical filenames.
+- Checked relative Markdown links in the new README and moved documents, `git diff --check`, and representative ignore rules for environment configuration, signing keys and model binaries. A tracked-text scan for common private-key, GitHub-token, AWS-key and JWT formats found no matches; this is not a complete audit of all secrets or Git history. No runtime changes or application tests were needed.
+
 ## 2026-11-18 - Repository handoff checkpoint
 
 - User requested committing and pushing all pending repository work before an extended absence. Included manuscript reviews, revision guidance, generated model figures/tables and both manuscript ZIP packages, selected-model publication/rollback/default SQL, bundle/evaluation metadata, validation/staging tools, project notes and the pending mobile TypeScript configuration change. Existing ignore rules continue to exclude credentials, student uploads, datasets, private model binaries, signing keys and local backups/tools.

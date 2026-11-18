@@ -1,6 +1,6 @@
 2026-11-16 MANUSCRIPT DIRECTION: User says to follow the seven-page
 GraphiScan_Manuscript_Revision_Log (1).pdf in Downloads. Current decisions,
-section-based workflow and open checks: MANUSCRIPT_REVISION_LOG_GUIDANCE.md.
+section-based workflow and open checks: docs/manuscript/MANUSCRIPT_REVISION_LOG_GUIDANCE.md.
 This supersedes conflicting older checklist suggestions and restarting at item 1.
 Reported edits are not independently verified manuscript changes. Preserve
 retained tables/ERD/header, deferred References/literature work and 2027 schedule;
@@ -8,10 +8,10 @@ reconcile historical evaluation figures with newer evidence before replacing any
 No manuscript edited in adopting this direction.
 
 2026-11-15 MANUSCRIPT HANDOFF: User requests saving revisions for later. Full
-25-item page-ordered checklist: GRAPHISCAN_TOP_TO_BOTTOM_REVISION_LIST.md, based
+25-item page-ordered checklist: docs/manuscript/GRAPHISCAN_TOP_TO_BOTTOM_REVISION_LIST.md, based
 on current 75-page GraphiScan (1).pdf. Keep Agile per explicit clarification.
 No manuscript edited; resume at item 1 when requested. Current evidence and all
-16 defense requests: DEFENSE_CURRENT_PDF_REVIEW.md. Do not use old 76-page PDF
+16 defense requests: docs/manuscript/DEFENSE_CURRENT_PDF_REVIEW.md. Do not use old 76-page PDF
 page references as current. App/live acceptance remains separate.
 
 2026-11-13 ANDROID 1.0.5 LIVE: Signed original-key APK published from c06e9f2; GitHub asset hash/size match local. Landing fbbdc8f live bundle confirms 1.0.5 link. Includes large-photo preparation and model explanatory sentence removal. TypeScript/24 tests, Gradle/signature and landing build pass. Native photo upload, physical device and resize accuracy impact untested. See CHANGELOG.

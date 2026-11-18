@@ -1,27 +1,36 @@
 # GraphiScan
 
-GraphiScan is a capstone project that explores how image classification can support handwriting screening for possible dysgraphia-related difficulties. It is designed as a **screening aid**, with expert review of results, and is not a clinical diagnosis.
+GraphiScan is a capstone project exploring image classification as an aid to screening handwriting for possible dysgraphia-related difficulties. Its results are preliminary screening outputs, not clinical diagnoses, and require expert review.
 
-## Project overview
+Teachers can manage student records and submit handwriting samples. Authorized experts can review results, and parents can access information according to their permissions. A separate administrator interface supports account and record management.
 
-Teachers can manage student records and submit handwriting samples for screening. The application records the model result, supports expert validation, and presents reviewed information to authorized users. A separate admin interface supports account and record management.
+## Applications and technology
 
-## Built with
+| Component | Location | Technology |
+| --- | --- | --- |
+| Mobile app | [graphiscan/mobile-app](graphiscan/mobile-app/) | React Native and Expo |
+| Admin interface | [graphiscan/admin-web](graphiscan/admin-web/) | Vue 3 |
+| API and inference | [graphiscan](graphiscan/) | Python, Flask and LiteRT |
+| Landing site | [graphiscan/landing-web](graphiscan/landing-web/) | Web frontend |
+| Data and identity | [graphiscan/db](graphiscan/db/) | Supabase Auth, PostgreSQL and private Storage |
 
-- **Application:** Python/Flask API, Vue 3 admin web interface, and React Native/Expo mobile app.
-- **Machine learning:** TensorFlow/Keras for model preparation and LiteRT for the hosted model runtime.
-- **Data:** Supabase Auth, PostgreSQL and private Storage for the hosted system. A legacy MySQL/Flask/Vue prototype also remains in the repository.
+The repository also retains a legacy Flask/MySQL and Vue prototype in `graphiscan/user-app`. Model training uses TensorFlow/Keras; deployed model binaries and private configuration are supplied separately.
 
-## Current status
+## Project status
 
-The Android 1.0.2 APK and admin website were published on 9 November 2026.
-Subsequent mobile and final-report changes are local and have not been published
-in a new APK. The user reports that migration 031 passed its three preflight
-checks; parent-account acceptance still needs an end-to-end check. The system's
-current model labels are Normal and High Potential. For current details and
-verification limits, see [KNOWLEDGE.md](KNOWLEDGE.md), [CHANGELOG.md](CHANGELOG.md),
-and [the simple system flow](SYSTEM_FLOW.md).
+Android version 1.0.5 was published on 13 November 2026. The system uses the labels **Normal** and **High Potential**. As last verified on that date, ResNet50 was the default selectable model. Physical-device and authenticated end-to-end acceptance checks remain incomplete; see [KNOWLEDGE.md](KNOWLEDGE.md) and [CHANGELOG.md](CHANGELOG.md) for dated evidence and limitations.
 
-## Responsible use
+## Getting started
 
-Model scores are screening outputs, not medical conclusions. A qualified expert should review results before they are shared. Student records and handwriting images require restricted access and must not be placed in a public repository or public storage bucket.
+Component-specific instructions are in the [mobile app](graphiscan/mobile-app/README.md), [admin web](graphiscan/admin-web/README.md), [landing site](graphiscan/landing-web/README.md), and [API documentation](graphiscan/api/README.md). Some component notes contain historical checkpoints; consult the latest entries in `KNOWLEDGE.md` before applying migrations or deployment instructions. Local Python environments may need to be recreated as described there.
+
+Use the provided example configuration files as templates. Obtain real configuration, model artifacts, and access through the project maintainers; never commit credentials, signing keys, student records, or handwriting samples.
+
+## Documentation
+
+- [System flow](SYSTEM_FLOW.md) and [system map](KNOWLEDGE.md)
+- [API contract](API_CONTRACT.md) and [database notes](graphiscan/db/MIGRATION_NOTES.md)
+- [Project plan](PROJECT_PLAN.md), [handoff notes](RESUME.md), and [changelog](CHANGELOG.md)
+- [Manuscript and defense reviews](docs/manuscript/README.md)
+
+Student records and handwriting images require restricted access. Model scores must be interpreted as screening outputs and reviewed by an authorized expert.

@@ -25,7 +25,7 @@ superseded by this direction; no manuscript edit or adviser approval inferred.
 Current-PDF follow-up: supplied 75-page GraphiScan (1).pdf reviewed; RRL themes,
 shared use cases and stated nonfunctional requirements confirmed. Methodology/WBS,
 account/Follow-up descriptions, diagram balancing and model table/figure errors
-remain. See DEFENSE_CURRENT_PDF_REVIEW.md; manuscript not edited, no live tests.
+remain. See docs/manuscript/DEFENSE_CURRENT_PDF_REVIEW.md; manuscript not edited, no live tests.
 
 2026-11-15 DEFENSE REASSESSMENT: Most requested software capabilities have source
 and prior verification evidence; all 16 minutes actions cannot be marked complete.
