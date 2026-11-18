@@ -135,10 +135,10 @@ The runner does not start the legacy Flask app or load its predictor/MySQL confi
 User reported the fictional profile seed succeeded on 2026-10-20. The next check
 needs the Auth-account password entered locally, without putting it in chat,
 command history, `.env` or a report. Open an interactive Windows PowerShell window
-and run this command (works from any directory):
+and run this command from the repository root:
 
 ```powershell
-& 'C:\Users\MY_PC\Downloads\CAPSTONE\capstone\.venv\Scripts\python.exe' 'C:\Users\MY_PC\Downloads\CAPSTONE\capstone\graphiscan\tools\check_v1_auth.py'
+& '.venv\Scripts\python.exe' 'graphiscan\tools\check_v1_auth.py'
 ```
 
 At the hidden prompt, enter the password for `graphiscan.test@example.invalid`,

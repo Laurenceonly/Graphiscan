@@ -93,3 +93,5 @@ graphiscan/model/*.local.json
 /.impeccable/surfaces/
 /scrollcraft/
 /graphiscan/mobile-app/UI_CONSISTENCY_AUDIT.md
+/graphiscan/api/PRIVACY_AGREEMENT_DRAFT.md
+/graphiscan/api/PRIVACY_NOTICE_REVIEW_DRAFT.md

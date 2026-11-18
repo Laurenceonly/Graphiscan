@@ -70,7 +70,7 @@ rollback remain to verify. See the API README for the read-only adapter's setup.
 
 See [the proposed shared API contract](../../API_CONTRACT.md) and [artifact validation notes](../api/README.md) for wire types, ownership/onboarding, historical models and private images. `postgres/003_api_contract.sql` now extends the original identity/screening drafts with permission/school scope, expert assignment, revisions/history, consent publication, session revocations, request tracking, cleanup and model metadata. All three passed isolated in-memory PostgreSQL checks with an `auth.users` stub and fictional rows; none was applied to live MySQL or hosted Supabase. Existing MySQL cascade deletions conflict with target RESTRICT relationships; retention/deletion policy remains unresolved. No grant, consent text or real model default is seeded.
 
-This is a migration plan, not a completed data transfer. The source is the schema-only `legacy_mysql_schema.sql` extracted from an export dated 2026-07-28. The folder `C:\Users\MY_PC\Downloads\CAPSTONE\graphiscan_db` contains raw MySQL/MariaDB `.frm` and `.ibd` files; these are not PostgreSQL imports. The XAMPP database copy has later file timestamps. Obtain a fresh logical SQL export and a secure backup before moving real rows.
+This is a migration plan, not a completed data transfer. The source is the schema-only `legacy_mysql_schema.sql` extracted from an export dated 2026-07-28. The local legacy database folder contains raw MySQL/MariaDB `.frm` and `.ibd` files; these are not PostgreSQL imports. The XAMPP database copy has later file timestamps. Obtain a fresh logical SQL export and a secure backup before moving real rows.
 
 | Existing MySQL table | Target |
 | --- | --- |
