@@ -1,7 +1,6 @@
 # Local secrets and machine-specific configuration
 **/.env
 **/.env.*
-!**/.env.example
 graphiscan/config.py
 *.pem
 *.key

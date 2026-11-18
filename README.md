@@ -43,7 +43,7 @@ Start with the instructions for the component you want to work on:
 - [Mobile app](graphiscan/mobile-app/README.md) · [Admin web](graphiscan/admin-web/README.md) · [Landing site](graphiscan/landing-web/README.md)
 - [API documentation](graphiscan/api/README.md) · [Database migration notes](graphiscan/db/MIGRATION_NOTES.md)
 
-Some component documents include historical checkpoints. Review migration and deployment instructions against the current environment before applying them. Private configuration and deployed model binaries are supplied separately. Use example configuration files as templates and obtain access through the project maintainers.
+Some component documents include historical checkpoints. Review migration and deployment instructions against the current environment before applying them. Environment files, private configuration and deployed model binaries are supplied separately; obtain them through the project maintainers.
 
 ## Documentation
 

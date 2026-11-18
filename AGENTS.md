@@ -7,6 +7,6 @@ When available locally, read `KNOWLEDGE.md` for the system map before changing c
 - User app routes and requests live in `graphiscan/user-app/src/router/` and `src/api/`; admin equivalents live in `graphiscan/admin-web/src/router/` and `src/api/`.
 - Preserve role and ownership checks on server routes. Client route guards alone do not protect records.
 - Do not disclose values from `.env`, `config.py`, or credential setup scripts. Avoid committing real credentials, uploaded student images, or database data.
-- Keep the root `.gitignore` protections in place. The repository uses `graphiscan/.env.example` and `graphiscan/config.example.py` as safe setup templates; real configuration and the screening model are supplied separately.
+- Keep the root `.gitignore` protections in place. Environment files, real configuration and the screening model are supplied separately; do not commit environment files.
 - If architecture, endpoints, model behavior, or setup changes, update `KNOWLEDGE.md` with the verified behavior. Distinguish observed source behavior from behavior checked by running the system.
 - When the local handoff notes are available, track meaningful updates in `CHANGELOG.md` and keep `PROJECT_PLAN.md` and `KNOWLEDGE.md` current when relevant. Never include secrets or private student data.
