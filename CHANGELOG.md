@@ -1,3 +1,8 @@
+## 2026-11-18 - Improve project README showcase
+
+- Redesigned `README.md` with a project introduction, role-based mobile screenshots, admin dashboard, screening workflow, technology and documentation links. Reused existing landing-site images showing fictional records; identified them as older illustrative interface states. No application behavior changed.
+- Verified the selected screenshots visually and checked local README links and `git diff --check`. No application tests were run for this documentation-only change.
+
 ## 2026-11-18 - Organize repository documentation
 
 - Rewrote the root README with a component map, dated Android 1.0.5 and model status, documentation links, setup pointers and data-handling guidance. Moved six manuscript and defense working documents into `docs/manuscript/`, added an index and updated current handoff/plan references. Older changelog entries retain their historical filenames.
