@@ -31,9 +31,7 @@ graphiscan/mobile-app/android/
 *.aab
 *.log
 /.local-tools/
-/.10k/tools/
-/.10k/package.json
-/.10k/package-lock.json
+/.10k/
 /.local-backups/
 /.playwright-cli/
 /output/playwright/
@@ -92,7 +90,6 @@ graphiscan/model/*.local.json
 /output/GraphiScan_Model_Manuscript_Package.zip
 /output/manuscript-model-figures/
 /output/manuscript-model-figures.zip
-/.10k/*.md
 /.impeccable/surfaces/
 /scrollcraft/
 /graphiscan/mobile-app/UI_CONSISTENCY_AUDIT.md
