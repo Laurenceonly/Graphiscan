@@ -73,3 +73,26 @@ graphiscan/model/*.local.json
 
 # Generated Android release verification artifacts
 /output/android-*/
+
+# Local project planning, manuscript and handoff notes
+/CHANGELOG.md
+/CURRENT_REQUIREMENTS.md
+/DEFENSE_SOFTWARE_AUDIT.md
+/GraphiScan_Defense_Minutes.md
+/KNOWLEDGE.md
+/PRIVACY_REVIEW_BRIEF.md
+/PROJECT_PLAN.md
+/RESUME.md
+/SYSTEM_DESIGN.md
+/SYSTEM_FLOW.md
+/WORK_CHECKLIST.md
+/docs/manuscript/
+/docs/archive/root-notes/
+/output/GraphiScan_Model_Manuscript_Package/
+/output/GraphiScan_Model_Manuscript_Package.zip
+/output/manuscript-model-figures/
+/output/manuscript-model-figures.zip
+/.10k/*.md
+/.impeccable/surfaces/
+/scrollcraft/
+/graphiscan/mobile-app/UI_CONSISTENCY_AUDIT.md

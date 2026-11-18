@@ -1,7 +1,0 @@
-﻿Model,Selected version,Class,Overall test accuracy (%),Precision (%),Recall (%),F1-score (%)
-MobileNetV2,Original,Normal,85.29,81.25,92.86,86.67
-MobileNetV2,Original,High Potential,85.29,91.07,77.27,83.61
-EfficientNetB0,Fine-tuned,Normal,78.68,73.03,92.86,81.76
-EfficientNetB0,Fine-tuned,High Potential,78.68,89.36,63.64,74.34
-ResNet50,Fine-tuned,Normal,86.76,80.95,97.14,88.31
-ResNet50,Fine-tuned,High Potential,86.76,96.15,75.76,84.75

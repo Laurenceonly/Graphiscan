@@ -1,6 +1,6 @@
 # Agent guidance for GRAPHISCAN
 
-Read [KNOWLEDGE.md](KNOWLEDGE.md) for the system map before changing code.
+When available locally, read `KNOWLEDGE.md` for the system map before changing code. Internal project notes are distributed separately from this repository.
 
 - The active Python application is under `graphiscan/`. `graphiscan/app.py` contains both the JSON API and older Flask page routes. Check both paths when changing shared behavior.
 - The active inference artifacts are in `graphiscan/model/`; `graphiscan/predict.py` is the runtime source of truth for preprocessing and classification thresholds. Training and top level model artifacts are separate.
@@ -9,4 +9,4 @@ Read [KNOWLEDGE.md](KNOWLEDGE.md) for the system map before changing code.
 - Do not disclose values from `.env`, `config.py`, or credential setup scripts. Avoid committing real credentials, uploaded student images, or database data.
 - Keep the root `.gitignore` protections in place. The repository uses `graphiscan/.env.example` and `graphiscan/config.example.py` as safe setup templates; real configuration and the screening model are supplied separately.
 - If architecture, endpoints, model behavior, or setup changes, update `KNOWLEDGE.md` with the verified behavior. Distinguish observed source behavior from behavior checked by running the system.
-- Track meaningful updates, fixes, and agreed decisions in root `CHANGELOG.md` in the same work session. Read its latest entries when resuming work. Use dated entries describing what changed, affected files, verification actually performed, and remaining work or limitations. Keep planned work distinct from implemented and verified behavior; never include secrets or private student data. Keep `PROJECT_PLAN.md` statuses and `KNOWLEDGE.md` current when relevant.
+- When the local handoff notes are available, track meaningful updates in `CHANGELOG.md` and keep `PROJECT_PLAN.md` and `KNOWLEDGE.md` current when relevant. Never include secrets or private student data.
