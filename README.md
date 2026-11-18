@@ -1,4 +1,5 @@
 ﻿<div align="center">
+  <img src="graphiscan/landing-web/public/images/graphiscan-mark.png" alt="GraphiScan logo" width="88" />
   <h1>GraphiScan</h1>
   <p><strong>Handwriting screening, supported by expert review.</strong></p>
   <p>A capstone project connecting teachers, experts, and families through a shared screening workflow.</p>
